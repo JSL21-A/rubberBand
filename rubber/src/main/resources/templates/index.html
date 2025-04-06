@@ -6,34 +6,67 @@
 	<title>Insert title here</title>
 </head>
 <style>
+	:root {
+		/* 크기는 조정 가능 */
+		--diameter: 200;
+		--card-width: 20;
+		--card-height: 20;
+		--unit: 1vw;
+	}
+
 	body {
 		padding: 0;
 		margin: 0;
 	}
 
-	.card-container {
-		position: relative;
-		width: 50%;
-		height: 50%;
-		top: 100%;
-		left: 25%;
-		/* margin: 0 auto; */
-		transform-origin: 50% 50%;
-		background-color: red;
+	.menu-container {
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		overflow: hidden;
+	}
+
+	.menu-container,
+	.menu-inner {
+		position: absolute;
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+		will-change: transform;
+	}
+
+	.menu-inner {
+		/* 상단기준 반지름만큼 내려가기 */
+		width: calc((var(--diameter) + var(--card-width))*var(--unit));
+		height: calc((var(--diameter) + var(--card-height))*var(--unit));
+		top: calc(55vh + (var(--diameter) * 0.5 * var(--unit)) - (var(--card-height) * 0.5 * var(--unit)));
+		left: 50%;
+		transform: translate(-50%, -50%);
+		transform-origin: center center;
+		/* 회전 중심을 중앙으로 */
+		will-change: transform;
 	}
 
 	.card {
-		width: 250px;
-		height: 350px;
+		position: absolute;
+		width: calc(var(--card-width)*var(--unit));
+		height: calc(var(--card-height) * var(--unit));
 		perspective: 1000px;
-		margin: 0 10px;
+		transform-origin: center;
+		will-change: transform;
+		transform-style: preserve-3d;
 	}
 
 	.card-inner {
-		width: 100%;
-		height: 100%;
-		transition: transform 0.6s;
+		transition: transform .6s;
 		transform-style: preserve-3d;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		will-change: transform;
+		height: calc((var(--card-height) + var(--card-height)/3.5)*var(--unit));
 	}
 
 	.card:hover .card-inner {
@@ -43,14 +76,14 @@
 	.card-front,
 	.card-back {
 		position: absolute;
-		width: 100%;
-		height: 100%;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		-webkit-backface-visibility: hidden;
 		backface-visibility: hidden;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border: 1px solid #ccc;
-		border-radius: 10px;
+		border: 5px solid #000;
+		border-radius: 30px;
 	}
 
 	.card-front {
@@ -64,67 +97,249 @@
 </style>
 
 <body>
-	<div class="card-container">
-		<div class="card">
-			<div class="card-inner">
-				<div class="card-front">
-					<h2>카드 1</h2>
+	<div class="menu-container">
+		<div class="menu-inner">
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 1</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
 				</div>
-				<div class="card-back">
-					<p>추가 정보 표시</p>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 2</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 3</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 4</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 5</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 6</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 1</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 2</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 3</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 4</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 5</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 6</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 1</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 2</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 3</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 4</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 5</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 6</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 1</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 2</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 3</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 4</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 5</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="card-inner">
+					<div class="card-front">
+						<h2>카드 6</h2>
+					</div>
+					<div class="card-back">
+						<p>추가 정보 표시</p>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="card">
-			<div class="card-inner">
-				<div class="card-front">
-					<h2>카드 2</h2>
-				</div>
-				<div class="card-back">
-					<p>추가 정보 표시</p>
-				</div>
-			</div>
-		</div>
-		<!--<div class="card">
-			<div class="card-inner">
-				<div class="card-front">
-					<h2>카드 3</h2>
-				</div>
-				<div class="card-back">
-					<p>추가 정보 표시</p>
-				</div>
-			</div>
-		</div>
-		<div class="card">
-			<div class="card-inner">
-				<div class="card-front">
-					<h2>카드 4</h2>
-				</div>
-				<div class="card-back">
-					<p>추가 정보 표시</p>
-				</div>
-			</div>
-		</div>
-		<div class="card">
-			<div class="card-inner">
-				<div class="card-front">
-					<h2>카드 5</h2>
-				</div>
-				<div class="card-back">
-					<p>추가 정보 표시</p>
-				</div>
-			</div>
-		</div>
-		<div class="card">
-			<div class="card-inner">
-				<div class="card-front">
-					<h2>카드 6</h2>
-				</div>
-				<div class="card-back">
-					<p>추가 정보 표시</p>
-				</div>
-			</div>
-		</div> -->
 	</div>
 </body>
 <script src="/src/main/resources/static/JS/jquery-3.7.1.min.js"></script>
@@ -133,14 +348,13 @@
 <script>
 	gsap.registerPlugin(Draggable);
 
-	var card = $('.card-container');
+	var card = $('.menu-inner');
 	let rotation = 0;
 	let velocity = 0;
 	let isDragging = false;
 	let lastRotation = 0;
 	let raf;
 
-	//it doesn't get much easier than this ;)
 	const draggable = Draggable.create(card.get(0), {
 		type: "rotation",
 		onDragStart: function () {
@@ -203,6 +417,43 @@
 			console.log(Draggable.get(card.get(0)).rotation, "from the Draggable");
 		});
 	}
+	$(document).ready(function () {
+		function cardLayout() {
+			var $container = $('.menu-inner');
+			var $cards = $container.find('.card');
+			var totalCards = $cards.length; // 카드 개수에 따라 동적 계산
+
+			// var cardWidth = $(window).width() * 0.1;
+			// var cardHeight = cardWidth * 1.5; // 비율 2:3 (가로:세로)
+
+			// 반지름 및 위치 계산
+			const radius = parseFloat(getComputedStyle(document.documentElement)
+				.getPropertyValue('--diameter')) * window.innerWidth / 100 / 2; // 1vw = window.innerWidth / 100
+
+			var centerX = $container.width() / 2; //가로 중앙
+			var centerY = $container.height() / 2; //세로 중앙
+
+			const cardWidth = radius * 0.2;  // 카드 너비는 반지름의 10%로 계산
+			const cardHeight = cardWidth * 1.4; // 비율 유지 (예: 2:3 → 1.4배 높이)
+
+			// 첫 번째 카드는 컨테이너 상단 중앙에 오도록 시작 각도를 -90도
+			$cards.each(function (index) {
+				var angle = (2 * Math.PI / totalCards) * index - Math.PI / 2;
+				var $card = $(this);
+				// 카드 중심이 계산된 좌표에 오도록 카드 크기의 절반씩 빼줌
+				var x = centerX + radius * Math.cos(angle) - $card.width() / 2;
+				var y = centerY + radius * Math.sin(angle) - $card.height() / 2;
+				$card.css({
+					left: x + 'px',
+					top: y + 'px',
+					transform: 'rotate(' + ((angle * 180 / Math.PI) + 90) + 'deg)'
+				});
+			});
+		}
+
+		cardLayout();
+		$(window).on('resize', cardLayout);
+	});
 </script>
 
 </html>
