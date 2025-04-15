@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Butn */
+    @import url('https://fonts.googleapis.com/css?family=Lato:100,300,400');
+    @import url('https://fonts.googleapis.com/css?family=Roboto:100');
+
+    .Butn {
+        position: relative;
+        width: 100px;
+        height: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 7vh;
+        overflow: hidden;
+        border: 1px solid #000;
+        font-family: 'Lato', sans-serif;
+        font-weight: 300;
+        transition: 0.5s;
+        letter-spacing: 1px;
+        border-radius: 8px;
+    }
+
+    .Butn button {
+        width: 101%;
+        height: 100%;
+        font-family: 'Lato', sans-serif;
+        font-weight: bold;
+        font-size: 11px;
+        letter-spacing: 1px;
+        background: #000;
+        -webkit-mask: url("https://raw.githubusercontent.com/robin-dela/css-mask-animation/master/img/urban-sprite.png");
+        mask: url("https://raw.githubusercontent.com/robin-dela/css-mask-animation/master/img/urban-sprite.png");
+        -webkit-mask-size: 3000% 100%;
+        mask-size: 3000% 100%;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        -webkit-animation: ani2 0.7s steps(29) forwards;
+        animation: ani2 0.7s steps(29) forwards;
+    }
+
+    .Butn button:hover {
+        -webkit-animation: ani 0.7s steps(29) forwards;
+        animation: ani 0.7s steps(29) forwards;
+    }
+
+    .mas {
+        position: absolute;
+        color: #000;
+        text-align: center;
+        width: 101%;
+        font-family: 'Lato', sans-serif;
+        font-weight: bold;
+        font-size: 11px;
+        margin-top: 17px;
+        overflow: hidden;
+    }
+
+    @-webkit-keyframes ani {
+        from {
+            -webkit-mask-position: 0 0;
+            mask-position: 0 0;
+        }
+
+        to {
+            -webkit-mask-position: 100% 0;
+            mask-position: 100% 0;
+        }
+    }
+
+    @keyframes ani {
+        from {
+            -webkit-mask-position: 0 0;
+            mask-position: 0 0;
+        }
+
+        to {
+            -webkit-mask-position: 100% 0;
+            mask-position: 100% 0;
+        }
+    }
+
+    @-webkit-keyframes ani2 {
+        from {
+            -webkit-mask-position: 100% 0;
+            mask-position: 100% 0;
+        }
+
+        to {
+            -webkit-mask-position: 0 0;
+            mask-position: 0 0;
+        }
+    }
+
+    @keyframes ani2 {
+        from {
+            -webkit-mask-position: 100% 0;
+            mask-position: 100% 0;
+        }
+
+        to {
+            -webkit-mask-position: 0 0;
+            mask-position: 0 0;
+        }
+    }
+
+    /* Butn End */
+    /* butn2 */
+    .Butn2 {
+        position: relative;
+        width: 100px;
+        height: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 7vh;
+    }
+
+    .butn2,
+    .butn2 *,
+    .butn2 :after,
+    .butn2 :before,
+    .butn2:after,
+    .butn2:before {
+        border: 0 solid;
+        box-sizing: border-box;
+    }
+
+    .butn2 {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-appearance: button;
+        background-color: #000;
+        background-image: none;
+        color: #fff;
+        cursor: pointer;
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+            Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
+            Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+        font-size: 100%;
+        font-weight: 900;
+        line-height: 1.5;
+        margin: 0;
+        -webkit-mask-image: -webkit-radial-gradient(#000, #fff);
+        padding: 0;
+        text-transform: uppercase;
+    }
+
+    .butn2:disabled {
+        cursor: default;
+    }
+
+    .butn2:-moz-focusring {
+        outline: auto;
+    }
+
+    .butn2 svg {
+        display: block;
+        vertical-align: middle;
+    }
+
+    .butn2 [hidden] {
+        display: none;
+    }
+
+    .butn2 {
+        border-radius: 99rem;
+        border-width: 2px;
+        overflow: hidden;
+        padding: 0.8rem 3rem;
+        position: relative;
+    }
+
+    .butn2 span {
+        display: grid;
+        inset: 0;
+        place-items: center;
+        position: absolute;
+        transition: opacity 0.2s ease;
+    }
+
+    .butn2 .marquee {
+        --spacing: 5em;
+        --start: 0em;
+        --end: 5em;
+        -webkit-animation: marquee 1s linear infinite;
+        animation: marquee 1s linear infinite;
+        -webkit-animation-play-state: paused;
+        animation-play-state: paused;
+        opacity: 0;
+        position: relative;
+        text-shadow: #fff var(--spacing) 0, #fff calc(var(--spacing) * -1) 0,
+            #fff calc(var(--spacing) * -2) 0;
+    }
+
+    .butn2:hover .marquee {
+        -webkit-animation-play-state: running;
+        animation-play-state: running;
+        opacity: 1;
+    }
+
+    .butn2:hover .text {
+        opacity: 0;
+    }
+
+    @-webkit-keyframes marquee {
+        0% {
+            transform: translateX(var(--start));
+        }
+
+        to {
+            transform: translateX(var(--end));
+        }
+    }
+
+    @keyframes marquee {
+        0% {
+            transform: translateX(var(--start));
+        }
+
+        to {
+            transform: translateX(var(--end));
+        }
+    }
+
+    /* Butn2 End */
+    /* Butn3 */
+    .Butn3 {
+        width: 200px;
+        height: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 7vh;
+    }
+
+    .Butn3 button {
+        padding: 15px 60px;
+        display: inline-block;
+        font-family: segoe UI;
+        font-size: 14px;
+        outline: none;
+        color: #fff;
+        border-radius: 30px;
+        font-weight: bold;
+    }
+
+    #Edward_2 {
+        background: #fff;
+        border: 2px solid #abb7b7;
+        color: #abb7b7;
+    }
+
+    #Edward_2:hover {
+        background: #abb7b7;
+        color: #fff;
+    }
+
+    #Edward_2:active {
+        background: #abb7b7;
+        border-color: #fff;
+    }
+
+    /* Butn3 End */
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+<body>
+    <div class="Butn">
+        <span class="mas">MASK2</span>
+        <button type="butn">MASK2</button>
+    </div>
+    <div class="Butn2">
+        <button class="butn2">
+            <span class="text">Button</span>
+            <span aria-hidden="" class="marquee">Button</span>
+        </button>
+    </div>
+    <div class="Butn3">
+        <button id="Edward_2">CLICK ME</button>
+    </div>
+</body>
+<script src="/src/main/resources/static/JS/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+<script>
+</script>
+
+</html>
