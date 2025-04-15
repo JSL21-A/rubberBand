@@ -398,78 +398,76 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/Draggable.min.js"></script>
 <script>
-	function spin() {
-		// 돌아돌아 돌림판
-		gsap.registerPlugin(Draggable);
+	// 돌아돌아 돌림판
+	gsap.registerPlugin(Draggable);
 
-		var menu = $('.menu-inner');
-		let rotation = 0;
-		let velocity = 0;
-		let isDragging = false;
-		let lastRotation = 0;
-		let raf;
-		// 돌아가게 div태그에 draggable 설정
-		const draggable = Draggable.create(menu.get(0), {
-			type: "rotation",
-			onDragStart: function () {
-				isDragging = true;
-				cancelAnimationFrame(raf);
-				velocity = 0;
-			},
-			onDrag: function () {
-				rotation = gsap.getProperty(menu.get(0), "rotation");
-				velocity = rotation - lastRotation;
-				lastRotation = rotation;
-			},
-			onDragEnd: function () {
-				isDragging = false;
-				animateInertia();
+	var menu = $('.menu-inner');
+	let rotation = 0;
+	let velocity = 0;
+	let isDragging = false;
+	let lastRotation = 0;
+	let raf;
+	// 돌아가게 div태그에 draggable 설정
+	const draggable = Draggable.create(menu.get(0), {
+		type: "rotation",
+		onDragStart: function () {
+			isDragging = true;
+			cancelAnimationFrame(raf);
+			velocity = 0;
+		},
+		onDrag: function () {
+			rotation = gsap.getProperty(menu.get(0), "rotation");
+			velocity = rotation - lastRotation;
+			lastRotation = rotation;
+		},
+		onDragEnd: function () {
+			isDragging = false;
+			animateInertia();
+		}
+	});
+
+	//관성 설정
+	function animateInertia() {
+		if (!isDragging) {
+			// 점점 속도 줄게 (velocity = 감속 계수)
+			velocity *= 0.95;
+			rotation += velocity;
+
+			gsap.set(menu.get(0), { rotation });
+
+			// 속도가 거의 0이면 스냅 처리
+			if (Math.abs(velocity) > 0.5) {
+				raf = requestAnimationFrame(animateInertia);
+			} else {
+				snapToClosestAngle(); // 가장 가까운 각도로 스냅
 			}
+		}
+	}
+
+	function snapToClosestAngle() {
+		let nextMultiple;
+
+		const isClockwise = rotation > lastRotation; // 시계방향 회전 여부 확인
+
+		// 시계방향 (양수로 증가) 일 때
+		if (isClockwise) {
+			nextMultiple = Math.ceil(rotation / 15) * 15;  // 다음 15도 배수
+		}
+		// 반시계방향 (음수로 감소) 일 때
+		else {
+			nextMultiple = Math.floor(rotation / 15) * 15;  // 이전 15도 배수
+		}
+
+		gsap.to(menu.get(0), {
+			rotation: nextMultiple,
+			duration: 0.7,
+			ease: "power1.out"
 		});
 
-		//관성 설정
-		function animateInertia() {
-			if (!isDragging) {
-				// 점점 속도 줄게 (velocity = 감속 계수)
-				velocity *= 0.95;
-				rotation += velocity;
-
-				gsap.set(menu.get(0), { rotation });
-
-				// 속도가 거의 0이면 스냅 처리
-				if (Math.abs(velocity) > 0.5) {
-					raf = requestAnimationFrame(animateInertia);
-				} else {
-					snapToClosestAngle(); // 가장 가까운 각도로 스냅
-				}
-			}
-		}
-
-		function snapToClosestAngle() {
-			let nextMultiple;
-
-			const isClockwise = rotation > lastRotation; // 시계방향 회전 여부 확인
-
-			// 시계방향 (양수로 증가) 일 때
-			if (isClockwise) {
-				nextMultiple = Math.ceil(rotation / 15) * 15;  // 다음 15도 배수
-			}
-			// 반시계방향 (음수로 감소) 일 때
-			else {
-				nextMultiple = Math.floor(rotation / 15) * 15;  // 이전 15도 배수
-			}
-
-			gsap.to(menu.get(0), {
-				rotation: nextMultiple,
-				duration: 0.7,
-				ease: "power1.out"
-			});
-
-			$("#rotation").click(function () {
-				console.log(gsap.getProperty(menu.get(0), "rotation"), "from element");
-				console.log(Draggable.get(menu.get(0)).rotation, "from the Draggable");
-			});
-		}
+		$("#rotation").click(function () {
+			console.log(gsap.getProperty(menu.get(0), "rotation"), "from element");
+			console.log(Draggable.get(menu.get(0)).rotation, "from the Draggable");
+		});
 	}
 
 	$(document).ready(function () {
@@ -526,7 +524,6 @@
 		}
 		// 창 크기가 변하면 다시 계산
 		cardLayout();
-		spin();
 		$(window).on('resize', function () {
 			// 창 크기가 변하면 다시 계산
 			cardLayout();
