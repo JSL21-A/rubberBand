@@ -58,6 +58,10 @@
 			transform-origin: center center;
 			will-change: transform;
 		}
+
+		.card:hover .card-inner {
+			transform: rotateY(180deg);
+		}
 	}
 
 	.menu-container {
@@ -107,9 +111,7 @@
 		height: calc((var(--card-height) + var(--card-height)/3.5)*var(--unit));
 	}
 
-	.card:hover .card-inner {
-		transform: rotateY(180deg);
-	}
+
 
 	.card-front,
 	.card-back {
