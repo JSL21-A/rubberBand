@@ -11,29 +11,29 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 public class SecurityConfig {
 
-	@Bean
-	PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    	http
-//    	.formLogin(login -> login
-//    			.loginPage("/user/login")
-//    			.defaultSuccessUrl("/")
-//    			.permitAll()
-//    			)
-    	.logout(logout -> logout
-    			.logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-    			.logoutSuccessUrl("/")
-    			.permitAll()
-    			)
-    	.authorizeHttpRequests(auth -> auth
-    			.requestMatchers("/").permitAll()
-    			);
-		return http.build();
-		//.permitAll() : 누구나 접근 가능
-		//.authenticated() : 인증된 사람만 접근 가능
-	}
+        http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/", "/css/**", "/JS/**", "/images/**", "/js/**", "/user/**").permitAll() // ✅ 이 줄 중요!
+                .anyRequest().authenticated()
+            )
+            .formLogin(login -> login
+                .loginPage("/user/login")    // 여기에 해당하는 컨트롤러 + HTML이 실제 있어야 함!
+                .defaultSuccessUrl("/")
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                .logoutSuccessUrl("/")
+                .permitAll()
+            );
+
+        return http.build();
+    }
 }

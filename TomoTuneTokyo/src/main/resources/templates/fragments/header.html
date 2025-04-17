@@ -1,79 +1,66 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeLeaf.org">
-
+<!-- header.html -->
 <div th:fragment="header">
-  
-
-<div th:fragment = "header">
-<div class="top_navigation">
-  <header class="header">
-  	<div class="scrolling-banner">
-  		<p>✨ 공연 팀 모집 중! | 🎤 보컬, 드러머, 래퍼 환영! | 🎧 지금 바로 지원해보세요!</p>
-	</div>
-    
-    <!-- 상단 로고 및 타이틀 -->
-    <div class="header-container">
-      <div class="header-item left">
-        <a href="/">
-          <img th:src="@{/images/HOME2.png}" class="header-icon" alt="Home Icon">
-        </a>
+  <div class="top_navigation">
+    <header class="header">
+      <div class="scrolling-banner">
+        <p>✨ 공연 팀 모집 중! | 🎤 보컬, 드러머, 래퍼 환영! | 🎧 지금 바로 지원해보세요!</p>
       </div>
 
-      <div class="header-item center">
-        <h1>Tomo Tune Tokyo</h1>
-      </div>
-
-      <div class="header-item right">
-        <div id="hamburgerBtn" class="hamburger-icon">
-          <img th:src="@{/images/hamburger icon.png}" class="header-icon" alt="Hamburger Icon">
-          <!-- 슬라이드 메뉴 (왼쪽에서 등장) -->
-	  <div id="slideMenu" class="slide-menu">
-  		<ul>
-    		<li><a href="#">회원가입</a></li>
-   			<li><a href="#">로그인</a></li>
-    		<li><a href="#">프로필정보</a></li>
-    		<li><a href="#">마이페이지</a></li>
-    		<li><a href="#">로그아웃</a></li>
- 		</ul>
-	 </div>
+      <div class="header-container">
+        <div class="header-item left">
+          <a href="/">
+            <img th:src="@{/images/HOME2.png}" class="header-icon" alt="Home Icon">
+          </a>
+        </div>
+        <div class="header-item center">
+          <h1>Tomo Tune Tokyo</h1>
+        </div>
+        <div class="header-item right">
+          <div id="hamburgerBtn" class="hamburger-icon">
+            <img th:src="@{/images/hamburger icon.png}" class="header-icon" alt="Hamburger Icon">
+            <div id="slideMenu" class="slide-menu">
+              <ul>
+                <li><a href="#">회원가입</a></li>
+                <li><a href="#">로그인</a></li>
+                <li><a href="#">프로필정보</a></li>
+                <li><a href="#">마이페이지</a></li>
+                <li><a href="#">로그아웃</a></li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- 내비게이션 메뉴 -->
-   <div class="gnb_group">
-      <nav class="gnb">
-        <ul class="nav_1depth">
-          <li><a href="gratings.html">기업소개</a>
-            <ul class="nav_2depth">
-              <li><a href="gratings.html">인사말</a></li>
-              <li><a href="history.html">연혁 및</a></li>
-              <li><a href="gratings.html">교직원소개</a></li>
-              <li><a href="../gallery/photo.html">대우갤러리</a></li>
-              <li><a href="map.html">찾아오시는길</a></li>
-            </ul>
-          </li>
-          <li><a th:href="@{/port/list}">포트폴리오</a>
-            <ul class="nav_2depth">
-              <li><a th:href="@{/port/list}">포트폴리오</a></li>
-            </ul>
-          </li>
-          <li><a th:href="@{/notice/list}">커뮤니티</a>
-            <ul class="nav_2depth">
-              <li><a th:href="@{/notice/list}">공지사항</a></li>
-              <li><a href="../qna/qa.html">질문과답변</a></li>
-              <li><a href="../faq/faq.html">FAQ</a></li>
-              <li><a href="../pds/pds.html">자료실</a></li>
-              <li><a href="../adm/admin.html">관리자</a></li>
-            </ul>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+      <!-- 네비게이션 -->
+      <div class="gnb_group" th:if="${isIndex != true}">
+        <nav class="gnb">
+          <ul class="nav_1depth">
+            <li><a href="gratings.html">기업소개</a>
+              <ul class="nav_2depth">
+                <li><a href="gratings.html">인사말</a></li>
+                <li><a href="history.html">연혁 및</a></li>
+                <li><a href="gratings.html">교직원소개</a></li>
+                <li><a href="../gallery/photo.html">대우갤러리</a></li>
+                <li><a href="map.html">찾아오시는길</a></li>
+              </ul>
+            </li>
+            <li><a th:href="@{/port/list}">포트폴리오</a>
+              <ul class="nav_2depth">
+                <li><a th:href="@{/port/list}">포트폴리오</a></li>
+              </ul>
+            </li>
+            <li><a th:href="@{/notice/list}">커뮤니티</a>
+              <ul class="nav_2depth">
+                <li><a th:href="@{/notice/list}">공지사항</a></li>
+                <li><a href="../qna/qa.html">질문과답변</a></li>
+                <li><a href="../faq/faq.html">FAQ</a></li>
+                <li><a href="../pds/pds.html">자료실</a></li>
+                <li><a href="../adm/admin.html">관리자</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+  </div>
 </div>
-
-
-</div>
-</div>
-</html>

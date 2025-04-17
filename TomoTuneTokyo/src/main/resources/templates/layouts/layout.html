@@ -1,24 +1,29 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeLeaf.org"
-      xmlns:se="http://www.thymeleaf.org/extras/spring-security">
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:se="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
+  <title>TomoTuneTokyo</title>
+
+  <!-- CSS -->
   <link th:href="@{/css/layout.css}" rel="stylesheet">
-  	  
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-<link th:href="@{/css/main.css}" rel="stylesheet">
-    
+  <link th:href="@{/css/main.css}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  
+  <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  
-  
-  <title>TomoTuneTokyo</title>
 </head>
 <body>
+  <!-- ✅ header fragment 삽입 -->
   <div th:replace="~{fragments/header::header}"></div>
+
+  <!-- ✅ 페이지 내용이 삽입될 자리 -->
   <div layout:fragment="content" class="content"></div>
 
-  <!-- 공통 JS는 여기에 -->
-  <script src="/js/header.js"></script>
+  <!-- 공통 JS -->
+  <script src="/JS/header.js"></script>
 </body>
 </html>
