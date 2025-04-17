@@ -1,13 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title>Tomo Tune Tokyo</title>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-</head>
-<body>
+<html xmlns:th="http://www.thymeLeaf.org">
+
+<div th:fragment="header">
+  
 
 <div th:fragment = "header">
 <div class="top_navigation">
@@ -46,7 +41,7 @@
     </div>
 
     <!-- 내비게이션 메뉴 -->
-    <div class="gnb_group">
+   <div class="gnb_group">
       <nav class="gnb">
         <ul class="nav_1depth">
           <li><a href="gratings.html">기업소개</a>
@@ -78,42 +73,7 @@
   </header>
 </div>
 
-<script>
-$(function () {
-    $(".gnb > .nav_1depth > li").hover(
-      function () {
-        $(this).addClass("active");
-        $(this).children(".nav_2depth").stop(true, true).slideDown("fast");
-      },
-      function () {
-        $(this).removeClass("active");
-        $(this).children(".nav_2depth").stop(true, true).slideUp("fast");
-      }
-    );
-  });
-  
-//햄버거 메뉴 슬라이드
-$('#hamburgerBtn').hover(
-  function () {
-    $('#slideMenu').addClass('open');
-  },
-  function () {
-    setTimeout(() => {
-      if (!$('#slideMenu').is(':hover')) {
-        $('#slideMenu').removeClass('open');
-      }
-    }, 300);
-  }
-);
 
-$('#slideMenu').mouseleave(function () {
-  $(this).removeClass('open');
-});
-
-
-
-</script>
 </div>
-</body>
-
+</div>
 </html>
