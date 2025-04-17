@@ -1,0 +1,105 @@
+:root {
+		/* 창 크기에 따라 유동적으로 움직이려고 선언 */
+		--diameter: 200;
+		--card-width: 20;
+		--card-height: 20;
+		--unit: 1vw;
+	}
+
+	body {
+		padding: 0;
+		margin: 0;
+	}
+
+	.menu-container {
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		overflow: hidden;
+	}
+
+	.menu-container,
+	.menu-inner {
+		position: absolute;
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+		will-change: transform;
+	}
+
+	.menu-inner {
+		/* 돌아가는 판 크기 설정 */
+		width: calc((var(--diameter) + var(--card-width))*var(--unit));
+		height: calc((var(--diameter) + var(--card-height))*var(--unit));
+		/* 상단기준 반지름만큼 내려가기 */
+		top: calc(55vh + (var(--diameter) * 0.5 * var(--unit)) - (var(--card-height) * 0.5 * var(--unit)));
+		/* 중앙배치 */
+		left: 50%;
+		transform: translate(-50%, -50%);
+		/* 회전 중심을 중앙으로 */
+		transform-origin: center center;
+		will-change: transform;
+	}
+
+	.menu-arrow {
+		width: 240px;
+		position: fixed;
+		bottom: 12vh;
+		left: 50%;
+		transform: translate(-50%);
+	}
+
+	.card {
+		position: absolute;
+		/* 카드 크기 */
+		width: calc(var(--card-width)*var(--unit));
+		height: calc(var(--card-height) * var(--unit));
+		perspective: 1000px;
+		transform-origin: center;
+		will-change: transform;
+		transform-style: preserve-3d;
+	}
+
+	.card-inner {
+		transition: transform .6s;
+		transform-style: preserve-3d;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		will-change: transform;
+		height: calc((var(--card-height) + var(--card-height)/3.5)*var(--unit));
+	}
+
+	.card:hover .card-inner {
+		transform: rotateY(180deg);
+	}
+
+	.card-front,
+	.card-back {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+		border: 5px solid #000;
+		border-radius: 30px;
+	}
+
+	.card-front {
+		background-color: #fff;
+	}
+
+	.card-back {
+		background-color: #f4f4f4;
+		transform: rotateY(180deg);
+	}
+
+	#rotateBtn {
+		font-size: 100px;
+		border: 0;
+		background-color: transparent;
+	}
