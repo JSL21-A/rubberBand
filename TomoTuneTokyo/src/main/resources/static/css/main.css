@@ -44,6 +44,10 @@
         transform-origin: center center;
         will-change: transform;
     }
+
+    .menu-card:hover .card-inner {
+        transform: rotateY(180deg);
+    }
 }
 
 .menu-container {
@@ -70,7 +74,7 @@
     transform: translate(-50%);
 }
 
-.card {
+.menu-card {
     position: absolute;
     /* 카드 크기 */
     width: calc(var(--card-width) * var(--unit));
@@ -91,10 +95,6 @@
     bottom: 0;
     will-change: transform;
     height: calc((var(--card-height) + var(--card-height) / 3.5) * var(--unit));
-}
-
-.card:hover .card-inner {
-    transform: rotateY(180deg);
 }
 
 .card-front,
