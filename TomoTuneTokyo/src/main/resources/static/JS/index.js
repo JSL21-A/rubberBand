@@ -74,7 +74,7 @@ $(function () {
 
     function cardLayout() {
         var $container = $(".menu-inner");
-        var $cards = $container.find(".card");
+        var $cards = $container.find(".menu-card");
         var totalCards = $cards.length; // 카드 개수에 따라 동적 계산
 
         // 반지름 및 위치 계산
