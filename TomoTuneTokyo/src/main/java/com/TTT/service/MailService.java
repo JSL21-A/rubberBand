@@ -33,6 +33,6 @@ public class MailService {
         message.setText("認証コード: " + code + "\n\n５分以内にご入力お願いします!");
 
         mailSender.send(message);
-        return code; // 이 코드를 Redis나 DB에 저장해두면 돼
+        return code;
     }
 }

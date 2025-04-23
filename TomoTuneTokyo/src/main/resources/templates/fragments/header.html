@@ -39,41 +39,44 @@
 					</form>
 					<form class="register-form" action="/user/register" method="post" style="display:none;">
     					<h2>会員登録</h2>
-    				<div class="form-group">
-      					<input type="text" name="username" placeholder="ログインID" required />
-    				</div>
-    				<div class="form-group">
-     					<input type="password" id="password" name="password" placeholder="パスワード" required />
-    				</div>
-    				<div class="form-group">
-      					<input type="password" id="passwordConfirm" name="passwordConfirm" placeholder="パスワード確認" required />
-      					<div id="pwMatchMsg" class="validation-msg"></div>
-    				</div>
-
-    <div class="form-group nickname-group">
-      <input type="text" id="nickname" name="nickname" placeholder="ニックネーム" required />
-      <button type="button" id="checkNickname">重複チェック</button>
-      <div id="nickMsg" class="validation-msg"></div>
-    </div>
-
-    <div class="form-group email-group">
-      <input type="email" id="email" name="email" placeholder="メールアドレス" required />
-      <button type="button" id="sendEmailCode">認証メール送信</button>
-      <div id="emailMsg" class="validation-msg"></div>
-    </div>
-
-    <div class="form-group" id="emailCodeGroup" style="display:none;">
-      <input type="text" id="emailCode" placeholder="認証番号を入力" />
-      <button type="button" id="verifyEmailCode">認証する</button>
-      <div id="codeMsg" class="validation-msg"></div>
-    </div>
-
-    <button type="submit" class="btn-login">登録する</button>
-
-    <div class="login-actions">
-      <a href="#" class="btn-link back-to-login">ログインに戻る</a>
-    </div>
-  </form>
+    					<div class="form-group">
+      						<input 
+      						type="text" 
+      						name="username" 
+      						id="regUsername" 
+      						placeholder="ログインID" 
+      						required 
+      						minlength="4" 
+      						maxlength="20"
+      						/>
+      						<div id="usernameMsg" class="validation-msg"></div>
+    					</div>
+    					<div class="form-group">
+     						<input type="password" id="password" name="password" placeholder="パスワード" required />
+    					</div>
+    					<div class="form-group">
+      						<input type="password" id="passwordConfirm" name="passwordConfirm" placeholder="パスワード確認" required />
+      						<div id="pwMatchMsg" class="validation-msg"></div>
+    					</div>
+    					<div class="form-group nickname-group">
+      						<input type="text" id="nickname" name="nickname" placeholder="ニックネーム" required minlength="2" maxlength="8"/>
+      						<div id="nickMsg" class="validation-msg"></div>
+    					</div>
+    					<div class="form-group email-group">
+      						<input type="email" id="email" name="email" placeholder="メールアドレス" required />
+      						<button type="button" id="sendEmailCode">認証メール送信</button>
+      					<div id="emailMsg" class="validation-msg"></div>
+    					</div>
+    					<div class="form-group" id="emailCodeGroup" style="display:none;">
+      						<input type="text" id="emailCode" placeholder="認証番号を入力" />
+      						<button type="button" id="verifyEmailCode">認証する</button>
+      						<div id="codeMsg" class="validation-msg"></div>
+   						</div>
+    					<button type="submit" class="btn-login">登録する</button>
+    					<div class="login-actions">	
+      						<a href="#" class="btn-link back-to-login">ログインに戻る</a>
+    					</div>	
+  					</form>
 				</div>
 			</div>
 		</div>
