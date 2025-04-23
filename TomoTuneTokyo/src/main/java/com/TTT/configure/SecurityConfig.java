@@ -19,12 +19,14 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+        	.csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/css/**", "/JS/**", "/images/**", "/js/**", "/user/**").permitAll() // ✅ 이 줄 중요!
+            	.requestMatchers("/**").permitAll()
+                //.requestMatchers("/", "/css/**", "/JS/**", "/images/**", "/js/**", "/user/**").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(login -> login
-                .loginPage("/user/login")    // 여기에 해당하는 컨트롤러 + HTML이 실제 있어야 함!
+                .loginPage("/user/login")
                 .defaultSuccessUrl("/")
                 .permitAll()
             )
