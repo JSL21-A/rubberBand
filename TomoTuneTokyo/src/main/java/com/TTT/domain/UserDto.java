@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @Component
 public class UserDto {
-	
+	//users
 	private String user_id;
 	private String username;
 	private String password;
@@ -20,5 +20,7 @@ public class UserDto {
 	private LocalDateTime updated_at;
 	private LocalDateTime deleted_at;
 	private String user_memo;
+	//user_profile
+	private String nickname;
 
 }

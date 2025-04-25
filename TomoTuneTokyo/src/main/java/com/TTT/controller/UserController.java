@@ -19,6 +19,7 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
+	@Autowired
 	MailService mailService;
 	
 	//ID(username) 중복 체크
@@ -36,7 +37,7 @@ public class UserController {
 	//회원가입 인증 이메일 전송
 	@PostMapping("/send-email-code")
 	public ResponseEntity<Void> sendEmailCode(
-			@RequestParam String email,
+			@RequestParam("email") String email,
 			HttpSession session
 	) {
 		String code = mailService.sendEmail(email);
@@ -49,7 +50,7 @@ public class UserController {
 	//인증 코드 확인
 	@PostMapping("/verify-email-code")
 	public ResponseEntity<Boolean> verifyCode(
-			@RequestParam String code,
+			@RequestParam("code") String code,
 			HttpSession session
 	) {
 		String codeSaved = (String) session.getAttribute("emailAuthCode");
