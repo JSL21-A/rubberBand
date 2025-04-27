@@ -1,13 +1,17 @@
 package com.TTT.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.TTT.domain.UserDto;
 import com.TTT.service.MailService;
 import com.TTT.service.UserService;
 
@@ -60,6 +64,13 @@ public class UserController {
 			session.removeAttribute("emailAuthCode");
 		}
 		return ResponseEntity.ok(ok);
+	}
+	
+	//회원가입 유저정보 등록
+	@PostMapping("/register")
+	public ResponseEntity<?> register(UserDto userDto){
+		userService.userInsert(userDto);
+		return ResponseEntity.ok().build();
 	}
 	
 

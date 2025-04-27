@@ -1,3 +1,8 @@
+let isUsernameValid   = false;
+let isNicknameValid   = false;
+let isPasswordMatch   = false;
+let isEmailVerified   = false;
+
 //ID 중복 체크
 document.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('regUsername');
@@ -59,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (v.length < 2 || v.length > 8) {
       msg.textContent  = 'ニックネームは２文字以上８文字以下で入力してください';
       msg.style.color = 'red';
-	  isNicknameVaild = false;
+	  isNicknameValid = false;
       return;
     }
 
@@ -70,18 +75,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (available) {
           msg.textContent  = '使用可能なニックネームです';
           msg.style.color = 'white';
-		  isNicknameVaild = true;
+		  isNicknameValid = true;
         } else {
           msg.textContent  = '既に使用中のニックネームです';
           msg.style.color = 'red';
-		  isNicknameVaild = false;
+		  isNicknameValid = false;
         }
       })
       .catch(err => {
         console.error(err);
         msg.textContent  = '通信エラーが発生しました';
         msg.style.color = 'red';
-		isNicknameVaild = false;
+		isNicknameValid = false;
       });
   });
 
@@ -96,7 +101,7 @@ const passwordInput = document.getElementById('password');
 const passwordConfirmInput = document.getElementById('passwordConfirm');
 const pwMatchMsg = document.getElementById('pwMatchMsg');
 
-let isPasswordMatch = false; // 상태 변수 초기화
+isPasswordMatch = false; // 상태 변수 초기화
 
 // 비밀번호 일치 여부 실시간 검사
 const checkPasswordMatch = () => {
@@ -157,24 +162,57 @@ $('#verifyEmailCode').on('click', function(){
 });
 
 //전체 유효성검사 + 통과시 회원가입 정보 제출 
-form.addEventListener('submit', function(e){
-		e.preventDefault();
-		
-		if(!isUsernameValid){
-			alert('IDの重複確認をしてください');
-			return;
-		}
-		if(!isPasswordMatch){
-			alert('パスワードが一致していません。');
-			return;
-		}
-		if(!isNicknameValid){
-			alert('ニックネームの重複確認をしてください');
-			return;
-		}
-		if(!isEmailVerified){
-			alert('メール確認を完了してください');
-			return;
-		}
-		form.submit();
-}) 
+
+document.addEventListener('DOMContentLoaded', () => {
+
+const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+const registerBtn = document.getElementById('registerBtn')
+registerBtn.addEventListener('click', async e => {
+	e.preventDefault();
+	
+	document.getElementById('regUsername').dispatchEvent(new Event('blur'))
+	document.getElementById('nickname').dispatchEvent(new Event('blur'))
+	
+	console.log({
+		isUsernameValid,
+		isNicknameValid,
+		isPasswordMatch,
+		isEmailVerified
+	})
+	
+	if(!(isUsernameValid && isPasswordMatch && isNicknameValid && isEmailVerified)){
+		alert('入力内容を確認してください。');
+		return;
+	}
+	
+	const form = document.getElementById('registerForm');
+	const formData = new FormData(form);
+	const params = new URLSearchParams();
+	
+	for (const [key, val] of formData) {
+	    params.append(key, val);
+	  }
+
+	  const csrfToken  = document.querySelector('meta[name="_csrf"]').content;
+	  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+	  const res = await fetch('/user/register', {
+	    method: 'POST',
+	    headers: {
+	      'Content-Type': 'application/x-www-form-urlencoded',
+	      [csrfHeader]: csrfToken
+	    },
+	    body: params.toString()
+	  });
+
+	  if (res.ok) {
+	    alert('登録成功！');
+	    window.location.href = '/';
+	  } else {
+	    console.error(await res.text());
+	    alert('登録に失敗しました');
+	  }
+})
+})
