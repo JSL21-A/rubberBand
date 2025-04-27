@@ -3,6 +3,21 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Baloo&display=swap');
 
+/* Chrome, Edge, Safari */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px #111 inset !important; /* 배경색 유지 */
+  -webkit-text-fill-color: #fff !important;               /* 글자색 유지 */
+}
+
+/* Firefox */
+input:-moz-autofill {
+  box-shadow: 0 0 0px 1000px #111 inset !important;
+  -moz-text-fill-color: #fff !important;
+}
+
 body {
   font-family: 'Noto Sans JP', 'Baloo', sans-serif !important;
 }

@@ -183,7 +183,8 @@ registerBtn.addEventListener('click', async e => {
 	})
 	
 	if(!(isUsernameValid && isPasswordMatch && isNicknameValid && isEmailVerified)){
-		alert('入力内容を確認してください。');
+		registerMsg.textContent = '入力内容を確認してください。';
+		registerMsg.style.color   = 'red';
 		return;
 	}
 	
@@ -208,11 +209,12 @@ registerBtn.addEventListener('click', async e => {
 	  });
 
 	  if (res.ok) {
-	    alert('登録成功！');
-	    window.location.href = '/';
+		registerMsg.textContent = '登録が完了しました！';
+		        registerMsg.style.color   = 'white';
+		        setTimeout(() => window.location.href = '/', 2000);
 	  } else {
-	    console.error(await res.text());
-	    alert('登録に失敗しました');
+		registerMsg.textContent = '通信エラーが発生しました。';
+		registerMsg.style.color   = 'red';
 	  }
 })
 })
