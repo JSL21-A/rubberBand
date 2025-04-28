@@ -1,39 +1,18 @@
+<!-- footer.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<style>
-.footer-list {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: space-evenly;
-  gap: 20px;
-  padding: 0 20px;
-  list-style: none;
-  margin: 0;
-}
-
-.footer-list li a {
-  text-decoration: none;
-  color: #333; /* 원하는 색상으로 조정 가능 */
-  font-size: 14px;
-}
-
-.footer-list li a:hover {
-  text-decoration: none;
-}
-</style>
-
 <div th:fragment="footer">
-  <footer>
-    <nav aria-label="사이트 정보">
-      <ul class="footer-list">
-        <li><a th:href="">お知らせ</a></li>
-        <li><a th:href="">개인정보 처리방침</a></li>
-        <li><a th:href="">이용약관</a></li>
-        <li><a th:href="">FAQ</a></li>
-      </ul>
-    </nav>
-  </footer>
+	<footer>
+		<nav aria-label="site-footer">
+			<ul class="footer-list">
+				<li><a th:href="">お知らせ</a></li> <!-- 공지사항 -->
+				<li><a th:href="">プライバシーポリシー</a></li> <!-- 개인정보정책 -->
+				<li><a th:href="">特定商取引に基づく表記</a></li> <!-- 사이트 or 회사 정보 -->
+				<li><a th:href="">ご利用規約</a></li> <!-- 이용약관 -->
+			</ul>
+		</nav>
+	</footer>
 </div>
 
 </html>

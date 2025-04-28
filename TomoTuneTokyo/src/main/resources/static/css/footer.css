@@ -1,0 +1,19 @@
+.footer-list {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: space-evenly;
+	gap: 20px;
+	padding: 0 20px;
+	list-style: none;
+	margin: 0;
+}
+
+.footer-list li a {
+	text-decoration: none;
+	color: #333;
+	font-size: 14px;
+}
+
+.footer-list li a:hover {
+	text-decoration: none;
+}
