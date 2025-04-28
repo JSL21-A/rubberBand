@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
@@ -22,19 +23,35 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/css/**", "/JS/**", "/images/**", "/js/**", "/user/**").permitAll() // ✅ 이 줄 중요!
-                        .anyRequest().authenticated())
-                .formLogin(login -> login
-                        // .loginPage("/user/login") // 여기에 해당하는 컨트롤러 + HTML이 실제 있어야 함! (테스트를 위해 일단 주석)
-                        .defaultSuccessUrl("/")
-                        .permitAll())
-                .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                        .logoutSuccessUrl("/")
-                        .permitAll());
-
+          .csrf(csrf -> csrf
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+          )
+          .authorizeHttpRequests(auth -> auth
+            // 여기에 인증 없이 접근 가능한 URL들만 나열
+            .requestMatchers(
+              "/", 
+              "/css/**", "/JS/**", "/images/**",
+              "/user/check-username",
+              "/user/check-nickname",
+              "/user/send-email-code",
+              "/user/verify-email-code",
+              "/user/**"
+            ).permitAll()
+            .anyRequest().permitAll()
+          )
+          .formLogin(login -> login
+            // 1) 로그인 폼을 렌더링할 GET URL
+            .loginPage("/")               
+            // 2) 실제 인증 로직을 처리할 POST URL
+            .loginProcessingUrl("/user/login")
+            .defaultSuccessUrl("/")        
+            .permitAll()
+          )
+          .logout(logout -> logout
+            .logoutRequestMatcher(new AntPathRequestMatcher("/logout","GET"))
+            .logoutSuccessUrl("/")
+            .permitAll()
+          );
         return http.build();
     }
 }
