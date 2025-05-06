@@ -21,9 +21,9 @@
 					th:data-hover-src="@{/images/member2.png}"
 					class="header-icon"
 					alt="Hamburger Icon">
-				<div id="slideMenu" class="slide-menu">
+				<div id="slideMenu" th:fragment="slideMenu" class="slide-menu">
 					<button class="close-btn" aria-label="閉じる">&times;</button>
-					<form class="login-form" action="/user/login" method="post">
+					<form class="login-form" th:action="@{/user/login}" method="post" sec:authorize="!isAuthenticated()">
 						<h2>ログイン</h2>
 						<div class="form-group">
 							<input type="text" name="username" placeholder="ID" required />
@@ -31,12 +31,20 @@
 						<div class="form-group">
 							<input type="password" name="password" placeholder="PASSWORD" required />
 						</div>
-						<button type="submit" class="btn-login">ログイン</button>
+						<button id="login" class="btn-login">ログイン</button>
 						<div class="login-actions">
 							<a href="#" class="btn-link register-link">会員登録</a>
 							<a href="/user/forgot" class="btn-link">ID／パスワードをお忘れの方</a>
 						</div>
 					</form>
+					<div class="welcome" style="display:none">
+   						<p>ようこそ、<span id="welcomeName"></span>さん！</p>
+    					<a href="/logout" class="btn-link">ログアウト</a>
+  					</div>
+  					<div class="welcome" sec:authorize="isAuthenticated()">
+						<p>ようこそ、<span th:text="${#authentication.name}">ユーザー名</span>さん！
+						<a href = "/logout" class="btn-link">ログアウト</a>
+					</div>
 					<form class="register-form" id="registerForm" style="display:none;">
     					<h2>会員登録</h2>
     					<div class="form-group">

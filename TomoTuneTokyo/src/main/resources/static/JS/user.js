@@ -2,6 +2,42 @@ let isUsernameValid   = false;
 let isNicknameValid   = false;
 let isPasswordMatch   = false;
 let isEmailVerified   = false;
+//CSRF 헤더 추가
+$(function(){
+	const token = $('meta[name="_csrf"]').attr('content');
+	const header = $('meta[name="_csrf_header"]').attr('content');
+	
+	$.ajaxSetup({
+		beforeSend: xhr => {
+			xhr.setRequestHeader(header, token);
+		}
+	})
+})
+
+
+//로그인
+$('#login').on('click', e => {
+  e.preventDefault();
+  const username = $('input[name="username"]').val();
+  const password = $('input[name="password"]').val();
+
+  $.post('/user/login', { username, password })
+    .done(() => {
+      $('#slideMenu').removeClass('open');
+      $('#slideMenu .login-form').hide();
+      $('#welcomeName').text(username);
+      $('#slideMenu .welcome').show();
+    })
+    .fail(xhr => {
+      $('#loginError').text(
+        xhr.status === 401
+          ? 'IDやパスワードが間違っています'
+          : 'エラー発生'
+      );
+    });
+});
+
+
 
 //ID 중복 체크
 document.addEventListener('DOMContentLoaded', () => {

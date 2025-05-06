@@ -10,6 +10,13 @@ $(function(){
 	})
 })
 
+//로그인 요청 시 우측 사이드바 오픈
+$(function(){
+	const params = new URLSearchParams(window.location.search);
+	if(params.has('openLogin')){
+		$('#slideMenu').addClass('open');
+	}
+})
 
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -32,7 +39,6 @@ $(function(){
 
 
 $(function () {
-<<<<<<< HEAD
     $(".gnb > .nav_1depth > li").hover(
       function () {
         $(this).addClass("active");
@@ -53,35 +59,10 @@ $('#hamburgerBtn').on('click', function(e) {
 $(document).on('click', function(e) {
   if (!$(e.target).closest('#hamburgerBtn, #slideMenu').length) {
     $('#slideMenu').removeClass('open');
-=======
-  $(".gnb > .nav_1depth > li").hover(
-    function () {
-      $(this).addClass("active");
-      $(this).children(".nav_2depth").stop(true, true).slideDown("fast");
-    },
-    function () {
-      $(this).removeClass("active");
-      $(this).children(".nav_2depth").stop(true, true).slideUp("fast");
-    }
-  );
-});
 
-//햄버거 메뉴 슬라이드
-$("#hamburgerBtn").hover(
-  function () {
-    $("#slideMenu").addClass("open");
-  },
-  function () {
-    setTimeout(() => {
-      if (!$("#slideMenu").is(":hover")) {
-        $("#slideMenu").removeClass("open");
-      }
-    }, 300);
->>>>>>> branch 'devBranch' of https://github.com/JSL21-A/rubberBand.git
   }
 });
 
-<<<<<<< HEAD
 $('#slideMenu').on('click', function(e) {
   e.stopPropagation();
 });
@@ -163,8 +144,4 @@ $(function(){
   
 
 });
-=======
-$("#slideMenu").mouseleave(function () {
-  $(this).removeClass("open");
-});
->>>>>>> branch 'devBranch' of https://github.com/JSL21-A/rubberBand.git
+
