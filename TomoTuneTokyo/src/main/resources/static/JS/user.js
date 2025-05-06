@@ -16,28 +16,28 @@ $(function(){
 
 
 //로그인
-$('#login').on('click', async (e) => {
-	e.preventDefault();
-	const username = $('input[name="username"]').val()
-	const password = $('input[name="password"]').val()
-	
-	$.post('/user/login', {username, password})
-	.done(() => {
-		$('#loginForm').hide();
-		$('#welcomeNickname').show();
-		alert('로그인 성공!(테스트용) 사용자 : ' + username)
-	})
-	.fail((xhr) => {
-		if (xhr.status === 401) {
-			alert('로그인 실패(테스트용) (아이디비번오류)')
-			$('#loginError').text('IDやパスワードが間違っています')
-		}else{
-			alert('로그인 실패(테스트용) 기타오류')
-			$('#loginError').text('エラー発生')
-		}
-	})
-	
+$('#login').on('click', e => {
+  e.preventDefault();
+  const username = $('input[name="username"]').val();
+  const password = $('input[name="password"]').val();
+
+  $.post('/user/login', { username, password })
+    .done(() => {
+      $('#slideMenu').removeClass('open');
+      $('#slideMenu .login-form').hide();
+      $('#welcomeName').text(username);
+      $('#slideMenu .welcome').show();
+    })
+    .fail(xhr => {
+      $('#loginError').text(
+        xhr.status === 401
+          ? 'IDやパスワードが間違っています'
+          : 'エラー発生'
+      );
+    });
 });
+
+
 
 //ID 중복 체크
 document.addEventListener('DOMContentLoaded', () => {

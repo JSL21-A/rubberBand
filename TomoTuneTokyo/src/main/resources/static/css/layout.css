@@ -362,6 +362,19 @@ body {
   text-decoration: underline;
 }
 
+.welcome .btn-link {
+  color: #fff;
+  text-decoration: none;
+}
+
+.welcome .btn-link:hover {
+  text-decoration: underline;
+}
+
+.welcome .btn-link:hover {
+  text-decoration: underline;
+}
+
 /* register-form 전체 레이아웃: login-form 과 동일 */
 .register-form {
   display: flex;

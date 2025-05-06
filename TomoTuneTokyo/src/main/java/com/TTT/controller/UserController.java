@@ -1,7 +1,10 @@
 package com.TTT.controller;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.thymeleaf.TemplateSpec;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.templatemode.TemplateMode;
 
 import com.TTT.domain.UserDto;
 import com.TTT.service.MailService;
@@ -25,6 +32,8 @@ public class UserController {
 	UserService userService;
 	@Autowired
 	MailService mailService;
+	@Autowired
+	SpringTemplateEngine templateEngine;
 	
 	//ID(username) 중복 체크
 	@GetMapping("/check-username")
@@ -72,6 +81,11 @@ public class UserController {
 		userService.userInsert(userDto);
 		return ResponseEntity.ok().build();
 	}
+	
+	
+	
+	
+
 	
 	
 	
