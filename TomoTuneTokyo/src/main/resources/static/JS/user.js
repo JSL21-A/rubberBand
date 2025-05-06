@@ -2,6 +2,42 @@ let isUsernameValid   = false;
 let isNicknameValid   = false;
 let isPasswordMatch   = false;
 let isEmailVerified   = false;
+//CSRF 헤더 추가
+$(function(){
+	const token = $('meta[name="_csrf"]').attr('content');
+	const header = $('meta[name="_csrf_header"]').attr('content');
+	
+	$.ajaxSetup({
+		beforeSend: xhr => {
+			xhr.setRequestHeader(header, token);
+		}
+	})
+})
+
+
+//로그인
+$('#login').on('click', async (e) => {
+	e.preventDefault();
+	const username = $('input[name="username"]').val()
+	const password = $('input[name="password"]').val()
+	
+	$.post('/user/login', {username, password})
+	.done(() => {
+		$('#loginForm').hide();
+		$('#welcomeNickname').show();
+		alert('로그인 성공!(테스트용) 사용자 : ' + username)
+	})
+	.fail((xhr) => {
+		if (xhr.status === 401) {
+			alert('로그인 실패(테스트용) (아이디비번오류)')
+			$('#loginError').text('IDやパスワードが間違っています')
+		}else{
+			alert('로그인 실패(테스트용) 기타오류')
+			$('#loginError').text('エラー発生')
+		}
+	})
+	
+});
 
 //ID 중복 체크
 document.addEventListener('DOMContentLoaded', () => {

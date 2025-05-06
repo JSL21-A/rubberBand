@@ -25,4 +25,8 @@ public interface UserMapper {
 	//user_profile에 회원가입 정보 insert
 	@Insert("insert into user_profile (user_id, nickname) values (#{user_id}, #{nickname})")
 	void insertUserProfile(UserDto userDto);
+	
+	//userLogin
+	@Select("select user_id, username, password, role from users where username = #{username}")
+	UserDto findByUsername(@Param("username") String username);
 }

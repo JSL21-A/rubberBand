@@ -35,7 +35,6 @@ dependencies {
 	implementation 'com.mysql:mysql-connector-j'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
-    implementation 'org.springframework.security:spring-security-crypto'
 	annotationProcessor 'org.projectlombok:lombok'
 	
 	
