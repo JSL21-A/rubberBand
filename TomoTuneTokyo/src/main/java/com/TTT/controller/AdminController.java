@@ -24,7 +24,16 @@ public class AdminController {
         if ("true".equals(request.getHeader("HX-Request"))) {
             page = (page == null) ? "1" : "3";
             System.out.println(page);
-            return "admin/forLiveServer";
+            return "admin/memberList";
+        } else {
+            return "redirect:/admin/main";
+        }
+    }
+
+    @GetMapping("/notice")
+    public String noticeList(HttpServletRequest request) {
+        if ("true".equals(request.getHeader("HX-Request"))) {
+            return "admin/noticeList";
         } else {
             return "redirect:/admin/main";
         }
