@@ -17,54 +17,50 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class SecurityConfig {
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        // return new BCryptPasswordEncoder();
-    	 DelegatingPasswordEncoder delegating =
-    	            (DelegatingPasswordEncoder) PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    	delegating.setDefaultPasswordEncoderForMatches(
-    			new BCryptPasswordEncoder()
-    			);
-        return delegating;
-    }
+  @Bean
+  PasswordEncoder passwordEncoder() {
+    // return new BCryptPasswordEncoder();
+    DelegatingPasswordEncoder delegating = (DelegatingPasswordEncoder) PasswordEncoderFactories
+        .createDelegatingPasswordEncoder();
+    delegating.setDefaultPasswordEncoderForMatches(
+        new BCryptPasswordEncoder());
+    return delegating;
+  }
 
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-          .csrf(csrf -> csrf
-            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-          )
-          .authorizeHttpRequests(auth -> auth
+  @Bean
+  SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(csrf -> csrf
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+        .authorizeHttpRequests(auth -> auth
             // 여기에 인증 없이 접근 가능한 URL들만 나열
             .requestMatchers(
-              "/", 
-              "/css/**", "/JS/**", "/images/**",
-              "/user/check-username",
-              "/user/check-nickname",
-              "/user/send-email-code",
-              "/user/verify-email-code",
-              "/user/register"
-            ).permitAll()
-            .anyRequest().authenticated()
-          )
-          .formLogin(login -> login
+                "/",
+                "/css/**", "/JS/**", "/images/**",
+                "/user/check-username",
+                "/user/check-nickname",
+                "/user/send-email-code",
+                "/user/verify-email-code",
+                "/user/register",
+                "/admin/**")
+            .permitAll()
+            .anyRequest().authenticated())
+        .formLogin(login -> login
             // 1) 로그인 폼을 렌더링할 GET URL
-            .loginPage("/?openLogin")               
+            .loginPage("/?openLogin")
             // 2) 실제 인증 로직을 처리할 POST URL
             .loginProcessingUrl("/user/login")
             .successHandler((req, res, auth) -> {
-            	res.setStatus(HttpServletResponse.SC_OK);
+              res.setStatus(HttpServletResponse.SC_OK);
             })
             .failureHandler((req, res, ex) -> {
-            	res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+              res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             })
-            .permitAll()
-          )
-          .logout(logout -> logout
-            .logoutRequestMatcher(new AntPathRequestMatcher("/logout","GET"))
+            .permitAll())
+        .logout(logout -> logout
+            .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
             .logoutSuccessUrl("/")
-            .permitAll()
-          );
-        return http.build();
-    }
+            .permitAll());
+    return http.build();
+  }
 }
