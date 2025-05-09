@@ -33,6 +33,8 @@ public class SecurityConfig {
         .csrf(csrf -> csrf
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
         .authorizeHttpRequests(auth -> auth
+            // 어드민 페이지를 위한 권한설정.
+            .requestMatchers("/admin/**").hasRole("A")
             // 여기에 인증 없이 접근 가능한 URL들만 나열
             .requestMatchers(
                 "/",
@@ -41,8 +43,7 @@ public class SecurityConfig {
                 "/user/check-nickname",
                 "/user/send-email-code",
                 "/user/verify-email-code",
-                "/user/register",
-                "/admin/**")
+                "/user/register")
             .permitAll()
             .anyRequest().authenticated())
         .formLogin(login -> login
