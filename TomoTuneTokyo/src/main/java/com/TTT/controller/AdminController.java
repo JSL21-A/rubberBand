@@ -24,7 +24,7 @@ public class AdminController {
         return "admin/adminIndex";
     }
 
-    @GetMapping("/list")
+    @GetMapping("/users")
     public String userList(HttpServletRequest request, @RequestParam(name = "page", required = false) String page) {
         if ("true".equals(request.getHeader("HX-Request"))) {
             page = (page == null) ? "1" : page;
@@ -47,6 +47,15 @@ public class AdminController {
     public String QnAList(HttpServletRequest request) {
         if ("true".equals(request.getHeader("HX-Request"))) {
             return "admin/QnA";
+        } else {
+            return "redirect:/admin/main";
+        }
+    }
+
+    @GetMapping("/reports")
+    public String reportList(HttpServletRequest request) {
+        if ("true".equals(request.getHeader("HX-Request"))) {
+            return "admin/report";
         } else {
             return "redirect:/admin/main";
         }

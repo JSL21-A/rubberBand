@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <style>
-    #notice {
+    #report {
         margin: 0;
         padding: 0;
     }
@@ -59,9 +59,9 @@
 </style>
 
 <body>
-    <h1 id="banner-font" hx-swap-oob="true">お知らせ</h1>
+    <h1 id="banner-font" hx-swap-oob="true">通報管理</h1>
     <div id="content">
-        <div id="notice">
+        <div id="report">
             <div id="top">
 
             </div>
@@ -69,15 +69,16 @@
                 <div class="noti_list">
                     <ul>
                         <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">TITLE</div>
-                            </a>
+                            <div class="noti_title">タイトル</div>
+                            <div>カテゴリー</div>
+                            <div>ユーザー名</div>
                             <div class="noti_date">DATE</div>
                         </li>
                         <li class="noti_post">
                             <a hx-get="/admin/test">
                                 <div class="noti_title">testThings1</div>
                             </a>
+                            <div></div>
                             <div class="noti_date">2025.04.30</div>
                         </li>
                         <li class="noti_post">
