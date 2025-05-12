@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calendar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Noto+Sans+JP&family=Rock+Salt&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-papJYyYkW+ZVgogE6eCtwlvOAJGyq7J/8Hdz7mI7YIk68DfPEbLpybYXPOx3n+BrDzrjZJd4+Ij5v0lL7ffR8A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/css/calender.css">
+</head>
+<body>
+  <section class="calendar-section">
+    <div class="calendar">
+      <div class="calendar-header">
+        <span class="month">April 2025</span>
+        <div class="nav">
+          <button class="prev">◀︎</button>
+          <button class="next">▶︎</button>
+        </div>
+      </div>
+      
+      <div class="calendar-grid">
+        <div class="day-name">Sun</div>
+        <div class="day-name">Mon</div>
+        <div class="day-name">Tue</div>
+        <div class="day-name">Wed</div>
+        <div class="day-name">Thu</div>
+        <div class="day-name">Fri</div>
+        <div class="day-name">Sat</div>
+      </div>
+    </div>
+  </section>
+
+  <div id="event-popup">
+    <h3>🎫 Event Details</h3>
+    <p id="event-info">This is where event info will appear.</p>
+    <button onclick="closePopup()">Close</button>
+  </div>
+
+  <script src="/JS/calender.js"></script>
+</body>
+</html>

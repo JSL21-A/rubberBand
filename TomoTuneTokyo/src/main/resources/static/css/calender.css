@@ -1,0 +1,124 @@
+body {
+      font-family: 'Comic Neue', 'Noto Sans JP', sans-serif;
+      background: #fff;
+      background-attachment: fixed;
+      margin: 0;
+      padding: 40px;
+      transform: none;
+      background-image: url('https://www.transparenttextures.com/patterns/blueprint.png');
+      background-size: 200px;
+      background-blend-mode: multiply;
+      background-repeat: repeat;
+      filter: contrast(1.1);
+    }
+    .calendar {
+      border: 4px double #000;
+      border-radius: 14px;
+      padding: 20px;
+      background: white;
+      background-size: 80px;
+      box-shadow: 7px 7px 0 rgba(0,0,0,0.3);
+      max-width: 90vw;
+      margin: 0 auto;
+      transform: rotate(-1deg);
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      font-size: 22px;
+      margin-bottom: 16px;
+      font-family: 'Rock Salt', cursive;
+      transform: rotate(1deg);
+    }
+    .calendar-icons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 12px 0;
+      font-size: 20px;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      font-size: min(3vw, 16px);
+      transform: rotate(0.3deg);
+    }
+    .day-name {
+      text-align: center;
+      font-weight: bold;
+      color: #444;
+      font-style: italic;
+      text-shadow: 1px 1px #ccc;
+    }
+    .day {
+      background: repeating-linear-gradient(45deg, #fff, #fff 10px, #f9f9f9 10px, #f9f9f9 20px);
+      border: 2px solid #111;
+      border-radius: 6px;
+      height: min(12vw, 80px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      transition: 0.2s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+      
+    .day.today {
+      background: #cce5ff;
+      border-color: #004085;
+      font-weight: bold;
+    }
+    .day.today::before {
+      content: 'Today';
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      font-size: 10px;
+      color: #004085;
+    }
+    .day .event-tag {
+      font-size: 10px;
+      margin-top: 2px;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-weight: bold;
+      white-space: nowrap;
+      font-family: 'Comic Neue', cursive;
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+    }
+    .tag-rehearsal { background: #fdd835; color: #111; }
+    .tag-live-gig { background: #ef5350; color: white; }
+    .tag-recording { background: #42a5f5; color: white; }
+    .tag-meeting { background: #ab47bc; color: white; }
+    .event-tag.more {
+      background: #555;
+      color: #fff;
+    }
+    #event-popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border: 3px solid #111;
+      padding: 20px;
+      box-shadow: 5px 5px 0 #000;
+      font-family: 'Comic Neue', 'Noto Sans JP', sans-serif;
+      z-index: 999;
+      border-radius: 10px;
+    }
+    #event-popup button {
+      margin-top: 10px;
+      border: 2px solid #111;
+      background: white;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+}
