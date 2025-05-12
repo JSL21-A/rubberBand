@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+
+<html lang="ja" xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/layout}">
+
+<head>
+  <title>バンドリスト</title>
+  <link rel="stylesheet" href="/css/board-style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <div layout:fragment="content" class="board-container">
+    <div class="recruit-post-btn-wrap">
+      <button type="button" class="recruit-post-btn" data-toggle="modal" data-target="#applyModal">バンド結成登録</button>
+    </div>
+    <h2 class="board-title">バンドリスト</h2>
+
+<!-- 🔍 검색창 -->
+<div class="search-bar">
+  <input type="text" class="search-input" placeholder="チーム名 or ポジション検索">
+  <button class="search-btn">検索</button>
+</div>
+
+<!-- 해시태그 선택 영역 -->
+<div class="selected-tags-title"># 自分の好みであるキーワード検索</div>
+<div class="selected-tags"></div>
+<div class="keyword-box">
+  <div class="keyword-row">
+    <div class="keyword-category">ジャンル</div>
+    <div class="keyword-tags">
+      <span class="tag">ロック</span>
+      <span class="tag">ポップ</span>
+      <span class="tag">ジャズ</span>
+      <span class="tag">ヒップホップ</span>
+      <span class="tag">クラシック</span>
+      <span class="tag">EDM</span>
+      <span class="tag">その他</span>
+    </div>
+  </div>
+  <div class="keyword-row">
+    <div class="keyword-category">ポジション</div>
+    <div class="keyword-tags">
+      <span class="tag">Vo（ボーカル）</span>
+      <span class="tag">Gt（ギター）</span>
+      <span class="tag">Ba（ベース）</span>
+      <span class="tag">Dr（ドラム）</span>
+      <span class="tag">Kb（キーボード）</span>
+      <span class="tag">その他</span>
+    </div>
+  </div>
+  <div class="keyword-row">
+    <div class="keyword-category">性別</div>
+    <div class="keyword-tags">
+      <span class="tag">男性バンド</span>
+      <span class="tag">女性バンド</span>
+      <span class="tag">混成バンド</span>
+    </div>
+  </div>
+  <div class="keyword-row">
+    <div class="keyword-category">年齢代</div>
+    <div class="keyword-tags">
+      <span class="tag">10代</span>
+      <span class="tag">20代</span>
+      <span class="tag">30代</span>
+      <span class="tag">40代</span>
+      <span class="tag">50代以上</span>
+    </div>
+  </div>
+</div>
+
+<!-- 카드 목록 -->
+<div class="board-card-grid">
+  <div class="board-card">
+    <a th:href="@{/port/modify}">
+      <img src="/images/ChatGPT1.png" alt="썸네일" class="card-image">
+    </a>
+    <div class="card-info">
+      <h3 class="card-title">Tomo Groove</h3>
+      <p class="card-summary">도쿄와 홍대를 오가는 감성 시티팝 밴드입니다 🎷</p>
+      <p class="card-meta">가무 | 2025.04.21 | ヒット数 15</p>
+    </div>
+  </div>
+
+  <div class="board-card">
+    <img src="/images/ChatGPT2.png" alt="썸네일" class="card-image">
+    <div class="card-info">
+      <h3 class="card-title">Blue Morning</h3>
+      <p class="card-summary">자유를 추구하는 우리는 멋진 밴드!</p>
+      <p class="card-meta">유나 | 2025.04.20 | ヒット数 7</p>
+    </div>
+  </div>
+
+  <div class="board-card">
+    <img src="/images/ChatGPT3.png" alt="썸네일" class="card-image">
+    <div class="card-info">
+      <h3 class="card-title">VoとKey急募</h3>
+      <p class="card-summary">연습실 완비, 월 2회 연습, 공연 경험 多 밴드~</p>
+      <p class="card-meta">타케시 | 2025.04.18 | ヒット数 10</p>
+    </div>
+  </div>
+
+  <div class="board-card">
+    <img src="/images/ChatGPT4.png" alt="썸네일" class="card-image">
+    <div class="card-info">
+      <h3 class="card-title">LET ME KNOW</h3>
+      <p class="card-summary">합주 위주로 투어를 도는 우리야 밴드!</p>
+      <p class="card-meta">하나미 | 2025.04.17 | ヒット数 6</p>
+    </div>
+  </div>
+
+  <div class="board-card">
+    <img src="/images/ChatGPT1.png" alt="썸네일" class="card-image">
+    <div class="card-info">
+      <h3 class="card-title">King Gnu Cover</h3>
+      <p class="card-summary">R&B/소울 스타일의 커버를 중점으로 하는 밴드입니다.</p>
+      <p class="card-meta">토모 | 2025.04.15 | ヒット数 12</p>
+    </div>
+  </div>
+  <div class="board-card">
+    <img src="/images/ChatGPT2.png" alt="썸네일" class="card-image">
+    <div class="card-info">
+      <h3 class="card-title">RADWIMPS 커버밴드</h3>
+      <p class="card-summary">자작곡 녹음 예정인 인디 밴드입니다!</p>
+      <p class="card-meta">Indigo | 2025.04.13 | ヒット数 9</p>
+    </div>
+  </div>
+  
+  <!-- ✅ 밴드 결성 등록 모달 -->
+<div class="modal fade" id="applyModal" tabindex="-1" role="dialog" aria-labelledby="applyModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="applyModalLabel">バンド結成登録フォーム</h4>
+      </div>
+      <div class="modal-body">
+		<form id="applyForm" method="post" action="/bandinsert/bandsinsert" enctype="multipart/form-data">
+			<div id="page1">
+			  <div class="form-group">
+			    <label for="bandName">バンド名</label>
+			    <input type="text" class="form-control" id="bandName" name="band_name" placeholder="例: Tomato Groove">
+			  </div>
+
+		  <div class="form-group">
+		    <label for="formationDate">結成日</label>
+		    <input type="date" class="form-control" id="formationDate" name="formation_date">
+		  </div>
+
+		  <div class="form-group">
+		    <label for="bandIntro">紹介文</label>
+		    <textarea class="form-control" id="bandIntro" name="band_intro" rows="3" placeholder="バンド紹介を入力してください"></textarea>
+		  </div>
+
+		  <div class="form-group">
+		    <label>ジャンル・ポジション・性別・年齢代</label>
+		    <div class="keyword-box">
+		      <div class="keyword-row">
+		        <div class="keyword-category">ジャンル</div>
+		        <div class="keyword-tags" id="genre-tags">
+		          <span class="tag">ロック</span>
+		          <span class="tag">ポップ</span>
+		          <span class="tag">ジャズ</span>
+		          <span class="tag">ヒップホップ</span>
+		          <span class="tag">クラシック</span>
+		          <span class="tag">EDM</span>
+		          <span class="tag">その他</span>
+		        </div>
+		      </div>
+		      <div class="keyword-row">
+		        <div class="keyword-category">ポジション</div>
+		        <div class="keyword-tags" id="position-tags">
+		          <span class="tag">Vo（ボーカル）</span>
+		          <span class="tag">Gt（ギター）</span>
+		          <span class="tag">Ba（ベース）</span>
+		          <span class="tag">Dr（ドラム）</span>
+		          <span class="tag">Kb（キーボード）</span>
+		          <span class="tag">その他</span>
+		        </div>
+		      </div>
+		      <div class="keyword-row">
+		        <div class="keyword-category">性別</div>
+		        <div class="keyword-tags" id="gender-tags">
+		          <span class="tag">男性バンド</span>
+		          <span class="tag">女性バンド</span>
+		          <span class="tag">混成バンド</span>
+		        </div>
+		      </div>
+		      <div class="keyword-row">
+		        <div class="keyword-category">年齢代</div>
+		        <div class="keyword-tags" id="age-tags">
+		          <span class="tag">10代</span>
+		          <span class="tag">20代</span>
+		          <span class="tag">30代</span>
+		          <span class="tag">40代</span>
+		          <span class="tag">50代以上</span>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+
+		  <div class="form-group">
+		    <label for="region">活動地域</label>
+		    <input type="text" class="form-control" id="region" name="region" placeholder="例: ソウル弘大、東京渋谷">
+		  </div>
+
+		  <div class="form-group">
+		    <label for="bandEmail">メールアドレス</label>
+		    <input type="email" class="form-control" id="bandEmail" name="bandEmail" placeholder="例: band@example.com" required>
+		  </div>
+
+		  <input type="hidden" name="selectedGenres" id="selectedGenres">
+		  <input type="hidden" name="selectedPositions" id="selectedPositions">
+		  <input type="hidden" name="selectedGenders" id="selectedGenders">
+		  <input type="hidden" name="selectedAges" id="selectedAges">
+
+		  <div class="text-center">
+		    <button type="button" class="btn btn-primary" id="nextPage">次へ</button>
+		  </div>
+		</div>
+
+		<!-- 2페이지 -->
+		<div id="page2" style="display:none;">
+		  <div class="form-group">
+		    <label for="leaderComment">リーダーのコメント</label>
+		    <textarea class="form-control" id="leaderComment" name="leader_comment" rows="2" placeholder="リーダーからのメッセージ"></textarea>
+		  </div>
+
+		  <div class="form-group">
+		    <label for="bandProfileImage">バンドプロフィール画像</label>
+		    <input type="file" class="form-control" id="bandProfileImage" name="bandProfileImage" accept="image/*">
+		  </div>
+
+		  <div class="form-group">
+		    <label for="bandCoverImage">バンドカバー画像</label>
+			<input type="file" class="form-control" id="bandCoverImage" name="bandCoverImage" accept="image/*">
+		  </div>
+
+		  <div class="form-group">
+		    <label for="youtubeLink">YouTubeリンク</label>
+		    <input type="url" class="form-control" id="youtubeLink" name="youtube_link" placeholder="https://www.youtube.com/@channel">
+		  </div>
+
+		  <div class="form-group">
+		    <label for="instagramLink">Instagramリンク</label>
+		    <input type="url" class="form-control" id="instagramLink" name="instagram_link" placeholder="https://www.instagram.com/yourband">
+		  </div>
+
+		  <div class="member-input-group leader-member">
+		    <label>リーダー</label>
+		    <button type="button" class="btn btn-sm btn-outline-primary mb-2 search-leader-btn" style = "margin-bottom: 15px;">🔍 リーダー検索</button>
+
+		    <div class="selected-leader-info mb-2"></div>
+
+		    <input type="text" name="stage_name" class="form-control mb-2" placeholder="例: リーダー名">
+		    <input type="hidden" name="photo">
+
+		    <input type="text" name="member_position" class="form-control mb-2" placeholder="ポジション: リーダー, プロデューサー">
+		    <input type="text" name="member_mbti" class="form-control mb-2" placeholder="MBTI: INTJ">
+		    <input type="text" name="favorite_band" class="form-control mb-2" placeholder="好きなバンド: DAY6">
+		    <input type="text" name="member_motto" class="form-control" placeholder="一言: 音楽は真実です">
+		  </div>
+
+		  <div class="text-center">
+		    <button type="button" class="btn btn-default" id="prevPage">以前へ</button>
+		    <button type="button" class="btn btn-primary" id="toPage3">次へ</button>
+		  </div>
+		</div>
+		<!-- 3페이지 -->
+		<div id="page3" style="display:none;">
+			<div id="general-members">
+			  <div class="member-input-group general-member">
+			    <label>メンバー1</label>
+			    <button type="button" class="btn btn-sm btn-outline-primary mb-2 search-member-btn" data-index="0" style="margin-bottom: 10px; font-size: 15px;">
+			      🔍 メンバー検索
+			    </button>
+			    <div class="selected-member-info mb-2" data-index="0"></div>
+			    <input type="text" name="stage_name[]" class="form-control mb-2" placeholder="例: メンバー名">
+			    <input type="text" name="member_position[]" class="form-control mb-2" placeholder="ポジション: ボーカル">
+			    <input type="text" name="member_mbti[]" class="form-control mb-2" placeholder="MBTI: ENFP">
+			    <input type="text" name="favorite_band[]" class="form-control mb-2" placeholder="好きなバンド: Aimer">
+			    <input type="text" name="member_motto[]" class="form-control" placeholder="一言: 歌で伝えたい">
+			  </div>
+
+			  <div class="member-input-group general-member">
+			    <label>メンバー2</label>
+			    <button type="button" class="btn btn-sm btn-outline-primary mb-2 search-member-btn" data-index="1" style="margin-bottom: 10px; font-size: 15px;">
+			      🔍 メンバー検索
+			    </button>
+			    <div class="selected-member-info mb-2" data-index="1"></div>
+			    <input type="text" name="stage_name[]" class="form-control mb-2" placeholder="例: メンバー名">
+			    <input type="text" name="member_position[]" class="form-control mb-2" placeholder="ポジション: ボーカル">
+			    <input type="text" name="member_mbti[]" class="form-control mb-2" placeholder="MBTI: ENFP">
+			    <input type="text" name="favorite_band[]" class="form-control mb-2" placeholder="好きなバンド: Aimer">
+			    <input type="text" name="member_motto[]" class="form-control" placeholder="一言: 歌で伝えたい">
+			  </div>
+			</div>
+
+		  <!-- 추가 멤버 버튼 -->
+		  <div>
+		    <button type="button" id="addGeneralMemberBtn" class="btn btn-secondary mt-3">＋ メンバー追加</button>
+		    <small class="text-muted d-block mt-2">※ メンバーは何人でも追加できます。</small>
+		  </div>
+
+		  <!-- 페이지 이동/제출 버튼 -->
+		  <div class="text-center mt-4" style="padding-top: 80px;">
+		    <button type="button" class="btn btn-default" id="toPage2">以前へ</button>
+		    <button type="submit" class="btn btn-primary" id="submitApply">登録する</button>
+		  </div>
+		</div>
+    </form>
+  </div>
+</div>
+  </div>
+</div>
+</div>
+    <!-- 페이징 -->
+    <div class="board-pagination">
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">&raquo;</button>
+    </div>
+
+<!-- 🔍 멤버 검색 팝업 -->
+<div id="memberSearchPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="memberSearchLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="padding: 30px;">
+      <div class="modal-header">
+        <h4 class="modal-title" id="memberSearchLabel">メンバー検索</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute; top: 10px; right: 16px; font-size: 24px;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="memberSearchInput" class="form-control mb-3" placeholder="名前で検索">
+		<ul id="memberSearchResult" class="list-group">
+		  <li class="list-group-item member-result-item"
+		      th:each="user : ${memberList}"
+		      th:data-name="${user.stage_name}"
+		      th:data-image="@{'/upload/' + ${user.photo}}">
+
+		    <img th:src="@{'/upload/' + ${user.photo}}"
+		         th:alt="${user.stage_name}"
+		         style="width: 30px; height: 30px; border-radius: 50%; margin-right: 8px;">
+
+		    <span th:text="${user.stage_name}">ステージ名</span>
+		  </li>
+		</ul>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // ✅ 탭 전환 (선택사항)
+  $('.list-sort-tabs .list').click(function () {
+    $('.list-sort-tabs .list').removeClass('active');
+    $(this).addClass('active');
+  });
+
+  // ✅ 모달 열기 버튼
+  $('#openApplyModal').on('click', function () {
+    $('#applyModal').modal('show');
+  });
+
+  // ✅ 페이지 전환
+  const page1 = document.getElementById("page1");
+  const page2 = document.getElementById("page2");
+  const page3 = document.getElementById("page3");
+
+  const nextPageBtn = document.getElementById("nextPage");
+  const prevPageBtn = document.getElementById("prevPage");
+  const toPage3Btn = document.getElementById("toPage3");
+  const toPage2Btn = document.getElementById("toPage2");
+
+  if (nextPageBtn) {
+    nextPageBtn.addEventListener("click", function () {
+      page1.style.display = "none";
+      page2.style.display = "block";
+      page3.style.display = "none";
+    });
+  }
+
+  if (prevPageBtn) {
+    prevPageBtn.addEventListener("click", function () {
+      page1.style.display = "block";
+      page2.style.display = "none";
+      page3.style.display = "none";
+    });
+  }
+
+  if (toPage3Btn) {
+    toPage3Btn.addEventListener("click", function () {
+      page1.style.display = "none";
+      page2.style.display = "none";
+      page3.style.display = "block";
+    });
+  }
+
+  if (toPage2Btn) {
+    toPage2Btn.addEventListener("click", function () {
+      page1.style.display = "none";
+      page2.style.display = "block";
+      page3.style.display = "none";
+    });
+  }
+
+  // ✅ 일반 멤버 추가
+  const addBtn = document.getElementById("addGeneralMemberBtn");
+  const container = document.getElementById("general-members");
+  let memberCount = 3;
+
+  if (addBtn && container) {
+    addBtn.addEventListener("click", function () {
+      const group = document.createElement("div");
+      group.classList.add("member-input-group", "mt-3");
+      group.innerHTML = `
+        <label>メンバー${memberCount}</label>
+        <input type="file" name="memberImage[]" class="form-control mb-2">
+        <input type="text" name="memberName[]" class="form-control mb-2" placeholder="例: メンバー名">
+        <input type="text" name="memberPosition[]" class="form-control mb-2" placeholder="ポジション: ボーカル">
+        <input type="text" name="memberMbti[]" class="form-control mb-2" placeholder="MBTI: ENFP">
+        <input type="text" name="memberFavoriteBand[]" class="form-control mb-2" placeholder="好きなバンド: Aimer">
+        <input type="text" name="memberMotto[]" class="form-control" placeholder="一言: 歌で伝えたい">
+      `;
+      container.appendChild(group);
+      memberCount++;
+    });
+  }
+
+  // ✅ 태그 색상 토글만 수행 (출력 제거)
+  document.querySelectorAll(".tag").forEach(tag => {
+    tag.addEventListener("click", function () {
+      tag.classList.toggle("active");
+    });
+  });
+
+  // ✅ 폼 제출 시 모달 닫기
+  const form = document.getElementById("applyForm");
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      const getSelectedValues = (selector) => {
+        return Array.from(document.querySelectorAll(`${selector} .tag.active`))
+          .map(tag => tag.textContent.trim())
+          .join(',');
+      };
+
+      document.getElementById("selectedGenres").value = getSelectedValues("#genre-tags");
+      document.getElementById("selectedPositions").value = getSelectedValues("#position-tags");
+      document.getElementById("selectedGenders").value = getSelectedValues("#gender-tags");
+      document.getElementById("selectedAges").value = getSelectedValues("#age-tags");
+
+    });
+  }
+});
+</script>
+
+<script>
+	// ✅ 리더 검색 버튼 클릭 시 팝업 열기
+	$(document).on('click', '.search-leader-btn', function () {
+	  $('#memberSearchPopup').data('targetType', 'leader').modal('show');
+	});
+
+	// ✅ 일반 멤버 검색 버튼 클릭 시 팝업 열기
+	$(document).on('click', '.search-member-btn', function () {
+	  const index = $(this).data('index');
+	  $('#memberSearchPopup').data('targetType', 'general').data('targetIndex', index).modal('show');
+	});
+
+	// ✅ 검색 결과 클릭 시 데이터 반영
+	$(document).on('click', '.member-result-item', function () {
+	  const name = $(this).data('name');
+	  const image = $(this).data('image');
+	  const targetType = $('#memberSearchPopup').data('targetType');
+
+	  // ✅ 리더일 경우
+	  if (targetType === 'leader') {
+	    const leaderContainer = $('.member-input-group.leader-member');
+
+	    // 값 반영
+	    leaderContainer.find('input[name="photo"]').val(image); // hidden
+	    leaderContainer.find('input[name="stage_name"]').val(name);
+
+	    // 이미지 미리보기
+	    leaderContainer.find('.selected-leader-info').html(`
+	      <img src="${image}" class="member-image-preview mb-2"
+	        style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" alt="미리보기">
+	    `);
+
+	    $('#memberSearchPopup').modal('hide');
+	    return;
+	  }
+
+	  // ✅ 일반 멤버일 경우
+	  if (targetType === 'general') {
+	    const index = $('#memberSearchPopup').data('targetIndex');
+	    const container = $(`#general-members .member-input-group.general-member:eq(${index})`);
+
+	    // 이름 입력
+	    container.find('input[name="stage_name[]"]').val(name);
+
+	    // 이미지를 저장할 hidden input이 없다면 여기 추가해줘야 함
+	    let hidden = container.find('input[name="photo[]"]');
+	    if (hidden.length === 0) {
+	      hidden = $('<input type="hidden" name="photo[]">');
+	      container.append(hidden);
+	    }
+	    hidden.val(image);
+
+	    // 이미지 미리보기
+	    const preview = container.find('.member-image-preview');
+	    if (preview.length > 0) {
+	      preview.attr('src', image);
+	    } else {
+	      const imgTag = `<img src="${image}" class="member-image-preview mb-2"
+	        style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" alt="미리보기">`;
+	      container.find('.selected-member-info').after(imgTag);
+	    }
+
+	    $('#memberSearchPopup').modal('hide');
+	  }
+	});
+</script>
+
+<script>
+  // ✅ 멤버 검색창에 입력할 때마다 서버에 Ajax 요청
+  $('#memberSearchInput').on('input', function () {
+    const keyword = $(this).val().trim();
+
+    if (keyword.length === 0) {
+      $('#memberSearchResult').empty();
+      return;
+    }
+
+    $.ajax({
+      url: '/bandinsert/membersearch',
+      method: 'GET',
+      data: { keyword: keyword },
+      success: function (data) {
+        const resultArea = $('#memberSearchResult');
+        resultArea.empty(); // 기존 목록 초기화
+
+        if (data.length === 0) {
+          resultArea.append('<li class="list-group-item">検索結果がありません</li>');
+        } else {
+          data.forEach(function (user) {
+            const item = `
+              <li class="list-group-item member-result-item"
+                  data-name="${user.stage_name}"
+                  data-image="/upload/${user.photo}">
+                <img src="/upload/${user.photo}" alt="${user.stage_name}"
+                     style="width: 30px; height: 30px; border-radius: 50%; margin-right: 8px;">
+                ${user.stage_name}
+              </li>
+            `;
+            resultArea.append(item);
+          });
+        }
+      },
+      error: function () {
+        alert('メンバー検索に失敗しました。');
+      }
+    });
+  });
+</script>
+
+<script>
+	// 팝업 열기 시 리더인지 일반멤버인지 체크
+	let isLeaderSearch = true; // 리더 검색이면 true, 아니면 false
+
+	// 검색 입력 이벤트
+	$('#memberSearchInput').on('input', function () {
+	  const keyword = $(this).val().trim();
+	  if (keyword.length === 0) {
+	    $('#memberSearchResult').empty();
+	    return;
+	  }
+
+	  const url = isLeaderSearch
+	    ? '/bandinsert/membersearch/leader' // 리더는 keyword 필요 없음
+	    : '/bandinsert/membersearch/general?keyword=' + encodeURIComponent(keyword);
+
+	  $.get(url, function (data) {
+	    const resultArea = $('#memberSearchResult').empty();
+
+	    if (!data || data.length === 0) {
+	      resultArea.append('<li class="list-group-item">検索結果がありません</li>');
+	      return;
+	    }
+
+	    const members = Array.isArray(data) ? data : [data]; // 리더는 단일 객체일 수 있음
+
+	    members.forEach(user => {
+	      resultArea.append(`
+	        <li class="list-group-item member-result-item"
+	            data-name="${user.stage_name}"
+	            data-image="/upload/${user.photo}">
+	          <img src="/upload/${user.photo}" alt="${user.stage_name}"
+	               style="width: 30px; height: 30px; border-radius: 50%; margin-right: 8px;">
+	          ${user.stage_name}
+	        </li>
+	      `);
+	    });
+	  });
+	});
+
+</script>
+
+
+
+  </div>
+</body>
+</html>
