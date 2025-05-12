@@ -1,32 +1,85 @@
 <!-- header.html -->
 <div th:fragment="header">
-  <div class="top_navigation">
-    <header class="header">
-      <div class="scrolling-banner">
-          <p>✨ パフォーマンスチームメンバー募集中！🎤 ボーカル、ドラマー、ラッパー 大歓迎！🎧 今すぐ応募してみよう！</p>
-      </div>
+	<div class="top_navigation">
+		<header class="header">
+			<div class="scrolling-banner">
+				<p>✨ パフォーマンスチームメンバー募集中！🎤 ボーカル、ドラマー、ラッパー 大歓迎！🎧 今すぐ応募してみよう！</p>
+			</div>
 
-      <div class="header-container">
-        <div class="header-item left">
-          <a href="/">
-            <img th:src="@{/images/HOME2.png}" class="header-icon" alt="Home Icon">
-          </a>
-        </div>
-        <div class="header-item center">
-          <h1>Tomo Tune Tokyo</h1>
-        </div>
-		<div class="header-item right">
-			<div id="hamburgerBtn" class="hamburger-icon">
-				<img th:src="@{/images/member1.png}" 
-					th:data-hover-src="@{/images/member2.png}"
-					class="header-icon"
-					alt="Hamburger Icon">
-				<div id="slideMenu" th:fragment="slideMenu" class="slide-menu">
-					<button class="close-btn" aria-label="閉じる">&times;</button>
-					<form class="login-form" th:action="@{/user/login}" method="post" sec:authorize="!isAuthenticated()">
-						<h2>ログイン</h2>
-						<div class="form-group">
-							<input type="text" name="username" placeholder="ID" required />
+			<div class="header-container">
+				<div class="header-item left">
+					<a href="/">
+						<img th:src="@{/images/HOME2.png}" class="header-icon" alt="Home Icon">
+					</a>
+				</div>
+				<div class="header-item center">
+					<h1>Tomo Tune Tokyo</h1>
+				</div>
+				<div class="header-item right">
+					<div id="hamburgerBtn" class="hamburger-icon">
+						<img th:src="@{/images/member1.png}" th:data-hover-src="@{/images/member2.png}"
+							class="header-icon" alt="Hamburger Icon">
+						<div id="slideMenu" th:fragment="slideMenu" class="slide-menu">
+							<button class="close-btn" aria-label="閉じる">&times;</button>
+							<form class="login-form" th:action="@{/user/login}" method="post"
+								sec:authorize="!isAuthenticated()">
+								<h2>ログイン</h2>
+								<div class="form-group">
+									<input type="text" name="username" placeholder="ID" required />
+								</div>
+								<div class="form-group">
+									<input type="password" name="password" placeholder="PASSWORD" required />
+								</div>
+								<button id="login" class="btn-login">ログイン</button>
+								<div class="login-actions">
+									<a href="#" class="btn-link register-link">会員登録</a>
+									<a href="/user/forgot" class="btn-link">ID／パスワードをお忘れの方</a>
+								</div>
+							</form>
+							<div class="welcome" style="display:none">
+								<p>ようこそ、<span id="welcomeName"></span>さん！</p>
+								<a href="/logout" class="btn-link">ログアウト</a>
+							</div>
+							<div class="welcome" sec:authorize="isAuthenticated()">
+								<p>ようこそ、<span th:text="${#authentication.name}">ユーザー名</span>さん！
+									<a href="/logout" class="btn-link">ログアウト</a>
+							</div>
+							<form class="register-form" id="registerForm" style="display:none;">
+								<h2>会員登録</h2>
+								<div class="form-group">
+									<input type="text" name="username" id="regUsername" placeholder="ログインID" required
+										minlength="4" maxlength="20" />
+									<div id="usernameMsg" class="validation-msg"></div>
+								</div>
+								<div class="form-group">
+									<input type="password" id="password" name="password" placeholder="パスワード" required />
+								</div>
+								<div class="form-group">
+									<input type="password" id="passwordConfirm" name="passwordConfirm"
+										placeholder="パスワード確認" required />
+									<div id="pwMatchMsg" class="validation-msg"></div>
+								</div>
+								<div class="form-group nickname-group">
+									<input type="text" id="nickname" name="nickname" placeholder="ニックネーム" required
+										minlength="2" maxlength="8" />
+									<div id="nickMsg" class="validation-msg"></div>
+								</div>
+								<div class="form-group email-group">
+									<input type="email" id="email" name="email" placeholder="メールアドレス" required />
+									<button type="button" id="sendEmailCode">認証メール送信</button>
+									<div id="emailMsg" class="validation-msg"></div>
+								</div>
+								<div class="form-group email-group" id="emailCodeGroup" style="display:none;">
+									<input type="text" id="emailCode" placeholder="認証番号を入力" />
+									<button type="button" id="verifyEmailCode">認証する</button>
+									<div id="codeMsg" class="validation-msg"></div>
+								</div>
+								<button type="button" id="registerBtn" class="btn-login">登録する</button>
+								<div id="registerMsg" class="validation-msg"></div>
+								<div class="login-actions">
+									<a href="#" class="btn-link back-to-login">ログインに戻る</a>
+								</div>
+							</form>
 						</div>
 						<div class="form-group">
 							<input type="password" name="password" placeholder="PASSWORD" required />
@@ -45,82 +98,39 @@
 						<p>ようこそ、<span th:text="${#authentication.name}">ユーザー名</span>さん！
 						<a href = "/logout" class="btn-link">ログアウト</a>
 					</div>
-					<form class="register-form" id="registerForm" style="display:none;">
-    					<h2>会員登録</h2>
-    					<div class="form-group">
-      						<input 
-      						type="text" 
-      						name="username" 
-      						id="regUsername" 
-      						placeholder="ログインID" 
-      						required 
-      						minlength="4" 
-      						maxlength="20"
-      						/>
-      						<div id="usernameMsg" class="validation-msg"></div>
-    					</div>
-    					<div class="form-group">
-     						<input type="password" id="password" name="password" placeholder="パスワード" required />
-    					</div>
-    					<div class="form-group">
-      						<input type="password" id="passwordConfirm" name="passwordConfirm" placeholder="パスワード確認" required />
-      						<div id="pwMatchMsg" class="validation-msg"></div>
-    					</div>
-    					<div class="form-group nickname-group">
-      						<input type="text" id="nickname" name="nickname" placeholder="ニックネーム" required minlength="2" maxlength="8" />
-      						<div id="nickMsg" class="validation-msg"></div>
-    					</div>
-    					<div class="form-group email-group">
-      						<input type="email" id="email" name="email" placeholder="メールアドレス" required />
-      						<button type="button" id="sendEmailCode">認証メール送信</button>
-      					<div id="emailMsg" class="validation-msg"></div>
-    					</div>
-    					<div class="form-group email-group" id="emailCodeGroup" style="display:none;">
-      						<input type="text" id="emailCode" placeholder="認証番号を入力" />
-      						<button type="button" id="verifyEmailCode">認証する</button>
-      						<div id="codeMsg" class="validation-msg"></div>
-   						</div>
-    					<button type="button" id="registerBtn" class="btn-login">登録する</button>
-    					<div id="registerMsg" class="validation-msg"></div>
-    					<div class="login-actions">	
-      						<a href="#" class="btn-link back-to-login">ログインに戻る</a>
-    					</div>	
-  					</form>
 				</div>
 			</div>
-		</div>
-	</div>
 
-      <!-- 네비게이션 -->
-      <div class="gnb_group" th:if="${isIndex != true}">
-        <nav class="gnb">
-          <ul class="nav_1depth">
-            <li><a href="gratings.html">기업소개</a>
-              <ul class="nav_2depth">
-                <li><a href="gratings.html">인사말</a></li>
-                <li><a href="history.html">연혁 및</a></li>
-                <li><a href="gratings.html">교직원소개</a></li>
-                <li><a href="../gallery/photo.html">대우갤러리</a></li>
-                <li><a href="map.html">찾아오시는길</a></li>
-              </ul>
-            </li>
-            <li><a th:href="@{/port/list}">포트폴리오</a>
-              <ul class="nav_2depth">
-                <li><a th:href="@{/port/list}">포트폴리오</a></li>
-              </ul>
-            </li>
-            <li><a th:href="@{/notice/list}">커뮤니티</a>
-              <ul class="nav_2depth">
-                <li><a th:href="@{/notice/list}">공지사항</a></li>
-                <li><a href="../qna/qa.html">질문과답변</a></li>
-                <li><a href="../faq/faq.html">FAQ</a></li>
-                <li><a href="../pds/pds.html">자료실</a></li>
-                <li><a href="../adm/admin.html">관리자</a></li>
-              </ul>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
-  </div>
+			<!-- 네비게이션 -->
+			<div class="gnb_group" th:if="${isIndex != true}">
+				<nav class="gnb">
+					<ul class="nav_1depth">
+						<li><a href="gratings.html">기업소개</a>
+							<ul class="nav_2depth">
+								<li><a href="gratings.html">인사말</a></li>
+								<li><a href="history.html">연혁 및</a></li>
+								<li><a href="gratings.html">교직원소개</a></li>
+								<li><a href="../gallery/photo.html">대우갤러리</a></li>
+								<li><a href="map.html">찾아오시는길</a></li>
+							</ul>
+						</li>
+						<li><a th:href="@{/port/list}">포트폴리오</a>
+							<ul class="nav_2depth">
+								<li><a th:href="@{/port/list}">포트폴리오</a></li>
+							</ul>
+						</li>
+						<li><a th:href="@{/notice/list}">커뮤니티</a>
+							<ul class="nav_2depth">
+								<li><a th:href="@{/notice/list}">공지사항</a></li>
+								<li><a href="../qna/qa.html">질문과답변</a></li>
+								<li><a href="../faq/faq.html">FAQ</a></li>
+								<li><a href="../pds/pds.html">자료실</a></li>
+								<li><a href="../adm/admin.html">관리자</a></li>
+							</ul>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</header>
+	</div>
 </div>
