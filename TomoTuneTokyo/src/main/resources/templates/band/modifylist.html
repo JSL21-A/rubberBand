@@ -567,9 +567,47 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 </script>
+<script>
+	// 팝업 열기 시 리더인지 일반멤버인지 체크
+	let isLeaderSearch = true; // 리더 검색이면 true, 아니면 false
 
+	// 검색 입력 이벤트
+	$('#memberSearchInput').on('input', function () {
+	  const keyword = $(this).val().trim();
+	  if (keyword.length === 0) {
+	    $('#memberSearchResult').empty();
+	    return;
+	  }
 
+	  const url = isLeaderSearch
+	    ? '/bandinsert/membersearch/leader' // 리더는 keyword 필요 없음
+	    : '/bandinsert/membersearch/general?keyword=' + encodeURIComponent(keyword);
 
-  </div>
+	  $.get(url, function (data) {
+	    const resultArea = $('#memberSearchResult').empty();
+
+	    if (!data || data.length === 0) {
+	      resultArea.append('<li class="list-group-item">検索結果がありません</li>');
+	      return;
+	    }
+
+	    const members = Array.isArray(data) ? data : [data]; // 리더는 단일 객체일 수 있음
+
+	    members.forEach(user => {
+	      resultArea.append(`
+	        <li class="list-group-item member-result-item"
+	            data-name="${user.stage_name}"
+	            data-image="/upload/${user.photo}">
+	          <img src="/upload/${user.photo}" alt="${user.stage_name}"
+	               style="width: 30px; height: 30px; border-radius: 50%; margin-right: 8px;">
+	          ${user.stage_name}
+	        </li>
+	      `);
+	    });
+	  });
+	});
+
+</script>
+    </div>
 </body>
 </html>
