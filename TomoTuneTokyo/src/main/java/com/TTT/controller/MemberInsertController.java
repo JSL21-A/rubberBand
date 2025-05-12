@@ -6,12 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.TTT.domain.BandInsertVo;
@@ -36,7 +34,8 @@ public class MemberInsertController {
 	public String modifylist(Model model) {
 	    List<BandInsertVo> bandList = bandInsertService.getAllBands();
 	    model.addAttribute("bandList", bandList);
-	    return "/bandlist/modifylist";
+	    return "bandlist/modifylist";
+
 	}
 	
 	// 밴드 결성 입력폼 (저장 기능 포함)
@@ -57,22 +56,22 @@ public class MemberInsertController {
 		    return bandInsertService.searchMembersByStageName(keyword);
 		}
 		
-		// 리더용 (단일 유저 정보)
-		@GetMapping("/membersearch/leader")
-		@ResponseBody
-		public BandInsertVo getLeader(@SessionAttribute("loginUser") String userId) {
-		    return bandInsertService.getLeaderInfo(userId);
-		}
-
-		// 일반 멤버용
-		@GetMapping("/membersearch/general")
-		@ResponseBody
-		public List<BandInsertVo> searchMembers(
-		        @RequestParam("keyword") String keyword,
-		        @SessionAttribute("loginUser") String userId
-		) {
-		    return bandInsertService.searchMembersByStageName(keyword, userId);
-		}
+//		// 리더용 (단일 유저 정보)
+//		@GetMapping("/membersearch/leader")
+//		@ResponseBody
+//		public BandInsertVo getLeader(@SessionAttribute("loginUser") String userId) {
+//		    return bandInsertService.getLeaderInfo(userId);
+//		}
+//
+//		// 일반 멤버용
+//		@GetMapping("/membersearch/general")
+//		@ResponseBody
+//		public List<BandInsertVo> searchMembers(
+//		        @RequestParam("keyword") String keyword,
+//		        @SessionAttribute("loginUser") String userId
+//		) {
+//		    return bandInsertService.searchMembersByStageName(keyword, userId);
+//		}
 
 
 	
