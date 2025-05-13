@@ -43,7 +43,10 @@ public class SecurityConfig {
               "/user/check-nickname",
               "/user/send-email-code",
               "/user/verify-email-code",
-              "/user/register"
+              "/user/register",
+              "/user/reset-password",
+              "/user/check-username-reset",
+              "/user/check-username-email"
             ).permitAll()
             .anyRequest().authenticated()
           )

@@ -36,9 +36,18 @@ public class UserService {
 		
 		userMapper.insertUser(userDto);
 		userMapper.insertUserProfile(userDto);
+		
+	}
+	//비밀번호 초기화
+	public void updatePassword(String username, String rawPassword) {
+		String password = passwordEncoder.encode(rawPassword);
+		
+		userMapper.updatePassword(username, password);
 	}
 	
-	
+	public boolean isUsernameEmailMatch(String username, String email) {
+		return userMapper.checkUsernameEmail(username, email) > 0;
+	}
 	
 	
 }

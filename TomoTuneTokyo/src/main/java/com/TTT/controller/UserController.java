@@ -1,22 +1,16 @@
 package com.TTT.controller;
 
-import java.security.Principal;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.thymeleaf.TemplateSpec;
-import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
-import org.thymeleaf.templatemode.TemplateMode;
 
 import com.TTT.domain.UserDto;
 import com.TTT.service.MailService;
@@ -80,6 +74,31 @@ public class UserController {
 	public ResponseEntity<?> register(UserDto userDto){
 		userService.userInsert(userDto);
 		return ResponseEntity.ok().build();
+	}
+	
+	//비밀번호 초기화
+	@PostMapping("/reset-password")
+	public ResponseEntity<Void> resetPassword(@RequestBody Map<String, String> body){
+		String username = body.get("username");
+		String newPassword = body.get("newPassword");
+		userService.updatePassword(username, newPassword);
+		return ResponseEntity.ok().build();
+	}
+	
+	//ID(username) 존재여부 확인
+	@GetMapping("/check-username-reset")
+	public ResponseEntity<?> checkUsernameExistsReset(@RequestParam("username") String username){
+		return ResponseEntity.ok(userService.usernameExists(username));
+	}
+	
+	//아이디, 이메일 일치여부 확인
+	@GetMapping("/check-username-email")
+	public ResponseEntity<Boolean> checkUsernameEmail(
+			@RequestParam("username") String username,
+			@RequestParam("email") String email
+			){
+		boolean ok = userService.isUsernameEmailMatch(username, email);
+		return ResponseEntity.ok(ok);
 	}
 	
 	

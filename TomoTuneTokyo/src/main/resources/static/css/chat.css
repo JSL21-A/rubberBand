@@ -4,6 +4,13 @@
   bottom: 0;
   right: 0;
   z-index: 1000;
+  pointer-events: none;
+}
+
+.chat-toggle,
+.chat-container,
+.chat-container * {
+	pointer-events: auto;
 }
 
 /* ── 토글 버튼 ── */

@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.TTT.domain.UserDto;
 
@@ -29,4 +30,13 @@ public interface UserMapper {
 	//userLogin
 	@Select("select user_id, username, password, role from users where username = #{username}")
 	UserDto findByUsername(@Param("username") String username);
+	
+	//아이디, 이메일 일치여부 확인
+	@Select("select count(*) from users where username=#{username} and email=#{email}")
+	int checkUsernameEmail(@Param("username") String username, @Param("email") String email);
+	
+	//비밀번호 초기화
+	@Update("update users set password = #{password} where username=#{username}")
+	void updatePassword(@Param("username") String username, @Param("password") String password);
+	
 }
