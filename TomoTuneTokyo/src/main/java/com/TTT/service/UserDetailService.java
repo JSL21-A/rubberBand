@@ -11,18 +11,20 @@ import com.TTT.mapper.UserMapper;
 @Service
 public class UserDetailService implements UserDetailsService {
 	private final UserMapper mapper;
+
 	public UserDetailService(UserMapper mapper) {
 		this.mapper = mapper;
 	}
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
 		UserDto userDto = mapper.findByUsername(username);
-		if(userDto == null) {
+		if (userDto == null) {
 			throw new UsernameNotFoundException(username);
 		}
-		return org.springframework.security.core.userdetails.User.withUsername(userDto.getUsername()).password(userDto.getPassword()).roles(userDto.getRole()).build();
+		return org.springframework.security.core.userdetails.User.withUsername(userDto.getUsername())
+				.password(userDto.getPassword()).roles(userDto.getRole()).build();
 	}
 
 }

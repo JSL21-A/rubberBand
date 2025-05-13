@@ -358,3 +358,4 @@ function renderResetStep(username) {
     }
   });
 }
+
