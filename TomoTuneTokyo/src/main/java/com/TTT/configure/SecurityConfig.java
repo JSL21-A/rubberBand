@@ -37,16 +37,22 @@ public class SecurityConfig {
             .requestMatchers("/admin/**").hasRole("A")
             // 여기에 인증 없이 접근 가능한 URL들만 나열
             .requestMatchers(
-                "/",
-                "/css/**", "/JS/**", "/images/**",
-                "/user/check-username",
-                "/user/check-nickname",
-                "/user/send-email-code",
-                "/user/verify-email-code",
-                "/user/register")
-            .permitAll()
-            .anyRequest().authenticated())
-        .formLogin(login -> login
+
+              "/", 
+              "/css/**", "/JS/**", "/images/**",
+              "/user/check-username",
+              "/user/check-nickname",
+              "/user/send-email-code",
+              "/user/verify-email-code",
+              "/user/register",
+              "/user/reset-password",
+              "/user/check-username-reset",
+              "/user/check-username-email"
+            ).permitAll()
+            .anyRequest().authenticated()
+          )
+          .formLogin(login -> login
+
             // 1) 로그인 폼을 렌더링할 GET URL
             .loginPage("/?openLogin")
             // 2) 실제 인증 로직을 처리할 POST URL
