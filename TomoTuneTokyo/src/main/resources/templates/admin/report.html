@@ -25,6 +25,7 @@
     #middle {
         width: 100%;
         margin: 0 auto;
+        display: flex;
     }
 
     ul {
@@ -37,8 +38,9 @@
     }
 
     .noti_list {
-        border-top: 3px solid black;
         border-radius: 30px;
+        width: 100%;
+        box-shadow: 5px 5px 5px 5px gray;
     }
 
     .noti_post {
@@ -55,6 +57,31 @@
     #bottom {
         display: flex;
         justify-content: space-between;
+        width: 95%;
+        padding: 4% 0;
+    }
+
+    #book {
+        padding-top: 4%;
+    }
+
+    #book .mark {
+        margin-bottom: 20%;
+        background-color: #000;
+        color: #fff;
+        width: 150%;
+        text-align: center;
+        height: 10%;
+        box-shadow: 5px 5px 5px gray;
+        height: 35px;
+        z-index: 1056;
+    }
+
+    #book .mark.active {
+        background-color: #fff;
+        color: #000;
+        box-shadow: 10px 5px 5px gray;
+        z-index: 1056;
     }
 </style>
 
@@ -82,7 +109,7 @@
                             <div class="noti_date">2025.04.30</div>
                         </li>
                         <li class="noti_post">
-                            <a href="#">
+                            <a hx-get="/admin/test">
                                 <div class="noti_title">testThings1</div>
                             </a>
                             <div class="noti_date">2025.04.30</div>
@@ -119,14 +146,24 @@
                         </li>
                     </ul>
                 </div>
+                <div id="book">
+                    <div class="mark active">投稿物</div>
+                    <div class="mark">コメント</div>
+                </div>
+
             </div>
             <div id="bottom">
                 1 2 3 4 5 6
-                <button>作成</button>
             </div>
 
         </div>
     </div>
+    <script>
+        $('.mark').on('click', function () {
+            $('.mark').removeClass("active");
+            $(this).addClass("active");
+        })
+    </script>
 </body>
 
 </html>

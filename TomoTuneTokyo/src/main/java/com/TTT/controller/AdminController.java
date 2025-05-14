@@ -19,6 +19,11 @@ public class AdminController {
     @Autowired
     AdminService adminService;
 
+    @GetMapping("/")
+    public String rediMain() {
+        return "redirect:/admin/main";
+    }
+
     @GetMapping("/main")
     public String adminMain() {
         return "admin/adminIndex";
@@ -34,7 +39,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/notice")
+    @GetMapping("/notify")
     public String noticeList(HttpServletRequest request) {
         if ("true".equals(request.getHeader("HX-Request"))) {
             return "admin/noticeList";
