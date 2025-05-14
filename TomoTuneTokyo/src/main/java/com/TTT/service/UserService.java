@@ -18,6 +18,8 @@ public class UserService {
 	UserMapper userMapper;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	private SendbirdClient sendbirdClient;
 	
 	//ID(username) 중복체크
 	public boolean usernameExists(String username) {
@@ -36,6 +38,12 @@ public class UserService {
 		
 		userMapper.insertUser(userDto);
 		userMapper.insertUserProfile(userDto);
+		
+		try {
+			sendbirdClient.createUser(user_id, userDto.getNickname());
+		}catch(Exception e) {
+			throw new IllegalStateException("Sendbird 유저 생성 실패", e);
+		}
 		
 	}
 	//비밀번호 초기화

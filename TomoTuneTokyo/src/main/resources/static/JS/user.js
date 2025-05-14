@@ -166,18 +166,16 @@ $('#login').on('click', async e => {
           $('#slideMenu').removeClass('open');
         });
       });
-
-      // (필요하다면 여기서 채팅 초기화)
-      // await initChat(username);
-    })
-    .fail(xhr => {
-      $('#loginError').text(
-        xhr.status === 401
-          ? 'IDやパスワードが間違っています'
-          : 'エラー発生'
-      );
-    });
-});
+	   await initChat(username);
+	      })
+	      .fail(xhr => {
+	        $('#loginError').text(
+	          xhr.status === 401
+	            ? 'IDやパスワードが間違っています'
+	            : 'エラー発生'
+	        );
+	      });
+	  });
 
 //비밀번호 초기화
 let fpUsernameGlobal = null;

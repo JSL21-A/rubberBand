@@ -156,6 +156,7 @@
   border: 1px solid #ccc;
   border-radius: 20px;
   outline: none;
+  width:100%;
 }
 .attach-btn,
 .send-btn {
@@ -178,4 +179,32 @@
 @media (max-width: 400px) {
   .chat-container { width: 100vw; height: 70vh; }
   .chat-toggle { bottom: 16px; right: 16px; }
+}
+
+.new-chat {
+  display: flex;
+  padding: 8px 12px;
+  gap: 6px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #f5f5f5;
+}
+#new-chat-user {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9em;
+  width: 100%;
+}
+#new-chat-btn {
+  padding: 6px 12px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .2s;
+}
+#new-chat-btn:hover {
+  background: #005bb5;
 }

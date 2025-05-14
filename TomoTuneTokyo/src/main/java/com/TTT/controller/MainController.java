@@ -12,5 +12,6 @@ public class MainController {
 		model.addAttribute("isIndex", true);
 		return ("index");
 	}
-
+	
+	
 }
