@@ -64,15 +64,27 @@
   // ─────────────────────────────────────────
   // 3) 채널 리스트 로드
   // ─────────────────────────────────────────
-  function loadChannelList(autoOpen = true) {
+  function loadChannelList(autoOpen = true, onLoaded = null) {
     channelsQuery = sb.GroupChannel.createMyGroupChannelListQuery();
     channelsQuery.limit = 20;
     channelsQuery.next((channels, err) => {
       if(err){ console.error('채널 조회 실패', err); return; }
+	  
+	  console.log('▶ fetched channels:', channels.map(c => c.url));   // ← 추가
+	  
       renderChannelList(channels);
-      if(autoOpen && channels.length) {
-			openChannel(channels[0])
-		};
+	  // (1) 먼저 콜백 실행
+	     if (onLoaded){
+			
+			console.log('▶ calling onLoaded callback');                  // ← 추가
+
+		  onLoaded(channels)};
+		 
+
+	     // (2) autoOpen 이 true 면 첫 번째 방 열기
+	     if (autoOpen && channels.length) {
+	       openChannel(channels[0]);
+	     }
     });
   }
 
@@ -81,16 +93,26 @@
   // ─────────────────────────────────────────
   function renderChannelList(channels) {
     const $list = $('.channel-list').empty();
-    channels.forEach(ch => {
-      // 상대방 닉네임 또는 채널명
-      const others = ch.members
-        .filter(m => m.userId !== sb.currentUser.userId)
-        .map(m => m.nickname || m.userId)
-        .join(', ');
-      const name = ch.name || others || '채널';
-      const $item = $(`<div class="channel-item">${name}</div>`);
-      $item.on('click', () => openChannel(ch));
-      $list.append($item);
+	channels.forEach(ch => {
+	    let displayName;
+
+	    // 1:1 distinct 채널일 경우 → 상대방 이름으로 표시
+	    if (ch.isDistinct && ch.memberCount === 2) {
+	      const other = ch.members.find(m => m.userId !== sb.currentUser.userId);
+	      displayName = other.nickname || other.userId;
+	    }
+	    // 그렇지 않으면 (그룹채널 등) 채널명 혹은 멤버 이름 조합
+	    else {
+	      const others = ch.members
+	        .filter(m => m.userId !== sb.currentUser.userId)
+	        .map(m => m.nickname || m.userId)
+	        .join(', ');
+	      displayName = ch.name || others || '채널';
+	    }
+
+	    const $item = $(`<div class="channel-item">${displayName}</div>`);
+	    $item.on('click', () => openChannel(ch));
+	    $list.append($item);
     });
   }
 
@@ -186,32 +208,32 @@
   // ─────────────────────────────────────────
   async function createOneOnOneChannel() {
     const targetId = $('#new-chat-user').val().trim();
-    if (!targetId) {
-      alert('상대방 ID를 입력하세요');
-      return;
-    }
+    if (!targetId) return alert('상대방 ID를 입력하세요');
 
     try {
-      // ① GroupChannelParams 생성
       const params = new sb.GroupChannelParams();
       params.isDistinct = true;
       params.addUserId(sb.currentUser.userId);
       params.addUserId(targetId);
 
-      // ② Promise 래핑해서 await로 처리
+      // 생성
       const channel = await new Promise((resolve, reject) => {
         sb.GroupChannel.createChannel(params, (ch, err) =>
           err ? reject(err) : resolve(ch)
         );
       });
-	  
-	  $('#chat-wrapper').load('/user/chats-fragment', () => {
-		bindChatUIEvents();
-		loadChannelList(false);
-		openChannel(channel)
-	  })
 
-      // ③ 리스트 갱신(자동 오픈 억제) + 새 채널 열기
+      // 1:1 채널이라면 상대 이름 표시
+      const other = channel.members.find(m => m.userId !== sb.currentUser.userId);
+      const displayName = other.nickname || other.userId;
+
+      // 채널 리스트 맨 앞에 “수동으로” 추가
+      const $item = $(`<div class="channel-item">${displayName}</div>`);
+      $item.on('click', () => openChannel(channel));
+      $('.channel-list').prepend($item);
+
+      // 바로 열기
+      openChannel(channel);
       $('#new-chat-user').val('');
     } catch (err) {
       console.error('채널 생성 에러', err);
