@@ -39,8 +39,27 @@
       if(err){ console.error('SendBird connect 실패', err); return; }
       $('#new-chat-btn').prop('disabled', false);
       loadChannelList();
+	  updateTotalBadge();
+	  const handler = new sb.ChannelHandler();
+	  handler.onMessageReceived = updateTotalBadge;
+	  handler.onReadReceiptUpdated = updateTotalBadge;
+	  handler.onChannelChanged = updateTotalBadge;
+	  sb.addChannelHandler('UNREAD_HANDLER', handler);
     });
   };
+  
+  //2-1))읽지 않은 메시지 개수 표시
+  function updateTotalBadge(){
+	sb.getTotalUnreadMessageCount((count, error) => {
+		if (error) return console.error('unread count error', error);
+		const $b = $('#chat-badge');
+		if(count > 0) {
+			$b.text(count).show();
+		}else{
+			$b.hide();
+		}
+	})
+  }
 
   // ─────────────────────────────────────────
   // 3) 채널 리스트 로드
@@ -83,10 +102,13 @@
 
 	$('#message-list').empty();
 	
+	ch.markAsRead();
+	updateTotalBadge();
+	
 	  // 2) PreviousMessageListQuery 생성
 	  const prevQuery = ch.createPreviousMessageListQuery();
 	  prevQuery.limit = 50;             // 한 번에 가져올 메시지 수
-	  prevQuery.reverse = true;         // true 면 최신→과거 순서, false 면 과거→최신 순서
+	  prevQuery.reverse = false;         // true 면 최신→과거 순서, false 면 과거→최신 순서
 	
 	  // 3) load() 호출로 메시지 조회
 	  prevQuery.load((msgs, err) => {

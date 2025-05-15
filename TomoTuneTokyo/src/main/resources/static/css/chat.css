@@ -16,8 +16,8 @@
 /* ── 토글 버튼 ── */
 .chat-toggle {
   position: fixed;
-  bottom: calc(env(safe-area-inset-bottom,20px) + 20px);
-  right: calc(env(safe-area-inset-right,20px) + 20px);
+  bottom: calc(env(safe-area-inset-bottom,20px) - 470px);
+  right: calc(env(safe-area-inset-right,20px) - 250px);
   width: 50px;
   height: 50px;
   border: none;
@@ -208,3 +208,21 @@
 #new-chat-btn:hover {
   background: #005bb5;
 }
+
+/* chat.css 에 추가 */
+.chat-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 18px;
+  height: 18px;
+  line-height: 18px;
+  padding: 0 4px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  border-radius: 9px;
+  text-align: center;
+  pointer-events: none;
+}
+.chat-toggle { position: relative; }
