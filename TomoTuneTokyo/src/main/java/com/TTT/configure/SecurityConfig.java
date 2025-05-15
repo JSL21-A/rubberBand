@@ -1,7 +1,11 @@
 package com.TTT.configure;
 
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -11,14 +15,19 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.TTT.domain.UserDto;
+import com.TTT.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 
 public class SecurityConfig {
+	
 
   @Bean
-  PasswordEncoder passwordEncoder() {
+  public static PasswordEncoder passwordEncoder() {
     // return new BCryptPasswordEncoder();
     DelegatingPasswordEncoder delegating = (DelegatingPasswordEncoder) PasswordEncoderFactories
         .createDelegatingPasswordEncoder();
@@ -26,6 +35,9 @@ public class SecurityConfig {
         new BCryptPasswordEncoder());
     return delegating;
   }
+  
+  @Autowired
+  private UserService userService;
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -47,7 +59,8 @@ public class SecurityConfig {
               "/user/register",
               "/user/reset-password",
               "/user/check-username-reset",
-              "/user/check-username-email"
+              "/user/check-username-email",
+              "/user/header-fragment"
             ).permitAll()
             .anyRequest().authenticated()
           )
@@ -58,7 +71,14 @@ public class SecurityConfig {
             // 2) 실제 인증 로직을 처리할 POST URL
             .loginProcessingUrl("/user/login")
             .successHandler((req, res, auth) -> {
+            	String username = auth.getName();
+            	UserDto user = userService.findByUsername(username);
+            	String userId = user.getUser_id();
               res.setStatus(HttpServletResponse.SC_OK);
+              res.setContentType(MediaType.APPLICATION_JSON_VALUE);
+              new ObjectMapper().writeValue(res.getWriter(), 
+            		  Map.of("userId", userId)
+            		  );
             })
             .failureHandler((req, res, ex) -> {
               res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

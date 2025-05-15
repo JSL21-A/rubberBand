@@ -3,8 +3,6 @@ package com.TTT.service;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +53,10 @@ public class UserService {
 	
 	public boolean isUsernameEmailMatch(String username, String email) {
 		return userMapper.checkUsernameEmail(username, email) > 0;
+	}
+	
+	public UserDto findByUsername(String username) {
+		return userMapper.findByUsername(username);
 	}
 	
 	
