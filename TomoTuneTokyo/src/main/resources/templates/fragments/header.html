@@ -21,6 +21,11 @@
 					class="header-icon"
 					alt="Hamburger Icon">
 				<div id="slideMenu" th:fragment="slideMenu" class="slide-menu">
+				 <script th:inline="javascript">
+    				/*<![CDATA[*/
+      				window.currentUser = /*[[${currentUserId}]]*/ 'anonymous';
+    				/*]]>*/
+  				 </script>
 					<button class="close-btn" aria-label="閉じる">&times;</button>
 					<form class="login-form" th:action="@{/user/login}" method="post" sec:authorize="!isAuthenticated()">
 						<h2>ログイン</h2>
@@ -132,5 +137,6 @@
         </nav>
       </div>
     </header>
+   
   </div>
 </div>
