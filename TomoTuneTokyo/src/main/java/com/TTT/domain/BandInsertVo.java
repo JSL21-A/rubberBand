@@ -15,13 +15,16 @@ public class BandInsertVo {
 	  private Long band_id; // Band ID
 	  private String user_id; // User ID     
 	  private MemberType member_type; // 멤버 유형 (리더 or 일반 멤버)
-	  private String stage_name; // 활동명 (user 테이블에 있는 활동명 참조)         
+	  private String nickname; // 닉네임
 	  private String member_position; // 포지션                      
 	  private String member_mbti; // MBTI 성격 유형              
 	  private String favorite_band; // 좋아하는 밴드                   
 	  private String member_motto; // 한마디                      
 	  private LocalDateTime created_at; // 등록 일시
-	  private String photo; // 프로필 사진 (user 테이블에 있는 프로필 사진 참조)
+	  private String user_img; // 프로필 사진 (user 테이블에 있는 프로필 사진 참조)
+	  private Long user_profile_id;
+	  private String stage_name; // 활동명
+	  private String photo; 
 	  
 	  // bands 테이블
 	  private String  band_name; // 밴드 이름
@@ -39,6 +42,15 @@ public class BandInsertVo {
 	  private Long tag_id; // 태그 고유 ID (자동증가)
 	  private  String tag_type; // 태그 유형
 	  private  String tag_value; // 실제 태그 내용
+	  
+	  // 태그 선택 결과들을 각각 저장하기 위한 필드
+	  private String selectedGenres;
+	  private String selectedPositions;
+	  private String selectedGenders;
+	  private String selectedAges;
+
+	  // 페이징
+	  private int band_count;
 
 	  
 }

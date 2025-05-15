@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+<meta charset="UTF-8">
+<title>밴드 상세정보</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="/css/band-profile-style.css">
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<!-- 전체 폼 -->
+<div class="band-profile-outer-form">
+
+	<!-- ✅ 커버 이미지 -->
+<div class="cover-image">
+	<img th:src="@{/images/GI-QFduagAEvfmH.jfif}" alt="커버 이미지">
+</div>
+
+<div class="profile-header">
+    <!-- 프로필 썸네일 -->
+    <div class="profile-thumbnail">
+        <img th:src="@{/images/NISI20240414_0001526023_web.jpg}" alt="프로필 이미지">
+    </div>
+
+    <!-- 프로필 정보 -->
+    <div class="profile-info">
+        <h2 class="band-name">Tomo Groove</h2>
+        <p class="band-handle">@tomogroove</p>
+        <p class="band-one-liner">도쿄와 홍대를 오가는 감성 시티팝 밴드입니다 🎷</p>
+        <a id="youtube-link" href="https://www.youtube.com/@DAY6Official" class="external-link" target="_blank">유튜브 채널</a>
+        <a id="instagram-link" href="https://www.instagram.com/day6kilogram/" class="external-link" target="_blank" style="padding-left: 10px;">인스타</a>
+    </div>
+
+    <!-- 수정/채팅 버튼 -->
+    <div class="band-actions">
+        <button class="btn-edit" id="edit-toggle-btn" type="button">수정하기</button>
+        <button class="btn-chat">채팅하기</button>
+    </div>
+</div>
+
+
+<!-- ✅ 메인 콘텐츠: 사이드바와 콘텐츠를 같은 wrapper 내부에 넣음 -->
+<div class="band-content-wrapper">
+	<!-- ✅ 프로필 아래 세로 메뉴 -->
+<nav class="band-sidebar band-sidebar-floating">
+	<button class="band-tab-btn active" data-target="section-intro">밴드
+		소개</button>
+	<button class="band-tab-btn" data-target="section-members">밴드
+		멤버</button>
+	<button class="band-tab-btn" data-target="section-gallery">활동
+		사진</button>
+	<button class="band-tab-btn" data-target="section-records">활동
+		기록</button>
+</nav>
+
+<div class="band-content">
+	<!-- 소개 -->
+<section class="band-section active" id="section-intro">
+	<h3>밴드 소개</h3>
+	<ul class="intro-list">
+		<li><strong>결성일:</strong> 2022년 5월</li>
+		<li><strong>장르:</strong> 시티팝, 재즈, 인디</li>
+		  <!-- ✅ 장르 태그 선택 팝업 구조 -->
+<div id="genre-popup" class="keyword-popup" style="display: none;">
+  <button id="genre-popup-close" class="popup-close">×</button>
+  <div class="keyword-box">
+    <div class="keyword-row">
+      <div class="keyword-category">ジャンル</div>
+      <div class="keyword-tags">
+        <span class="tag">ロック</span>
+        <span class="tag">ポップ</span>
+        <span class="tag">ジャズ</span>
+        <span class="tag">ヒップホップ</span>
+        <span class="tag">クラシック</span>
+        <span class="tag">EDM</span>
+        <span class="tag">その他</span>
+      </div>
+    </div>
+    <div class="keyword-row">
+      <div class="keyword-category">ポジション</div>
+      <div class="keyword-tags">
+        <span class="tag">Vo（ボーカル)</span>
+        <span class="tag">Gt（ギター）</span>
+        <span class="tag">Ba（ベース)</span>
+        <span class="tag">Dr（ドラム</span>
+        <span class="tag">Kb（キーボード)</span>
+        <span class="tag">その他</span>
+      </div>
+    </div>
+    <div class="keyword-row">
+      <div class="keyword-category">性別</div>
+      <div class="keyword-tags">
+        <span class="tag">男性バンド</span>
+        <span class="tag">女性バンド</span>
+        <span class="tag">混成バンド</span>
+      </div>
+    </div>
+    <div class="keyword-row">
+      <div class="keyword-category">年齢代</div>
+      <div class="keyword-tags">
+        <span class="tag">10代</span>
+        <span class="tag">20代</span>
+        <span class="tag">30代</span>
+        <span class="tag">40代</span>
+        <span class="tag">50代以上</span>
+      </div>
+    </div>
+  </div>
+</div>
+  
+		<li><strong>활동지역:</strong> 서울 홍대, 도쿄 시부야</li>
+	
+	<li><strong>밴드 소개 : </strong>
+	<p class="band-description">Tomo Groove는 4인조 여성 보컬 중심 밴드로, 도쿄와 홍대를 중심으로 활동하고 있습니다. 감성적인 시티팝과 재즈를 기반으로 한 자작곡과 커버곡을 연주하며 관객과의 교감을 중요하게 생각합니다.</p></li>
+	</ul>
+</section>
+
+<!-- 멤버 -->
+<section class="band-section" id="section-members">
+<h3>밴드 멤버</h3>
+
+<!-- ✅ 리더 멤버 -->
+<div class="member-container leader-only">
+  <div class="member-card">
+    <img th:src="@{/images/ChatGPT1.png}" alt="리더" class="member-img">
+    <div class="member-name">리더 · 가무</div>
+    <div class="member-popup">
+      <strong>가무</strong><br>
+      포지션: 리더, 프로듀서<br>
+      MBTI: INTJ<br>
+      좋아하는 밴드: DAY6<br>
+      한마디: 음악은 진심입니다.
+    </div>
+  </div>
+</div>
+
+<!-- ✅ 일반 멤버 -->
+  <div class="member-container">
+    <div class="member-card">
+      <img th:src="@{/images/ChatGPT2.png}" alt="보컬" class="member-img">
+      <div class="member-name">보컬</div>
+      <div class="member-popup">
+        <strong>하나미</strong><br>
+        포지션: 메인 보컬<br>
+        MBTI: ENFP<br>
+        특기: 일어, 작사<br>
+        한마디: 노래로 마음을 전해요!
+      </div>
+    </div>
+
+    <div class="member-card">
+      <img th:src="@{/images/ChatGPT3.png}" alt="기타" class="member-img">
+      <div class="member-name">기타</div>
+      <div class="member-popup">
+        <strong>타케시</strong><br>
+        포지션: 기타리스트<br>
+        성격: 차분한 타입<br>
+        좋아하는 장르: 시티팝<br>
+        한마디: 리듬을 타고 흐르는 삶 🎸
+      </div>
+    </div>
+
+    <div class="member-card">
+      <img th:src="@{/images/ChatGPT4.png}" alt="드럼" class="member-img">
+      <div class="member-name">드럼</div>
+      <div class="member-popup">
+        <strong>유나</strong><br>
+        포지션: 드러머<br>
+        취미: 리듬게임<br>
+        특징: 언제나 파워풀<br>
+        한마디: 드럼으로 심장 울려드릴게요!
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ✅ 활동 사진 섹션 -->
+<section class="band-section" id="section-gallery">
+  <h3>활동 사진</h3>
+  <!-- 페이징 버튼 포함 전체 래퍼 -->
+  <div class="gallery-wrapper">
+    
+    <!-- 왼쪽 화살표 버튼 -->
+    <button class="gallery-arrow gallery-prev">◀</button>
+    
+    <!-- 사진 + 영상 영역 -->
+ <!-- Slide 1 -->
+<div class="media-slide active">
+  <div class="media-row">
+    <!-- 활동사진 썸네일 (설명 포함) -->
+    <div class="gallery-grid activity-thumb"
+         data-title="홍대 거리공연"
+         data-desc="거리의 열기를 그대로 담은 열정의 공연이었습니다.">
+      <img th:src="@{/images/butai.jfif}" alt="활동사진1">
+    </div>
+
+    <!-- 영상 -->
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/DQwlPQm69PY" title="DAY6 - You Were Beautiful" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 2 -->
+<div class="media-slide">
+  <div class="media-row">
+    <div class="gallery-grid">
+      <img th:src="@{/images/20210808509732.jpg}" alt="활동사진2">
+    </div>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/RowlrvmyFEk" title="DAY6 - Welcome to the Show" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 3 -->
+<div class="media-slide">
+  <div class="media-row">
+    <div class="gallery-grid">
+      <img th:src="@{/images/NISI20240923_0001658811_web.jpg}" alt="활동사진3">
+    </div>
+    <div class="video-wrapper">
+      <iframe src="https://www.youtube.com/embed/yss4rIrHl6o" title="DAY6 - Zombie" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+    <!-- 오른쪽 화살표 버튼 -->
+    <button class="gallery-arrow gallery-next">▶</button>
+  </div>
+
+  <!-- 하단 인디케이터 -->
+  <div class="gallery-dots">
+    <div class="gallery-dot active"></div>
+    <div class="gallery-dot"></div>
+    <div class="gallery-dot"></div>
+  </div>
+  
+  <!-- 활동사진 설명 팝업 -->
+<div id="activity-popup" class="review-popup" style="display: none;">
+  <button class="popup-close">×</button>
+  <div class="review-popup-content">
+    <h4 class="activity-popup-title">활동명</h4>
+    <p class="activity-popup-desc">설명 내용</p>
+  </div>
+</div>
+  
+</section>
+
+
+<!-- 활동 기록 -->
+<section class="band-section" id="section-records">
+  <h3>활동 기록</h3>
+  <div class="gallery-wrapper">
+    <button class="gallery-arrow gallery-prev">◀</button>
+
+   <!-- Slide 1 -->
+<div class="media-slide active">
+      <div class="media-row two-columns">
+        <div class="column-left">
+          <div class="record-card">
+            <div class="record-date">4월<br><strong>19</strong></div>
+            <div class="record-info">
+              <div class="record-title">토 13시) 오디너리프로젝트 카페</div>
+              <div class="record-status">종료</div>
+              <div class="record-meta">🕒 오후 1:00 &nbsp; 👥 4/4명</div>
+            </div>
+            <div class="record-image">
+              <img src="/images/record1.jpg" alt="카페">
+            </div>
+            <div class="review-popup">
+              <button class="popup-close">×</button>
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="/images/ChatGPT1.png" alt="가무" class="review-profile-img">
+                  <div class="review-nickname"><strong>가무</strong> <span class="activity-role">⭐⭐⭐⭐⭐</span></div>
+                </div>
+                <p>감동적인 무대였어요. 관객 반응이 정말 뜨거웠습니다!</p>
+              </div>
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="/images/ChatGPT2.png" alt="하나미" class="review-profile-img">
+                  <div class="review-nickname"><strong>하나미</strong> <span class="activity-role">⭐⭐⭐⭐☆</span></div>
+                </div>
+                <p>노래하면서 울컥했어요. 이 무대를 잊지 못할 거예요.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="record-card">
+            <div class="record-date">4월<br><strong>26</strong></div>
+            <div class="record-info">
+              <div class="record-title">토 18시) 홍대 펍 무대</div>
+              <div class="record-status">예정</div>
+              <div class="record-meta">🕒 오후 6:00 &nbsp; 👥 2/4명</div>
+            </div>
+            <div class="record-image">
+              <img src="/images/record2.jpg" alt="홍대 펍">
+            </div>
+            <div class="review-popup">
+              <button class="popup-close">×</button>
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="/images/ChatGPT3.png" alt="타케시" class="review-profile-img">
+                  <div class="review-nickname"><strong>타케시</strong> <span class="activity-role">⭐⭐⭐⭐☆</span></div>
+                </div>
+                <p>사운드 체크가 완벽했어요. 좋은 분위기였습니다.</p>
+              </div>
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="/images/ChatGPT4.png" alt="유나" class="review-profile-img">
+                  <div class="review-nickname"><strong>유나</strong> <span class="activity-role">⭐⭐⭐⭐☆</span></div>
+                </div>
+                <p>드럼 소리에 모두가 집중했어요. 만족스러웠습니다.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column-right">
+          <div class="record-card">
+            <div class="record-date">5월<br><strong>3</strong></div>
+            <div class="record-info">
+              <div class="record-title">금 19시) 도쿄 소극장 라이브</div>
+              <div class="record-status">예정</div>
+              <div class="record-meta">🕒 오후 7:00 &nbsp; 👥 3/4명</div>
+            </div>
+            <div class="record-image">
+              <img src="/images/record3.jpg" alt="도쿄 소극장">
+            </div>
+            <div class="review-popup">
+              <button class="popup-close">×</button>
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="/images/ChatGPT1.png" alt="가무" class="review-profile-img">
+                  <div class="review-nickname"><strong>가무</strong> <span class="activity-role">⭐⭐⭐⭐☆</span></div>
+                </div>
+                <p>무대 연출이 멋졌고 음향도 좋았어요.</p>
+              </div>
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="/images/ChatGPT2.png" alt="하나미" class="review-profile-img">
+                  <div class="review-nickname"><strong>하나미</strong> <span class="activity-role">⭐⭐⭐⭐☆</span></div>
+                </div>
+                <p>관객 호응 덕분에 신나게 불렀습니다!</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="record-card">
+            <div class="record-date">5월<br><strong>10</strong></div>
+            <div class="record-info">
+              <div class="record-title">금 20시) 팬미팅 - 신촌 카페</div>
+              <div class="record-status">예정</div>
+              <div class="record-meta">🕒 오후 8:00 &nbsp; 👥 1/4명</div>
+            </div>
+            <div class="record-image">
+              <img src="/images/record4.jpg" alt="팬미팅">
+            </div>
+            <div class="review-popup">
+              <button class="popup-close">×</button>
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="/images/ChatGPT4.png" alt="유나" class="review-profile-img">
+                  <div class="review-nickname"><strong>유나</strong> <span class="activity-role">⭐⭐⭐⭐☆</span></div>
+                </div>
+                <p>팬들과 가까이서 소통할 수 있어서 뜻깊었어요.</p>
+              </div>
+              <div class="review-item">
+                <div class="review-header">
+                  <img src="/images/ChatGPT3.png" alt="타케시" class="review-profile-img">
+                  <div class="review-nickname"><strong>타케시</strong> <span class="activity-role">⭐⭐⭐☆☆</span></div>
+                </div>
+                <p>음악 얘기를 많이 나눌 수 있어서 좋았습니다.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+   <div class="media-slide">
+  <div class="media-row two-columns">
+    <div class="column-left">
+      <div class="record-card">
+        <div class="record-date">5월<br><strong>17</strong></div>
+        <div class="record-info">
+          <div class="record-title">금 19시) 양이청 기부 공연</div>
+          <div class="record-status">예정</div>
+          <div class="record-meta">🕒 오후 7:00 &nbsp; 👥 2/4명</div>
+        </div>
+        <div class="record-image">
+          <img src="/images/record5.jpg" alt="양이청">
+        </div>
+        <div class="review-popup">
+          <button class="popup-close">×</button>
+          <div class="review-item">
+            <div class="review-header">
+              <img src="/images/ChatGPT2.png" alt="하나미" class="review-profile-img">
+              <div class="review-nickname"><strong>하나미</strong> <span class="activity-role">⭐⭐⭐⭐⭐</span></div>
+            </div>
+            <p>기부 공연이라 더 감동적이었어요.</p>
+          </div>
+          <div class="review-item">
+            <div class="review-header">
+              <img src="/images/ChatGPT4.png" alt="유나" class="review-profile-img">
+              <div class="review-nickname"><strong>유나</strong> <span class="activity-role">⭐⭐⭐⭐☆</span></div>
+            </div>
+            <p>따뜻한 분위기가 정말 좋았어요.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="record-card">
+        <div class="record-date">5월<br><strong>24</strong></div>
+        <div class="record-info">
+          <div class="record-title">금 20시) 유튜브 상영 프리로</div>
+          <div class="record-status">예정</div>
+          <div class="record-meta">🕒 오후 8:00 &nbsp; 👥 4/4명</div>
+        </div>
+        <div class="record-image">
+          <img src="/images/record6.jpg" alt="유튜브">
+        </div>
+        <div class="review-popup">
+          <button class="popup-close">×</button>
+          <div class="review-item">
+            <div class="review-header">
+              <img src="/images/ChatGPT1.png" alt="가무" class="review-profile-img">
+              <div class="review-nickname"><strong>가무</strong> <span class="activity-role">⭐⭐⭐⭐☆</span></div>
+            </div>
+            <p>실시간 반응을 보며 연주하는 게 새로웠어요.</p>
+          </div>
+          <div class="review-item">
+            <div class="review-header">
+              <img src="/images/ChatGPT3.png" alt="타케시" class="review-profile-img">
+              <div class="review-nickname"><strong>타케시</strong> <span class="activity-role">⭐⭐⭐⭐☆</span></div>
+            </div>
+            <p>비대면인데도 열기가 가득했습니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column-right">
+      <div class="record-card">
+        <div class="record-date">5월<br><strong>31</strong></div>
+        <div class="record-info">
+          <div class="record-title">금 18시) 토요 사진 회의</div>
+          <div class="record-status">예정</div>
+          <div class="record-meta">🕒 오후 6:00 &nbsp; 👥 3/4명</div>
+        </div>
+        <div class="record-image">
+          <img src="/images/record7.jpg" alt="사진회의">
+        </div>
+        <div class="review-popup">
+          <button class="popup-close">×</button>
+          <div class="review-item">
+            <div class="review-header">
+              <img src="/images/ChatGPT2.png" alt="하나미" class="review-profile-img">
+              <div class="review-nickname"><strong>하나미</strong> <span class="activity-role">⭐⭐⭐⭐⭐</span></div>
+            </div>
+            <p>사진 아이디어 회의가 정말 창의적이었어요.</p>
+          </div>
+          <div class="review-item">
+            <div class="review-header">
+              <img src="/images/ChatGPT1.png" alt="가무" class="review-profile-img">
+              <div class="review-nickname"><strong>가무</strong> <span class="activity-role">⭐⭐⭐⭐☆</span></div>
+            </div>
+            <p>팀워크를 다질 수 있는 시간이었어요.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="record-card">
+        <div class="record-date">6월<br><strong>7</strong></div>
+        <div class="record-info">
+          <div class="record-title">금 21시) 홍대 남아지 무대</div>
+          <div class="record-status">예정</div>
+          <div class="record-meta">🕒 오후 9:00 &nbsp; 👥 4/4명</div>
+        </div>
+        <div class="record-image">
+          <img src="/images/record8.jpg" alt="홍대 무대">
+        </div>
+        <div class="review-popup">
+          <button class="popup-close">×</button>
+          <div class="review-item">
+            <div class="review-header">
+              <img src="/images/ChatGPT3.png" alt="타케시" class="review-profile-img">
+              <div class="review-nickname"><strong>타케시</strong> <span class="activity-role">⭐⭐⭐⭐☆</span></div>
+            </div>
+            <p>에너지 넘치는 공연이었어요. 사람들 반응 최고!</p>
+          </div>
+          <div class="review-item">
+            <div class="review-header">
+              <img src="/images/ChatGPT4.png" alt="유나" class="review-profile-img">
+              <div class="review-nickname"><strong>유나</strong> <span class="activity-role">⭐⭐⭐⭐⭐</span></div>
+            </div>
+            <p>정말 신나고 파워풀한 드럼 퍼포먼스를 보여줬습니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <button class="gallery-arrow gallery-next">▶</button>
+  </div>
+
+  <div class="gallery-dots">
+    <div class="gallery-dot active"></div>
+    <div class="gallery-dot"></div>
+  </div>
+ 
+</section>
+
+</div>
+</div>
+</div>
+
+<script>
+// ✅ 탭 전환 기능
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.band-tab-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      document.querySelectorAll('.band-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.band-section').forEach(section => section.classList.remove('active'));
+      button.classList.add('active');
+      document.getElementById(button.getAttribute('data-target')).classList.add('active');
+    });
+  });
+});
+</script>
+
+<script>
+// ✅ 활동사진 슬라이드(페이징) 기능
+document.addEventListener("DOMContentLoaded", () => {
+  const gallerySlides = document.querySelectorAll("#section-gallery .media-slide");
+  const galleryDots = document.querySelectorAll("#section-gallery .gallery-dot");
+  let galleryIndex = 0;
+
+  function updateGallerySlide(newIndex) {
+    gallerySlides[galleryIndex].classList.remove("active");
+    galleryDots[galleryIndex]?.classList.remove("active");
+    galleryIndex = newIndex;
+    gallerySlides[galleryIndex].classList.add("active");
+    galleryDots[galleryIndex]?.classList.add("active");
+  }
+
+  document.querySelector("#section-gallery .gallery-prev")?.addEventListener("click", () => {
+    updateGallerySlide((galleryIndex - 1 + gallerySlides.length) % gallerySlides.length);
+  });
+  document.querySelector("#section-gallery .gallery-next")?.addEventListener("click", () => {
+    updateGallerySlide((galleryIndex + 1) % gallerySlides.length);
+  });
+  galleryDots.forEach((dot, index) => {
+    dot.addEventListener("click", () => updateGallerySlide(index));
+  });
+});
+</script>
+
+<script>
+// ✅ 활동기록 슬라이드(페이징) 기능
+document.addEventListener("DOMContentLoaded", () => {
+  const recordSlides = document.querySelectorAll("#section-records .media-slide");
+  const recordDots = document.querySelectorAll("#section-records .gallery-dot");
+  let recordIndex = 0;
+
+  function updateRecordSlide(newIndex) {
+    recordSlides[recordIndex].classList.remove("active");
+    recordDots[recordIndex]?.classList.remove("active");
+    recordIndex = newIndex;
+    recordSlides[recordIndex].classList.add("active");
+    recordDots[recordIndex]?.classList.add("active");
+  }
+
+  document.querySelector("#section-records .gallery-prev")?.addEventListener("click", () => {
+    updateRecordSlide((recordIndex - 1 + recordSlides.length) % recordSlides.length);
+  });
+  document.querySelector("#section-records .gallery-next")?.addEventListener("click", () => {
+    updateRecordSlide((recordIndex + 1) % recordSlides.length);
+  });
+  recordDots.forEach((dot, index) => {
+    dot.addEventListener("click", () => updateRecordSlide(index));
+  });
+});
+</script>
+
+<script>
+// ✅ 활동기록 카드 클릭 → 후기 팝업 열기/닫기 기능
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.record-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const popup = card.querySelector('.review-popup');
+      if (popup) popup.style.display = 'block';
+    });
+  });
+
+  document.querySelectorAll('.popup-close').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const popup = btn.closest('.review-popup') || btn.closest('.keyword-popup');
+      if (popup) popup.style.display = 'none';
+    });
+  });
+});
+</script>
+
+<script>
+// ✅ 활동사진 클릭 → 후기 팝업 열기 기능
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.activity-thumb').forEach(el => {
+    el.addEventListener('click', () => {
+      const popup = document.getElementById('activity-popup');
+      popup.querySelector('.activity-popup-title').textContent = el.dataset.title;
+      popup.querySelector('.activity-popup-desc').textContent = el.dataset.desc;
+      popup.style.display = 'block';
+    });
+  });
+});
+</script>
+
+
+<script>
+// ✅ 프로필(이름/핸들/한줄소개) 영역 수정모드
+document.addEventListener("DOMContentLoaded", () => {
+  const profileThumbnail = document.querySelector(".profile-thumbnail img");
+
+  // 파일 input
+  const profileInput = document.createElement("input");
+  profileInput.type = "file";
+  profileInput.accept = "image/*";
+  profileInput.style.display = "none";
+  document.body.appendChild(profileInput);
+
+  profileInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        profileThumbnail.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+});
+
+// ✅ 수정모드 진입 시 프로필 수정 버튼 생성
+function initProfileEdit() {
+  if (window.profileEditBtnCreated) return;
+  window.profileEditBtnCreated = true;
+
+  const profileContainer = document.querySelector(".profile-thumbnail");
+  const profileBtn = document.createElement("button");
+  profileBtn.id = "profile-file-btn";
+  profileBtn.type = "button";
+  profileBtn.textContent = "프로필 변경";
+  profileBtn.className = "btn-primary";
+  profileBtn.style.position = "absolute";
+  profileBtn.style.bottom = "8px";
+  profileBtn.style.left = "50%";
+  profileBtn.style.transform = "translateX(-50%)";
+  profileBtn.style.width = "90px";
+  profileBtn.style.height = "26px";
+  profileBtn.style.fontSize = "12px";
+  profileBtn.style.backgroundColor = "rgba(0,0,0,0.7)";
+  profileBtn.style.color = "#fff";
+  profileBtn.style.border = "none";
+  profileBtn.style.borderRadius = "6px";
+  profileBtn.style.padding = "2px 4px";
+  profileBtn.style.cursor = "pointer";
+  profileBtn.style.zIndex = "10";
+
+  const wrapper = document.createElement("div");
+  wrapper.id = "profile-btn-wrapper";
+  wrapper.style.position = "relative";
+  wrapper.appendChild(profileBtn);
+
+  if (profileContainer) {
+    profileContainer.appendChild(wrapper);
+  }
+
+  profileBtn.addEventListener("click", () => {
+    const input = document.querySelector("input[type='file'][accept^='image/']");
+    if (input) input.click();
+  });
+}
+</script>
+
+<script>
+// ✅ 밴드소개 영역 입력폼 변환
+function initBandIntro() {
+  window.editMode = true;
+
+  const replacements = [
+    { selector: ".band-name", name: "bandName" },
+    { selector: ".band-handle", name: "bandHandle" },
+    { selector: ".band-one-liner", name: "bandOneLiner" }
+  ];
+  replacements.forEach(({ selector, name }) => {
+    const el = document.querySelector(selector);
+    if (el && !el.querySelector("input")) {
+      const val = el.textContent.trim();
+      el.innerHTML = `<input type="text" name="${name}" value="${val}">`;
+    }
+  });
+
+  const introList = document.querySelectorAll("#section-intro .intro-list li");
+  introList.forEach(li => {
+    const label = li.querySelector("strong")?.textContent.trim();
+    const value = li.childNodes[1]?.textContent.trim();
+    if (!label || !value) return;
+
+    if (label.includes("장르")) {
+      li.innerHTML = `
+        <strong>${label}</strong>
+        <input type="text" name="genre" id="genre-input" value="${value}" readonly style="cursor: pointer;">
+      `;
+    } else {
+      li.innerHTML = `<strong>${label}</strong> <input type="text" value="${value}">`;
+    }
+  });
+
+  const genreInput = document.getElementById("genre-input");
+  if (genreInput) {
+    genreInput.addEventListener("click", () => {
+      document.getElementById("genre-popup").style.display = "block";
+    });
+  }
+
+  const desc = document.querySelector(".band-description");
+  if (desc && !desc.querySelector("textarea")) {
+    const val = desc.textContent.trim();
+    desc.innerHTML = `<textarea name="bandDescription">${val}</textarea>`;
+  }
+}
+
+// ✅ 장르 태그 클릭 이벤트 위임 (항상 작동)
+document.addEventListener("click", (e) => {
+  if (e.target.closest("#genre-popup .tag")) {
+    const tag = e.target.closest(".tag");
+    tag.classList.toggle("active");
+
+    const activeTags = Array.from(document.querySelectorAll("#genre-popup .tag.active"))
+      .map(t => t.textContent.trim());
+
+    const genreInput = document.getElementById("genre-input");
+    if (genreInput) {
+      genreInput.value = activeTags.join(", ");
+    }
+  }
+});
+</script>
+
+<script>
+// ✅ 프로필 사진 수정
+document.addEventListener("DOMContentLoaded", () => {
+  const profileThumbnail = document.querySelector(".profile-thumbnail img");
+
+  const profileInput = document.createElement("input");
+  profileInput.type = "file";
+  profileInput.accept = "image/*";
+  profileInput.style.display = "none";
+  document.body.appendChild(profileInput);
+
+  profileInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        profileThumbnail.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+});
+
+// ✅ 수정모드 진입 시 프로필 변경 버튼 생성
+function initProfileImage() {
+  const profileContainer = document.querySelector(".profile-thumbnail");
+
+  if (!document.getElementById("profile-file-btn")) {
+    // 버튼 생성
+    const profileBtn = document.createElement("button");
+    profileBtn.id = "profile-file-btn";
+    profileBtn.type = "button";
+    profileBtn.textContent = "프로필 변경";
+    profileBtn.className = "btn-primary";
+
+    if (profileContainer) {
+      profileContainer.style.position = "relative";
+      profileBtn.style.position = "absolute";
+      profileBtn.style.bottom = "8px";
+      profileBtn.style.left = "50%";
+      profileBtn.style.transform = "translateX(-50%)";
+      profileBtn.style.width = "90px";
+      profileBtn.style.height = "26px";
+      profileBtn.style.fontSize = "12px";
+      profileBtn.style.backgroundColor = "rgba(0,0,0,0.7)";
+      profileBtn.style.color = "#fff";
+      profileBtn.style.border = "none";
+      profileBtn.style.borderRadius = "6px";
+      profileBtn.style.padding = "2px 4px";
+      profileBtn.style.cursor = "pointer";
+      profileBtn.style.zIndex = "10";
+
+      profileContainer.appendChild(profileBtn);
+    }
+
+    // 버튼 클릭 시 파일 input 트리거
+    profileBtn.addEventListener("click", () => {
+      const input = document.querySelector("input[type='file'][accept^='image/']");
+      if (input) input.click();
+    });
+  }
+}
+</script>
+
+<script>
+//✅ 멤버소개 팝업 수정모드
+function initMemberPopupEdit() {
+  // 모든 멤버 카드에 대해 반복
+  document.querySelectorAll("#section-members .member-card").forEach(card => {
+    const popup = card.querySelector(".member-popup");
+
+    // ✅ 프로필(카드) 클릭 → 팝업 열기
+    card.addEventListener("click", (e) => {
+      e.stopPropagation(); // 이벤트 버블링 방지
+
+      if (popup) {
+        popup.style.display = "block"; // 팝업 표시
+
+        // ✅ 수정모드가 아닐 때는 편집 불가 상태 유지
+        if (!window.editMode) {
+          popup.removeAttribute("contenteditable"); // 편집 불가
+          popup.style.border = "";
+          popup.style.padding = "";
+          popup.style.borderRadius = "";
+          popup.style.background = "";
+        }
+      }
+    });
+
+    // ✅ 팝업 내부 클릭 → 수정모드일 때만 편집 가능
+    popup.addEventListener("click", (e) => {
+      e.stopPropagation(); // 이벤트 버블링 방지
+
+      // ✅ 수정모드일 때만 contenteditable 활성화
+      if (window.editMode) {
+        popup.setAttribute("contenteditable", "true");
+        popup.style.border = "1px dashed #aaa";
+        popup.style.padding = "8px";
+        popup.style.borderRadius = "8px";
+        popup.style.background = "#f9f9f9";
+      }
+    });
+  });
+
+  // ✅ 페이지 아무 곳이나 클릭하면 모든 팝업 닫기
+  document.addEventListener("click", () => {
+    document.querySelectorAll("#section-members .member-popup").forEach(popup => {
+      popup.style.display = "none";
+    });
+  });
+}
+</script>
+
+<script>
+// 탭 전환 기능
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('.band-tab-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      document.querySelectorAll('.band-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.band-section').forEach(section => section.classList.remove('active'));
+      button.classList.add('active');
+      document.getElementById(button.getAttribute('data-target')).classList.add('active');
+
+      const targetId = button.getAttribute("data-target");
+      if (editMode) {
+        if (targetId === "section-intro") {
+          // ✅ 밴드소개 탭이면 입력폼 유지
+        } else {
+          // ✅ 다른 탭이면 원래 텍스트 복구
+          restoreProfileInfo();
+        }
+      }
+    });
+  });
+});
+</script>
+
+<script>
+// ✅ 탭 전환 시 밴드소개 입력폼 유지/복구
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".band-tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.getAttribute("data-target");
+
+      if (window.editMode) {
+        if (targetId === "section-intro") {
+          // ✅ "밴드 소개" 탭이면 기존 init 함수 호출로 유지
+          initBandIntro(); 
+        } else {
+          // ✅ 그 외 탭이면 원상복구
+          restoreProfileInfo();
+        }
+      }
+    });
+  });
+});
+</script>
+
+<script>
+// ✅ 활동사진 수정 버튼 (수정모드 진입 시 생성)
+function initGalleryEditButton() {
+  const sectionGallery = document.getElementById("section-gallery");
+
+  if (!sectionGallery) return;
+  if (!window.editMode) return; // ✅ 수정모드일 때만 작동
+  if (window.editGalleryBtnCreated) return; // 이미 생성했으면 또 만들지 않음
+
+  // ✅ 1. 활동사진 수정 버튼 생성
+  const editGalleryBtn = document.createElement("button");
+  editGalleryBtn.id = "edit-gallery-btn";
+  editGalleryBtn.type = "button";
+  editGalleryBtn.textContent = "활동사진 수정";
+  editGalleryBtn.className = "btn-primary";
+
+  // 🔥 활동 추가 버튼과 같은 스타일로 수정
+  editGalleryBtn.style.position = "absolute";
+  editGalleryBtn.style.top = "-40px";
+  editGalleryBtn.style.right = "20px";
+  editGalleryBtn.style.zIndex = "10";
+  editGalleryBtn.style.padding = "10px 20px";
+  editGalleryBtn.style.background = "#000";
+  editGalleryBtn.style.color = "#fff";
+  editGalleryBtn.style.borderRadius = "8px";
+  editGalleryBtn.style.fontSize = "16px";
+  editGalleryBtn.style.border = "none";
+  editGalleryBtn.style.cursor = "pointer";
+
+  sectionGallery.style.position = "relative";
+  sectionGallery.appendChild(editGalleryBtn);
+
+  window.editGalleryBtnCreated = true;
+
+  // ✅ 2. 팝업 생성 (활동 추가 팝업과 동일한 스타일)
+  const galleryPopup = document.createElement("div");
+  galleryPopup.id = "gallery-edit-popup";
+  galleryPopup.style.cssText = `
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border-radius: 12px;
+    z-index: 1000;
+    width: 400px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #000;
+    box-sizing: border-box;
+  `;
+
+  galleryPopup.innerHTML = `
+    <h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">활동 사진 수정</h3>
+    <input type="file" id="gallery-thumb-upload" accept="image/*" style="width:100%; margin-bottom:20px;">
+    <input type="text" id="gallery-title-input" placeholder="활동 제목" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px;">
+    <textarea id="gallery-desc-input" placeholder="활동 설명" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px; resize:vertical;"></textarea>
+
+    <div id="gallery-button-wrapper" style="display:flex; justify-content:center; align-items:center; gap:10px; margin-top:5px;">
+      <button id="save-gallery-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">저장</button>
+      <button id="close-gallery-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">닫기</button>
+    </div>
+  `;
+
+  document.body.appendChild(galleryPopup);
+
+  // ✅ 3. 버튼 클릭 시 팝업 열기
+  editGalleryBtn.addEventListener("click", () => {
+    galleryPopup.style.display = "block";
+  });
+
+  // ✅ 4. 팝업 닫기 버튼
+  document.getElementById("close-gallery-popup").addEventListener("click", () => {
+    galleryPopup.style.display = "none";
+  });
+
+  // ✅ 5. 저장 버튼 클릭 시 적용
+  document.getElementById("save-gallery-btn").addEventListener("click", () => {
+    const newTitle = document.getElementById("gallery-title-input").value.trim();
+    const newDesc = document.getElementById("gallery-desc-input").value.trim();
+    const thumbFile = document.getElementById("gallery-thumb-upload").files[0];
+
+    if (newTitle) {
+      const popupTitle = document.querySelector(".activity-popup-title");
+      if (popupTitle) popupTitle.textContent = newTitle;
+    }
+
+    if (newDesc) {
+      const popupDesc = document.querySelector(".activity-popup-desc");
+      if (popupDesc) popupDesc.textContent = newDesc;
+    }
+
+    if (thumbFile) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const firstThumb = document.querySelector("#section-gallery .gallery-grid img");
+        if (firstThumb) {
+          firstThumb.src = event.target.result;
+        }
+      };
+      reader.readAsDataURL(thumbFile);
+    }
+
+    galleryPopup.style.display = "none";
+  });
+}
+</script>
+
+<script>
+// ✅ 활동 사진 추가 (수정모드 진입 시 생성)
+function initGalleryAddButton() {
+  const sectionGallery = document.getElementById("section-gallery");
+
+  if (!sectionGallery) return;
+  if (!window.editMode) return; // ✅ 수정모드일 때만 작동
+  if (window.addAllBtnCreated) return; // 이미 생성했으면 또 만들지 않음
+
+  // "활동 추가" 버튼 생성
+  const addAllBtn = document.createElement("button");
+  addAllBtn.id = "add-all-btn";
+  addAllBtn.type = "button";
+  addAllBtn.textContent = "활동 추가";
+  addAllBtn.className = "btn-primary";
+
+  // 버튼 스타일 (🔥 수정: 선 위에 떠있고 오른쪽으로 정렬되게)
+  addAllBtn.style.position = "absolute";
+  addAllBtn.style.top = "-40px";
+  addAllBtn.style.right = "140px";
+  addAllBtn.style.zIndex = "10";
+  addAllBtn.style.padding = "10px 20px";
+  addAllBtn.style.background = "#000";
+  addAllBtn.style.color = "#fff";
+  addAllBtn.style.borderRadius = "8px";
+  addAllBtn.style.fontSize = "16px";
+  addAllBtn.style.border = "none";
+  addAllBtn.style.cursor = "pointer";
+  addAllBtn.style.marginRight = "20px";
+
+  sectionGallery.style.position = "relative";
+  sectionGallery.appendChild(addAllBtn);
+
+  window.addAllBtnCreated = true;
+
+  // ✅ "활동 추가" 팝업 생성
+  const allPopup = document.createElement("div");
+  allPopup.id = "all-popup";
+  allPopup.style.cssText = `
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border-radius: 12px;
+    z-index: 1000;
+    width: 400px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #000;
+    box-sizing: border-box;
+  `;
+
+  allPopup.innerHTML = `
+    <h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">활동 추가</h3>
+    <form id="all-photo-form" enctype="multipart/form-data">
+      <input type="file" id="new-all-photo" name="photo" accept="image/*" style="width:100%; margin-bottom:20px;">
+      <input type="text" id="all-photo-title" name="title" placeholder="활동 제목" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px;">
+      <textarea id="all-photo-desc" name="description" placeholder="활동 설명" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px; resize:vertical;"></textarea>
+
+      <div id="button-wrapper" style="display:flex; justify-content:center; align-items:center; gap:10px; margin-top:5px;">
+        <button type="submit" id="save-all-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">저장</button>
+        <button type="button" id="close-all-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">닫기</button>
+      </div>
+    </form>
+  `;
+
+  document.body.appendChild(allPopup);
+
+  // ✅ "활동 추가" 버튼 클릭 시 팝업 열기
+  addAllBtn.addEventListener("click", () => {
+    allPopup.style.display = "block";
+  });
+
+  // ✅ 닫기 버튼 클릭 시 팝업 닫기
+  document.getElementById("close-all-popup").addEventListener("click", () => {
+    allPopup.style.display = "none";
+  });
+
+  // ✅ 저장 버튼 클릭 시
+  document.getElementById("save-all-btn").addEventListener("click", () => {
+    const photoFile = document.getElementById("new-all-photo").files[0];
+    const title = document.getElementById("all-photo-title").value.trim();
+    const desc = document.getElementById("all-photo-desc").value.trim();
+
+    if (!title || !desc) {
+      alert("모든 항목을 입력해주세요!");
+      return;
+    }
+
+    alert("활동 추가 완료!");
+    allPopup.style.display = "none";
+  });
+}
+</script>
+	
+<script>
+// ✅ 활동 기록 수정 (수정모드 진입 시 생성)
+function initRecordEditButton() {
+  const sectionRecords = document.getElementById("section-records");
+
+  if (!sectionRecords) return;
+  if (!window.editMode) return;
+
+  if (!window.editRecordBtnCreated) {
+    window.editRecordBtnCreated = true;
+  } else {
+    return;
+  }
+
+  sectionRecords.style.position = "relative";
+
+  // ✅ "활동 기록 수정" 버튼 생성
+  const editRecordBtn = document.createElement("button");
+  editRecordBtn.id = "edit-record-btn";
+  editRecordBtn.type = "button";
+  editRecordBtn.textContent = "활동 기록 수정";
+  editRecordBtn.className = "btn-primary";
+
+  editRecordBtn.style.position = "absolute";
+  editRecordBtn.style.top = "-40px";
+  editRecordBtn.style.right = "160px";
+  editRecordBtn.style.zIndex = "10";
+  editRecordBtn.style.padding = "10px 20px";
+  editRecordBtn.style.background = "#000";
+  editRecordBtn.style.color = "#fff";
+  editRecordBtn.style.borderRadius = "8px";
+  editRecordBtn.style.fontSize = "16px";
+  editRecordBtn.style.border = "none";
+  editRecordBtn.style.cursor = "pointer";
+
+  sectionRecords.appendChild(editRecordBtn);
+
+  // ✅ "활동 기록 수정" 팝업 생성
+  const editRecordPopup = document.createElement("div");
+  editRecordPopup.id = "edit-record-popup";
+  editRecordPopup.style.cssText = `
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border-radius: 12px;
+    z-index: 1000;
+    width: 400px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #000;
+    box-sizing: border-box;
+  `;
+
+  editRecordPopup.innerHTML = `
+    <h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">활동 기록 수정</h3>
+    <input type="text" id="edit-title" placeholder="공연 제목" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+    <input type="date" id="edit-date" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+    <input type="text" id="edit-time" placeholder="시간" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+    <input type="text" id="edit-location" placeholder="장소" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+    <input type="text" id="edit-capacity" placeholder="인원수" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+    <input type="file" id="edit-thumb-upload" style="width:100%; padding:12px; font-size:16px; border:1px solid #ccc; border-radius:8px; margin-bottom:20px;">
+    <textarea id="edit-desc" placeholder="간단한 설명" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; resize:vertical; margin-bottom:10px;"></textarea>
+    <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+      <button id="save-edit-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">저장</button>
+      <button id="close-edit-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">닫기</button>
+    </div>
+  `;
+
+  document.body.appendChild(editRecordPopup);
+
+  // 버튼 클릭 이벤트
+  editRecordBtn.addEventListener("click", () => {
+    editRecordPopup.style.display = "block";
+  });
+
+  document.getElementById("close-edit-popup").addEventListener("click", () => {
+    editRecordPopup.style.display = "none";
+  });
+
+  document.getElementById("save-edit-btn").addEventListener("click", () => {
+    alert("활동 기록 수정 완료!");
+    editRecordPopup.style.display = "none";
+  });
+}
+</script>
+
+<script>
+// ✅ 활동 기록 추가 (수정모드 진입 시 생성)
+function initRecordAddButton() {
+  const sectionRecords = document.getElementById("section-records");
+
+  if (!sectionRecords) return;
+  if (!window.editMode) return;
+  if (window.addRecordBtnCreated) return;
+  window.addRecordBtnCreated = true;
+
+  sectionRecords.style.position = "relative";
+
+  // ✅ "활동 기록 추가" 버튼 생성
+  const addRecordBtn = document.createElement("button");
+  addRecordBtn.id = "add-record-btn";
+  addRecordBtn.type = "button";
+  addRecordBtn.textContent = "활동 기록 추가";
+  addRecordBtn.className = "btn-primary";
+
+  addRecordBtn.style.position = "absolute";
+  addRecordBtn.style.top = "-40px";
+  addRecordBtn.style.right = "20px";
+  addRecordBtn.style.zIndex = "10";
+  addRecordBtn.style.padding = "10px 20px";
+  addRecordBtn.style.background = "#000";
+  addRecordBtn.style.color = "#fff";
+  addRecordBtn.style.borderRadius = "8px";
+  addRecordBtn.style.fontSize = "16px";
+  addRecordBtn.style.border = "none";
+  addRecordBtn.style.cursor = "pointer";
+
+  sectionRecords.appendChild(addRecordBtn);
+
+  // ✅ "활동 기록 추가" 팝업 생성
+  const addRecordPopup = document.createElement("div");
+  addRecordPopup.id = "add-record-popup";
+  addRecordPopup.style.cssText = `
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border-radius: 12px;
+    z-index: 1000;
+    width: 400px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #000;
+    box-sizing: border-box;
+  `;
+
+  addRecordPopup.innerHTML = `
+    <h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">활동 기록 추가</h3>
+    <input type="text" id="record-title" placeholder="공연 제목" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+    <input type="date" id="record-date" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+    <input type="text" id="record-time" placeholder="시간" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+    <input type="text" id="record-location" placeholder="장소" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+    <input type="text" id="record-capacity" placeholder="인원수" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+    <input type="file" id="record-thumb-upload" style="width:100%; padding:12px; font-size:16px; border:1px solid #ccc; border-radius:8px; margin-bottom:20px;">
+    <textarea id="record-desc" placeholder="간단한 설명" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; resize:vertical; margin-bottom:10px;"></textarea>
+    <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+      <button id="save-record-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">저장</button>
+      <button id="close-record-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">닫기</button>
+    </div>
+  `;
+
+  document.body.appendChild(addRecordPopup);
+
+  // 버튼 클릭 이벤트
+  addRecordBtn.addEventListener("click", () => {
+    addRecordPopup.style.display = "block";
+  });
+
+  document.getElementById("close-record-popup").addEventListener("click", () => {
+    addRecordPopup.style.display = "none";
+  });
+
+  document.getElementById("save-record-btn").addEventListener("click", () => {
+    alert("활동 기록 추가 완료!");
+    addRecordPopup.style.display = "none";
+  });
+}
+</script>
+
+<!-- ✅ 세 번째: 수정모드 페이징 기능 (밴드소개 페이징) -->
+<script>
+// ✅ 밴드소개 페이징 기능 (수정모드 진입 시 실행)
+function initBandIntroPaging() {
+  if (!window.editMode) return; // ✅ 수정모드일 때만 작동
+
+  const introItems = document.querySelectorAll("#section-intro .intro-list li");
+  if (introItems.length < 4) return; // li가 최소 4개 있어야 정상
+
+  const introPages = [
+    [introItems[0], introItems[1]], // 1페이지: 결성일 + 장르
+    [introItems[2], introItems[3]]  // 2페이지: 활동지역 + 밴드소개
+  ];
+  let introIndex = 0;
+
+  function updateIntroPage(newIndex) {
+    introPages[introIndex].forEach(el => el.style.display = "none");
+    introIndex = newIndex;
+    introPages[introIndex].forEach(el => el.style.display = "block");
+  }
+
+  // ✅ 처음에 전부 숨기고 1페이지만 보여줌
+  introItems.forEach(el => el.style.display = "none");
+  updateIntroPage(0);
+
+  // ✅ 페이징 버튼이 없으면 생성
+  if (!document.getElementById("intro-paging-controls")) {
+    const pagingWrap = document.createElement("div");
+    pagingWrap.id = "intro-paging-controls";
+    pagingWrap.style.display = "flex";
+    pagingWrap.style.justifyContent = "center";
+    pagingWrap.style.gap = "20px";
+    pagingWrap.style.marginTop = "20px";
+
+    pagingWrap.innerHTML = `
+      <button id="intro-prev-btn" class="btn-primary">◀</button>
+      <button id="intro-next-btn" class="btn-primary">▶</button>
+    `;
+
+    const target = document.querySelector("#section-intro .intro-list");
+    if (target?.parentNode) {
+      target.parentNode.insertBefore(pagingWrap, target.nextSibling);
+    }
+
+    document.getElementById("intro-prev-btn").addEventListener("click", () => {
+      if (introIndex > 0) {
+        updateIntroPage(introIndex - 1);
+      }
+    });
+
+    document.getElementById("intro-next-btn").addEventListener("click", () => {
+      if (introIndex < introPages.length - 1) {
+        updateIntroPage(introIndex + 1);
+      }
+    });
+  }
+}
+</script>
+
+<script>
+// ✅ 수정모드 토글 버튼 기능 초기화
+function initEditToggle() {
+  const editButton = document.getElementById("edit-toggle-btn");
+  if (!editButton) return;
+
+  window.editMode = false;
+
+  editButton.addEventListener("click", () => {
+    window.editMode = !window.editMode;
+    editButton.textContent = window.editMode ? "수정완료" : "수정하기";
+
+    if (window.editMode) {
+      // ✅ 수정모드 진입 처리 함수들 실행
+      initProfileEdit();        // 프로필 영역
+      initBandIntro();          // 밴드소개 영역 input 변환
+      initBandIntroPaging();    // 밴드소개 페이징
+      initGalleryEditButton();  // 활동사진 수정 버튼
+      initGalleryAddButton();   // 활동사진 추가 버튼
+      initRecordEditButton();   // 활동기록 수정 버튼
+      initRecordAddButton();    // 활동기록 추가 버튼
+      initMemberPopupEdit();    // 멤버 소개 팝업 수정
+    } else {
+      // ✅ 수정모드 해제 처리
+      restoreProfileInfo();     // 이름, 핸들, 소개 복구
+      restoreBandIntro();       // 밴드소개 복구
+      closeAllPopups();         // 팝업창 닫기
+      removeEditButtons();      // 동적으로 생성된 버튼 제거
+    }
+  });
+}
+
+// ✅ DOM 로딩 시 초기화 함수 실행
+document.addEventListener("DOMContentLoaded", () => {
+  initEditToggle();
+});
+</script>
+
+<script>
+// ✅ 프로필 영역 원상복구 (이름/핸들/한줄소개)
+function restoreProfileInfo() {
+  const fields = [
+    { selector: ".band-name", defaultText: "Tomo Groove" },
+    { selector: ".band-handle", defaultText: "@tomogroove" },
+    { selector: ".band-one-liner", defaultText: "도쿄와 홍대를 오가는 감성 시티팝 밴드입니다 🎷" }
+  ];
+
+  fields.forEach(({ selector, defaultText }) => {
+    const container = document.querySelector(selector);
+    if (!container) return;
+
+    const input = container.querySelector("input");
+    if (input) {
+      const value = input.value.trim();
+      container.textContent = value || defaultText;
+    }
+  });
+}
+</script>
+
+<script>
+// ✅ 밴드 소개 영역 원상복구 (+ 페이징 제거 포함)
+function restoreBandIntro() {
+  const introList = document.querySelectorAll("#section-intro .intro-list li");
+
+  introList.forEach(li => {
+    const label = li.querySelector("strong")?.textContent.trim();
+    if (!label) return;
+
+    const input = li.querySelector("input");
+    const value = input ? input.value.trim() : "";
+
+    if (label.includes("결성일")) {
+      li.innerHTML = `<strong>${label}</strong> ${value || "2022년 5월"}`;
+    } else if (label.includes("장르")) {
+      li.innerHTML = `<strong>${label}</strong> ${value || "시티팝, 재즈, 인디"}`;
+    } else if (label.includes("활동지역")) {
+      li.innerHTML = `<strong>${label}</strong> ${value || "서울 홍대, 도쿄 시부야"}`;
+    } else if (label.includes("밴드 소개")) {
+      const textarea = li.querySelector("textarea");
+      const text = textarea ? textarea.value.trim() : "";
+      li.innerHTML = `<strong>${label}</strong><p class="band-description">${text || "Tomo Groove는 도쿄와 홍대 중심으로 활동하는 밴드입니다."}</p>`;
+    }
+
+    // ✅ 각 항목 display:block 으로 모두 표시
+    li.style.display = "list-item";
+  });
+
+  // ✅ 페이징 컨트롤 제거
+  const paging = document.getElementById("intro-paging-controls");
+  if (paging) paging.remove();
+}
+</script>
+
+</div>
+</body>
+</html>

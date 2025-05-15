@@ -1,3 +1,7 @@
+body {
+    overflow: hidden;
+}
+
 .admin a {
     text-decoration: none;
     color: #333;
@@ -185,4 +189,56 @@
             transform: translateX(var(--end));
         }
     }
+}
+
+.main-menu,
+.scrolling-banner,
+.header-item.left,
+.header-item.center,
+.header-icon,
+.close-btn {
+    display: none;
+}
+
+.slide-menu {
+    width: 305px;
+    margin: 15% auto;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: #f9f9f9;
+    font-family: "Noto Sans JP", sans-serif;
+    transition: border 0.3s ease;
+}
+
+.btn-login {
+    width: 100%;
+    height: 48px;
+    border: 1px solid #000;
+    border-radius: 6px;
+    background: #000;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-form .login-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.login-form .btn-link {
+    color: #000;
+    text-decoration: none;
 }

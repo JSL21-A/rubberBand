@@ -1,6 +1,7 @@
 package com.TTT.service;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class MailService {
 
-    private final JavaMailSender mailSender;
+	private final JavaMailSender mailSender;
 
     // 인증코드 생성
     public String createCode() {

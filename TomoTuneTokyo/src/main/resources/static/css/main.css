@@ -124,3 +124,92 @@
     border: 0;
     background-color: transparent;
 }
+
+
+/* ── 입력창 통일 ── */
+.forgot-form .form-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  line-height: 1.2;
+  color: #333;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+  transition: border-color 0.2s;
+}
+.forgot-form .form-group input:focus {
+  outline: none;
+  border-color: #fff;
+  background-color: #fff;
+}
+
+/* ── 次へ 버튼 스타일 ── */
+#fpNextBtn {
+  display: inline-block;
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  color: #000;
+  background-color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-bottom: 1rem;
+}
+#fpNextBtn:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+/* ── “ログインに戻る” 링크 스타일 ── */
+.forgot-form .login-actions {
+  text-align: center;
+}
+.forgot-form .login-actions .btn-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+.forgot-form .login-actions .btn-link:hover {
+  text-decoration: underline;
+}
+
+.register-form .login-actions .btn-link:hover {
+  text-decoration: underline;
+}
+
+/* ── 에러 메시지 스타일 ── */
+.forgot-form .validation-msg {
+  font-size: 0.85rem;
+  color: #e74c3c;
+  margin-top: -0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+#fpSendCode, #fpVerifyCode, #fpResetBtn{
+  display: inline-block;
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  color: #000;
+  background-color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-bottom: 1rem;
+}
+
+#fpSendCode:hover, #fpVerifyCode:hover, #fpResetBtn:hover{
+  background-color: #333;
+  color: #fff;
+}

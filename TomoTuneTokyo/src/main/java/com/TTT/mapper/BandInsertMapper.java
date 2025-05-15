@@ -29,28 +29,34 @@ public interface BandInsertMapper {
 	@Insert("INSERT INTO band_tags (band_id, tag_type, tag_value) VALUES (#{band_id}, #{tag_type}, #{tag_value})")
 	void InsertBandTag(BandInsertVo vo);
 	
-	// 활동명으로 검색 (user_id, stage_name, photo 가져옴)
-    @Select("SELECT user_id, stage_name, photo FROM resume WHERE stage_name LIKE CONCAT('%', #{keyword}, '%')")
-    List<BandInsertVo> BandInsertstage_nameSelect(@Param("keyword") String keyword);
-    
-    // 밴드 결성 리더 검색
-    @Select("SELECT user_id, stage_name, photo FROM resume WHERE user_id = #{userId}")
-    BandInsertVo selectLeaderInfo(@Param("userId") String userId);
-    
+	// user_id(UUID)로 리더 정보 불러오기
+	@Select("SELECT user_profile_id, user_id, nickname, user_img FROM user_profile WHERE user_id = #{userId}")
+    BandInsertVo getMyProfile(@Param("userId") String userId);
+
+	// username으로 user_id(UUID) 조회
+	@Select("SELECT user_id FROM users WHERE username = #{username}")
+	String findUserIdByUsername(@Param("username") String username);
+
     // 밴드 결성 일반 멤버 검색
-    @Select("SELECT user_id, stage_name, photo FROM resume WHERE stage_name LIKE CONCAT('%', #{keyword}, '%') AND user_id != #{excludeUserId}")
-    List<BandInsertVo> searchMembersExcludingSelf(@Param("keyword") String keyword, @Param("excludeUserId") String excludeUserId);
+	@Select("SELECT user_id, nickname, user_img FROM user_profile WHERE nickname LIKE CONCAT('%', #{keyword}, '%') AND user_id != #{excludeUserId}")
+	List<BandInsertVo> searchMembersNickname(@Param("keyword") String keyword, @Param("excludeUserId") String excludeUserId);
+	
+	// 밴드 결성 일반 멤버 전체 조회 (본인을 제외)
+	@Select("SELECT user_id, nickname, user_img FROM user_profile WHERE TRIM(user_id) != #{excludeUserId}")
+	List<BandInsertVo> selectAllMembersSelect(@Param("excludeUserId") String excludeUserId);
 
 	// 결성된 밴드 list에서 조회
-	@Select("SELECT * FROM bands ORDER BY created_at DESC")
+	@Select("SELECT b.band_id, b.band_name, b.band_intro, b.band_profile_img, b.created_at, m.stage_name AS stage_name FROM bands b JOIN band_member m ON b.band_id = m.band_id WHERE m.member_type = 'LEADER' ORDER BY b.created_at DESC")
 	List<BandInsertVo> selectAllBands();
 
 	// band_id 조회
 	@Select("SELECT band_id FROM bands WHERE band_name = #{band_name}")
 	Long FindBandIdByBandId(String band_name);
 	
+	// list에서 장르 태그로 검색
+	@Select("SELECT b.band_id, b.band_name, b.band_intro, b.band_profile_img, b.created_at, m.stage_name AS stage_name FROM bands b JOIN band_member m ON b.band_id = m.band_id WHERE m.member_type = 'LEADER' AND (#{genre} IS NULL OR #{genre} = '' OR EXISTS (SELECT 1 FROM band_tags WHERE band_id = b.band_id AND tag_type = 'genre' AND tag_value = #{genre})) AND (#{position} IS NULL OR #{position} = '' OR EXISTS (SELECT 1 FROM band_tags WHERE band_id = b.band_id AND tag_type = 'position' AND tag_value = #{position})) AND (#{gender} IS NULL OR #{gender} = '' OR EXISTS (SELECT 1 FROM band_tags WHERE band_id = b.band_id AND tag_type = 'gender' AND tag_value = #{gender})) AND (#{age} IS NULL OR #{age} = '' OR EXISTS (SELECT 1 FROM band_tags WHERE band_id = b.band_id AND tag_type = 'age' AND tag_value = #{age})) ORDER BY b.created_at DESC")
+	List<BandInsertVo> selectBandsByConditions(@Param("genre") String genre, @Param("position") String position, @Param("gender") String gender, @Param("age") String age);
 
-	
 	
 	
 	
