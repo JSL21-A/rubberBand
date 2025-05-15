@@ -33,5 +33,10 @@ public class MainController {
 		return "fragments/header :: header";
 	}
 	
+	//신규 채팅 생성시 chats fragment만 새로고침 
+	@GetMapping("/user/chats-fragment")
+	public String chatsFragment() {
+		return "fragments/chats :: chats";
+	}
 	
 }

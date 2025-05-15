@@ -64,13 +64,15 @@
   // ─────────────────────────────────────────
   // 3) 채널 리스트 로드
   // ─────────────────────────────────────────
-  function loadChannelList() {
+  function loadChannelList(autoOpen = true) {
     channelsQuery = sb.GroupChannel.createMyGroupChannelListQuery();
     channelsQuery.limit = 20;
     channelsQuery.next((channels, err) => {
       if(err){ console.error('채널 조회 실패', err); return; }
       renderChannelList(channels);
-      if(channels.length) openChannel(channels[0]);
+      if(autoOpen && channels.length) {
+			openChannel(channels[0])
+		};
     });
   }
 
@@ -182,33 +184,49 @@
   // ─────────────────────────────────────────
   // 10) 1:1 채널 생성
   // ─────────────────────────────────────────
-  function createOneOnOneChannel() {
+  async function createOneOnOneChannel() {
     const targetId = $('#new-chat-user').val().trim();
     if (!targetId) {
       alert('상대방 ID를 입력하세요');
       return;
     }
 
-    // === 수정 시작 ===
-    // 1) GroupChannelParams 생성
-    const params = new sb.GroupChannelParams();
-    params.isDistinct = true;
-    params.addUserId(sb.currentUser.userId);
-    params.addUserId(targetId);
+    try {
+      // ① GroupChannelParams 생성
+      const params = new sb.GroupChannelParams();
+      params.isDistinct = true;
+      params.addUserId(sb.currentUser.userId);
+      params.addUserId(targetId);
 
-    // 2) 이 Params 인스턴스를 넘겨서 채널 생성
-    sb.GroupChannel.createChannel(params, (channel, error) => {
-      if (error) {
-        console.error('채널 생성 실패', error);
-        alert('채널 생성 에러: ' + error.message);
-        return;
-      }
-      // 3) 생성 성공 시 리스트 갱신 및 채널 열기
-      loadChannelList();
-      openChannel(channel);
+      // ② Promise 래핑해서 await로 처리
+      const channel = await new Promise((resolve, reject) => {
+        sb.GroupChannel.createChannel(params, (ch, err) =>
+          err ? reject(err) : resolve(ch)
+        );
+      });
+	  
+	  $('#chat-wrapper').load('/user/chats-fragment', () => {
+		bindChatUIEvents();
+		loadChannelList(false);
+		openChannel(channel)
+	  })
+
+      // ③ 리스트 갱신(자동 오픈 억제) + 새 채널 열기
       $('#new-chat-user').val('');
-    });
-    // === 수정 끝 ===
+    } catch (err) {
+      console.error('채널 생성 에러', err);
+      alert(err.message || '채널 생성에 실패했습니다.');
+    }
+  }
+  
+  function bindChatUIEvents() {
+    $('#chat-toggle').off('click').on('click', () => $('#chat-wrapper').toggleClass('open'));
+    $('.chat-close').off('click').on('click', () => $('#chat-wrapper').removeClass('open'));
+    $('#attach-btn').off('click').on('click', () => $('#file-input').click());
+    $('#new-chat-btn').off('click').on('click', createOneOnOneChannel);
+    $('#send-btn').off('click').on('click', sendMessage);
+    $('#message-input').off('keypress').on('keypress', e => { if (e.key==='Enter') sendMessage(); });
+    $('#file-input').off('change').on('change', function(){ sendFile(this.files[0]); this.value=null; });
   }
 
 })(jQuery);
