@@ -11,37 +11,196 @@
 
 <body>
     <style>
+        body {
+            background-color: #f4f6f8;
+        }
+
         .note-editable {
             border-radius: 30px;
             background-color: #fff;
+            padding: 1% 2%;
+            height: 30vh;
+        }
+
+        .select_option.show {
+            display: block;
+        }
+
+        .select_option {
+            display: none;
+            position: absolute;
+            width: 260px;
+            top: 44px;
+            left: 0;
+            border: 1px solid #626262;
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            z-index: 2
+        }
+
+        .select_option ul {
+            list-style: none;
+            padding: 10px;
+        }
+
+        .select_option li {
+            display: inline-block;
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            color: #626262;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border-radius: 8px;
+        }
+
+        .select_option li.on {
+            background: #2d2d2d;
+            color: #fff !important;
+        }
+
+        .select_option li:hover {
+            background: #2D2D2D;
+            color: #fff;
+        }
+
+        .write_header {
+            background-color: #fff;
+            border-radius: 30px;
+            padding: 1% 2%;
+        }
+
+        .select_box {
+            position: relative;
+            border: 1px solid #5C5C5C;
+            width: 170px;
+            border-radius: 16px;
+            padding: 10px;
+        }
+
+        .select_box .selected::after {
+            display: block;
+            content: "";
+            min-width: 10px;
+            width: 10px;
+            height: 8px;
+            background: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' fill='none'%3E%3Cpath stroke='%235C5C5C' stroke-linecap='round' stroke-width='3' d='M8 2 5 5 2 2'/%3E%3C/svg%3E");
+            background-size: cover;
+            margin-left: 4px;
+        }
+
+        .select_box.disable {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .selected {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .post_title {
+            background-color: #f4f6f8;
+            position: relative;
+            margin-top: 20px;
+            width: 100%;
+            padding: 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        #post_title {
+            background: none;
+            border-width: 0;
+            width: 100%;
+            font-size: 25px;
+        }
+
+        .toolbar {
+            padding: 1%;
         }
     </style>
     <div id="content">
         <div class="write_header">
             <div class="notify" th:if="${prev == 'notify'}">
+                <input type="hidden" name="board_id" value="7" id="board_id">
                 <h1>お知らせ</h1>
             </div>
             <div class="category_list" th:unless="${prev == 'notify'}">
                 <div class="select_box">
-                    <input type="hidden" name="board_id" value="6">
+                    <input type="hidden" name="board_id" value="3" id="board_id">
                     <div class="selected">
-                        <span>コミュニティ </span>
+                        <span>コミュニティ</span>
                     </div>
                     <div class="select_option">
                         <ul>
-                            <li class="on" data-board_id="1" data-selected="true">メンバー募集</li>
-                            <li class="" data-board_id="2" data-selected="true">バンド結成</li>
-                            <li class="" data-board_id="3" data-selected="true">フリーマーケット</li>
-                            <li class="" data-board_id="4" data-selected="true">演奏音源のアップロード</li>
-                            <li class="" data-board_id="5" data-selected="true">ライブ告知</li>
-                            <li class="" data-board_id="6" data-selected="true">コミュニティ</li>
+                            <li class="" data-board_id="1">メンバー募集</li>
+                            <li class="" data-board_id="2">バンド結成</li>
+                            <li class="" data-board_id="3">フリーマーケット</li>
+                            <li class="" data-board_id="4">演奏音源</li>
+                            <li class="" data-board_id="5">ライブ告知</li>
+                            <li class="" data-board_id="6">コミュニティ</li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div class="post_title">
+                <div class="select_box" th:unless="${prev == 'notify'}">
+                    <div class="selected">
+                        <span>ー楽器ー</span>
+                    </div>
+                    <div class="select_option">
+                        <ul>
+                            <li class="">ギター</li>
+                            <li class="">ベース</li>
+                            <li class="">ドラム</li>
+                            <li class="">キーボード</li>
+                            <li class="">その外</li>
+                        </ul>
+                    </div>
+                </div>
                 <input type="text" name="post_title" id="post_title" placeholder="タイトルを入力してください">
             </div>
+        </div>
+        <div class="toolbar">
+            <button id="btn-bold">
+                <b>B</b>
+            </button>
+            <button id="btn-italic">
+                <i>I</i>
+            </button>
+            <button id="btn-underline">
+                <u>U</u>
+            </button>
+            <button id="btn-strike">
+                <s>S</s>
+            </button>
+            <button id="btn-ordered-list">
+                OL
+            </button>
+            <button id="btn-unordered-list">
+                UL
+            </button>
+            <select name="font-size" id="font-size">
+                <option value="1">10px</option>
+                <option value="2">13px</option>
+                <option value="3" selected>16px</option>
+                <option value="4">18px</option>
+                <option value="5">24px</option>
+                <option value="6">32px</option>
+                <option value="7">48px</option>
+            </select>
+            <button id="btn-image">
+                IMG
+            </button>
         </div>
         <div class="edit-area">
             <div class="note-editable" contenteditable="true"></div>
@@ -52,6 +211,106 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 <script>
+    $('#btn-bold').on('click', function () {
+        setStyle('bold');
+    });
+
+    $('#btn-italic').on('click', function () {
+        setStyle('italic');
+    });
+
+    $('#btn-underline').on('click', function () {
+        setStyle('underline');
+    });
+
+    $('#btn-strike').on('click', function () {
+        setStyle('strikeThrough')
+    });
+
+    $('#btn-ordered-list').on('click', function () {
+        setStyle('insertOrderedList');
+    });
+
+    $('#btn-unordered-list').on('click', function () {
+        setStyle('insertUnorderedList');
+    });
+
+    $('#font-size').on('change', function () {
+        setFont(this.value);
+    });
+
+    function setStyle(style) {
+        document.execCommand(style);
+        focusEditor();
+    }
+
+    function setFont(size) {
+        document.execCommand('fontSize', false, size);
+        focusEditor();
+    }
+
+    // 버튼 클릭 시 에디터가 포커스를 잃기 때문에 다시 에디터에 포커스를 해줌
+    function focusEditor() {
+        $('.note-editable')[0].focus({ preventScroll: true });
+    }
+
+    function checkOption(sel) {
+        option = [1, 3, 4];
+        if (!(option.includes(sel))) {
+            $($('.select_box')[1]).addClass('disable');
+        } else {
+            $($('.select_box')[1]).removeClass('disable');
+        }
+    }
+
+    $(document).ready(function () {
+        //어느 페이지에서 글쓰기를 했는지 탐색
+        boardId = $('#board_id').val();
+
+        //위에서 찾은 id를 토대로 카테고리 강조
+        $($('li[data-board_id=' + boardId + ']')[0]).addClass('on');
+
+        //카테고리에 해당 카테고리 표시
+        setText = $($('li[data-board_id=' + boardId + ']')[0]).text();
+        $($('.select_box')[0]).find('.selected span').text(setText);
+
+        checkOption(Number(boardId));
+    });
+
+    $(document).on('click', '.select_option li', function () {
+        // 모든 항목에서 'on' 클래스 제거
+        $(this).siblings('.select_option li').removeClass('on');
+
+        // 클릭된 항목에 'on' 클래스 추가
+        $(this).addClass('on');
+
+        // 선택된 카테고리 가져오기
+        const selectedText = $(this).text();
+        const boardId = $(this).data('board_id');
+
+        // selected 에 선택된 텍스트 적용
+        $(this).closest('.select_box').find('.selected span').text(selectedText);
+
+        // hidden input에 board_id 값 설정
+        $(this).closest('.select_box').find('input[name="board_id"]').val(boardId);
+
+        checkOption(boardId);
+    });
+
+    // 옵션 누르면 닫기
+    $(document).on('click', '.select_option li', function () {
+        $('.select_option').removeClass('show');
+    });
+
+    $(document).on('click', '.select_box .selected', function (e) {
+        e.stopPropagation(); // 클릭 전파 방지
+        $(this).siblings('.select_option').toggleClass('show');
+    });
+
+    // 바깥 누르면 닫기
+    $(document).on('click', function () {
+        $('.select_option').removeClass('show');
+    });
 </script>
 
 </html>
