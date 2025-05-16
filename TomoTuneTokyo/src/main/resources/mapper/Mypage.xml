@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.TTT.mapper.MypageMapper"> 
+
+    <!-- 이력서 작성 SQL -->
+    <insert id="insertResume" parameterType="com.TTT.domain.MypageDto">
+        INSERT INTO resume (
+            resume_id,
+            user_id,
+            stage_name,
+            gender,
+            birth,
+            sns,
+            phone_number,
+            area,
+            instrument,
+            genre,
+            practice_date,
+            practice_time,
+            detail_time,
+            band_career,
+            band_name,
+            band_period,
+            note
+        )
+        VALUES (
+            #{resumeId},
+            #{userId},
+            #{stageName},
+            #{gender},
+            #{birth},
+            #{sns},
+            #{phoneNumber},
+            #{area},
+            #{instrument},
+            #{genre},
+            #{practiceDate},
+            #{practiceTime},
+            #{detailTime},
+            #{bandCareer},
+            #{bandName},
+            #{bandPeriod},
+            #{note}
+        )
+    </insert>
+
+</mapper>
