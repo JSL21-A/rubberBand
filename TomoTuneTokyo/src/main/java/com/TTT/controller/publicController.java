@@ -20,19 +20,25 @@ public class publicController {
     AdminService adminService;
 
     @GetMapping("/write")
-    public String writeNotice(HttpServletRequest request, Model model) {
-        String uri = request.getRequestURI();
-        if (uri.startsWith("/admin")) {
-            if ("true".equals(request.getHeader("HX-Request"))) {
-                String prevUri = request.getHeader("referer")
-                        .substring(request.getHeader("referer").lastIndexOf("/") + 1);
-                model.addAttribute("prev", prevUri);
-                return "public/write";
-            } else {
-                return "redirect:/admin/main";
+    public Object writePost(HttpServletRequest request, Model model) {
+        String accept = request.getHeader("Accept");
+        if (accept != null && !(accept.contains("application/json"))) {
+            String uri = request.getRequestURI();
+            if (uri.startsWith("/admin")) {
+                if ("true".equals(request.getHeader("HX-Request"))) {
+                    String prevUri = request.getHeader("referer")
+                            .substring(request.getHeader("referer").lastIndexOf("/") + 1);
+                    model.addAttribute("prev", prevUri);
+                    return "public/write";
+                } else {
+                    return "redirect:/admin/main";
+                }
             }
+            return "public/write";
+        } else {
+
+            return "";
         }
-        return "public/write";
     }
 
     @GetMapping("/test")
