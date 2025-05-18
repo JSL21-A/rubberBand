@@ -10,6 +10,8 @@
 </head>
 
 <body>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <style>
         body {
             background-color: #f4f6f8;
@@ -263,6 +265,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 <script>
+
     // 글 작성 효과적용 스크립트
     $('#btn-bold').on('click', function () {
         setStyle('bold');
@@ -292,24 +295,51 @@
         setFont(this.value);
     });
 
+    const fileMap = new Map(); // id → File 객체 저장용
+
     $('#btn-image').on('click', function () {
-        const imageSelector = $('#img-selector')[0];
-        imageSelector.click();
+        $('#img-selector').click();
     });
 
     $('#img-selector').on('change', function (e) {
         const files = e.target.files;
-        if (!!files) {
-            insertImageDate(files[0]);
+        if (files && files.length > 0) {
+            Array.from(files).forEach(file => {
+                insertImageWithTracking(file);
+            });
         }
+        $('#img-selector').val(''); // 같은 파일 다시 선택할 수 있게 초기화
     });
 
-    function insertImageDate(file) {
+    function insertImageWithTracking(file) {
+        const id = crypto.randomUUID();
         const reader = new FileReader();
-        reader.addEventListener('load', function (e) {
+
+        reader.addEventListener('load', function () {
             focusEditor();
-            document.execCommand('insertImage', false, `${reader.result}`);
+
+            // 직접 img 태그 삽입
+            const img = document.createElement('img');
+            img.src = reader.result;
+            img.setAttribute('data-id', id);
+
+            const sel = window.getSelection();
+            if (!sel.rangeCount) return;
+
+            const range = sel.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(img);
+
+            // 커서 이동
+            range.setStartAfter(img);
+            range.setEndAfter(img);
+            sel.removeAllRanges();
+            sel.addRange(range);
+
+            // FileMap에 저장
+            fileMap.set(id, file);
         });
+
         reader.readAsDataURL(file);
     }
 
@@ -340,6 +370,13 @@
     }
 
     $(document).ready(function () {
+
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(csrfHeader, csrfToken);
+        });
+
         //어느 페이지에서 글쓰기를 했는지 탐색
         boardId = $('#board_id').val();
 
@@ -449,25 +486,44 @@
             }
         }
 
-        console.log($('#img-selector').val());
+        const formData = new FormData();
 
-        // $.ajax({
-        //     url: '/',
-        //     method: 'post',
-        //     data: form,
-        //     dataType: 'html',
-        //     success: function (data, status, xhr) {
-        //         console.log("data : : " + JSON.stringify(data));
-        //         $("#search_result").empty();
-        //         $("#search_result").replaceWith(data);
-        //     },
-        //     error: function (data, status, err) {
-        //     },
-        //     complete: function () {
-        //         var total = $("#dataCount").val();
-        //         $("#totalCount").text(addComma(total));
-        //     }
-        // });
+        const contentHtml = $('.note-editable')[0].innerHTML;
+        formData.append('content', contentHtml);
+        console.log(contentHtml);
+
+        const usedIds = new Set(
+            Array.from($('.note-editable img')).map(img => img.getAttribute('data-id'))
+        );
+
+        for (let [id, file] of fileMap.entries()) {
+            if (usedIds.has(id)) {
+                formData.append('images', file);
+            }
+        }
+
+        console.log(formData);
+
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+        $.ajax({
+            url: './doWrite',
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(csrfHeader, csrfToken);
+            },
+            success: function (res) {
+                alert('게시물이 등록되었습니다.');
+            },
+            error: function (err) {
+                alert('등록 실패');
+                console.error(err);
+            }
+        });
     });
 </script>
 
