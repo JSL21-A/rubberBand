@@ -462,23 +462,32 @@
         // 제목과 내용이 공백이거나 비어있는지 체크
         titleEmpty = $('#post_title').val().trim();
         contentEmpty = $('.note-editable').text().trim();
-        if (titleEmpty == "") {
-            alert("タイトルを入力してください。");
+
+        if (titleEmpty.length < 2) {
+            if (titleEmpty == "") {
+                alert("タイトルを入力してください。");
+            } else {
+                alert("二文字以上入力してください。");
+            }
             $('#post_title').focus();
             return;
         }
-        if (contentEmpty == "") {
-            alert("内容を入力してください。");
+
+        if (contentEmpty.length < 2) {
+            if (contentEmpty == "") {
+                alert("内容を入力してください。");
+            } else {
+                alert("二文字以上入力してください。");
+            }
             $('.note-editable').focus();
             return;
         }
 
         //부 카테고리가 비활성화가 아닐때.(선택 가능할때)
-        var head = "";
-        console.log($('#board_id').val());
+        title = $('#post_title').val();
         if (!($('.select_box.play').hasClass('disable')) && $('#board_id').val() != 7) {
             if ($('#play_id').val()) {
-                head = $('.select_box.play').find('li[data-play_id=' + $('#play_id').val() + ']').text();
+                title = '[' + $('.select_box.play').find('li[data-play_id=' + $('#play_id').val() + ']').text() + ']' + title;
             } else {
                 alert("サブカテゴリーを選択してください。");
                 $($('.select_box.play')[0]).find('.select_option').toggleClass('show');
@@ -490,7 +499,11 @@
 
         const contentHtml = $('.note-editable')[0].innerHTML;
         formData.append('content', contentHtml);
-        console.log(contentHtml);
+        formData.append('title', title);
+
+        const boardId = $('#board_id').val();
+
+        formData.append('board_id', boardId);
 
         const usedIds = new Set(
             Array.from($('.note-editable img')).map(img => img.getAttribute('data-id'))

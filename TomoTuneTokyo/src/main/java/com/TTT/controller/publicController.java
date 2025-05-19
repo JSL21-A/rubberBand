@@ -1,5 +1,6 @@
 package com.TTT.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.TTT.domain.PostVo;
 import com.TTT.domain.UserDto;
 import com.TTT.service.AdminService;
+import com.TTT.service.PublicService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +28,9 @@ public class publicController {
 
     @Autowired
     AdminService adminService;
+
+    @Autowired
+    PublicService publicService;
 
     @GetMapping("/write")
     public String writePost(HttpServletRequest request, Model model) {
@@ -44,19 +50,18 @@ public class publicController {
 
     @PostMapping("/doWrite")
     public ResponseEntity<?> doPost(@RequestParam("content") String content,
-            @RequestParam(name = "images", required = false) List<MultipartFile> images) {
-        System.out.println(images);
-        return ResponseEntity.ok().build();
-    }
+            @RequestParam(name = "images", required = false) List<MultipartFile> images,
+            @RequestParam("title") String title, @RequestParam("board_id") Long board_id,
+            Principal principal, PostVo vo) {
 
-    @GetMapping("/test")
-    public String modalTest(HttpServletRequest request, UserDto userDto, Model model) {
-        if ("true".equals(request.getHeader("HX-Request"))) {
-            adminService.modalTest(userDto);
-            model.addAttribute("test", userDto.getNickname());
-            return "admin/testModal";
-        } else {
-            return "redirect:/admin/main";
-        }
+        vo.setBoard_id(board_id);
+        vo.setPost_title(title);
+        vo.setPost_content(content);
+        vo.setPost_pinned('Y');
+        vo.setUser_id(publicService.searchUserByUserName(principal.getName()));
+
+        publicService.insertPost(vo);
+
+        return ResponseEntity.ok().build();
     }
 }

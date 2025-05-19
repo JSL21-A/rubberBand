@@ -6,6 +6,10 @@
     <title>Document</title>
 </head>
 <style>
+    body {
+        overflow: scroll;
+    }
+
     #notice {
         margin: 0;
         padding: 0;
@@ -74,51 +78,15 @@
                     <ul>
                         <li class="noti_post">
                             <a href="#">
-                                <div class="noti_title">TITLE</div>
+                                <div class="noti_title">タイトル</div>
                             </a>
-                            <div class="noti_date">DATE</div>
+                            <div class="noti_date">作成日</div>
                         </li>
-                        <li class="noti_post">
+                        <li class="noti_post" th:each="post: ${list}">
                             <a hx-get="/admin/test">
-                                <div class="noti_title">testThings1</div>
+                                <div class="noti_title" th:text="${post.post_title}"></div>
                             </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
+                            <div class="noti_date" th:text="${#temporals.format(post.created_at, 'yyyy.MM.dd')}"></div>
                         </li>
                     </ul>
                 </div>

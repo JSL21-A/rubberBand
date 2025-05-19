@@ -1,5 +1,7 @@
 package com.TTT.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,8 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.TTT.domain.PostVo;
 import com.TTT.domain.UserDto;
 import com.TTT.service.AdminService;
+import com.TTT.service.PublicService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -18,6 +22,9 @@ public class AdminController {
 
     @Autowired
     AdminService adminService;
+
+    @Autowired
+    PublicService publicService;
 
     @GetMapping("/")
     public String rediMain() {
@@ -40,8 +47,10 @@ public class AdminController {
     }
 
     @GetMapping("/notify")
-    public String noticeList(HttpServletRequest request) {
+    public String noticeList(HttpServletRequest request, Model model) {
         if ("true".equals(request.getHeader("HX-Request"))) {
+            List<PostVo> list = publicService.getPostList(7);
+            model.addAttribute("list", list);
             return "admin/noticeList";
         } else {
             return "redirect:/admin/main";
