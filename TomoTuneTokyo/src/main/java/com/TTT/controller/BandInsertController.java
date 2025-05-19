@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.TTT.domain.BandInsertVo;
 import com.TTT.service.BandInsertService;
@@ -23,22 +24,26 @@ import com.TTT.service.BandInsertService;
 
 @Controller
 @RequestMapping("/bandinsert")
-public class MemberInsertController {
+public class BandInsertController {
 	
 	@Autowired
 	private BandInsertService bandInsertService;
 	
-	// 밴드 상세정보
+	// 밴드 list
 	@GetMapping("/modifylist")
 	public String modifylist(@RequestParam(value = "genre", required = false) String genre,
             @RequestParam(value = "position", required = false) String position,
             @RequestParam(value = "gender", required = false) String gender,
             @RequestParam(value = "age", required = false) String age,
+            @RequestParam(value = "keyword", required = false) String keyword,
 	                         Model model, Principal principal) {
 
 	    // ✅ 필터 조건에 따라 밴드 리스트 조회
 	    List<BandInsertVo> bandList = bandInsertService.getBandsByConditions(genre, position, gender, age);
 	    model.addAttribute("bandList", bandList);
+	    
+	    List<BandInsertVo> bandnamelist = bandInsertService.searchByTeamNameOrPosition(keyword);
+	    model.addAttribute("bandnamelist", bandnamelist);
 
 	    // ✅ 로그인한 리더 정보 전달
 	    if (principal != null) {
@@ -53,12 +58,13 @@ public class MemberInsertController {
 	    model.addAttribute("selectedPosition", position);
 	    model.addAttribute("selectedGender", gender);
 	    model.addAttribute("selectedAge", age);
+	    
+	    model.addAttribute("keyword", keyword); // 검색창 view에 다시 전달
 
 	    return "band/modifylist";
 	}
-
-
-
+	
+	
 	// 밴드 결성 입력폼 (저장 기능 포함)
 	    @InitBinder
 	    public void initBinder(WebDataBinder binder) {

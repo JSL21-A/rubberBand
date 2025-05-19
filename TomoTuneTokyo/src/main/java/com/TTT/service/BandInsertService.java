@@ -180,11 +180,15 @@ public class BandInsertService {
 	public List<BandInsertVo> getBandsByConditions(String genre, String position, String gender, String age) {
 	    return bandInsertMapper.selectBandsByConditions(genre, position, gender, age);
 	}
-
 	
 	// band_id 호출
 	public Long getBandIdByBandName(String band_name) {
 		return bandInsertMapper.FindBandIdByBandId(band_name);
+	}
+
+	// 밴드명 검색창 검색
+	public List<BandInsertVo> searchByTeamNameOrPosition(String keyword) {
+	    return bandInsertMapper.searchBandsByName(keyword);
 	}
 
 }
