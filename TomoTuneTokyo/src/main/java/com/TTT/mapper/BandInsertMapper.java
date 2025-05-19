@@ -57,7 +57,11 @@ public interface BandInsertMapper {
 	@Select("SELECT b.band_id, b.band_name, b.band_intro, b.band_profile_img, b.created_at, m.stage_name AS stage_name FROM bands b JOIN band_member m ON b.band_id = m.band_id WHERE m.member_type = 'LEADER' AND (#{genre} IS NULL OR #{genre} = '' OR EXISTS (SELECT 1 FROM band_tags WHERE band_id = b.band_id AND tag_type = 'genre' AND tag_value = #{genre})) AND (#{position} IS NULL OR #{position} = '' OR EXISTS (SELECT 1 FROM band_tags WHERE band_id = b.band_id AND tag_type = 'position' AND tag_value = #{position})) AND (#{gender} IS NULL OR #{gender} = '' OR EXISTS (SELECT 1 FROM band_tags WHERE band_id = b.band_id AND tag_type = 'gender' AND tag_value = #{gender})) AND (#{age} IS NULL OR #{age} = '' OR EXISTS (SELECT 1 FROM band_tags WHERE band_id = b.band_id AND tag_type = 'age' AND tag_value = #{age})) ORDER BY b.created_at DESC")
 	List<BandInsertVo> selectBandsByConditions(@Param("genre") String genre, @Param("position") String position, @Param("gender") String gender, @Param("age") String age);
 
-	
+	// 밴드 팀명 검색창
+	@Select("SELECT * FROM bands WHERE band_name LIKE CONCAT('%', #{keyword}, '%')")
+	List<BandInsertVo> searchBandsByName(@Param("keyword") String keyword);
+
+
 	
 	
 	}
