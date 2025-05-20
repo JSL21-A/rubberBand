@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{layouts/layout}">
 
 <head>
     <meta charset="UTF-8">
@@ -151,6 +152,10 @@
             padding: 1%;
         }
 
+        .toolbar {
+            width: 30px;
+        }
+
         .btn-area {
             display: flex;
             justify-content: space-between;
@@ -161,7 +166,7 @@
             display: none;
         }
     </style>
-    <div id="content">
+    <div id="content" layout:fragment="content">
         <div class="write_header">
             <!-- 공지사항 작성인지 판단 -->
             <div class="notify" th:if="${prev == 'notify'}">

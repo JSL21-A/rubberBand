@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{layouts/layout}">
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:attr="layout:decorate='~{layouts/layout}'">
 
 <head>
     <meta charset="UTF-8">
@@ -21,7 +21,7 @@
             }
 
             #content {
-                width: 80vw;
+                width: 90vw;
                 margin: 0 auto;
                 margin-top: 60px;
             }
@@ -29,6 +29,7 @@
             #top {
                 display: flex;
                 flex-direction: row-reverse;
+                margin-bottom: 30px;
             }
 
             #middle {
@@ -199,7 +200,7 @@
             </div>
             <div id="bottom">
                 1 2 3 4 5 6
-                <a hx-get="/admin/write" hx-target="#content" hx-push-url="true">作成</a>
+                <a hx-get="./write" hx-target="#content" hx-push-url="true">作成</a>
             </div>
         </div>
         <script>

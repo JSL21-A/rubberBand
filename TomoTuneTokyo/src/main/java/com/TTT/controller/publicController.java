@@ -57,17 +57,20 @@ public class publicController {
     @GetMapping("/write")
     public String writePost(HttpServletRequest request, Model model) {
         String uri = request.getRequestURI();
+        boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
+        model.addAttribute("isHtmx", isHtmx);
         if (uri.startsWith("/admin")) {
-            if ("true".equals(request.getHeader("HX-Request"))) {
-                String prevUri = request.getHeader("referer")
-                        .substring(request.getHeader("referer").lastIndexOf("/") + 1);
-                model.addAttribute("prev", prevUri);
+            String prevUri = request.getHeader("referer")
+                    .substring(request.getHeader("referer").lastIndexOf("/") + 1);
+            model.addAttribute("prev", prevUri);
+            if (isHtmx) {
                 return "public/write";
             } else {
                 return "redirect:/admin/main";
             }
         }
         return "public/write";
+
     }
 
     @PostMapping("/doWrite")
