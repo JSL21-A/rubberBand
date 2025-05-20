@@ -51,7 +51,8 @@ public class SecurityConfig {
             .requestMatchers(
 
               "/", 
-              "/css/**", "/JS/**", "/images/**",
+              "/css/**", "/JS/**", "/images/**", 
+              "/resume/**",
               "/user/check-username",
               "/user/check-nickname",
               "/user/send-email-code",

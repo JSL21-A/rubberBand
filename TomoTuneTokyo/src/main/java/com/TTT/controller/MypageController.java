@@ -1,14 +1,17 @@
 package com.TTT.controller;
-//안녕녕 
+ 
 import java.security.Principal;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.TTT.domain.MypageDto;
+import com.TTT.domain.UserDto;
 import com.TTT.service.MypageService;
+import com.TTT.service.UserService;
 
-@Controller
+@Controller 
 @RequestMapping("/resume")
 public class MypageController {
 	
@@ -21,20 +24,26 @@ public class MypageController {
 	// 이력서 입력 폼 열기
 	@GetMapping("/insert")
 	public String resumeInsertForm() {
-	    return "mypage/resumeInsert"; // templates/mypage/resumeInsert.html
+	    return "mypage/resumeInsert";
 	}
 
 	// 이력서 저장 
+
+	@Autowired
+	private UserService userService;
+
 	@PostMapping("/insert")
-	public String insertResume(@ModelAttribute MypageDto dto,
-	                           Principal principal) {
-	    // 로그인한 사용자 ID를 불러오기 
-	    String userId = principal.getName();
-	    dto.setUserId(userId); // DTO에 설정
+	public String insertResume(@ModelAttribute MypageDto dto, Principal principal) {
+	    String username = principal.getName();
 
-	    // 저장 처리
+	    UserDto user = userService.findByUsername(username);
+	    String userId = user.getUser_id();
+
+	    dto.setUserId(userId);
+
 	    mypageService.saveResume(dto);
-
-	    return "redirect:/mypage/success"; // 저장 후 이동할 페이지
+	    return "redirect:/resume/insert"; //경로 바꾸기 !!
 	}
+
+
 }

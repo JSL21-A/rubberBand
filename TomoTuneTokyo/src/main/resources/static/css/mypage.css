@@ -351,6 +351,7 @@ ul li {
 }
 
 label.field-label {
+	font-size: 17px;
 	font-weight: 700; /* 각항목 제목 굵게 */
 }
 
@@ -541,4 +542,29 @@ textarea#selfIntro {
 	font-size: 0.85rem;
 	color: #cbd5e1;
 	margin-top: 2px;
+}
+
+.band-card {
+  background: #f8f9fa;
+  padding: 1.2rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  border: 1px solid #dee2e6;
+  position: relative;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.6rem;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.remove-btn:hover {
+  color: #dc3545;
 }

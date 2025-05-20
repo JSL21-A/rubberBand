@@ -28,7 +28,6 @@ public class MypageDto {
 	private String practiceTime; // 연습가능시간대
 	private String detailTime; // 구체적인 시간
 	// 밴드활동정보
-	//ID 필요할까? (3개까지 등록가능하니까)
 	private String bandCareer; // 밴드활동경험유무
 	private String bandName; // 활동밴드이름
 	// 포지션 필요 !! 

@@ -6,45 +6,44 @@
 <mapper namespace="com.TTT.mapper.MypageMapper"> 
 
     <!-- 이력서 작성 SQL -->
-    <insert id="insertResume" parameterType="com.TTT.domain.MypageDto">
-        INSERT INTO resume (
-            resume_id,
-            user_id,
-            stage_name,
-            gender,
-            birth,
-            sns,
-            phone_number,
-            area,
-            instrument,
-            genre,
-            practice_date,
-            practice_time,
-            detail_time,
-            band_career,
-            band_name,
-            band_period,
-            note
-        )
-        VALUES (
-            #{resumeId},
-            #{userId},
-            #{stageName},
-            #{gender},
-            #{birth},
-            #{sns},
-            #{phoneNumber},
-            #{area},
-            #{instrument},
-            #{genre},
-            #{practiceDate},
-            #{practiceTime},
-            #{detailTime},
-            #{bandCareer},
-            #{bandName},
-            #{bandPeriod},
-            #{note}
-        )
-    </insert>
+<insert id="insertResume" parameterType="com.TTT.domain.MypageDto"
+        useGeneratedKeys="true" keyProperty="resumeId">
+    INSERT INTO resume (
+        user_id,
+        stage_name,
+        gender,
+        birth,
+        sns,
+        phone_number,
+        area,
+        instrument,
+        genre,
+        practice_date,
+        practice_time,
+        detail_time,
+        band_career,
+        band_name,
+        band_period,
+        note
+    ) VALUES (
+        #{userId},
+        #{stageName},
+        #{gender},
+        #{birth},
+        #{sns},
+        #{phoneNumber},
+        #{area},
+        #{instrument},
+        #{genre},
+        #{practiceDate},
+        #{practiceTime},
+        #{detailTime},
+        #{bandCareer},
+        #{bandName},
+        #{bandPeriod},
+        #{note}
+    )
+</insert>
+
 
 </mapper>
