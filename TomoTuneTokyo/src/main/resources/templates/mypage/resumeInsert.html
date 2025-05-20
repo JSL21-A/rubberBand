@@ -18,6 +18,18 @@
 <!-- 활동기간 일본 캘린더 -->
 <script
 	src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // flatpickr가 완전히 로드된 후에 실행되도록 보장
+    const monthSelectPlugin = window.flatpickr?.plugins?.monthSelect;
+
+    // 이 변수를 전역에서 쓸 수 있게 window에 저장해 두는 것도 한 방법입니다
+    window.monthSelectPlugin = monthSelectPlugin;
+  });
+</script>
+
+
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
 
@@ -69,6 +81,9 @@
 		<div class="box content-box">
 			<div class="resume-form">
 				<form id="resumeForm" action="/resume/insert" method="post">
+				
+				 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				
 					<!-- 활동명(필수) -->
 					<h4>
 						<label class="field-label">アーティスト名<span
@@ -80,9 +95,7 @@
 						<label class="field-label">性別<span class="required-label">必須</span></label>
 					</h4>
 					<div class="gender-group">
-						<label><input type="radio" name="gender" value="woman">
-							女性</label> <label><input type="radio" name="gender" value="man">
-							男性</label>
+						<label><input type="radio" name="gender" value="F"> 女性</label> <label><input type="radio" name="gender" value="M"> 男性</label>
 					</div>
 
 					<!-- 생년월일 캘린더(선택) -->
@@ -162,9 +175,9 @@
 							name="position-etc-input" placeholder="例: DJ"
 							style="display: none;" />
 						<!-- その他 -->
-						<input type="text" id="position-etc-input"
+						<!--  <input type="text" id="position-etc-input"
 							name="position-etc-input" placeholder="例: DJ"
-							style="display: none;" />
+							style="display: none;" />-->
 					</div>
 					<!-- 선호하는 음악장르, 드롭다운 복수선택가능 -->
 					<h4>
@@ -204,7 +217,8 @@
 					</div>
 
 					<!-- 연습가능시간대, 드롭다운 복수선택가능 (필수) -->
-					<label>時間代</label> <select id="timeSlot">
+					<label>時間代 <span class="required-label">必須</span></label> <select
+						id="timeSlot" name="practiceTime">
 						<option value="">-- 選択してください --</option>
 						<option value="morning">午前（06時〜12時）</option>
 						<option value="afternoon">午後（12時〜18時）</option>
@@ -212,7 +226,7 @@
 						<option value="other">その他</option>
 					</select>
 					<!-- その他 -->
-					<label>具体的な時間</label> <input type="text" id="customTime"
+					<label>具体的な時間</label> <input type="text" id="customTime" name="detailTime"
 						placeholder="例）18時〜22時">
 					<!-- 밴드활동이력추가, 버튼 클릭시 입력폼이 나오게(선택) -->
 					<h4>
@@ -224,7 +238,7 @@
 					</div>
 					<!-- 자기소개, 텍스트창 (선택) -->
 					<h4>
-						<label for="selfIntro">自己紹介</label>
+						<label class="field-label">自己紹介</label>
 					</h4>
 					<textarea id="selfIntro" name="selfIntro" rows="5" cols="50"
 						placeholder="例：ギター歴3年、ロックバンド経験あり。よろしくお願いします！"
@@ -256,14 +270,19 @@
 						</div>
 					</div>
 					<!-- top 버튼 -->
-					<button id="topButton" title="top 버튼">
+					<button id="topButton" type="button" title="top 버튼">
 						<span>↑</span>
 					</button>
+
 				</form>
 				<!-- resume-form -->
 			</div>
 
 			<!-- JS -->
+			<script>
+  const monthSelectPlugin = window.flatpickr?.plugins?.monthSelect;
+</script>
+
 			<!-- 작성취소버튼 -->
 			<script>
 		function cancelForm() {
@@ -495,46 +514,75 @@ function confirmReset() {
   let bandCount = 0;
 
   function addBandHistory() {
-    if (bandCount >= 3) {
-      alert("最大3件まで追加できます。");
-      return;
-    }
+	  if (bandCount >= 3) {
+	    alert("最大3件まで追加できます。");
+	    return;
+	  }
 
-    bandCount++;
-    const container = document.createElement('div');
-    container.className = 'band-card';
+	  bandCount++;
+	  const container = document.createElement('div');
+	  container.className = 'band-card';
+	  container.style.position = 'relative';
 
-    container.innerHTML = `
-      <label>バンド名</label>
-      <input type="text" name="band_name_${bandCount}" placeholder="例: Oasis" />
+	  container.innerHTML = `
+	    <button class="remove-btn" type="button" title="削除">✕</button>
+	    <label>バンド名</label>
+	    <input type="text" name="band_name_${bandCount}" placeholder="例: Oasis" />
 
-      <label>ポジション</label>
-      <input type="text" name="band_part_${bandCount}" placeholder="例: ボーカル" />
+	    <label>ポジション</label>
+	    <input type="text" name="band_part_${bandCount}" placeholder="例: ボーカル" />
 
-      <label>活動期間</label>
-      <div class="band-period">
-        <input type="text" id="band-start-${bandCount}" name="band_start_${bandCount}" placeholder="開始年月を選択" />
-        <span>から</span>
-        <input type="text" id="band-end-${bandCount}" name="band_end_${bandCount}" placeholder="終了年月を選択" />
-        <span>まで</span>
-      </div>
-    `;
+	    <label>活動期間</label>
+	    <div class="band-period">
+	      <input type="text" id="band-start-${bandCount}" name="band_start_${bandCount}" placeholder="開始年月を選択" />
+	      <span>から</span>
+	      <input type="text" id="band-end-${bandCount}" name="band_end_${bandCount}" placeholder="終了年月を選択" />
+	      <span>まで</span>
+	    </div>
+	  `;
 
-    document.getElementById('band-history').appendChild(container);
+	  container.querySelector('.remove-btn').onclick = () => {
+	    container.remove();
+	    bandCount--;
+	  };
 
-    flatpickr(`#band-start-${bandCount}`, {
-      locale: "ja",
-      dateFormat: "Y-m",
-      plugins: [new monthSelectPlugin({ shorthand: true, dateFormat: "Y-m", altFormat: "Y年m月" })]
-    });
+	  document.getElementById('band-history').appendChild(container);
 
-    flatpickr(`#band-end-${bandCount}`, {
-      locale: "ja",
-      dateFormat: "Y-m",
-      plugins: [new monthSelectPlugin({ shorthand: true, dateFormat: "Y-m", altFormat: "Y年m月" })]
-    });
-  }
+	  // 플러그인 존재 여부 확인 후 적용
+	  if (window.flatpickr && window.flatpickr.plugins && window.flatpickr.plugins.monthSelect) {
+	    const plugin = window.flatpickr.plugins.monthSelect;
+	    
+	    flatpickr(`#band-start-${bandCount}`, {
+	      locale: "ja",
+	      dateFormat: "Y-m",
+	      plugins: [
+	        new plugin({
+	          shorthand: true,
+	          dateFormat: "Y-m",
+	          altFormat: "Y年m月"
+	        })
+	      ]
+	    });
+
+	    flatpickr(`#band-end-${bandCount}`, {
+	      locale: "ja",
+	      dateFormat: "Y-m",
+	      plugins: [
+	        new plugin({
+	          shorthand: true,
+	          dateFormat: "Y-m",
+	          altFormat: "Y年m月"
+	        })
+	      ]
+	    });
+	  } else {
+	    console.error("monthSelect 플러그인을 사용할 수 없습니다. 스크립트 로드 확인 필요!");
+	  }
+	}
+
+
 </script>
+
 			<!-- box content-box -->
 		</div>
 		<!-- page-->
