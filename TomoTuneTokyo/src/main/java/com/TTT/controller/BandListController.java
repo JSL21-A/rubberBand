@@ -77,7 +77,6 @@ public class BandListController {
 	
 	@GetMapping("/view")
 	public String viewPortfolio() {
-		
 		return "/band/view";
 	}
 	
