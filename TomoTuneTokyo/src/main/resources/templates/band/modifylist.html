@@ -85,7 +85,7 @@
 <!-- 🔍 검색어가 있을 경우 bandnamelist 출력 -->
 <div class="board-card-grid" th:if="${keyword != null and !#strings.isEmpty(keyword)}">
   <div class="board-card" th:each="band : ${bandnamelist}">
-    <a th:href="@{/bandinsert/modify(band_id=${band.band_id})}">
+	<a th:href="@{'/bandinsertselect/modify?band_id=' + ${band.band_id}}">
       <img th:src="@{${band.band_profile_img != null ? '/images/uploads/bands/' + band.band_profile_img : '/images/default.png'}}"
            alt="썸네일" class="card-image">
     </a>
@@ -104,7 +104,7 @@
 <!-- 🔍 검색어가 없을 경우 기존 bandList 출력 -->
 <div class="board-card-grid" th:if="${keyword == null or #strings.isEmpty(keyword)}">
   <div class="board-card" th:each="band : ${bandList}">
-    <a th:href="@{/bandinsert/modify(band_id=${band.band_id})}">
+	<a th:href="@{'/bandinsertselect/modify?band_id=' + ${band.band_id}}">
       <img th:src="@{${band.band_profile_img != null ? '/images/uploads/bands/' + band.band_profile_img : '/images/default.png'}}"
            alt="썸네일" class="card-image">
     </a>

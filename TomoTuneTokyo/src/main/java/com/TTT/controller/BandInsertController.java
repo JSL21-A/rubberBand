@@ -16,12 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.TTT.domain.BandInsertVo;
 import com.TTT.service.BandInsertService;
 
-
+// 밴드 결성 관련 콘트롤러 
 @Controller
 @RequestMapping("/bandinsert")
 public class BandInsertController {
@@ -218,13 +217,5 @@ public class BandInsertController {
 		    return bandInsertService.getBandIdByBandName(band_name); // band_name으로 band_id 조회
 		}
 
-	
-		// 밴드 상세정보
-		@GetMapping("/modify")
-		public String modify() {
-			return "/band/modify";
-		}
-
-	
 	
 }
