@@ -16,12 +16,12 @@ public class PublicService {
     private PublicMapper publicMapper;
 
     public void insertPost(PostVo postVo) {
-        System.out.println(postVo.getBoard_id());
         if (postVo.getBoard_id() == 7) {
-            publicMapper.insertNotify(postVo);
+            postVo.setPost_pinned('Y');
         } else {
-            System.out.println("not today biach");
+            postVo.setPost_pinned('N');
         }
+        publicMapper.insertPost(postVo);
     }
 
     public String searchUserByUserName(String username) {
@@ -30,5 +30,9 @@ public class PublicService {
 
     public List<PostVo> getPostList(int board_id) {
         return publicMapper.getPostList(board_id);
+    }
+
+    public List<PostVo> getPostListAll() {
+        return publicMapper.getPostListAll();
     }
 }

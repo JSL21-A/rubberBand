@@ -32,6 +32,28 @@ public class publicController {
     @Autowired
     PublicService publicService;
 
+    @GetMapping("/list")
+    public String postList(HttpServletRequest request, Model model) {
+        String Param = request.getParameter("board");
+        if (Param == null) {
+            List<PostVo> list = publicService.getPostListAll();
+            model.addAttribute("list", list);
+
+            List<PostVo> noti = publicService.getPostList(7);
+            model.addAttribute("noti", noti);
+        } else {
+            List<PostVo> list = publicService.getPostList(Integer.parseInt(Param));
+            model.addAttribute("list", list);
+
+            if (!(Param.equals("7"))) {
+                List<PostVo> noti = publicService.getPostList(7);
+                model.addAttribute("noti", noti);
+            }
+            System.out.println(list);
+        }
+        return "public/postList";
+    }
+
     @GetMapping("/write")
     public String writePost(HttpServletRequest request, Model model) {
         String uri = request.getRequestURI();
@@ -57,7 +79,6 @@ public class publicController {
         vo.setBoard_id(board_id);
         vo.setPost_title(title);
         vo.setPost_content(content);
-        vo.setPost_pinned('Y');
         vo.setUser_id(publicService.searchUserByUserName(principal.getName()));
 
         publicService.insertPost(vo);

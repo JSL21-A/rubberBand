@@ -10,6 +10,7 @@ public class PostVo {
     private Long post_id; // 글 번호(자동생성)
     private Long board_id; // 카테고리 번호
     private String user_id; // 작성자 번호
+    private String nickname; // 작성자 닉네임
     private String post_title; // 글 이름
     private String post_content; // 글 내용
     private String post_img; // 이미지가 있다면 경로 저장
