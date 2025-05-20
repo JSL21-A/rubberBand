@@ -219,7 +219,11 @@ public class BandInsertController {
 		}
 
 	
-
+		// 밴드 상세정보
+		@GetMapping("/modify")
+		public String modify() {
+			return "/band/modify";
+		}
 
 	
 	
