@@ -218,7 +218,6 @@ public class BandInsertController {
 		    return bandInsertService.getBandIdByBandName(band_name); // band_name으로 band_id 조회
 		}
 
-	
 
 
 	

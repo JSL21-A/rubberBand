@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+<head>
+<meta charset="UTF-8">
+<title>募集内容</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script
+	src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+<body>
+	<div layout:fragment="content">
+		<!-- 게시글 상단: 팀 소개 + 상세보기 세트 -->
+		<div class="band-and-detail-container">
+			<!-- 상세 게시글: 오른쪽 영역 -->
+			<div class="detail-container">
+				<div class="band-info-container">
+					<!-- 왼쪽: 리더 + 멤버 + 코멘트 -->
+					<div class="deadline-badge">
+						<span class="deadline-text">D-5</span>
+						<!-- 날짜 계산 결과 -->
+					</div>
+
+					<div class="band-profile-area" style="position: relative;">
+						<!-- 팀 소개: 왼쪽 영역 -->
+							<div class="band-title">
+								<span class="emoji">☀️</span> 弘大バスキングチーム <strong>Tomato
+									Groove</strong>
+							</div>
+						<div class="band-leader">
+							<div class="leader-pic">
+								<img th:src="@{/images/ChatGPT1.png}" src="/images/ChatGPT1.png"
+									alt="리더 프로필" class="profile-image" data-index="0">
+							</div>
+							<div class="leader-name">リーダー・ガム</div>
+						</div>
+
+						<div class="band-members">
+							<div class="member">
+								<img th:src="@{/images/ChatGPT2.png}" src="/images/ChatGPT2.png"
+									alt="보컬" class="profile-image" data-index="1"> <span>ボーカル</span>
+							</div>
+							<div class="member">
+								<img th:src="@{/images/ChatGPT3.png}" src="/images/ChatGPT3.png"
+									alt="기타" class="profile-image" data-index="2"> <span>ギター</span>
+							</div>
+							<div class="member">
+								<img th:src="@{/images/ChatGPT4.png}" src="/images/ChatGPT4.png"
+									alt="드럼" class="profile-image" data-index="3"> <span>ドラム</span>
+							</div>
+
+						</div>
+
+						<!-- 리더 코멘트 -->
+						<div class="band-comment-area">
+							<h3>リーダーのコメント</h3>
+							<p>
+								私たちのチームは愉快で暖かい雰囲気を求めています。<br> 사 我々は人が好きで一緒に楽しく過ごせる方だといいですね。<br>ご遠慮なく応募してください:)
+							</p>
+						</div>
+
+
+						<!-- 팝업 슬라이더 -->
+						<div id="profile-popup">
+							<div class="swiper profile-swiper">
+								<div class="swiper-wrapper">
+									<div class="swiper-slide">
+										<img th:src="@{/images/ChatGPT1.png}" alt="프로필1">
+									</div>
+									<div class="swiper-slide">
+										<img th:src="@{/images/ChatGPT2.png}" alt="프로필2">
+									</div>
+									<div class="swiper-slide">
+										<img th:src="@{/images/ChatGPT3.png}" alt="프로필3">
+									</div>
+								</div>
+								<div class="swiper-button-prev"></div>
+								<div class="swiper-button-next"></div>
+							</div>
+						</div>
+
+					</div>
+
+					<!-- 추천 태그 -->
+					<div class="recommendation-tags-container">
+						<div class="recommendation-tag">#ギター</div>
+						<div class="recommendation-tag">#ドラム</div>
+						<div class="recommendation-tag">#ベース</div>
+						<div class="recommendation-tag">#ボーカル</div>
+						<div class="recommendation-tag">#ピアノ</div>
+						<div class="recommendation-tag">#バンド</div>
+						<div class="recommendation-tag">#ジャズ</div>
+						<div class="recommendation-tag">#ロック</div>
+					</div>
+				</div>
+
+				<!-- 구인/구직 글 -->
+				<form class="post-detail-form">
+					<div class="title-and-button">
+						<h2 class="detail-title">バスキングチームの女性ボーカル募集</h2>
+						<!-- form 안에 있는 버튼 -->
+						<button type="button" class="apply-btn-absolute"
+							data-target="#applyModal" id="openApplyModal">応募する</button>
+					</div>
+					<div class="detail-meta">
+						<span>作成者: ガム</span> <span>作成日: 2024.05.12</span> <span>ヒット数:
+							4</span>
+					</div>
+
+					<div class="detail-content">
+						<h3>🎤 バンドの紹介</h3>
+						<p>弘大で活動中であり自由な雰囲気でバスキングをするバンドです。
+							様々なジャンルを試み、コミュニケーションを重視しています。</p>
+						<h3>🎯 募集ポジション</h3>
+						<p>女性ボーカル</p>
+						<h3>🌍 活動地域</h3>
+						<p>ソウル弘大</p>
+						<h3>📯 こんな人を探しています！</h3>
+						<p>
+							<strong>20代</strong>, チームワーク重視、基本的なボーカル経験あり
+						</p>
+						<h3>🎵 好きなジャンル</h3>
+						<p>アコースティック、インディーズ、ポップ</p>
+					</div>
+				</form>
+				<!-- 지원하기 모달 -->
+				<div class="modal fade" id="applyModal" tabindex="-1" role="dialog"
+					aria-labelledby="applyModalLabel">
+					<div class="modal-dialog modal-lg" role="document">
+						<div class="modal-content">
+
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal"
+									aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<h4 class="modal-title" id="applyModalLabel">募集内容の作成</h4>
+							</div>
+
+							<div class="modal-body">
+								<form id="applyForm" enctype="multipart/form-data">
+
+									<!-- 밴드팀명 -->
+									<div class="form-group">
+										<label for="bandName">バンドのチーム名</label> <input type="text"
+											class="form-control" id="bandName"
+											placeholder="Tomato Groove">
+									</div>
+
+									<!-- 밴드소개 -->
+									<div class="form-group">
+										<label for="bandIntro">バンド紹介</label>
+										<textarea class="form-control" id="bandIntro" rows="2"
+											placeholder="バンドのご紹介をおお願いいたします。"></textarea>
+									</div>
+
+									<!-- 모집포지션 -->
+									<div class="form-group">
+										<label for="recruitPosition">募集ポジション</label> <input
+											type="text" class="form-control" id="recruitPosition"
+											placeholder="例；女性ボーカル">
+									</div>
+
+									<!-- 활동지역 -->
+									<div class="form-group">
+										<label for="activityArea">活動地域</label> <input type="text"
+											class="form-control" id="activityArea" placeholder="例；ソウル弘大">
+									</div>
+
+									<!-- 모집조건 -->
+									<div class="form-group">
+										<label for="recruitCondition">こんな人を探しています！</label> <input
+											type="text" class="form-control" id="recruitCondition"
+											placeholder="例: 20代、 チームワーク重視、基本的なボーカル経験あり">
+									</div>
+
+									<!-- 선호 장르 -->
+									<div class="form-group">
+										<label for="preferredGenres">好きなジャル</label> <input type="text"
+											class="form-control" id="preferredGenres"
+											placeholder="例: アコースティック、インディーズ、ポップ">
+									</div>
+
+									<!-- 리더의 코멘트 -->
+									<div class="form-group">
+										<label for="leaderComment">リーダーのコメント</label>
+										<textarea class="form-control" id="leaderComment" rows="2"
+											placeholder="リーダーの簡単なメッセージを入力してください　:)"></textarea>
+									</div>
+									<!-- 추천 태그 -->
+									<div class="form-group">
+										<label for="tags">おすすめタグ</label> <input type="text"
+											class="form-control" id="tags" placeholder="#ギター #ボーカル #ジャズ">
+									</div>
+
+									<!-- 이미지 업로드 -->
+									<div class="form-group">
+										<label for="bandImages">チーム構造/活動写真</label> <input type="file"
+											id="bandImages" name="bandImages" class="form-control"
+											accept="image/*" multiple> <small class="text-muted">※
+											最大４枚のイメージが登録可能です。</small>
+									</div>
+								</form>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-primary" id="submitApply">応募する</button>
+								<button type="button" class="btn btn-default"
+									data-dismiss="modal">閉める</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- comment-form-container 끝 -->
+		<!-- 외부 스크립트 로드 -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<!-- 직접 작성한 스크립트는 별도 <script> 태그로 아래에 -->
+<script>
+  $(document).ready(function () {
+    // ✅ 프로필 팝업 슬라이더
+    const popup = $('#profile-popup');
+    const area = $('.band-profile-area');
+    let hoverTimeout;
+
+    const profileSwiper = new Swiper('.profile-swiper', {
+      loop: false,
+      slidesPerView: 1,
+      spaceBetween: 10,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      }
+    });
+
+    area.on('mouseenter', function () {
+      clearTimeout(hoverTimeout);
+      popup.fadeIn(200);
+    });
+
+    area.on('mouseleave', function () {
+      hoverTimeout = setTimeout(() => {
+        if (!popup.is(':hover')) {
+          popup.fadeOut(200);
+        }
+      }, 200);
+    });
+
+    popup.on('mouseenter', function () {
+      clearTimeout(hoverTimeout);
+    });
+
+    popup.on('mouseleave', function () {
+      hoverTimeout = setTimeout(() => {
+        if (!area.is(':hover')) {
+          popup.fadeOut(200);
+        }
+      }, 200);
+    });
+
+    // ✅ 모달 열기 버튼 (data-toggle 제거하고 JS로만 제어)
+    $('#openApplyModal').off('click').on('click', function (e) {
+      e.preventDefault(); // 혹시 모를 기본 동작 방지
+      $('#applyModal').modal('show');
+    });
+
+    // ✅ 모달 닫기 버튼
+    $('#submitApply').off('click').on('click', function (e) {
+      e.preventDefault();
+      $('#applyModal').modal('hide');
+    });
+
+    // ✅ post-detail-form 자동 submit 방지 (페이지 깜빡임 방지 핵심)
+    $('.post-detail-form').on('submit', function (e) {
+      e.preventDefault();
+    });
+
+    // ✅ applyForm 자동 submit 방지
+    $('#applyForm').on('submit', function (e) {
+      e.preventDefault();
+    });
+
+    // ✅ 마감일 계산 표시
+    const deadlineDate = new Date("2024-05-20");
+    const today = new Date();
+    const diffTime = deadlineDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const el = document.querySelector(".deadline-text");
+    if (el) el.textContent = diffDays > 0 ? `D-${diffDays}` : "締め切り";
+  });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const selectedTagsContainer = document.querySelector(".selected-tags");
+  const searchTagElements = document.querySelectorAll(".keyword-box .tag");
+  const recommendationTags = document.querySelectorAll(".recommendation-tag");
+
+  // ✅ 태그 클릭 시 활성화/비활성화 토글 + selected-tags 반영
+  searchTagElements.forEach(tag => {
+    tag.addEventListener("click", function () {
+      tag.classList.toggle("active");
+
+      const activeTags = Array.from(searchTagElements)
+        .filter(t => t.classList.contains("active"))
+        .map(t => t.textContent.trim());
+
+      // 선택된 태그 보여주기 영역 갱신
+      selectedTagsContainer.innerHTML = "";
+      activeTags.forEach(t => {
+        const span = document.createElement("span");
+        span.className = "tag active";
+        span.textContent = `#${t}`;
+        selectedTagsContainer.appendChild(span);
+      });
+
+      // ✅ 추천 태그 필터링
+      recommendationTags.forEach(rTag => {
+        const tagText = rTag.textContent.replace("#", "").trim();
+        if (activeTags.length === 0 || activeTags.includes(tagText)) {
+          rTag.style.display = "inline-block";
+        } else {
+          rTag.style.display = "none";
+        }
+      });
+    });
+  });
+});
+</script>
+	</div>
+</body>
+</html>
