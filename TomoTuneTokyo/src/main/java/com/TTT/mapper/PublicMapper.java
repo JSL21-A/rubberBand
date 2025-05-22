@@ -22,10 +22,14 @@ public interface PublicMapper {
     String searchUserByUserName(String username);
 
     // 카테고리에 해당하는 글 불러오기
-    @Select("SELECT post_title, board_id, user_id, post_pinned, created_at FROM posts WHERE board_id = #{board_id}")
+    @Select("SELECT p.post_title, p.board_id, p.user_id, p.post_pinned, p.created_at, u.nickname FROM posts p, user_profile u WHERE board_id = #{board_id} AND p.user_id = u.user_id ORDER BY p.created_at desc")
     List<PostVo> getPostList(int board_id);
 
     // 모든 글 불러오기
-    @Select("SELECT p.post_title, p.board_id, p.user_id, p.post_pinned, p.created_at, u.nickname FROM posts p, user_profile u WHERE NOT board_id = 7 AND p.user_id = u.user_id;")
+    @Select("SELECT p.post_title, p.board_id, p.user_id, p.post_pinned, p.created_at, u.nickname FROM posts p, user_profile u WHERE NOT board_id = 7 AND p.user_id = u.user_id ORDER BY p.created_at desc")
     List<PostVo> getPostListAll();
+
+    // 가장 최근 공지글 3개 불러오기
+    @Select("SELECT post_title, created_at FROM posts ORDER BY created_at desc LIMIT 3")
+    List<PostVo> getNotiRecently();
 }

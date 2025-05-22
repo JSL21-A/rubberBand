@@ -39,17 +39,16 @@ public class publicController {
             List<PostVo> list = publicService.getPostListAll();
             model.addAttribute("list", list);
 
-            List<PostVo> noti = publicService.getPostList(7);
+            List<PostVo> noti = publicService.getNotiRecently();
             model.addAttribute("noti", noti);
         } else {
             List<PostVo> list = publicService.getPostList(Integer.parseInt(Param));
             model.addAttribute("list", list);
 
             if (!(Param.equals("7"))) {
-                List<PostVo> noti = publicService.getPostList(7);
+                List<PostVo> noti = publicService.getNotiRecently();
                 model.addAttribute("noti", noti);
             }
-            System.out.println(list);
         }
         return "public/postList";
     }
@@ -58,15 +57,14 @@ public class publicController {
     public String writePost(HttpServletRequest request, Model model) {
         String uri = request.getRequestURI();
         boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
+        model.addAttribute("banner_title", "public/write :: banner_title");
         if (request.getHeader("referer") != null) {
             String prevUri = request.getHeader("referer")
                     .substring(request.getHeader("referer").lastIndexOf("/") + 1);
-            model.addAttribute("prev", prevUri);
+            request.getSession().setAttribute("prev", prevUri);
         }
         if (isHtmx) {
-            System.out.println("onwin");
-            model.addAttribute("layout", "layouts/htmxLayout");
-            return "public/write";
+            return "public/write :: content";
         } else {
             if (uri.startsWith("/admin")) {
                 model.addAttribute("layout", "layouts/adminLayout");

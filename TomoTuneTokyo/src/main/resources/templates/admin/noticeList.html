@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" data-layout-decorate=~{layouts/adminLayout}>
 
 <head>
     <meta charset="UTF-8">
@@ -9,66 +11,11 @@
     body {
         overflow: scroll;
     }
-
-    #notice {
-        margin: 0;
-        padding: 0;
-    }
-
-    #content {
-        width: 80vw;
-        margin: 0 auto;
-        margin-top: 60px;
-    }
-
-    #top {
-        display: flex;
-        flex-direction: row-reverse;
-    }
-
-    #middle {
-        width: 100%;
-        margin: 0 auto;
-        background-color: #fff;
-        border-radius: 30px;
-    }
-
-    .noti_list ul {
-        list-style: none;
-        padding: 0 3%;
-    }
-
-    .noti_list li {
-        border-bottom: 1px dotted black;
-    }
-
-    .noti_list {
-        border-radius: 30px;
-        box-shadow: 2px 2px 2px 2px #bbb;
-        z-index: 1055;
-    }
-
-    .noti_post {
-        display: flex;
-        justify-content: space-between;
-        padding: 1%;
-    }
-
-    .noti_post a {
-        text-decoration: none;
-        color: #333;
-    }
-
-    #bottom {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 2%;
-    }
 </style>
 
 <body>
-    <h1 id="banner-font" hx-swap-oob="true">お知らせ</h1>
-    <div id="content">
+    <h1 id="banner-font" hx-swap-oob="true" th:fragment="banner_title">お知らせ</h1>
+    <div id="content" layout:fragment="content" th:fragment="content">
         <div id="notice">
             <div id="top">
 
@@ -93,9 +40,8 @@
             </div>
             <div id="bottom">
                 1 2 3 4 5 6
-                <a hx-get="/admin/write" hx-target="#content" hx-push-url="true">作成</a>
+                <a hx-get="./write" hx-target="#content" hx-push-url="true">作成</a>
             </div>
-
         </div>
     </div>
 </body>

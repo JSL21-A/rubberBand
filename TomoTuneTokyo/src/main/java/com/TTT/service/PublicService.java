@@ -35,4 +35,8 @@ public class PublicService {
     public List<PostVo> getPostListAll() {
         return publicMapper.getPostListAll();
     }
+
+    public List<PostVo> getNotiRecently() {
+        return publicMapper.getNotiRecently();
+    }
 }

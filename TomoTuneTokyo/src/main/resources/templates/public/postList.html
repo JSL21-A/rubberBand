@@ -23,7 +23,6 @@
             #content {
                 width: 90vw;
                 margin: 0 auto;
-                margin-top: 60px;
             }
 
             #top {
@@ -86,6 +85,7 @@
                 display: flex;
                 justify-content: space-between;
                 width: 100%;
+                background-color: #fff;
             }
 
             .cate_nav {
@@ -138,7 +138,7 @@
             #bottom {
                 display: flex;
                 justify-content: space-between;
-                margin-top: 2%;
+                margin: 2%;
             }
         </style>
         <div id="notice">
@@ -146,14 +146,26 @@
                 <div class="cate_wrapper">
                     <div class="cate_nav">
                         <div class="cate_sort top">
-                            <div class="sel_cate" data-board-id="6">コミュニティ</div>
-                            <div class="sel_cate" data-board-id="4">演奏音源</div>
-                            <div class="sel_cate" data-board-id="3">フリーマーケット</div>
+                            <div class="sel_cate" hx-get="./list" hx-target="#middle" hx-select="#middle"
+                                hx-push-url="true">すべて
+                            </div>
+                            <div class="sel_cate" data-board-id="6" hx-get="./list?board=6" hx-target="#middle"
+                                hx-select="#middle" hx-push-url="true">コミュニティ
+                            </div>
+                            <div class="sel_cate" hx-get="./list?board=3" hx-target="#middle" hx-select="#middle"
+                                hx-push-url="true">フリーマーケット
+                            </div>
                         </div>
                         <div class="cate_sort bottom">
-                            <div class="sel_cate" data-board-id="1">メンバー募集</div>
-                            <div class="sel_cate" data-board-id="2">バンド結成</div>
-                            <div class="sel_cate" data-board-id="5">ライブ告知</div>
+                            <div class="sel_cate" data-board-id="4" hx-get="./list?board=4" hx-target="#middle"
+                                hx-select="#middle" hx-push-url="true">演奏音源
+                            </div>
+                            <div class="sel_cate" hx-get="./list?board=5" hx-target="#middle" hx-select="#middle"
+                                hx-push-url="true">ライブ告知
+                            </div>
+                            <div class="sel_cate" hx-get="./list?board=7" hx-target="#middle" hx-select="#middle"
+                                hx-push-url="true">お知らせ
+                            </div>
                         </div>
                     </div>
                     <div class="searchTab"></div>
@@ -204,10 +216,6 @@
             </div>
         </div>
         <script>
-            console.log("script on?");
-            $('.sel_cate').on('click', function () {
-                console.log($(this).data('board-id'));
-            });
         </script>
     </div>
 </body>

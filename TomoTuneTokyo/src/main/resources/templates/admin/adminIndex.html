@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" data-layout-decorate=~{layouts/adminLayout}>
 
 <head>
     <meta charset="UTF-8">
@@ -24,7 +26,7 @@
                 </div>
             </div>
         </div>
-        <div id="content" hx-target="this">
+        <div id="content" layout:fragment="content" th:fragment="content" hx-target="this">
             <div class="admin container">
                 <div class="admin row">
                     <div class="admin col-md-6 mb-4 col-xl-6">
@@ -86,10 +88,6 @@
         </div>
     </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/htmx.org@2.0.4"></script>
-<script src="https://unpkg.com/htmx-router"></script>
 <script>
 </script>
 

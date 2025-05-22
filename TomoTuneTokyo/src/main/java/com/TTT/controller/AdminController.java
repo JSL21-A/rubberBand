@@ -48,12 +48,12 @@ public class AdminController {
 
     @GetMapping("/notify")
     public String noticeList(HttpServletRequest request, Model model) {
+        List<PostVo> list = adminService.getNotiList();
+        model.addAttribute("list", list);
         if ("true".equals(request.getHeader("HX-Request"))) {
-            List<PostVo> list = publicService.getPostList(7);
-            model.addAttribute("list", list);
-            return "admin/noticeList";
+            return "admin/noticeList :: content";
         } else {
-            return "redirect:/admin/main";
+            return "admin/noticeList";
         }
     }
 

@@ -6,183 +6,31 @@
     <meta charset=" UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
 </head>
 
 <body>
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
     <style>
-        body {
-            background-color: #f4f6f8;
-            overflow: scroll;
-        }
 
-        .edit-area {
-            position: relative;
-        }
-
-        .note-editable {
-            border-radius: 30px;
-            background-color: #fff;
-            padding: 1% 2%;
-            min-height: 30vh;
-            width: 100%;
-        }
-
-        .note-editable img {
-            max-width: 100%;
-        }
-
-        .note-placeholder {
-            position: absolute;
-            padding: 1% 2%;
-            width: 100%;
-            top: 0;
-            color: #aaa;
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        .select_option.show {
-            display: block;
-        }
-
-        .select_option {
-            display: none;
-            position: absolute;
-            width: 260px;
-            top: 44px;
-            left: 0;
-            border: 1px solid #626262;
-            background: #fff;
-            border-radius: 16px;
-            padding: 20px;
-            z-index: 2
-        }
-
-        .select_option ul {
-            list-style: none;
-            padding: 10px;
-        }
-
-        .select_option li {
-            display: inline-block;
-            width: 100%;
-            padding: 8px 10px;
-            font-size: 14px;
-            cursor: pointer;
-            margin-bottom: 5px;
-            color: #626262;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            border-radius: 8px;
-        }
-
-        .select_option li.on {
-            background: #2d2d2d;
-            color: #fff !important;
-        }
-
-        .select_option li:hover {
-            background: #2D2D2D;
-            color: #fff;
-        }
-
-        .write_header {
-            background-color: #fff;
-            border-radius: 30px;
-            padding: 1% 2%;
-        }
-
-        .select_box {
-            position: relative;
-            border: 1px solid #5C5C5C;
-            width: 170px;
-            border-radius: 16px;
-            padding: 10px;
-            margin-right: 1%;
-        }
-
-        .select_box .selected::after {
-            display: block;
-            content: "";
-            min-width: 10px;
-            width: 10px;
-            height: 8px;
-            background: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='8' fill='none'%3E%3Cpath stroke='%235C5C5C' stroke-linecap='round' stroke-width='3' d='M8 2 5 5 2 2'/%3E%3C/svg%3E");
-            background-size: cover;
-            margin-left: 4px;
-        }
-
-        .select_box.disable {
-            opacity: 0.3;
-            pointer-events: none;
-        }
-
-        .selected {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .post_title {
-            background-color: #f4f6f8;
-            position: relative;
-            margin-top: 20px;
-            width: 100%;
-            padding: 20px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-        }
-
-        #post_title {
-            background: none;
-            border-width: 0;
-            width: 100%;
-            font-size: 25px;
-        }
-
-        .toolbar {
-            padding: 1%;
-        }
-
-        .toolbar {
-            width: 30px;
-        }
-
-        .btn-area {
-            display: flex;
-            justify-content: space-between;
-            padding: 1% 3%;
-        }
-
-        #img-selector {
-            display: none;
-        }
     </style>
-    <div id="content" layout:fragment="content">
+    <div id="content" layout:fragment="content" th:fragment="content">
         <div class="write_header">
             <!-- 공지사항 작성인지 판단 -->
-            <div class="notify" th:if="${prev == 'notify'}">
-                <input type="hidden" name="board_id" value="7" id="board_id">
+            <div class="write_notify" th:if="${session.prev == 'notify'}">
+                <input type="hidden" name="board_id" value="7" id="write_board_id">
                 <h1>お知らせ</h1>
             </div>
             <!-- 공지사항이 아니면 카테고리 표시 -->
-            <div class="category_list" th:unless="${prev == 'notify'}">
-                <div class="select_box">
+            <div class="write_category_list" th:unless="${session.prev == 'notify'}">
+                <div class="write_select_box">
                     <!-- 글 카테고리 -->
-                    <input type="hidden" name="board_id" value="3" id="board_id">
-                    <div class="selected">
+                    <input type="hidden" name="board_id" value="6" id="write_board_id">
+                    <div class="write_selected">
                         <span>コミュニティ</span>
                     </div>
                     <!-- 카테고리 옵션 -->
-                    <div class="select_option">
+                    <div class="write_select_option">
                         <ul>
                             <li class="" data-board_id="1">メンバー募集</li>
                             <li class="" data-board_id="2">バンド結成</li>
@@ -195,15 +43,15 @@
                 </div>
             </div>
             <!-- 제목 -->
-            <div class="post_title">
+            <div class="write_post_title">
                 <!-- 공지사항 작성이 아니면 악기 카테고리 표시 -->
-                <div class="select_box play" tabindex="0" th:unless="${prev == 'notify'}">
-                    <input type="hidden" name="play_id" value="" id="play_id">
-                    <div class="selected">
+                <div class="write_select_box play" tabindex="0" th:unless="${session.prev == 'notify'}">
+                    <input type="hidden" name="play_id" value="" id="write_play_id">
+                    <div class="write_selected">
                         <span>ー楽器ー</span>
                     </div>
                     <!-- 악기 옵션 -->
-                    <div class="select_option">
+                    <div class="write_select_option">
                         <ul>
                             <li class="" data-play_id="1">ギター</li>
                             <li class="" data-play_id="2">ベース</li>
@@ -214,31 +62,31 @@
                     </div>
                 </div>
                 <!-- 제목 작성 input -->
-                <input type="text" name="post_title" id="post_title" placeholder="タイトルを入力してください">
+                <input type="text" name="post_title" id="write_post_title" placeholder="タイトルを入力してください">
             </div>
         </div>
         <!-- 글 효과 툴바 -->
-        <div class="toolbar">
-            <button id="btn-bold">
+        <div class="write_toolbar">
+            <button class="write_text-effect" data-effect-type="bold">
                 <b>B</b>
             </button>
-            <button id="btn-italic">
+            <button class="write_text-effect" data-effect-type="italic">
                 <i>I</i>
             </button>
-            <button id="btn-underline">
+            <button class="write_text-effect" data-effect-type="underline">
                 <u>U</u>
             </button>
-            <button id="btn-strike">
+            <button class="write_text-effect" data-effect-type="strikeThrough">
                 <s>S</s>
             </button>
-            <button id="btn-ordered-list">
+            <button class="write_text-effect" data-effect-type="insertOrderedList">
                 OL
             </button>
-            <button id="btn-unordered-list">
+            <button class="write_text-effect" data-effect-type="insertUnorderedList">
                 UL
             </button>
             <!-- 폰트 사이즈 -->
-            <select name="font-size" id="font-size">
+            <select name="font-size" id="write_font-size">
                 <option value="1">10px</option>
                 <option value="2">13px</option>
                 <option value="3" selected>16px</option>
@@ -247,302 +95,26 @@
                 <option value="6">32px</option>
                 <option value="7">48px</option>
             </select>
-            <button id="btn-image">
+            <button id="write_btn-image">
                 IMG
             </button>
         </div>
-        <div class="edit-area">
+        <div class="write_edit-area">
             <!-- 글 작성 AREA -->
-            <div class="note-editable" contenteditable="true"></div>
-            <div class="note-placeholder">
+            <div class="write_note-editable" contenteditable="true"></div>
+            <div class="write_note-placeholder">
                 <div>名誉毀損、虚偽情報、非正常プレイ流布など法律、約款、運営政策に違反する掲示文登録時に利用が制限されることがあります。<br>掲示文の作成時に大切な個人情報を含めないようにご注意お願いします
                 </div>
             </div>
-            <input id="img-selector" type="file" accept="image/*" multiple />
+            <input id="write_img-selector" type="file" accept="image/*" multiple />
         </div>
-        <div class="btn-area">
-            <button id="to_list">リストへ</button>
-            <button id="submit">作成</button>
+        <div class="write_btn-area">
+            <button id="write_to_list">リストへ</button>
+            <button id="write_submit">作成</button>
         </div>
     </div>
 </body>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://unpkg.com/htmx.org@2.0.4"></script>
 <script>
-
-    // 글 작성 효과적용 스크립트
-    $('#btn-bold').on('click', function () {
-        setStyle('bold');
-    });
-
-    $('#btn-italic').on('click', function () {
-        setStyle('italic');
-    });
-
-    $('#btn-underline').on('click', function () {
-        setStyle('underline');
-    });
-
-    $('#btn-strike').on('click', function () {
-        setStyle('strikeThrough')
-    });
-
-    $('#btn-ordered-list').on('click', function () {
-        setStyle('insertOrderedList');
-    });
-
-    $('#btn-unordered-list').on('click', function () {
-        setStyle('insertUnorderedList');
-    });
-
-    $('#font-size').on('change', function () {
-        setFont(this.value);
-    });
-
-    const fileMap = new Map(); // id → File 객체 저장용
-
-    $('#btn-image').on('click', function () {
-        $('#img-selector').click();
-    });
-
-    $('#img-selector').on('change', function (e) {
-        const files = e.target.files;
-        if (files && files.length > 0) {
-            Array.from(files).forEach(file => {
-                insertImageWithTracking(file);
-            });
-        }
-        $('#img-selector').val(''); // 같은 파일 다시 선택할 수 있게 초기화
-    });
-
-    function insertImageWithTracking(file) {
-        const id = crypto.randomUUID();
-        const reader = new FileReader();
-
-        reader.addEventListener('load', function () {
-            focusEditor();
-
-            // 직접 img 태그 삽입
-            const img = document.createElement('img');
-            img.src = reader.result;
-            img.setAttribute('data-id', id);
-
-            const sel = window.getSelection();
-            if (!sel.rangeCount) return;
-
-            const range = sel.getRangeAt(0);
-            range.deleteContents();
-            range.insertNode(img);
-
-            // 커서 이동
-            range.setStartAfter(img);
-            range.setEndAfter(img);
-            sel.removeAllRanges();
-            sel.addRange(range);
-
-            // FileMap에 저장
-            fileMap.set(id, file);
-        });
-
-        reader.readAsDataURL(file);
-    }
-
-    function setStyle(style) {
-        document.execCommand(style);
-        focusEditor();
-    }
-
-    // 폰트 사이즈 적용 스크립트
-    function setFont(size) {
-        document.execCommand('fontSize', false, size);
-        focusEditor();
-    }
-
-    // 버튼 클릭 시 에디터가 포커스를 잃기 때문에 다시 에디터에 포커스를 해줌
-    function focusEditor() {
-        $('.note-editable')[0].focus({ preventScroll: true });
-    }
-
-    // 글 카테고리 판단 후 악기 카테고리 표시
-    function checkOption(sel) {
-        option = [1, 3, 4];
-        if (!(option.includes(sel))) {
-            $($('.select_box')[1]).addClass('disable');
-        } else {
-            $($('.select_box')[1]).removeClass('disable');
-        }
-    }
-
-    $(document).ready(function () {
-
-        const csrfToken = $("meta[name='_csrf']").attr("content");
-        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
-        $(document).ajaxSend(function (e, xhr, options) {
-            xhr.setRequestHeader(csrfHeader, csrfToken);
-        });
-
-        //어느 페이지에서 글쓰기를 했는지 탐색
-        boardId = $('#board_id').val();
-
-        //위에서 찾은 id를 토대로 카테고리 강조
-        $($('li[data-board_id=' + boardId + ']')[0]).addClass('on');
-
-        //카테고리에 해당 카테고리 표시
-        setText = $($('li[data-board_id=' + boardId + ']')).text();
-        $($('.select_box')[0]).find('.selected span').text(setText);
-
-        checkOption(Number(boardId));
-        togglePlaceholder;
-    });
-
-    // 글 쓰기 전에 나오는 경고 문구 표시
-    function togglePlaceholder() {
-        const $editable = $('.note-editable')[0]; // jQuery → 실제 DOM
-        const html = $editable.innerHTML;
-
-        // 완전히 빈 내용 판단: 태그도 없고 글자도 없을 때만 placeholder 보이게
-        const isCompletelyEmpty = html === '' || html === '<br>' || html === '<div><br></div>' || html === '<p><br></p>';
-
-        $('.note-placeholder').toggle(isCompletelyEmpty);
-    }
-
-    // 입력이 발생하면 위의 스크립트 실행
-    $('.note-editable').on('input', togglePlaceholder);
-
-    // 카테고리 선택이 발생했을때
-    $(document).on('click', '.select_option li', function () {
-        // 모든 항목에서 'on' 클래스 제거
-        $(this).siblings('.select_option li').removeClass('on');
-
-        // 클릭된 항목에 'on' 클래스 추가
-        $(this).addClass('on');
-
-        // 선택된 카테고리 가져오기
-        const selectedText = $(this).text();
-        const boardId = $(this).data('board_id');
-        const playId = $(this).data('play_id');
-
-
-        // selected 에 선택된 텍스트 적용
-        $(this).closest('.select_box').find('.selected span').text(selectedText);
-
-        // 주 카테고리일때
-        if (boardId) {
-            // hidden input에 board_id 값 설정
-            $(this).closest('.select_box').find('input[name="board_id"]').val(boardId);
-            checkOption(boardId);
-        }
-
-        // 악기 카테고리 일때
-        if (playId) {
-            // hidden input에 board_id 값 설정
-            $(this).closest('.select_box').find('input[name="play_id"]').val(playId);
-        }
-    });
-
-    // 옵션 누르면 닫기
-    $(document).on('click', '.select_option li', function () {
-        $('.select_option').removeClass('show');
-    });
-
-    // 카테고리 옵션 표시
-    $(document).on('click', '.select_box .selected', function (e) {
-        e.stopPropagation(); // 클릭 전파 방지
-        $('.select_option').removeClass('show');
-        $(this).siblings('.select_option').toggleClass('show');
-    });
-
-    // 바깥 누르면 닫기
-    $(document).on('click', function (e) {
-        // 클릭한 요소가 select_box 내부에 있으거나 작성버튼이 아니면 (작성버튼의 경우 입력체크를 위한 용도)닫지 않음
-        if (!$(e.target).closest('.select_box').length &&
-            !$(e.target).closest('#submit').length) {
-            $('.select_option').removeClass('show');
-        }
-    });
-
-    // 작성 버튼이 눌렸을때
-    $('#submit').on('click', function () {
-        // 제목과 내용이 공백이거나 비어있는지 체크
-        titleEmpty = $('#post_title').val().trim();
-        contentEmpty = $('.note-editable').text().trim();
-
-        if (titleEmpty.length < 2) {
-            if (titleEmpty == "") {
-                alert("タイトルを入力してください。");
-            } else {
-                alert("二文字以上入力してください。");
-            }
-            $('#post_title').focus();
-            return;
-        }
-
-        if (contentEmpty.length < 2) {
-            if (contentEmpty == "") {
-                alert("内容を入力してください。");
-            } else {
-                alert("二文字以上入力してください。");
-            }
-            $('.note-editable').focus();
-            return;
-        }
-
-        //부 카테고리가 비활성화가 아닐때.(선택 가능할때)
-        title = $('#post_title').val();
-        if (!($('.select_box.play').hasClass('disable')) && $('#board_id').val() != 7) {
-            if ($('#play_id').val()) {
-                title = '[' + $('.select_box.play').find('li[data-play_id=' + $('#play_id').val() + ']').text() + ']' + title;
-            } else {
-                alert("サブカテゴリーを選択してください。");
-                $($('.select_box.play')[0]).find('.select_option').toggleClass('show');
-                return;
-            }
-        }
-
-        const formData = new FormData();
-
-        const contentHtml = $('.note-editable')[0].innerHTML;
-        formData.append('content', contentHtml);
-        formData.append('title', title);
-
-        const boardId = $('#board_id').val();
-
-        formData.append('board_id', boardId);
-
-        const usedIds = new Set(
-            Array.from($('.note-editable img')).map(img => img.getAttribute('data-id'))
-        );
-
-        for (let [id, file] of fileMap.entries()) {
-            if (usedIds.has(id)) {
-                formData.append('images', file);
-            }
-        }
-
-        console.log(formData);
-
-        const csrfToken = $("meta[name='_csrf']").attr("content");
-        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
-
-        $.ajax({
-            url: './doWrite',
-            method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader(csrfHeader, csrfToken);
-            },
-            success: function (res) {
-                alert('게시물이 등록되었습니다.');
-            },
-            error: function (err) {
-                alert('등록 실패');
-                console.error(err);
-            }
-        });
-    });
 </script>
 
 </html>
