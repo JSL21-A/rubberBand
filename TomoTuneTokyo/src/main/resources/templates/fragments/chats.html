@@ -2,7 +2,10 @@
   <!-- 채팅 래퍼 -->
 <div id="chat-wrapper" class="chat-wrapper">
 
-  <button id="chat-toggle" class="chat-toggle">💬</button>
+	<button id="chat-toggle" class="chat-toggle">
+  		💬
+  		<span id="chat-badge" class="chat-badge" style="display:none">0</span>	
+  	</button>
 
   <div class="chat-container">
     <!-- 헤더 -->
@@ -10,8 +13,13 @@
       <span class="chat-title">チャット</span>
       <button class="chat-close">&times;</button>
     </div>
+    
+    <!-- 1:1 채팅 대상 입력 폼 -->
+	<div class="new-chat">
+  	 <input type="text" id="new-chat-user" placeholder="相手のID を入力" />
+  	 <button id="new-chat-btn">新規チャット</button>
+	</div>
 
-    <!-- (1:1이면 숨기셔도 됩니다) 채널 리스트 -->
     <div class="channel-list">
       <div class="channel-item active">誰か</div>
       <div class="channel-item">バンドチャット</div>
@@ -22,7 +30,7 @@
 
     <!-- 입력창 -->
     <div class="message-input-group">
-      <input type="text" id="message-input" placeholder="메시지를 입력하세요…" />
+      <input type="text" id="message-input" placeholder="メッセージ入力" />
       <input type="file" id="file-input" style="display:none;" />
       <button id="attach-btn" class="attach-btn">📎</button>
       <button id="send-btn" class="send-btn">SEND</button>

@@ -1243,10 +1243,14 @@ textarea::placeholder {
 }
 
 .home-icon {
-    width: 200px;
+    width: 120px;
     height: auto;
-    display: block;
-    margin: 0 auto;
+    display: inline-block;
+    transition: transform 0.6s ease;
+}
+
+.home-icon:hover {
+    transform: rotate(360deg);
 }
 
 /* 팝업 이미지 전체 wrapper */
@@ -2498,4 +2502,1056 @@ body {
     font-size: 16px;
     line-height: 1.6;
     color: #333;
+}
+
+/* 2025-05-20 추가*/
+
+/* 밴드 결성 상세보기*/
+/* ✅ 전체 폼 박스 - 너비 및 높이 증가 반영 */
+.band-profile-outer-form {
+    width: 100%;
+    max-width: 1800px;
+    height: 1150px;
+    margin: 0 auto;
+    padding: 30px;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+/* ✅ 커버 이미지 */
+.cover-image {
+    position: relative;
+    width: 100%;
+}
+
+.cover-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+}
+
+/* ✅ 프로필 헤더 - 트위터 스타일 */
+.profile-header {
+    position: relative;
+    padding: 0 40px;
+    margin-top: 0;
+    margin-bottom: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+/* ✅ 프로필 이미지 크기 확대 */
+.profile-thumbnail {
+    position: absolute;
+    top: -75px;
+    left: 40px;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid #fff;
+    background-color: #fff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.profile-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ✅ 프로필 정보 영역 여백 증가 */
+.profile-info {
+    margin-left: 300px;
+    flex: 1;
+}
+
+.band-name {
+    font-size: 2.4rem;
+    font-weight: bold;
+    margin: 12px 0 6px 0;
+    text-align: left;
+}
+
+.band-handle,
+.band-one-liner {
+    font-size: 1.1rem;
+    color: #444;
+    margin: 3px 0;
+}
+
+.external-link {
+    display: inline-block;
+    margin-top: 8px;
+    color: #000;
+    text-decoration: underline;
+    font-size: 1rem;
+}
+
+/* ✅ 버튼 우측 상단 위치 유지 + 크기 조정 */
+.band-actions {
+    position: absolute;
+    top: 60px;
+    right: 40px;
+    display: flex;
+    gap: 12px;
+}
+
+.btn-follow,
+.btn-chat {
+    padding: 10px 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-follow {
+    background-color: #000;
+    color: #fff;
+}
+
+.btn-chat {
+    background-color: #007bff;
+    color: #fff;
+}
+
+/* ✅ 메인 콘텐츠 영역 */
+.band-content-wrapper {
+    display: flex;
+    margin-top: 40px;
+    align-items: flex-start; /* ✅ 왼쪽 탭과 콘텐츠 정렬 기준을 상단으로 명시 */
+    min-height: 400px; /* ✅ 콘텐츠가 너무 아래로 쏠리지 않도록 최소 높이 지정 */
+}
+
+/* ✅ 왼쪽 세로 탭 - 너비 증가 */
+.band-sidebar {
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-left: 40px; /* ✅ 썸네일 기준 왼쪽 위치 조정 */
+    margin-top: 30px; /* ✅ 프로필 이미지 아래 위치로 조정 */
+}
+
+/* ✅ 탭 버튼 확대 */
+.band-tab-btn {
+    width: 100%;
+    padding: 14px 20px;
+    background-color: #f4f4f4;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-align: left;
+}
+
+.band-tab-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.band-tab-btn.active {
+    background-color: #d0d0d0;
+}
+
+/* ✅ 오른쪽 콘텐츠 */
+.band-content {
+    flex-grow: 1;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.band-section {
+    display: none;
+}
+
+.band-section.active {
+    display: block;
+}
+
+/* ✅ 리스트 항목 크기 */
+.intro-list li,
+.member-list li {
+    margin-bottom: 10px;
+    font-size: 1.05rem;
+}
+
+/* ✅ 장르 태그 크기 조정 */
+.genre-tags {
+    margin-top: 14px;
+}
+
+.genre-tags .tag {
+    display: inline-block;
+    background-color: #eee;
+    color: #333;
+    padding: 8px 14px;
+    border-radius: 24px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+/* ✅ 갤러리 이미지 크기 확대 */
+.gallery-grid {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.gallery-grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* ✅ 활동 기록 카드 크기 확대 */
+.portfolio-items {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.portfolio-card {
+    background-color: #f8f8f8;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 0 0 6px 0;
+}
+
+.portfolio-date {
+    font-size: 1rem;
+    color: #555;
+}
+
+/* ✅ 리뷰 박스 크기 확대 */
+.review-box {
+    background-color: #f2f2f2;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    line-height: 1.6;
+    font-size: 1.05rem;
+}
+/* ✅ 리더 멤버 */
+.leader-member {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.leader-member img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #eee;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.leader-member .member-role {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* ✅ 일반 멤버 아이콘 정렬 */
+.member-icons {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.member-icons .member {
+    text-align: center;
+}
+
+.member-icons .member img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #eee;
+}
+
+.member-icons .member .member-role {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #333;
+}
+/* ✅ 유튜브 영상 비율 유지 */
+.media-row {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* ✅ 영상 비율 유지하면서 오른쪽에 배치 */
+.video-wrapper {
+    flex: 1;
+    max-width: 500px;
+    aspect-ratio: 16 / 9; /* 최신 브라우저 비율 자동 조정 */
+    position: relative;
+}
+
+.video-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 10px;
+}
+
+/* ✅ 사진 영역 크기 제한 */
+.gallery-grid {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ✅ 멤버 전체 컨테이너 - 수평 중앙 정렬 */
+.member-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+/* ✅ 리더 전용 컨테이너 - 별도 간격 처리 */
+.leader-only {
+    margin-bottom: 20px;
+}
+
+/* ✅ 멤버 카드 기본 박스 */
+.member-card {
+    position: relative;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* ✅ 멤버 프로필 이미지 */
+.member-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+/* ✅ 멤버 이름 텍스트 */
+.member-name {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* ✅ 팝업 스타일 */
+.member-popup {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+/* ✅ 마우스 오버 시 팝업 보이기 */
+.member-card:hover .member-popup {
+    display: block;
+}
+
+/*활동사진 페이징*/
+/* ✅ 활동 사진 전체 영역 */
+.gallery-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px auto;
+    max-width: 1000px;
+    gap: 20px;
+}
+
+/* ✅ 좌우 화살표 버튼 */
+.gallery-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #888; /* 연한 회색 */
+    color: #fff;
+    font-size: 24px;
+    border: none;
+    width: 40px;
+    height: 40px;
+    line-height: 38px;
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 5;
+    transition: background 0.3s ease;
+}
+
+.gallery-arrow:hover {
+    background: #666;
+}
+
+.gallery-prev {
+    left: -60px;
+}
+
+.gallery-next {
+    right: -60px;
+}
+
+/* ✅ 이미지 슬라이드 그룹 */
+.gallery-grid {
+    flex: 1;
+    max-width: 500px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.gallery-slide {
+    display: none;
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.gallery-slide.active {
+    display: block;
+}
+
+/* ✅ 영상 래퍼 */
+.video-wrapper {
+    flex: 1;
+    max-width: 500px;
+    aspect-ratio: 16 / 9;
+}
+
+.video-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: none;
+}
+
+/* ✅ 인디케이터 (동그라미) */
+.gallery-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.gallery-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #999;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.gallery-dot.active {
+    background-color: #333;
+}
+.media-slide {
+    display: none;
+}
+.media-slide.active {
+    display: block;
+}
+
+/*활동기록*/
+/* ✅ 활동 기록 (카카오 스타일) */
+.activity-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.activity-card {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    gap: 20px;
+}
+
+.activity-date {
+    background-color: #f0f0f0;
+    padding: 10px 14px;
+    text-align: center;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    width: 60px;
+}
+
+.activity-date .month {
+    font-size: 14px;
+    color: #888;
+}
+
+.activity-date .day {
+    font-size: 22px;
+    font-weight: 800;
+    color: #000;
+}
+
+.activity-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.activity-title {
+    font-size: 17px;
+    font-weight: bold;
+    color: #000;
+}
+
+.activity-status {
+    font-size: 14px;
+    color: #888;
+}
+
+.activity-meta {
+    font-size: 13px;
+    color: #555;
+    display: flex;
+    gap: 10px;
+}
+
+.activity-thumbnail {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.activity-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.review-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.review-profile-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.review-nickname {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.activity-role {
+    font-weight: normal;
+    font-size: 13px;
+    color: #666;
+    margin-left: 6px;
+}
+
+/*활동기록 페이징*/
+.record-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    padding: 16px;
+    background-color: #f9f9f9;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    width: 460px;
+}
+
+.record-date {
+    background-color: #eee;
+    border-radius: 12px;
+    padding: 10px 16px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #444;
+    min-width: 60px;
+}
+
+.record-date strong {
+    font-size: 24px;
+    display: block;
+    margin-top: 4px;
+}
+
+.record-info {
+    flex: 1;
+}
+
+.record-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000;
+}
+
+.record-status {
+    font-size: 14px;
+    color: #888;
+    margin: 6px 0;
+}
+
+.record-meta {
+    font-size: 13px;
+    color: #555;
+}
+
+.record-image {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.record-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 활동 기록 슬라이드 구조 - 양쪽 2개씩 */
+.media-row.two-columns {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 5px 0;
+}
+
+/* 좌/우 컬럼 각각 세로 정렬 */
+.column-left,
+.column-right {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    flex: 1;
+}
+
+/*활동기록 캘린더*/
+.calendar-filter {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    height: -60px;
+}
+
+.calendar-filter label {
+    font-weight: bold;
+    font-size: 15px;
+    color: #333;
+}
+
+.calendar-filter input[type="date"] {
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #333;
+}
+
+/*활동 후기 팝업창*/
+/* 팝업 전체 영역 */
+.review-popup {
+    display: none; /* 기본은 숨김 */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    max-width: 90%;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    z-index: 9999;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 팝업 내부 컨텐츠 */
+.review-popup-content {
+    position: relative;
+}
+
+/* 닫기 버튼 */
+.popup-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+
+/* 후기 제목 */
+.review-popup-content h4 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: #000;
+}
+
+/* 후기 목록 전체 */
+.review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* 후기 아이템 */
+.review-item {
+    background-color: #f5f5f5;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* 멤버 이름 */
+.review-item strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 6px;
+    color: #222;
+}
+
+/* 후기 내용 */
+.review-item p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* 별점 */
+.review-item .stars {
+    color: #ffd700; /* 노란색 */
+    font-size: 16px;
+    margin-top: 6px;
+}
+
+/*밴드 정보 수정*/
+.btn-edit {
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-edit:hover {
+    background-color: #333;
+}
+
+/* ✅ 수정모드용 input 스타일 */
+.profile-header input[type="text"],
+.band-section input[type="text"],
+.band-section textarea {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    font-family: "Noto Sans KR", sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    color: #333;
+    box-sizing: border-box;
+    margin-top: 4px;
+    margin-bottom: 10px;
+}
+
+/* ✅ textarea 높이 제한 */
+.band-section textarea {
+    min-height: 100px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.band-profile-outer-form .profile-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: nowrap;
+}
+
+.profile-info {
+    flex: 1 1 600px; /* ✅ 적당한 기본 너비 */
+    max-width: 650px; /* ✅ 형광펜 기준으로 줄이기 */
+    margin-top: -10px;
+}
+
+.profile-info input,
+.profile-info textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+.keyword-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.band-description-wrapper .band-description-page {
+    display: none;
+}
+.band-description-wrapper .band-description-page.active {
+    display: block;
+}
+.band-description-pagination {
+    margin-top: 10px;
+    text-align: right;
+}
+.band-description-pagination button {
+    font-size: 14px;
+    padding: 4px 10px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+/*프로필사진 수정 버튼*/
+.profile-thumbnail-edit {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.profile-thumbnail-edit button {
+    padding: 10px 20px;
+    font-size: 15px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.profile-thumbnail-edit button:hover {
+    background-color: #333;
+}
+
+/*활동사진 추가 버튼 팝업창 디자인*/
+/* ✅ 팝업 전체 틀 */
+#all-popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 30px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    font-family: "Noto Sans KR", sans-serif;
+    color: #000;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+/* ✅ 팝업 제목 */
+#all-popup h3 {
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+/* ✅ 파일 업로드 */
+#new-all-photo {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* ✅ 입력 폼 (활동 제목, 활동 설명, 활동 후기) */
+#all-popup input[type="text"],
+#all-popup textarea {
+    width: 100%;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 20px;
+    background: #fff;
+    color: #000;
+    margin-bottom: 10px; /* ✅ 폼 아래 여백 줄임 */
+    box-sizing: border-box;
+    resize: vertical;
+    align-items: center;
+}
+
+/* ✅ 버튼 스타일 (공통) */
+#save-all-btn,
+#close-all-popup {
+    padding: 12px 24px;
+    font-size: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+/* ✅ 저장 버튼 */
+#save-all-btn {
+    background: #000;
+    color: #fff;
+    border: none;
+}
+
+/* ✅ 닫기 버튼 */
+#close-all-popup {
+    background: #fff !important;
+    color: #000;
+    border: 1px solid #000;
+    box-shadow: none;
+}
+
+/* ✅ 버튼 가로 정렬 + 중앙 정렬 */
+#button-wrapper {
+    display: flex;
+    justify-content: center; /* ✅ 중앙 정렬 */
+    align-items: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+/*list おすすめタグ*/
+#genre-popup.keyword-popup {
+    position: absolute;
+    top: auto;
+    left: 500px;
+    right: 20px;
+    bottom: 50px;
+    z-index: 900;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    width: 600px;
+    max-width: 90%;
+}
+
+#genre-popup .popup-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #000;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#genre-popup .keyword-box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#genre-popup .keyword-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+#genre-popup .keyword-category {
+    min-width: 80px;
+    font-weight: bold;
+    background-color: #000;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+#genre-popup .keyword-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#genre-popup .tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border: 1px solid #000;
+    border-radius: 20px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+#genre-popup .tag.active {
+    background-color: #000;
+    color: #fff;
+}
+
+/*밴드 결성 리더 검색창 css*/
+.leader-member {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* 왼쪽 정렬 */
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+    margin-bottom: 40px;
 }

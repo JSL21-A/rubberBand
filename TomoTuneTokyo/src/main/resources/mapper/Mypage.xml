@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.TTT.mapper.MypageMapper">
+
+	<!-- 이력서 작성 -->
+	<insert id="insertResume"
+		parameterType="com.TTT.domain.MypageDto" useGeneratedKeys="true"
+		keyProperty="resumeId">
+		INSERT INTO resume (
+		user_id,
+		stage_name,
+		gender,
+		birth,
+		sns,
+		area,
+		instrument,
+		genre,
+		practice_date,
+		practice_time,
+		detail_time,
+		note
+		) VALUES (
+		#{userId},
+		#{stageName},
+		#{gender},
+		#{birth},
+		#{sns},
+		#{area},
+		#{instrument},
+		#{genre},
+		#{practiceDate, jdbcType=VARCHAR},
+		#{practiceTime},
+		#{detailTime},
+		#{note}
+		)
+	</insert>
+	<!-- 밴드활동이력 추가-->
+	<insert id="insertBandHistory"
+		parameterType="com.TTT.domain.BandHistoryDto">
+		INSERT INTO band_history (
+		resume_id, band_name, band_part, band_start, band_end
+		) VALUES (
+		#{resumeId}, #{bandName}, #{bandPart}, #{bandStart}, #{bandEnd}
+		)
+	</insert>
+
+
+</mapper>

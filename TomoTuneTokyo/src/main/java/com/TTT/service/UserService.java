@@ -3,8 +3,6 @@ package com.TTT.service;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +16,8 @@ public class UserService {
 	UserMapper userMapper;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	private SendbirdClient sendbirdClient;
 	
 	//ID(username) 중복체크
 	public boolean usernameExists(String username) {
@@ -37,6 +37,12 @@ public class UserService {
 		userMapper.insertUser(userDto);
 		userMapper.insertUserProfile(userDto);
 		
+		try {
+			sendbirdClient.createUser(user_id, userDto.getNickname());
+		}catch(Exception e) {
+			throw new IllegalStateException("Sendbird 유저 생성 실패", e);
+		}
+		
 	}
 	//비밀번호 초기화
 	public void updatePassword(String username, String rawPassword) {
@@ -47,6 +53,10 @@ public class UserService {
 	
 	public boolean isUsernameEmailMatch(String username, String email) {
 		return userMapper.checkUsernameEmail(username, email) > 0;
+	}
+	
+	public UserDto findByUsername(String username) {
+		return userMapper.findByUsername(username);
 	}
 	
 	

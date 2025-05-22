@@ -17,24 +17,24 @@
 <div class="band-profile-outer-form">
 
 	<!-- ✅ 커버 이미지 -->
-<div class="cover-image">
-	<img th:src="@{/images/GI-QFduagAEvfmH.jfif}" alt="커버 이미지">
-</div>
+	<div class="cover-image">
+		<img th:src="@{'/images/uploads/bands/' + ${band.band_cover_img}}" alt="커버 이미지">
+	</div>
 
 <div class="profile-header">
     <!-- 프로필 썸네일 -->
-    <div class="profile-thumbnail">
-        <img th:src="@{/images/NISI20240414_0001526023_web.jpg}" alt="프로필 이미지">
-    </div>
+	<div class="profile-thumbnail">
+	    <img th:src="@{'/images/uploads/bands/' + ${band.band_profile_img}}" alt="프로필 이미지">
+	</div>
 
     <!-- 프로필 정보 -->
-    <div class="profile-info">
-        <h2 class="band-name">Tomo Groove</h2>
-        <p class="band-handle">@tomogroove</p>
-        <p class="band-one-liner">도쿄와 홍대를 오가는 감성 시티팝 밴드입니다 🎷</p>
-        <a id="youtube-link" href="https://www.youtube.com/@DAY6Official" class="external-link" target="_blank">유튜브 채널</a>
-        <a id="instagram-link" href="https://www.instagram.com/day6kilogram/" class="external-link" target="_blank" style="padding-left: 10px;">인스타</a>
-    </div>
+	<div class="profile-info">
+	    <h2 class="band-name" th:text="${band.band_name}">Tomo Groove</h2>
+	    <p class="band-one-liner" th:text="${band.band_intro}">한 줄 소개</p>
+		<p class="band-email" th:text="${leaderEmail}">리더 이메일</p>
+	    <a id="youtube-link" th:href="${band.youtube_link}" class="external-link" target="_blank">유튜브 채널</a>
+	    <a id="instagram-link" th:href="${band.instagram_link}" class="external-link" target="_blank" style="padding-left: 10px;">인스타</a>
+	</div>
 
     <!-- 수정/채팅 버튼 -->
     <div class="band-actions">
@@ -63,8 +63,15 @@
 <section class="band-section active" id="section-intro">
 	<h3>밴드 소개</h3>
 	<ul class="intro-list">
-		<li><strong>결성일:</strong> 2022년 5월</li>
-		<li><strong>장르:</strong> 시티팝, 재즈, 인디</li>
+		<li><strong>결성일 : </strong> <span th:text="${band.formation_date}">2022년 5월</span></li>
+		<li>
+		  <strong>장르 : </strong>
+		  <span th:each="tag, stat : ${tags}" 
+		        th:if="${tag.tag_type == 'genre' or tag.tag_type == 'position' or tag.tag_type == 'gender' or tag.tag_type == 'age'}"
+		        th:text="${tag.tag_value + (stat.last ? '' : ', ')}"
+		        class="tag-item">
+		  </span>
+		</li>
 		  <!-- ✅ 장르 태그 선택 팝업 구조 -->
 <div id="genre-popup" class="keyword-popup" style="display: none;">
   <button id="genre-popup-close" class="popup-close">×</button>
@@ -112,72 +119,64 @@
     </div>
   </div>
 </div>
-  
-		<li><strong>활동지역:</strong> 서울 홍대, 도쿄 시부야</li>
-	
-	<li><strong>밴드 소개 : </strong>
-	<p class="band-description">Tomo Groove는 4인조 여성 보컬 중심 밴드로, 도쿄와 홍대를 중심으로 활동하고 있습니다. 감성적인 시티팝과 재즈를 기반으로 한 자작곡과 커버곡을 연주하며 관객과의 교감을 중요하게 생각합니다.</p></li>
+<li><strong>활동지역 : </strong> <span th:text="${band.region}"></span></li>
+<li><strong>밴드 소개 : </strong> <p class="band-description" th:text="${band.band_intro}"></p></li>
 	</ul>
 </section>
 
 <!-- 멤버 -->
 <section class="band-section" id="section-members">
 <h3>밴드 멤버</h3>
-
-<!-- ✅ 리더 멤버 -->
+<!-- ✅ 리더 멤버 카드 전체 -->
 <div class="member-container leader-only">
   <div class="member-card">
-    <img th:src="@{/images/ChatGPT1.png}" alt="리더" class="member-img">
-    <div class="member-name">리더 · 가무</div>
+    <!-- 리더 이미지: 값 있으면 업로드, 없으면 기본 이미지 -->
+    <img th:src="@{${leader != null and leader.user_img != null and !#strings.isEmpty(leader.user_img) 
+                    ? '/upload/' + leader.user_img 
+                    : '/images/member1.png'}}"
+         alt="리더"
+         class="member-img"
+         style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
+
+    <!-- 이름 -->
+    <div class="member-name" th:text="'리더 · ' + ${leader.stage_name}"></div>
+
+    <!-- 상세 정보 팝업 -->
     <div class="member-popup">
-      <strong>가무</strong><br>
-      포지션: 리더, 프로듀서<br>
-      MBTI: INTJ<br>
-      좋아하는 밴드: DAY6<br>
-      한마디: 음악은 진심입니다.
+      <strong th:text="${leader.stage_name}"></strong><br>
+      포지션: <span th:text="${leader.member_position}"></span><br>
+      MBTI: <span th:text="${leader.member_mbti}"></span><br>
+      좋아하는 밴드: <span th:text="${leader.favorite_band}"></span><br>
+      한마디: <span th:text="${leader.member_motto}"></span>
     </div>
   </div>
 </div>
+<!-- ✅ 일반 멤버 목록 -->
+<div class="member-container">
+  <div class="member-card" th:each="member : ${members}" 	th:if="${member.member_type.name() == 'member'}">
 
-<!-- ✅ 일반 멤버 -->
-  <div class="member-container">
-    <div class="member-card">
-      <img th:src="@{/images/ChatGPT2.png}" alt="보컬" class="member-img">
-      <div class="member-name">보컬</div>
-      <div class="member-popup">
-        <strong>하나미</strong><br>
-        포지션: 메인 보컬<br>
-        MBTI: ENFP<br>
-        특기: 일어, 작사<br>
-        한마디: 노래로 마음을 전해요!
-      </div>
+    <!-- ✅ 프로필 이미지: user_img 없으면 기본 이미지 -->
+    <img th:src="@{${member.user_img != null and !#strings.isEmpty(member.user_img) 
+                    ? '/upload/' + member.user_img 
+                    : '/images/member1.png'}}"
+         class="member-img"
+         alt="멤버 이미지"
+         style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
+
+    <!-- ✅ 이름 = 포지션 -->
+    <div class="member-name" th:text="${member.member_position}">포지션</div>
+
+    <!-- ✅ 상세 팝업 -->
+    <div class="member-popup">
+      <strong th:text="${member.stage_name}">스테이지명</strong><br>
+      포지션: <span th:text="${member.member_position}">포지션</span><br>
+      MBTI: <span th:text="${member.member_mbti}">MBTI</span><br>
+      좋아하는 밴드: <span th:text="${member.favorite_band}">밴드</span><br>
+      한마디: <span th:text="${member.member_motto}">한마디</span>
     </div>
 
-    <div class="member-card">
-      <img th:src="@{/images/ChatGPT3.png}" alt="기타" class="member-img">
-      <div class="member-name">기타</div>
-      <div class="member-popup">
-        <strong>타케시</strong><br>
-        포지션: 기타리스트<br>
-        성격: 차분한 타입<br>
-        좋아하는 장르: 시티팝<br>
-        한마디: 리듬을 타고 흐르는 삶 🎸
-      </div>
-    </div>
-
-    <div class="member-card">
-      <img th:src="@{/images/ChatGPT4.png}" alt="드럼" class="member-img">
-      <div class="member-name">드럼</div>
-      <div class="member-popup">
-        <strong>유나</strong><br>
-        포지션: 드러머<br>
-        취미: 리듬게임<br>
-        특징: 언제나 파워풀<br>
-        한마디: 드럼으로 심장 울려드릴게요!
-      </div>
-    </div>
   </div>
-</section>
+</div>
 
 <!-- ✅ 활동 사진 섹션 -->
 <section class="band-section" id="section-gallery">

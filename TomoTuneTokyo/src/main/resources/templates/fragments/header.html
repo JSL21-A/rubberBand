@@ -8,7 +8,7 @@
       <div class="header-container">
         <div class="header-item left">
           <a href="/">
-            <img th:src="@{/images/HOME2.png}" class="header-icon" alt="Home Icon">
+            <img src="/images/logo.png" class="header-icon home-icon" alt="Home Icon">
           </a>
         </div>
         <div class="header-item center">
@@ -18,9 +18,14 @@
 			<div id="hamburgerBtn" class="hamburger-icon">
 				<img th:src="@{/images/member1.png}" 
 					th:data-hover-src="@{/images/member2.png}"
-					class="header-icon"
+					class="header-icon hamburger-icon"
 					alt="Hamburger Icon">
 				<div id="slideMenu" th:fragment="slideMenu" class="slide-menu">
+				 <script th:inline="javascript">
+    				/*<![CDATA[*/
+      				window.currentUser = /*[[${currentUserId}]]*/ 'anonymous';
+    				/*]]>*/
+  				 </script>
 					<button class="close-btn" aria-label="閉じる">&times;</button>
 					<form class="login-form" th:action="@{/user/login}" method="post" sec:authorize="!isAuthenticated()">
 						<h2>ログイン</h2>
@@ -132,5 +137,6 @@
         </nav>
       </div>
     </header>
+   
   </div>
 </div>
