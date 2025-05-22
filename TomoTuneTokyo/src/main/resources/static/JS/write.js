@@ -51,6 +51,8 @@ function insertImageWithTracking(file) {
 
         // FileMap에 저장
         fileMap.set(id, file);
+
+        togglePlaceholder();
     });
 
     reader.readAsDataURL(file);
@@ -91,7 +93,6 @@ $(document).ready(function () {
 
     //어느 페이지에서 글쓰기를 했는지 탐색
     boardId = $("#write_board_id").val();
-    console.log(boardId);
 
     //위에서 찾은 id를 토대로 카테고리 강조
     $($("li[data-board_id=" + boardId + "]")[0]).addClass("write_on");
@@ -228,11 +229,10 @@ $(document).on("click", "#write_submit", function () {
 
     for (let [id, file] of fileMap.entries()) {
         if (usedIds.has(id)) {
-            formData.append("images", file);
+            const ext = file.name.split(".").pop();
+            formData.append("images", file, id + "." + ext);
         }
     }
-
-    console.log(formData);
 
     const csrfToken = $("meta[name='_csrf']").attr("content");
     const csrfHeader = $("meta[name='_csrf_header']").attr("content");

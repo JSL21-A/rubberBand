@@ -30,6 +30,6 @@ public interface PublicMapper {
     List<PostVo> getPostListAll();
 
     // 가장 최근 공지글 3개 불러오기
-    @Select("SELECT post_title, created_at FROM posts ORDER BY created_at desc LIMIT 3")
+    @Select("SELECT post_title, created_at FROM posts WHERE board_id = 7 ORDER BY created_at desc LIMIT 3")
     List<PostVo> getNotiRecently();
 }

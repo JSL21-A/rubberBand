@@ -25,7 +25,8 @@
             <div class="write_category_list" th:unless="${session.prev == 'notify'}">
                 <div class="write_select_box">
                     <!-- 글 카테고리 -->
-                    <input type="hidden" name="board_id" value="6" id="write_board_id">
+                    <input type="hidden" name="board_id" th:value="${session.prev.length() == 1 ? session.prev : 6}"
+                        id="write_board_id">
                     <div class="write_selected">
                         <span>コミュニティ</span>
                     </div>
