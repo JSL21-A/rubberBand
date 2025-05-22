@@ -20,7 +20,7 @@ $(function(){
 
 
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.header-icon').forEach(img => {
+    document.querySelectorAll('.hamburger-icon').forEach(img => {
       // 원본 src, hover src 불러오기
       const originalSrc = img.getAttribute('src');
       const hoverSrc    = img.getAttribute('data-hover-src');
