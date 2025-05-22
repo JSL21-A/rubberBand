@@ -43,6 +43,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 	annotationProcessor 'org.projectlombok:lombok'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+	implementation 'org.jsoup:jsoup:1.17.2'
 	
 	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
