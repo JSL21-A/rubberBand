@@ -1,0 +1,97 @@
+  /* 계정 및 프로필 관리 페이지 */
+  
+  body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: #fff;
+      margin: 0;
+      padding: 3rem 1rem;
+      color: #111;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.4rem;
+      margin-bottom: 2.5rem;
+      color: #333;
+    }
+
+    .section {
+      border-top: 1px solid #eee;
+      padding: 1.8rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .section:first-of-type {
+      border-top: none;
+    }
+
+    .section-title {
+      font-weight: bold;
+      color: #444;
+      margin-bottom: 0.3rem;
+    }
+
+    .section-desc {
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    .info-block {
+      flex: 1;
+    }
+
+    .profile-photo {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #ccc;
+    }
+
+    .btn-outline {
+      border: 1px solid #999;
+      background: #fff;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline:hover {
+      background: #000;
+      color: #fff;
+    }
+
+    .btn-text-link {
+      font-size: 0.85rem;
+      color: #888;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .email {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .nickname {
+      font-weight: bold;
+      font-size: 1rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .subtext {
+      font-size: 0.88rem;
+      color: #666;
+    }

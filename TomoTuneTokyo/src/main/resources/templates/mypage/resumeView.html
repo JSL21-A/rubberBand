@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>MYPAGE Resume View</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 2rem;
+      color: #1f2d3d;
+    }
+    .resume-preview {
+      max-width: 840px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 2.5rem 3rem;
+      border-radius: 14px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+    }
+    .resume-preview h2 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+    }
+    .section { margin-bottom: 2rem; }
+    .section h3 {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.8rem;
+      color: #374151;
+    }
+    .info-item {
+      margin-bottom: 0.6rem;
+      line-height: 1.6;
+      color: #4b5563;
+    }
+    .info-label {
+      display: inline-block;
+      font-weight: 500;
+      color: #111827;
+      min-width: 80px;
+    }
+    .tag {
+      display: inline-block;
+      background-color: #eef2f7;
+      color: #1d4ed8;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      margin: 0.3rem 0.4rem 0 0;
+      font-weight: 500;
+    }
+    .self-intro {
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 1.2rem 1.4rem;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: #374151;
+    }
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .title-row h2 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0;
+      color: #111827;
+    }
+    .action-buttons { display: flex; gap: 0.6rem; }
+    .action-btn {
+      padding: 0.45rem 1rem;
+      font-size: 0.85rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    .edit-btn {
+      background-color: #000;
+      color: white;
+    }
+    .edit-btn:hover {
+      background-color: #555;
+    }
+    .delete-btn {
+      background-color: #000;
+      color: white;
+    }
+    .delete-btn:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="resume-preview">
+    <div class="title-row">
+      <h2>履歴書プレビュー</h2>
+      <div class="action-buttons">
+        <button class="action-btn edit-btn" onclick="editResume()">編集</button>
+        <button class="action-btn delete-btn" onclick="deleteResume()">削除</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>基本情報</h3>
+      <div class="info-item"><span class="info-label">活動名:</span> <span th:text="${resume.stageName}">NANA</span></div>
+      <div class="info-item"><span class="info-label">性別:</span> <span th:text="${resume.gender}">女性</span></div>
+      <div class="info-item"><span class="info-label">生年月日:</span> <span th:text="${resume.birth}">2001-01-01</span></div>
+      <div class="info-item"><span class="info-label">Eメール:</span> <span th:text="${resume.sns}">example@mail.com</span></div>
+      <div class="info-item"><span class="info-label">連絡先:</span> <span th:text="${resume.phoneNumber}">080-1234-5678</span></div>
+    </div>
+
+    <div class="section" th:if="${areaList != null}">
+      <h3>活動可能地域</h3>
+      <span class="tag" th:each="region : ${areaList}" th:text="${region}">地域名</span>
+    </div>
+
+    <div class="section" th:if="${instrumentList != null}">
+      <h3>ポジション</h3>
+      <span class="tag" th:each="inst : ${instrumentList}" th:text="${inst}">ポジション</span>
+    </div>
+
+    <div class="section" th:if="${genreList != null}">
+      <h3>好きなジャンル</h3>
+      <span class="tag" th:each="genre : ${genreList}" th:text="${genre}">ジャンル</span>
+    </div>
+
+    <div class="section" th:if="${practiceDayList != null}">
+      <h3>練習可能な曜日</h3>
+      <span class="tag" th:each="day : ${practiceDayList}" th:text="${day}">曜日</span>
+    </div>
+
+    <div class="section">
+      <h3>練習可能時間帯</h3>
+      <div class="info-item" th:text="${resume.practiceTime}">午後（12時〜18時）</div>
+      <div class="info-item">
+        <span class="info-label">具体的な時間:</span>
+        <span th:text="${resume.detailTime}">13時〜17時</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>自己紹介</h3>
+      <div class="self-intro" th:text="${resume.note}">
+        ギター歴3年、ロックバンド経験あり。よろしくお願いします！
+      </div>
+    </div>
+
+    <script>
+      function editResume() {
+        window.location.href = "/mypage/resumeinsert";
+      }
+
+      function deleteResume() {
+        if (confirm("この履歴書を削除しますか？")) {
+          fetch('/mypage/delete', { method: 'POST' }).then(() => {
+            alert("履歴書が削除されました");
+            location.href = '/mypage/account';
+          });
+        }
+      }
+    </script>
+  </div>
+</body>
+</html>

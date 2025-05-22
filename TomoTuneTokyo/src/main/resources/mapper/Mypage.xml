@@ -46,6 +46,17 @@
 		#{resumeId}, #{bandName}, #{bandPart}, #{bandStart}, #{bandEnd}
 		)
 	</insert>
+	<!-- 이력서페이지이동 (작성 or 조회) -->
+	<select id="countResumeByUserId" parameterType="String" resultType="int">
+    SELECT COUNT(*) 
+    FROM resume 
+    WHERE user_id = #{userId}
+</select>
+ <!-- 이력서조회 -->
+<select id="selectResumeByUserId" resultType="com.TTT.domain.MypageDto" parameterType="String">
+    SELECT * FROM resume WHERE user_id = #{userId} LIMIT 1
+</select>
 
+	
 
 </mapper>

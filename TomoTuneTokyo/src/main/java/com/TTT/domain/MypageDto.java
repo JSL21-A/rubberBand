@@ -18,6 +18,7 @@ public class MypageDto {
 	private String stageName; // 활동명
 	private String gender; // 성별
 	private String birth; // 생년월일
+	private String phoneNumber; // 연락처
 	private String sns; // 이메일
 	// 합주정보
 	private String area; // 활동지역
