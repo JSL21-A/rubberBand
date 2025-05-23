@@ -15,6 +15,9 @@ $(function(){
 	const params = new URLSearchParams(window.location.search);
 	if(params.has('openLogin')){
 		$('#slideMenu').addClass('open');
+		
+	const urlWithoutParams = window.location.pathname;
+	window.history.replaceState({}, document.title, urlWithoutParams);
 	}
 })
 
