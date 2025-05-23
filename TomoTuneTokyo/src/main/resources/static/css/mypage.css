@@ -59,11 +59,13 @@ h4 {
 input[type="text"], input[type="email"], input[type="date"], select,
 	textarea {
 	max-width: 520px;
-	padding: 0.5rem 0.8rem;
-	font-size: 0.9rem;
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	box-sizing: border-box;
+	  height: 36px;         /* 고정 높이 */
+  padding: 0 0.6rem;    /* 좌우 여백만 */
+  font-size: 0.9rem;
+  line-height: 1.2;
 }
 
 textarea {
@@ -241,13 +243,17 @@ ul li {
 	box-sizing: border-box;
 }
 
+.band-card .band-period input[type="text"] {
+	cursor: pointer;
+}
+
 .band-card .band-period {
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
 	margin-top: 0.3rem;
 }
-
+	
 .band-card .band-period span {
 	font-size: 0.9rem;
 	color: #666;
@@ -371,6 +377,122 @@ label.field-label {
 textarea#selfIntro {
 	resize: none;
 	height: 140px;
+}
+
+/* 기본 박스 및 버튼 스타일 */
+.resume-form .button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  justify-content: center;
+}
+
+.button-group button {
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #333;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-group button:hover {
+  background-color: #555;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 300px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+}
+
+/* 활동지역, 장르 선택 목록 */
+#selected-regions li,
+#selected-genres li {
+  margin: 0.5rem 0;
+  padding: 0.3rem 0.8rem;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+#selected-regions button,
+#selected-genres button {
+  background: transparent;
+  border: none;
+  color: red;
+  margin-left: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* 기타 입력창 */
+#position-etc-input,
+#genre-other,
+#region-other {
+  margin-top: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+    height: 36px;
+  padding: 0 0.6rem;
+  font-size: 0.9rem;
+}
+
+/* flatpickr의 altInput input 스타일 재정의 */
+.flatpickr-input.flatpickr-input[readonly] {
+  background-color: #fff !important;
+  border: 1px solid #ccc !important;
+  border-radius: 5px !important;
+  padding: 0.5rem 0.8rem !important;
+  font-size: 0.9rem !important;
+  color: #333 !important;
+  max-width: 520px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+  display: none;
+}
+
+/* 자기소개 텍스트창 크기 고정 */
+#note {
+  resize: none;
+  height: 140px; 
+}
+
+.hidden {
+  display: none !important;
+}
+
+#region-other,
+#position-etc-input,
+#genre-other {
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* 이메일 오류 메시지 전용 스타일 */
+#emailError {
+  color: red;
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+  display: none;
 }
 
 /* 사이드바 (hamburger) */
@@ -542,15 +664,6 @@ textarea#selfIntro {
 	font-size: 0.85rem;
 	color: #cbd5e1;
 	margin-top: 2px;
-}
-
-.band-card {
-  background: #f8f9fa;
-  padding: 1.2rem;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  border: 1px solid #dee2e6;
-  position: relative;
 }
 
 .remove-btn {

@@ -1,12 +1,14 @@
 package com.TTT.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.TTT.domain.UserDto;
+import com.TTT.service.NotificationService;
 import com.TTT.service.UserService;
 
 
@@ -16,6 +18,10 @@ public class MainController {
 	
 	@Autowired
 	UserService userService;
+	
+	//테스트용
+	@Autowired
+	NotificationService notificationService;
 
 	
 	//index.html
@@ -38,5 +44,8 @@ public class MainController {
 	public String chatsFragment() {
 		return "fragments/chats :: chats";
 	}
+	
+
+	
 	
 }

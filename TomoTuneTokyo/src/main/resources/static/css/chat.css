@@ -16,7 +16,7 @@
 /* ── 토글 버튼 ── */
 .chat-toggle {
   position: fixed;
-  bottom: calc(env(safe-area-inset-bottom,20px) - 470px);
+  bottom: calc(env(safe-area-inset-bottom,20px) - 450px);
   right: calc(env(safe-area-inset-right,20px) - 250px);
   width: 50px;
   height: 50px;
