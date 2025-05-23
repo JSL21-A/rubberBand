@@ -187,8 +187,8 @@ public class BandInsertController {
 		@GetMapping("/membersearch/leader")
 		@ResponseBody
 		public BandInsertVo getLeaderProfile(Principal principal) {
-		    String userId = principal.getName(); // ✅ 문자열 그대로 사용
-		    return bandInsertService.getMyProfile(userId); // ✅ 아래 서비스도 String 기반으로 수정되어 있어야 함
+		    String userId = principal.getName(); // 문자열 그대로 사용
+		    return bandInsertService.getMyProfile(userId); // 아래 서비스도 String 기반으로 수정되어 있어야 함
 		}
 
 
