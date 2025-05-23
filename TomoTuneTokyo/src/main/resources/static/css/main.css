@@ -28,15 +28,16 @@
         --diameter: 200;
         --card-width: 20;
         --card-height: 20;
-        --unit: 1vw;
+        --unit-w: 1vw;
+        --unit-h: 0.5vh;
     }
 
     .menu-inner {
         /* 돌아가는 판 크기 설정 */
-        width: calc((var(--diameter) + var(--card-width)) * var(--unit));
-        height: calc((var(--diameter) + var(--card-height)) * var(--unit));
+        width: calc((var(--diameter) + var(--card-width)) * var(--unit-w));
+        height: calc((var(--diameter) + var(--card-height)) * var(--unit-w));
         /* 상단기준 반지름만큼 내려가기 */
-        top: calc(55vh + (var(--diameter) * 0.5 * var(--unit)) - (var(--card-height) * 0.5 * var(--unit)));
+        top: calc(55vh + (var(--diameter) * 0.5 * var(--unit-w)) - (var(--card-height) * 0.5 * var(--unit-h)));
         /* 중앙배치 */
         left: 50%;
         transform: translate3d(-50%, -50%, 0px);
@@ -77,8 +78,8 @@
 .menu-card {
     position: absolute;
     /* 카드 크기 */
-    width: calc(var(--card-width) * var(--unit));
-    height: calc(var(--card-height) * var(--unit));
+    width: calc(var(--card-width) * var(--unit-w));
+    height: calc(var(--card-height) * var(--unit-w));
     perspective: 1000px;
     transform-origin: center;
     will-change: transform;
@@ -94,7 +95,7 @@
     right: 0;
     bottom: 0;
     will-change: transform;
-    height: calc((var(--card-height) + var(--card-height) / 3.5) * var(--unit));
+    height: calc((var(--card-height) + var(--card-height) / 3.5) * var(--unit-w));
 }
 
 .card-front,

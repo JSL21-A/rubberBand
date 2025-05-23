@@ -16,10 +16,10 @@
         :root {
             --dark: #333;
             /* 짙은 회색으로 모노톤 강조 */
-            --light: #f0f0f0;
+            --light: #000;
             /* 밝은 회색 배경 */
             --white: #fff;
-            --highlight: #ffdd40;
+            --highlight: #000;
             /* 강조색, 모노톤에 살짝 포인트 */
             --trans: all 0.3s ease;
         }
@@ -133,6 +133,7 @@
             background: var(--light);
             transform: rotate(0deg);
             transition: transform 0.4s;
+            color: #fff;
         }
 
         .co-funder:after {
@@ -153,7 +154,7 @@
             display: inline-block;
             margin: 0.5em 0 0 0;
             background: var(--dark);
-            color: var(--highlight);
+            color: #fff;
             padding: 0.1em 0.5em 0.35em;
             border-radius: 0.5em;
             text-decoration: none;
