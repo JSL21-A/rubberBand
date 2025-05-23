@@ -2699,9 +2699,15 @@ body {
 /* ✅ 갤러리 이미지 크기 확대 */
 .gallery-grid {
     display: flex;
-    gap: 14px;
     flex-wrap: wrap;
+    gap: 14px;
+    flex: 1;
+    max-width: 500px;
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    overflow: hidden;
 }
+
 
 .gallery-grid img {
     width: 100%;
@@ -3554,4 +3560,33 @@ body {
     align-items: flex-start; /* 왼쪽 정렬 */
     text-align: left; /* 텍스트 왼쪽 정렬 */
     margin-bottom: 40px;
+}
+/* ✅ 활동 기록 슬라이드 내부 레이아웃: 2줄 2칸 */
+#section-records .media-row.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 20px;
+  justify-items: center;
+  align-items: stretch;
+  padding: 10px 0;
+}
+
+#section-records .column-left {
+  width: 100%;
+}
+
+#section-records .record-card {
+  height: 100%;
+}
+
+#leader-email {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+#leader-email.visible {
+  visibility: visible;
+  opacity: 1;
 }
