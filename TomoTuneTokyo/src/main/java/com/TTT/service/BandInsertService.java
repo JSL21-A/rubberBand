@@ -190,5 +190,9 @@ public class BandInsertService {
 	public List<BandInsertVo> searchByTeamNameOrPosition(String keyword) {
 	    return bandInsertMapper.searchBandsByName(keyword);
 	}
+	
+	
+
+
 
 }
