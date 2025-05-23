@@ -142,7 +142,7 @@
 
 	  <div class="form-group">
 	    <label for="formationDate">結成日</label>
-	    <input type="date" class="form-control" id="formationDate" name="formation_date">
+		<input type="date" class="form-control" id="formationDate" name="formation_date" placeholder="年-月-日">
 	  </div>
 
 	  <div class="form-group">
@@ -203,9 +203,9 @@
 	  </div>
 
 	  <div class="form-group">
-	    <label for="bandEmail">メールアドレス</label>
-	    <input type="email" class="form-control" id="bandEmail" name="bandEmail" placeholder="例: band@example.com" required>
-	  </div>
+	  	    <label for="leaderComment">リーダーのコメント</label>
+	  	    <textarea class="form-control" id="leaderComment" name="leader_comment" rows="2" placeholder="リーダーからのメッセージ"></textarea>
+	  	  </div>
 
 	  <input type="hidden" name="selectedGenres" id="selectedGenres">
 	  <input type="hidden" name="selectedPositions" id="selectedPositions">
@@ -219,11 +219,6 @@
 
 	<!-- 2페이지 -->
 	<div id="page2" style="display:none;">
-	  <div class="form-group">
-	    <label for="leaderComment">リーダーのコメント</label>
-	    <textarea class="form-control" id="leaderComment" name="leader_comment" rows="2" placeholder="リーダーからのメッセージ"></textarea>
-	  </div>
-
 	  <div class="form-group">
 	    <label for="bandProfileImage">バンドプロフィール画像</label>
 	    <input type="file" class="form-control" id="bandProfileImage" name="bandProfileImage" accept="image/*">
@@ -274,7 +269,7 @@
 	  </div>
 
 	  <div class="text-center">
-	    <button type="button" class="btn btn-default" id="prevPage">以前へ</button>
+	    <button type="button" class="btn btn-primary" id="prevPage">以前へ</button>
 	    <button type="button" class="btn btn-primary" id="toPage3">次へ</button>
 	  </div>
 	</div>
@@ -331,7 +326,7 @@
 	  </div>
 
 	  <div class="text-center mt-4" style="padding-top: 80px;">
-	    <button type="button" class="btn btn-default" id="toPage2">以前へ</button>
+	    <button type="button" class="btn btn-primary" id="toPage2">以前へ</button>
 	    <button type="submit" class="btn btn-primary" id="submitApply">登録する</button>
 	  </div>
 	</div>
@@ -561,6 +556,81 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 
 </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // ✅ 검색 파라미터 제거
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("keyword")) {
+      url.searchParams.delete("keyword");
+      window.history.replaceState({}, document.title, url.pathname + url.search);
+    }
+  });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const tags = document.querySelectorAll('a.tag');
+
+  tags.forEach(tag => {
+    const param = tag.getAttribute('href').split('=')[0].replace('?', '');
+    const value = tag.getAttribute('href').split('=')[1];
+
+    tag.addEventListener('click', function (e) {
+      e.preventDefault(); // 기본 링크 이동 막기
+
+      const url = new URL(window.location.href);
+      const current = url.searchParams.get(param);
+
+      if (current === value) {
+        url.searchParams.delete(param); // 현재 선택된 값 → 제거 (해제)
+      } else {
+        url.searchParams.set(param, value); // 새로운 값 → 설정
+      }
+
+      window.location.href = url.toString(); // 새 URL로 이동
+    });
+  });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const url = new URL(window.location.href);
+  const params = url.searchParams;
+
+  document.querySelectorAll('.tag').forEach(tag => {
+    const href = tag.getAttribute('href');
+    if (!href) return;
+
+    const match = href.match(/[?&]([^=]+)=([^&]+)/);
+    if (!match) return;
+
+    const key = match[1];
+    const value = match[2];
+
+    // 현재 URL 파라미터와 일치하면 active 클래스 추가
+    if (params.get(key) === value) {
+      tag.classList.add('active');
+    }
+
+    // 클릭 시 리로드 없이 선택/해제
+    tag.addEventListener('click', function (e) {
+      e.preventDefault();
+      const current = params.get(key);
+
+      if (current === value) {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+
+      window.location.href = url.pathname + '?' + params.toString();
+    });
+  });
+});
+</script>
+
+
 </div>
 </body>
 </html>

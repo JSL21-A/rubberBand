@@ -42,8 +42,9 @@ public interface BandInsertMapper {
 	List<BandInsertVo> searchMembersNickname(@Param("keyword") String keyword, @Param("excludeUserId") String excludeUserId);
 	
 	// 밴드 결성 일반 멤버 전체 조회 (본인을 제외)
-	@Select("SELECT user_id, nickname, user_img FROM user_profile WHERE TRIM(user_id) != #{excludeUserId}")
+	@Select("SELECT user_id, nickname, user_img FROM user_profile WHERE user_id <> #{excludeUserId}")
 	List<BandInsertVo> selectAllMembersSelect(@Param("excludeUserId") String excludeUserId);
+
 
 	// 결성된 밴드 list에서 조회
 	@Select("SELECT b.band_id, b.band_name, b.band_intro, b.band_profile_img, b.created_at, m.stage_name AS stage_name FROM bands b JOIN band_member m ON b.band_id = m.band_id WHERE m.member_type = 'LEADER' ORDER BY b.created_at DESC")
@@ -61,7 +62,6 @@ public interface BandInsertMapper {
 	@Select("SELECT * FROM bands WHERE band_name LIKE CONCAT('%', #{keyword}, '%')")
 	List<BandInsertVo> searchBandsByName(@Param("keyword") String keyword);
 
+	
 
-	
-	
 	}

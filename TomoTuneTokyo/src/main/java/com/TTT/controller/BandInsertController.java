@@ -63,7 +63,6 @@ public class BandInsertController {
 	    return "band/modifylist";
 	}
 	
-	
 	// 밴드 결성 입력폼 (저장 기능 포함)
 	    @InitBinder
 	    public void initBinder(WebDataBinder binder) {
@@ -203,10 +202,12 @@ public class BandInsertController {
 		@GetMapping("/membersearch/allmember")
 		@ResponseBody
 		public List<BandInsertVo> selectAllMembersSelect(Principal principal) {
-		    String excludeUserId = principal.getName(); // 현재 로그인한 사용자 ID
-		    System.out.println("제외할 user_id: " + excludeUserId);
-		    return bandInsertService.selectAllMembersSelect(excludeUserId);
+		    String username = principal.getName(); // 로그인 ID (username)
+		    String userId = bandInsertService.findUserIdByUsername(username); // username -> user_id 변환
+		    System.out.println("제외할 user_id: " + userId);
+		    return bandInsertService.selectAllMembersSelect(userId);
 		}
+
 
 		// band_id 불러오기
 		@GetMapping("/bandinsert/findBandId")
