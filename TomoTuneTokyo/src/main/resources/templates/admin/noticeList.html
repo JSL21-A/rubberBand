@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" data-layout-decorate=~{layouts/adminLayout}>
 
 <head>
     <meta charset="UTF-8">
@@ -6,61 +8,14 @@
     <title>Document</title>
 </head>
 <style>
-    #notice {
-        margin: 0;
-        padding: 0;
-    }
-
-    #content {
-        width: 80vw;
-        margin: 0 auto;
-        margin-top: 60px;
-    }
-
-    #top {
-        display: flex;
-        flex-direction: row-reverse;
-    }
-
-    #middle {
-        width: 100%;
-        margin: 0 auto;
-    }
-
-    ul {
-        list-style: none;
-        padding: 0 3%;
-    }
-
-    li {
-        border-bottom: 1px dotted black;
-    }
-
-    .noti_list {
-        border-top: 3px solid black;
-        border-radius: 30px;
-    }
-
-    .noti_post {
-        display: flex;
-        justify-content: space-between;
-        padding: 1%;
-    }
-
-    .noti_post a {
-        text-decoration: none;
-        color: #333;
-    }
-
-    #bottom {
-        display: flex;
-        justify-content: space-between;
+    body {
+        overflow: scroll;
     }
 </style>
 
 <body>
-    <h1 id="banner-font" hx-swap-oob="true">お知らせ</h1>
-    <div id="content">
+    <h1 id="banner-font" hx-swap-oob="true" th:fragment="banner_title">お知らせ</h1>
+    <div id="content" layout:fragment="content" th:fragment="content">
         <div id="notice">
             <div id="top">
 
@@ -70,60 +25,23 @@
                     <ul>
                         <li class="noti_post">
                             <a href="#">
-                                <div class="noti_title">TITLE</div>
+                                <div class="noti_title">タイトル</div>
                             </a>
-                            <div class="noti_date">DATE</div>
+                            <div class="noti_date">作成日</div>
                         </li>
-                        <li class="noti_post">
+                        <li class="noti_post" th:each="post: ${list}">
                             <a hx-get="/admin/test">
-                                <div class="noti_title">testThings1</div>
+                                <div class="noti_title" th:text="${post.post_title}"></div>
                             </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
+                            <div class="noti_date" th:text="${#temporals.format(post.created_at, 'yyyy.MM.dd')}"></div>
                         </li>
                     </ul>
                 </div>
             </div>
             <div id="bottom">
                 1 2 3 4 5 6
-                <button>作成</button>
+                <a hx-get="./write" hx-target="#content" hx-push-url="true">作成</a>
             </div>
-
         </div>
     </div>
 </body>

@@ -19,15 +19,15 @@
     </div>
     <h2 class="board-title">バンドリスト</h2>
 
-<!-- 🔍 검색창 -->
-
-<div class="search-bar">
-  <input type="text" class="search-input" placeholder="チーム名 or ポジション検索">
-  <button class="search-btn">検索</button>
-</div>
+	<!-- 🔍 검색창 -->
+	<div class="search-bar">
+	  <form method="get" th:action="@{/bandinsert/modifylist}" style="display: contents;">
+	    <input type="text" class="search-input" name="keyword" placeholder="チーム名検索" th:value="${keyword}">
+	    <button type="submit" class="search-btn">検索</button>
+	  </form>
+	</div>
 
 <!-- 해시태그 선택 영역 -->
-
 <div class="selected-tags-title"># 自分の好みであるキーワード検索</div>
 <div class="selected-tags"></div>
 <div class="keyword-box">
@@ -82,9 +82,10 @@
 </div>
 
 <!-- 카드 목록 -->
-<div class="board-card-grid">
-  <div class="board-card" th:each="band : ${bandList}">
-    <a th:href="@{/bandinsert/modify(band_id=${band.band_id})}">
+<!-- 🔍 검색어가 있을 경우 bandnamelist 출력 -->
+<div class="board-card-grid" th:if="${keyword != null and !#strings.isEmpty(keyword)}">
+  <div class="board-card" th:each="band : ${bandnamelist}">
+	<a th:href="@{'/bandinsertselect/modify?band_id=' + ${band.band_id}}">
       <img th:src="@{${band.band_profile_img != null ? '/images/uploads/bands/' + band.band_profile_img : '/images/default.png'}}"
            alt="썸네일" class="card-image">
     </a>
@@ -99,6 +100,26 @@
     </div>
   </div>
 </div>
+
+<!-- 🔍 검색어가 없을 경우 기존 bandList 출력 -->
+<div class="board-card-grid" th:if="${keyword == null or #strings.isEmpty(keyword)}">
+  <div class="board-card" th:each="band : ${bandList}">
+	<a th:href="@{'/bandinsertselect/modify?band_id=' + ${band.band_id}}">
+      <img th:src="@{${band.band_profile_img != null ? '/images/uploads/bands/' + band.band_profile_img : '/images/default.png'}}"
+           alt="썸네일" class="card-image">
+    </a>
+    <div class="card-info">
+      <h3 class="card-title" th:text="${band.band_name}">バンド名</h3>
+      <p class="card-summary" th:text="${band.band_intro}">バンド紹介</p>
+      <p class="card-meta">
+        <span th:text="${band.stage_name}">작성자</span> |
+        <span th:text="${#temporals.format(band.created_at, 'yyyy.MM.dd')}">날짜</span> |
+        ヒット数 <span>0</span>
+      </p>
+    </div>
+  </div>
+</div>
+
   <!-- ✅ 밴드 결성 등록 모달 -->
 
 <div class="modal fade" id="applyModal" tabindex="-1" role="dialog" aria-labelledby="applyModalLabel">

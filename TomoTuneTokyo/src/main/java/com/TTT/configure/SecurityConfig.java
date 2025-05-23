@@ -61,7 +61,8 @@ public class SecurityConfig {
               "/user/reset-password",
               "/user/check-username-reset",
               "/user/check-username-email",
-              "/user/header-fragment"
+              "/user/header-fragment",
+              "/test/notify-logout"
             ).permitAll()
             .anyRequest().authenticated()
           )

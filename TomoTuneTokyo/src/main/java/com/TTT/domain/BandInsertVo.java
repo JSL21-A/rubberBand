@@ -52,5 +52,7 @@ public class BandInsertVo {
 	  // 페이징
 	  private int band_count;
 
+	  // users 테이블
+	  private String email;
 	  
 }

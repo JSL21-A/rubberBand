@@ -111,7 +111,7 @@ public class BandInsertService {
 
 	    // 7. 리더 등록
 	    vo.setBand_id(bandId);
-	    vo.setMember_type(MemberType.LEADER);
+	    vo.setMember_type(MemberType.leader);
 	    bandInsertMapper.InsertBandMember(vo);
 
 	    // 8. 일반 멤버 등록
@@ -119,7 +119,7 @@ public class BandInsertService {
 	    for (int i = 0; i < generalMemberList.size(); i++) {
 	        BandInsertVo member = generalMemberList.get(i);
 	        member.setBand_id(bandId);
-	        member.setMember_type(MemberType.MEMBER);
+	        member.setMember_type(MemberType.member);
 	        member.setCreated_at(LocalDateTime.now());
 	        
 	        if (member.getMember_mbti() != null) {
@@ -180,11 +180,15 @@ public class BandInsertService {
 	public List<BandInsertVo> getBandsByConditions(String genre, String position, String gender, String age) {
 	    return bandInsertMapper.selectBandsByConditions(genre, position, gender, age);
 	}
-
 	
 	// band_id 호출
 	public Long getBandIdByBandName(String band_name) {
 		return bandInsertMapper.FindBandIdByBandId(band_name);
+	}
+
+	// 밴드명 검색창 검색
+	public List<BandInsertVo> searchByTeamNameOrPosition(String keyword) {
+	    return bandInsertMapper.searchBandsByName(keyword);
 	}
 
 }
