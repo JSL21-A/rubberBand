@@ -62,6 +62,16 @@ public interface BandInsertMapper {
 	@Select("SELECT * FROM bands WHERE band_name LIKE CONCAT('%', #{keyword}, '%')")
 	List<BandInsertVo> searchBandsByName(@Param("keyword") String keyword);
 
+	// 전체 밴드 리스트 페이징 조회 (리더 활동명 포함)
+	@Select("SELECT b.band_id, b.band_name, b.band_intro, b.band_profile_img, b.created_at, (SELECT m.stage_name FROM band_member m WHERE m.band_id = b.band_id AND m.member_type = 'LEADER' LIMIT 1) AS stage_name FROM bands b WHERE (#{genre} IS NULL OR #{genre} = '') AND (#{position} IS NULL OR #{position} = '') AND (#{gender} IS NULL OR #{gender} = '') AND (#{age} IS NULL OR #{age} = '') AND (#{keyword} IS NULL OR #{keyword} = '') ORDER BY b.created_at DESC LIMIT #{size} OFFSET #{start}")
+	List<BandInsertVo> selectAllBandsWithPaging(@Param("genre") String genre, @Param("position") String position, @Param("gender") String gender, @Param("age") String age, @Param("keyword") String keyword, @Param("start") int start, @Param("size") int size);
+
+	// 전체 밴드 수 조회 (페이징용)
+	@Select("SELECT COUNT(*) FROM bands WHERE (#{genre} IS NULL OR #{genre} = '') AND (#{position} IS NULL OR #{position} = '') AND (#{gender} IS NULL OR #{gender} = '') AND (#{age} IS NULL OR #{age} = '') AND (#{keyword} IS NULL OR #{keyword} = '')")
+	int countAllBands(@Param("genre") String genre, @Param("position") String position, @Param("gender") String gender, @Param("age") String age, @Param("keyword") String keyword);
+
+
+
 	
 
 	}
