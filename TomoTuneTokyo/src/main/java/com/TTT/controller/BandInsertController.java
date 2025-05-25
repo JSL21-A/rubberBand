@@ -31,16 +31,39 @@ public class BandInsertController {
 	// 밴드 list
 	@GetMapping("/modifylist")
 	public String modifylist(@RequestParam(value = "genre", required = false) String genre,
-            @RequestParam(value = "position", required = false) String position,
-            @RequestParam(value = "gender", required = false) String gender,
-            @RequestParam(value = "age", required = false) String age,
-            @RequestParam(value = "keyword", required = false) String keyword,
+	                         @RequestParam(value = "position", required = false) String position,
+	                         @RequestParam(value = "gender", required = false) String gender,
+	                         @RequestParam(value = "age", required = false) String age,
+	                         @RequestParam(value = "keyword", required = false) String keyword,
+	                         @RequestParam(value = "page", defaultValue = "1") int page,
+	                         @RequestParam(value = "size", defaultValue = "6") int size,
 	                         Model model, Principal principal) {
 
-	    // ✅ 필터 조건에 따라 밴드 리스트 조회
-	    List<BandInsertVo> bandList = bandInsertService.getBandsByConditions(genre, position, gender, age);
-	    model.addAttribute("bandList", bandList);
-	    
+	    // ✅ 페이징 처리에 필요한 start 값 계산
+	    int start = (page - 1) * size;
+
+	    // ✅ 조건이 모두 비어있을 때만 전체 리스트 페이징 조회 실행
+	    boolean isNoFilter = (genre == null || genre.isBlank())
+	                      && (position == null || position.isBlank())
+	                      && (gender == null || gender.isBlank())
+	                      && (age == null || age.isBlank())
+	                      && (keyword == null || keyword.isBlank());
+
+	    if (isNoFilter) {
+	        List<BandInsertVo> pagedList = bandInsertService.getAllBandsWithPaging(genre, position, gender, age, keyword, start, size);
+	        int totalCount = bandInsertService.countAllBands(genre, position, gender, age, keyword);
+	        int totalPages = (int) Math.ceil((double) totalCount / size);
+
+	        model.addAttribute("bandList", pagedList);
+	        model.addAttribute("page", page);
+	        model.addAttribute("totalPages", totalPages);
+	    } else {
+	        // ✅ 필터 조건에 따라 밴드 리스트 조회 (페이징 없이)
+	        List<BandInsertVo> bandList = bandInsertService.getBandsByConditions(genre, position, gender, age);
+	        model.addAttribute("bandList", bandList);
+	    }
+
+	    // ✅ 검색어로 밴드명 검색한 결과 (검색창 우선)
 	    List<BandInsertVo> bandnamelist = bandInsertService.searchByTeamNameOrPosition(keyword);
 	    model.addAttribute("bandnamelist", bandnamelist);
 
@@ -57,11 +80,11 @@ public class BandInsertController {
 	    model.addAttribute("selectedPosition", position);
 	    model.addAttribute("selectedGender", gender);
 	    model.addAttribute("selectedAge", age);
-	    
-	    model.addAttribute("keyword", keyword); // 검색창 view에 다시 전달
+	    model.addAttribute("keyword", keyword);
 
 	    return "band/modifylist";
 	}
+
 	
 	// 밴드 결성 입력폼 (저장 기능 포함)
 	    @InitBinder

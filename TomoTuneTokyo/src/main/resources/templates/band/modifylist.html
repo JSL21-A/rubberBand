@@ -338,12 +338,30 @@
 </div>
 
     <!-- 페이징 -->
-    <div class="board-pagination">
-      <button class="page-btn active">1</button>
-      <button class="page-btn">2</button>
-      <button class="page-btn">3</button>
-      <button class="page-btn">&raquo;</button>
-    </div>
+	<div class="board-pagination" th:if="${totalPages != null and totalPages > 1}">
+	  <!-- 이전 페이지 -->
+	  <button class="page-btn"
+	          th:if="${page > 1}"
+	          th:onclick="'location.href=\'' + @{/bandinsert/modifylist(page=${page - 1}, genre=${selectedGenre}, position=${selectedPosition}, gender=${selectedGender}, age=${selectedAge})} + '\''">
+	    &laquo;
+	  </button>
+
+	  <!-- 페이지 숫자 -->
+	  <button class="page-btn"
+	          th:each="i : ${#numbers.sequence(1, totalPages)}"
+	          th:classappend="${i} == ${page} ? ' active' : ''"
+	          th:onclick="'location.href=\'' + @{/bandinsert/modifylist(page=${i}, genre=${selectedGenre}, position=${selectedPosition}, gender=${selectedGender}, age=${selectedAge})} + '\''"
+	          th:text="${i}">
+	  </button>
+
+	  <!-- 다음 페이지 -->
+	  <button class="page-btn"
+	          th:if="${page < totalPages}"
+	          th:onclick="'location.href=\'' + @{/bandinsert/modifylist(page=${page + 1}, genre=${selectedGenre}, position=${selectedPosition}, gender=${selectedGender}, age=${selectedAge})} + '\''">
+	    &raquo;
+	  </button>
+	</div>
+
 <!-- 🔍 멤버 검색 팝업 -->
 <div id="memberSearchPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="memberSearchLabel">
   <div class="modal-dialog" role="document">

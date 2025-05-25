@@ -191,7 +191,17 @@ public class BandInsertService {
 	    return bandInsertMapper.searchBandsByName(keyword);
 	}
 	
-	
+	// 전체 밴드 리스트 페이징 조회 (검색어 및 토글 필터 조건이 모두 비어있을 때만 작동)
+	public List<BandInsertVo> getAllBandsWithPaging(String genre, String position, String gender, String age, String keyword, int start, int size) {
+	    return bandInsertMapper.selectAllBandsWithPaging(genre, position, gender, age, keyword, start, size);
+	}
+
+	// 전체 밴드 수 조회 (페이징용) - 조건이 모두 비어 있을 때만 작동
+	public int countAllBands(String genre, String position, String gender, String age, String keyword) {
+	    return bandInsertMapper.countAllBands(genre, position, gender, age, keyword);
+	}
+
+
 
 
 
