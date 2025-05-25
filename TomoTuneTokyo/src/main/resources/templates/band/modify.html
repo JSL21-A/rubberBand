@@ -18,9 +18,23 @@
 		<div class="band-profile-outer-form">
 			<span id="band-id" th:text="${band.band_id}" style="display:none;"></span>
 
-			<!-- ✅ 커버 이미지 -->
+			<!-- 커버 이미지 -->
 			<div class="cover-image">
 				<img th:src="@{'/images/uploads/bands/' + ${band.band_cover_img}}" alt="커버 이미지">
+				
+				<!-- 초대 알림 고정 팝업 (오른쪽 상단) -->
+				<div id="member-invite-popup" class="member-invite-fixed" style="display: none;">
+				  <button class="invite-close-btn">×</button>
+				  <h4 class="popup-title">バンド招待のお知らせ</h4>
+				  <p class="popup-message">
+				    <strong>“Tomo Groove”</strong> バンドからメンバー招待を受けました。<span class="register-question">登録しますか？</span>
+				  </p>
+				  <div class="popup-buttons">
+				    <button class="btn-accept">受諾</button>
+				    <button class="btn-decline">拒絶</button>
+				  </div>
+				</div>
+
 			</div>
 
 			<div class="profile-header">
@@ -34,51 +48,47 @@
 					<h2 class="band-name" th:text="${band.band_name}">Tomo Groove</h2>
 					<p class="band-leader-comment" th:text="${band.leader_comment}">리더 코멘트</p>
 				<p id="leader-email" class="band-email" th:text="${leaderEmail}">리더 이메일</p>
-					<a id="youtube-link" th:href="${band.youtube_link}" class="external-link" target="_blank">유튜브 채널</a>
+					<a id="youtube-link" th:href="${band.youtube_link}" class="external-link" target="_blank">ユーチューブチャンネル</a>
 					<a id="instagram-link" th:href="${band.instagram_link}" class="external-link" target="_blank"
-						style="padding-left: 10px;">인스타</a>
+						style="padding-left: 10px;">インスタ</a>
 				</div>
 
 				<!-- 수정/채팅 버튼 -->
 				<div class="band-actions">
-					<button class="btn-edit" id="edit-toggle-btn" type="button" th:if="${isLeader}">수정하기</button>
-					<button class="btn-chat">채팅하기</button>
+					<button class="btn-edit" id="edit-toggle-btn" type="button" th:if="${isLeader}">編集する</button>
+					<button class="btn-chat">チャットする</button>
 				</div>
 			</div>
 
 
-			<!-- ✅ 메인 콘텐츠: 사이드바와 콘텐츠를 같은 wrapper 내부에 넣음 -->
+			<!-- 메인 콘텐츠: 사이드바와 콘텐츠를 같은 wrapper 내부에 넣음 -->
 			<div class="band-content-wrapper">
-				<!-- ✅ 프로필 아래 세로 메뉴 -->
+				<!-- 프로필 아래 세로 메뉴 -->
 				<nav class="band-sidebar band-sidebar-floating">
-					<button class="band-tab-btn active" data-target="section-intro">밴드
-						소개</button>
-					<button class="band-tab-btn" data-target="section-members">밴드
-						멤버</button>
-					<button class="band-tab-btn" data-target="section-gallery">활동
-						사진</button>
-					<button class="band-tab-btn" data-target="section-records">활동
-						기록</button>
+					<button class="band-tab-btn active" data-target="section-intro">バンド紹介</button>
+					<button class="band-tab-btn" data-target="section-members">バンドメンバー</button>
+					<button class="band-tab-btn" data-target="section-gallery">活動写真</button>
+					<button class="band-tab-btn" data-target="section-records">活動記録</button>
 				</nav>
 
 				<div class="band-content">
 					<!-- 소개 -->
 					<section class="band-section active" id="section-intro">
-						<h3>밴드 소개</h3>
+						<h3>バンド紹介</h3>
 						<ul class="intro-list">
 							<li>
-							  <strong>결성일 : </strong>
+							  <strong>結成日 : </strong>
 							  <div class="formation-date" th:text="${#temporals.format(band.formation_date, 'yyyy-MM-dd')}">2022-05-01</div>
 							</li>
 							<li>
-							  <strong>장르 : </strong>
+							  <strong>ジャンル : </strong>
 							  <span th:each="tag, stat : ${tags}"
 							        th:if="${tag.tag_type == 'genre' or tag.tag_type == 'position' or tag.tag_type == 'gender' or tag.tag_type == 'age'}"
 							        th:text="${tag.tag_value + (stat.last ? '' : ', ')}"
 							        class="tag-item">
 							  </span>
 							</li>
-							<!-- ✅ 장르 태그 선택 팝업 구조 -->
+							<!-- 장르 태그 선택 팝업 구조 -->
 							<div id="genre-popup" class="keyword-popup" style="display: none;">
 								<button id="genre-popup-close" class="popup-close">×</button>
 								<div class="keyword-box">
@@ -126,11 +136,11 @@
 								</div>
 							</div>
 							<li>
-							  <strong>활동지역 : </strong>
+							  <strong>活動地域 : </strong>
 							  <div class="band-region" th:text="${band.region}"></div>
 							</li>
 							<li>
-							  <strong>밴드 소개 : </strong>
+							  <strong>バンド紹介 : </strong>
 							  <div class="band-one-liner" th:text="${band.band_intro}"></div>
 							</li>
 						</ul>
@@ -138,9 +148,8 @@
 
 					<!-- 멤버 -->
 					<section class="band-section" id="section-members">
-					  <h3>밴드 멤버</h3>
-
-					  <!-- ✅ 리더 멤버 카드 전체 -->
+					  <h3>バンドメンバー</h3>
+					  <!-- 리더 멤버 카드 전체 -->
 					  <div class="member-container leader-only">
 					    <div class="member-card"
 					         th:attr="data-member-id=${leader.band_member_id},
@@ -160,12 +169,12 @@
 					      <!-- 이름 -->
 					      <div class="member-name" th:text="'리더 · ' + ${leader.stage_name}"></div>
 
-					      <!-- ✅ JS에서 내용 삽입할 빈 팝업 -->
+					      <!-- JS에서 내용 삽입할 빈 팝업 -->
 					      <div class="member-popup"></div>
 					    </div>
 					  </div>
 
-					  <!-- ✅ 일반 멤버 목록 -->
+					  <!-- 일반 멤버 목록 -->
 					  <div class="member-container">
 					    <div class="member-card"
 					         th:each="member : ${members}"
@@ -176,35 +185,35 @@
 					                  data-member-mbti=${member.member_mbti},
 					                  data-favorite-band=${member.favorite_band},
 					                  data-member-motto=${member.member_motto}">
-					      <!-- ✅ 프로필 이미지: user_img 없으면 기본 이미지 -->
+					      <!-- 프로필 이미지: user_img 없으면 기본 이미지 -->
 					      <img th:src="@{${member.user_img != null and !#strings.isEmpty(member.user_img) 
 					        ? '/upload/' + member.user_img 
 					        : '/images/member1.png'}}" 
 					        class="member-img" alt="멤버 이미지"
 					        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
 
-					      <!-- ✅ 이름 = 포지션 -->
+					      <!-- 이름 = 포지션 -->
 					      <div class="member-name" th:text="'멤버 · ' + ${member.stage_name}"></div>
 
-					      <!-- ✅ JS에서 내용 삽입할 빈 팝업 -->
+					      <!-- JS에서 내용 삽입할 빈 팝업 -->
 					      <div class="member-popup"></div>
 					    </div>
 					  </div>
 					</section>
 
-					<!-- ✅ 활동 사진 섹션 -->
+					<!-- 활동 사진 섹션 -->
 					<section class="band-section" id="section-gallery">
-						<h3>활동 사진</h3>
+						<h3>活動写真</h3>
 						<div class="gallery-wrapper">
 							<!-- 📌 활동 사진 없을 때 메시지 -->
 							<div th:if="${#lists.isEmpty(galleryList)}">
-								<p style="padding: 40px; text-align: center; color: #888;">등록된 활동 사진이 없습니다.</p>
+								<p style="padding: 40px; text-align: center; color: #888;">登録された活動写真はありません。</p>
 							</div>
 
 							<!-- ◀ 왼쪽 화살표 -->
 							<button class="gallery-arrow gallery-prev">◀</button>
 
-							<!-- ✅ 활동사진 슬라이드 반복 -->
+							<!-- 활동사진 슬라이드 반복 -->
 							<div th:each="photo, stat : ${galleryList}" th:if="${photo != null}" class="media-slide"
 								th:classappend="${stat.index == 0} ? ' active'" th:attr="
 	        data-title=${#strings.defaultString(photo.activityTitle, '')},
@@ -249,43 +258,43 @@
 						<div id="activity-popup" class="review-popup" style="display: none;">
 							<button class="popup-close">×</button>
 							<div class="review-popup-content">
-								<h4 class="activity-popup-title">활동명</h4>
-								<p class="activity-popup-desc">설명 내용</p>
+								<h4 class="activity-popup-title">活動名</h4>
+								<p class="activity-popup-desc">説明</p>
 							</div>
 						</div>
 					</section>
 
-					<!-- ✅ 활동 기록 -->
+					<!-- 활동 기록 -->
 					<section class="band-section" id="section-records">
-						<h3>활동 기록</h3>
+						<h3>活動記録</h3>
 						<div class="gallery-wrapper">
 							<!-- ◀ 왼쪽 화살표 -->
 							<button class="gallery-arrow gallery-prev">◀</button>
 
 							<!-- 📌 활동 기록 없을 때 메시지 -->
 							<div th:if="${#lists.isEmpty(recordList)}">
-								<p style="padding: 40px; text-align: center; color: #888;">등록된 활동 기록이 없습니다.</p>
+								<p style="padding: 40px; text-align: center; color: #888;">登録された活動記録はありません。</p>
 							</div>
 
-							<!-- ✅ 활동기록 슬라이드 묶음: 4개씩 -->
+							<!-- 활동기록 슬라이드 묶음: 4개씩 -->
 							<div th:each="slide, stat : ${recordSlides}" class="media-slide"
 								th:classappend="${stat.index == 0} ? ' active'">
 								<div class="media-row two-columns">
-									<!-- ✅ 슬라이드 내 최대 4개 반복 -->
+									<!-- 슬라이드 내 최대 4개 반복 -->
 									<div th:each="record : ${slide}" class="column-left">
 										<div class="record-card">
 											<div class="record-date">
-												<span th:text="${record.formattedDate}">5월</span><br>
+												<span th:text="${record.formattedDate}">５月</span><br>
 												<strong th:text="${record.formattedDay}">21</strong>
 											</div>
 											<div class="record-info">
 												<span class="record-id" th:text="${record.recordId}" style="display:none;"></span>
-												<div class="record-title" th:text="${record.recordTitle}">공연 제목</div>
-												<div class="record-status" th:text="${record.recordStatus}">예정</div>
-												<div class="record-location" th:text="${record.recordLocation}">장소</div>
+												<div class="record-title" th:text="${record.recordTitle}">公演のタイトル</div>
+												<div class="record-status" th:text="${record.recordStatus}">予定</div>
+												<div class="record-location" th:text="${record.recordLocation}">場所</div>
 												<div class="record-meta">
-													🕒 <span th:text="${record.recordTime}">시간</span> &nbsp;
-													👥 <span th:text="${record.participantCount} + '명'">0명</span>
+													🕒 <span th:text="${record.recordTime}">時間</span> &nbsp;
+													👥 <span th:text="${record.participantCount} + '名'">0名</span>
 												</div>
 											</div>
 											<div class="record-image">
@@ -296,7 +305,7 @@
 											<div class="review-popup">
 												<button class="popup-close">×</button>
 												<div class="review-item">
-													<p th:text="${record.recordDescription}">활동 설명</p>
+													<p th:text="${record.recordDescription}">活動説明</p>
 												</div>
 											</div>
 										</div>
@@ -308,20 +317,22 @@
 							<button class="gallery-arrow gallery-next">▶</button>
 						</div>
 
-						<!-- ✅ 페이징 도트 (4개 단위로) -->
+						<!-- 페이징 도트 (4개 단위로) -->
 						<div class="gallery-dots" th:if="${#lists.size(recordSlides) > 1}">
 							<div th:each="slide, stat : ${recordSlides}" class="gallery-dot"
 								th:classappend="${stat.index == 0} ? ' active'">
 							</div>
 						</div>
 					</section>
+					<!-- 다시 열기 버튼 -->
+					<button id="invite-toggle-btn" class="invite-reopen-btn" style="display: none;">📩</button>
 
 				</div>
 			</div>
 		</div>
 
 		<script>
-			// ✅ 탭 전환 기능
+			// 탭 전환 기능
 			document.addEventListener("DOMContentLoaded", () => {
 				document.querySelectorAll('.band-tab-btn').forEach(button => {
 					button.addEventListener('click', () => {
@@ -335,7 +346,7 @@
 		</script>
 
 		<script>
-			// ✅ 활동사진 슬라이드(페이징) 기능
+			// 활동사진 슬라이드(페이징) 기능
 			document.addEventListener("DOMContentLoaded", () => {
 				const gallerySlides = document.querySelectorAll("#section-gallery .media-slide");
 				const galleryDots = document.querySelectorAll("#section-gallery .gallery-dot");
@@ -364,7 +375,7 @@
 		</script>
 
 		<script>
-			// ✅ 활동기록 슬라이드(페이징) 기능
+			// 활동기록 슬라이드(페이징) 기능
 			document.addEventListener("DOMContentLoaded", () => {
 				const allSlides = Array.from(document.querySelectorAll("#section-records .media-slide"));
 				const dots = document.querySelectorAll("#section-records .gallery-dot");
@@ -418,16 +429,16 @@
 		</script>
 
 		<script>
-		  // ✅ 활동기록 카드 클릭 → 후기 팝업 하나만 열리도록 처리
+		  // 활동기록 카드 클릭 → 후기 팝업 하나만 열리도록 처리
 		  document.addEventListener("DOMContentLoaded", () => {
 		    document.querySelectorAll('.record-card').forEach(card => {
 		      card.addEventListener('click', () => {
-		        // 🔥 모든 popup을 먼저 닫는다
+		        // 모든 popup을 먼저 닫는다
 		        document.querySelectorAll('.review-popup').forEach(popup => {
 		          popup.style.display = 'none';
 		        });
 
-		        // 🔥 선택된 카드의 popup만 보이도록
+		        // 선택된 카드의 popup만 보이도록
 		        const popup = card.querySelector('.review-popup');
 		        if (popup) {
 		          popup.style.display = 'block';
@@ -435,7 +446,7 @@
 		      });
 		    });
 
-		    // ✅ 닫기 버튼 눌렀을 때 숨김 처리
+		    // 닫기 버튼 눌렀을 때 숨김 처리
 		    document.querySelectorAll('.popup-close').forEach(btn => {
 		      btn.addEventListener('click', (e) => {
 		        e.stopPropagation();
@@ -448,7 +459,7 @@
 
 
 		<script>
-			// ✅ 활동사진 클릭 → 후기 팝업 열기 + '활동 사진' 탭 활성화 기능 + activity_photo_id 로깅
+			// 활동사진 클릭 → 후기 팝업 열기 + '활동 사진' 탭 활성화 기능 + activity_photo_id 로깅
 			document.addEventListener("DOMContentLoaded", () => {
 				document.querySelectorAll('.activity-thumb').forEach(el => {
 					el.addEventListener('click', () => {
@@ -467,7 +478,6 @@
 						const gallerySection = document.getElementById('section-gallery');
 						if (gallerySection) gallerySection.classList.add('active');
 
-						// ✅ 수정된 부분: .media-slide의 data-* 속성 읽기
 						const slide = el.closest('.media-slide');
 						if (!slide) return;
 
@@ -476,12 +486,12 @@
 						const photoId = slide.dataset.photoId || '';
 						const youtube = slide.dataset.youtube || '';
 
-						// ✅ 후기 팝업 내용 갱신
+						// 후기 팝업 내용 갱신
 						const popup = document.getElementById('activity-popup');
 						popup.querySelector('.activity-popup-title').textContent = title;
 						popup.querySelector('.activity-popup-desc').textContent = desc;
 
-						// ✅ photoId 콘솔 확인
+						// photoId 콘솔 확인
 						console.log("선택된 activity_photo_id:", photoId);
 
 						popup.style.display = 'block';
@@ -526,7 +536,7 @@
 			  coverImageDiv.style.position = "relative";
 			  coverImageDiv.appendChild(coverBtn);
 
-			  // ✅ input이 없으면 생성
+			  // input이 없으면 생성
 			  let input = document.querySelector("input[type='file'][name='coverFile']");
 			  if (!input) {
 			    input = document.createElement("input");
@@ -564,15 +574,15 @@
 			        })
 			          .then(res => {
 			            if (res.ok) {
-			              alert("커버 이미지가 변경되었습니다.");
+			              alert("カバーイメージが変更になりました。");
 			              document.getElementById("edit-toggle-btn")?.click(); // 수정모드 종료
 			            } else {
-			              alert("업로드 실패");
+			              alert("アップロード失敗");
 			            }
 			          })
 			          .catch(err => {
-			            console.error("전송 오류:", err);
-			            alert("전송 실패");
+			            console.error("転送エラー:", err);
+			            alert("転送失敗");
 			          });
 			      }
 			    });
@@ -584,7 +594,7 @@
 		</script>
 
 		<script>
-			// ✅ 프로필(이름/핸들/한줄소개) 영역 수정모드
+			// 프로필(이름/핸들/한줄소개) 영역 수정모드
 			function initProfileEdit() {
 			    const isLeader = document.body.dataset.isLeader === "true";
 			    if (!isLeader) return;
@@ -598,7 +608,7 @@
 			    const profileBtn = document.createElement("button");
 			    profileBtn.id = "profile-file-btn";
 			    profileBtn.type = "button";
-			    profileBtn.textContent = "프로필 변경";
+			    profileBtn.textContent = "プロフィール変更";
 			    profileBtn.className = "btn-primary";
 
 			    Object.assign(profileBtn.style, {
@@ -627,7 +637,7 @@
 			      profileContainer.appendChild(wrapper);
 			    }
 
-			    // ✅ input이 없으면 생성
+			    // input이 없으면 생성
 			    let input = document.querySelector("input[type='file'][name='profileImage']");
 			    if (!input) {
 			      input = document.createElement("input");
@@ -665,15 +675,15 @@
 			          })
 			            .then(res => {
 			              if (res.ok) {
-			                alert("프로필 이미지가 변경되었습니다.");
+			                alert("プロフィールイメージが変更になりました。");
 			                document.getElementById("edit-toggle-btn")?.click();
 			              } else {
-			                alert("업로드 실패");
+			                alert("アップロード失敗");
 			              }
 			            })
 			            .catch(err => {
-			              console.error("전송 오류:", err);
-			              alert("전송 실패");
+			              console.error("転送エラー:", err);
+			              alert("転送失敗");
 			            });
 			        }
 			      });
@@ -711,24 +721,24 @@
 			    })
 			    .then(res => {
 			      if (!res.ok) {
-			        alert("밴드 이름 저장 실패");
+			        alert("バンド名保存失敗");
 			      } else {
-			        alert("밴드 이름이 저장되었습니다.");
+			        alert("バンド名が変更になりました。");
 			        sessionStorage.setItem("editMode", "false"); 
 					sessionStorage.setItem("justExitedEditMode", "true");
 			        location.reload();                           
 			      }
 			    })
 			    .catch(err => {
-			      console.error("저장 오류:", err);
-			      alert("전송 실패");
+			      console.error("保存エラー:", err);
+			      alert("保存失敗");
 			    });
 			  });
 			}
 		</script>
 		
 		<script>
-			// ✅ 리더 코멘트 수정
+			// 리더 코멘트 수정
 			function initLeaderCommentEdit() {
 			  const el = document.querySelector(".band-leader-comment");
 			  if (!el || el.querySelector("input")) return;
@@ -754,17 +764,17 @@
 			    })
 			    .then(res => {
 			      if (!res.ok) {
-			        alert("리더 코멘트 저장 실패");
+			        alert("リーダーコメント保存失敗");
 			      } else {
-			        alert("리더 코멘트가 저장되었습니다.");
+			        alert("リーダーコメントが変更になりました。");
 			        sessionStorage.setItem("editMode", "false"); 
 					sessionStorage.setItem("justExitedEditMode", "true");
 			        location.reload();                      
 			      }
 			    })
 			    .catch(err => {
-			      console.error("저장 오류:", err);
-			      alert("전송 실패");
+			      console.error("保存エラー:", err);
+			      alert("転送失敗");
 			    });
 			  });
 			}
@@ -798,17 +808,17 @@
 		      })
 		        .then(res => {
 		          if (!res.ok) {
-		            alert("밴드 소개 저장 실패");
+		            alert("バンド紹介保存失敗");
 		          } else {
-		            alert("밴드 소개가 저장되었습니다."); 
+		            alert("バンド紹介が変更になりました。"); 
 		            sessionStorage.setItem("editMode", "false");
 					sessionStorage.setItem("justExitedEditMode", "true");
 		            location.reload(); 
 		          }
 		        })
 		        .catch(err => {
-		          console.error("저장 오류:", err);
-		          alert("전송 실패");
+		          console.error("保存エラー:", err);
+		          alert("転送失敗");
 		        });
 		    });
 		  }
@@ -843,17 +853,17 @@
 		      })
 		        .then(res => {
 		          if (!res.ok) {
-		            alert("유튜브 주소 저장 실패");
+		            alert("ユーチューブアドレス保存失敗");
 		          } else {
-		            alert("유튜브 주소가 저장되었습니다.");
+		            alert("ユーチューブアドレスが変更になりました。");
 		            sessionStorage.setItem("editMode", "false");
 					sessionStorage.setItem("justExitedEditMode", "true");
 		            location.reload();
 		          }
 		        })
 		        .catch(err => {
-		          console.error("저장 오류:", err);
-		          alert("전송 실패");
+		          console.error("保存エラー:", err);
+		          alert("転送失敗");
 		        });
 		    });
 		  }
@@ -889,17 +899,17 @@
 			    })
 			      .then(res => {
 			        if (!res.ok) {
-			          alert("인스타그램 주소 저장 실패");
+			          alert("インスタアドレス保存失敗");
 			        } else {
-			          alert("인스타그램 주소가 저장되었습니다.");
+			          alert("インスタアドレスが変更になりました。");
 			          sessionStorage.setItem("editMode", "false");
 					  sessionStorage.setItem("justExitedEditMode", "true");
 			          location.reload();
 			        }
 			      })
 			      .catch(err => {
-			        console.error("저장 오류:", err);
-			        alert("전송 실패");
+			        console.error("保存エラー:", err);
+			        alert("転送失敗");
 			      });
 			  });
 			}
@@ -940,15 +950,15 @@
 		      })
 		      .then(res => {
 		        if (!res.ok) {
-		          alert("결성일 저장 실패");
+		          alert("結成日保存失敗");
 		        } else {
-		          alert("결성일이 저장되었습니다.");
+		          alert("結成日が変更になりました。");
 		          document.getElementById("edit-toggle-btn")?.click();
 		        }
 		      })
 		      .catch(err => {
-		        console.error("저장 오류:", err);
-		        alert("전송 실패");
+		        console.error("保存エラー:", err);
+		        alert("転送失敗");
 		      });
 		    });
 		  }
@@ -956,13 +966,13 @@
 		</script>
 
 		<script>
-		  // ✅ 장르 토글 수정
+		  // 장르 토글 수정
 		  function initGenreTagEdit() {
 		    const genreLi = Array.from(document.querySelectorAll("#section-intro .intro-list li"))
 		      .find(li => li.textContent.includes("장르"));
 		    if (!genreLi) return;
 
-		    // ✅ 쉼표로 분해해서 정확히 태그별 배열로 변환
+		    // 쉼표로 분해해서 정확히 태그별 배열로 변환
 		    const initialTags = Array.from(genreLi.querySelectorAll(".tag-item"))
 		      .flatMap(el => el.textContent.split(','))
 		      .map(tag => tag.trim())
@@ -978,7 +988,7 @@
 		    const popupTags = genrePopup.querySelectorAll(".tag");
 		    const closeBtn = document.getElementById("genre-popup-close");
 
-		    // ✅ 초기 선택된 태그 강조 (.active 적용)
+		    // 초기 선택된 태그 강조 (.active 적용)
 		    popupTags.forEach(tag => {
 		      const tagText = tag.textContent.trim();
 		      tag.classList.toggle("active", initialTags.includes(tagText));
@@ -1022,16 +1032,16 @@
 		        body: formData
 		      }).then(res => {
 		        if (res.ok) {
-		          alert("장르가 수정되었습니다.");
+		          alert("ジャンルが変更になりました。");
 		          sessionStorage.setItem("editMode", "false");
 				  sessionStorage.setItem("justExitedEditMode", "true");
 		          location.reload();
 		        } else {
-		          alert("장르 저장 실패");
+		          alert("ジャンル保存失敗");
 		        }
 		      }).catch(err => {
-		        console.error("장르 저장 오류:", err);
-		        alert("장르 저장 실패");
+		        console.error("ジャンル保存エラー:", err);
+		        alert("ジャンル保存失敗");
 		      });
 		    });
 
@@ -1073,24 +1083,24 @@
 		      })
 		        .then(res => {
 		          if (!res.ok) {
-		            alert("활동지역 저장 실패");
+		            alert("活動地域保存失敗");
 		          } else {
-		            alert("활동지역이 저장되었습니다.");
+		            alert("活動地域が変更になりました。");
 		            sessionStorage.setItem("editMode", "false");
 					sessionStorage.setItem("justExitedEditMode", "true");
 		            location.reload(); 
 		          }
 		        })
 		        .catch(err => {
-		          console.error("저장 오류:", err);
-		          alert("전송 실패");
+		          console.error("保存エラー:", err);
+		          alert("転送失敗");
 		        });
 		    });
 		  }
 		</script>
 		
 		<script>
-		  // ✅ 밴드 소개(이름, 한 줄 소개, 장르) 수정 기능 초기화
+		  // 밴드 소개(이름, 한 줄 소개, 장르) 수정 기능 초기화
 		  function initBandIntro() {
 		    initBandNameEdit();      // 밴드 이름 input으로 변경
 		    initOneLinerEdit();      // 한 줄 소개 input으로 변경
@@ -1106,7 +1116,7 @@
 		</script>
 		
 		<script>
-			// ✅ 프로필 사진 수정
+			// 프로필 사진 수정
 			function initProfileImage() {
 			  const isLeader = document.body.dataset.isLeader === "true";
 			  if (!isLeader) return;
@@ -1180,15 +1190,15 @@
 			            })
 			              .then(res => {
 			                if (res.ok) {
-			                  alert("프로필 이미지가 변경되었습니다.");
+			                  alert("プロフィールイメージが変更になりました。");
 			                  document.getElementById("edit-toggle-btn")?.click();
 			                } else {
-			                  alert("업로드 실패");
+			                  alert("アップロード失敗");
 			                }
 			              })
 			              .catch(err => {
-			                console.error("전송 오류:", err);
-			                alert("전송 실패");
+			                console.error("転送エラー:", err);
+			                alert("転送失敗");
 			              });
 			          }
 			        });
@@ -1229,11 +1239,11 @@
 		      const motto = card.dataset.memberMotto || "";
 
 		      popup.innerHTML = `
-		        <label>활동명: <input type="text" name="stage_name" value="${name}"></label><br>
-		        <label>포지션: <input type="text" name="member_position" value="${position}"></label><br>
-		        <label>MBTI: <input type="text" name="member_mbti" value="${mbti}"></label><br>
-		        <label>좋아하는 밴드: <input type="text" name="favorite_band" value="${band}"></label><br>
-		        <label>한마디: <textarea name="member_motto">${motto}</textarea></label><br>
+		        <label>活動名　: <input type="text" name="stage_name" value="${name}"></label><br>
+		        <label>ポジション　: <input type="text" name="member_position" value="${position}"></label><br>
+		        <label>MBTI　: <input type="text" name="member_mbti" value="${mbti}"></label><br>
+		        <label>好みのバンド　: <input type="text" name="favorite_band" value="${band}"></label><br>
+		        <label>一言　: <textarea name="member_motto">${motto}</textarea></label><br>
 		        <div style="text-align: center; margin-top: 10px;">
 		          <button class="save-member-btn" style="padding:8px 16px; border:none; border-radius:6px; background:#000; color:#fff; cursor:pointer;">저장</button>
 		        </div>
@@ -1258,7 +1268,7 @@
 		        formData.append("member_mbti", member_mbti);
 		        formData.append("favorite_band", favorite_band);
 		        formData.append("member_motto", member_motto);
-		        formData.append("member_type", "leader"); // ✅ 꼭 필요!
+		        formData.append("member_type", "leader"); 
 
 		        // CSRF 토큰
 		        const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
@@ -1274,17 +1284,17 @@
 		        })
 		        .then(res => {
 		          if (res.ok) {
-		            alert("저장되었습니다.");
+		            alert("メンバー紹介が変更になりました。");
 		            sessionStorage.setItem("editMode", "false");
 					sessionStorage.setItem("justExitedEditMode", "true");
 		            location.reload();
 		          } else {
-		            alert("저장 실패");
+		            alert("保存失敗");
 		          }
 		        })
 		        .catch(err => {
-		          console.error("전송 오류:", err);
-		          alert("전송 실패");
+		          console.error("転送エラー:", err);
+		          alert("転送失敗");
 		        });
 		      });
 		    });
@@ -1299,7 +1309,7 @@
 		</script>
 		
 		<script>
-		  // ✅ 리더 소개 마우스 오버 팝업
+		  // 리더 소개 마우스 오버 팝업
 		  function initLeaderPopupHover() {
 		    const card = document.querySelector("#section-members .leader-only .member-card");
 		    const popup = card?.querySelector(".member-popup");
@@ -1315,11 +1325,11 @@
 		    // popup 내용 구성
 		    popup.innerHTML = `
 		      <div style="line-height: 1.6; display: flex; flex-direction: column; gap: 4px;">
-		        <div><strong>활동명:</strong> <span>${name}</span></div>
-		        <div><strong>포지션:</strong> <span>${position}</span></div>
-		        <div><strong>MBTI:</strong> <span>${mbti}</span></div>
-		        <div><strong>좋아하는 밴드:</strong> <span>${band}</span></div>
-		        <div><strong>한마디:</strong> <span>${motto}</span></div>
+		        <div><strong>活動名　:</strong> <span>${name}</span></div>
+		        <div><strong>ポジション　:</strong> <span>${position}</span></div>
+		        <div><strong>MBTI　:</strong> <span>${mbti}</span></div>
+		        <div><strong>好みのバンド　:</strong> <span>${band}</span></div>
+		        <div><strong>一言　:</strong> <span>${motto}</span></div>
 		      </div>
 		    `;
 
@@ -1352,7 +1362,7 @@
 		    });
 		  }
 
-		  // ✅ 문서 로딩 후 실행
+		  // 문서 로딩 후 실행
 		  document.addEventListener("DOMContentLoaded", () => {
 		    initLeaderPopupHover();
 		  });
@@ -1386,19 +1396,19 @@
 
 		        popup.innerHTML = `
 		          <div style="display: flex; flex-direction: column; gap: 12px; padding: 16px;">
-		            <label style="font-weight: bold;">활동명:
+		            <label style="font-weight: bold;">活動名　:
 		              <input type="text" name="stage_name" value="${name}" style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
 		            </label>
-		            <label style="font-weight: bold;">포지션:
+		            <label style="font-weight: bold;">ポジション　:
 		              <input type="text" name="member_position" value="${position}" style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
 		            </label>
-		            <label style="font-weight: bold;">MBTI:
+		            <label style="font-weight: bold;">MBTI　:
 		              <input type="text" name="member_mbti" value="${mbti}" style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
 		            </label>
-		            <label style="font-weight: bold;">좋아하는 밴드:
+		            <label style="font-weight: bold;">好みのバンド　:
 		              <input type="text" name="favorite_band" value="${band}" style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
 		            </label>
-		            <label style="font-weight: bold;">한마디:
+		            <label style="font-weight: bold;">一言　:
 		              <textarea name="member_motto" style="width:100%; height:80px; padding:10px; border-radius:6px; border:1px solid #ccc; resize: vertical;">${motto}</textarea>
 		            </label>
 		            <button class="save-member-btn" style="padding:10px; border:none; border-radius:6px; background:#000; color:#fff; cursor:pointer;">저장</button>
@@ -1451,17 +1461,17 @@
 		          })
 		          .then(res => {
 		            if (res.ok) {
-		              alert("저장되었습니다.");
+		              alert("メンバー紹介が変更になりました。");
 		              sessionStorage.setItem("editMode", "false");
 					  sessionStorage.setItem("justExitedEditMode", "true");
 		              location.reload();
 		            } else {
-		              alert("저장 실패");
+		              alert("保存失敗");
 		            }
 		          })
 		          .catch(err => {
-		            console.error("전송 오류:", err);
-		            alert("전송 실패");
+		            console.error("転送エラー:", err);
+		            alert("転送失敗");
 		          });
 		        });
 		      });
@@ -1495,11 +1505,11 @@
 			    // popup 내용 구성 (한눈에 보기 쉽게 정렬)
 			    popup.innerHTML = `
 			      <div style="line-height: 1.6; display: flex; flex-direction: column; gap: 4px;">
-			        <div><strong>활동명:</strong> <span>${name}</span></div>
-			        <div><strong>포지션:</strong> <span>${position}</span></div>
+			        <div><strong>活動名:</strong> <span>${name}</span></div>
+			        <div><strong>ポジション:</strong> <span>${position}</span></div>
 			        <div><strong>MBTI:</strong> <span>${mbti}</span></div>
-			        <div><strong>좋아하는 밴드:</strong> <span>${band}</span></div>
-			        <div><strong>한마디:</strong> <span>${motto}</span></div>
+			        <div><strong>好むのバンド:</strong> <span>${band}</span></div>
+			        <div><strong>一言:</strong> <span>${motto}</span></div>
 			      </div>
 			    `;
 
@@ -1536,7 +1546,7 @@
 			  });
 			}
 
-			// ✅ 문서 로딩 후 초기화
+			// 문서 로딩 후 초기화
 			document.addEventListener("DOMContentLoaded", () => {
 			  initMemberPopupHover();
 			});
@@ -1555,9 +1565,9 @@
 						const targetId = button.getAttribute("data-target");
 						if (editMode) {
 							if (targetId === "section-intro") {
-								// ✅ 밴드소개 탭이면 입력폼 유지
+								// 밴드소개 탭이면 입력폼 유지
 							} else {
-								// ✅ 다른 탭이면 원래 텍스트 복구
+								// 다른 탭이면 원래 텍스트 복구
 								restoreProfileInfo();
 							}
 						}
@@ -1567,7 +1577,7 @@
 		</script>
 
 		<script>
-			// ✅ 탭 전환 시 밴드소개 입력폼 유지/복구
+			// 탭 전환 시 밴드소개 입력폼 유지/복구
 			document.addEventListener("DOMContentLoaded", () => {
 				document.querySelectorAll(".band-tab-btn").forEach(btn => {
 					btn.addEventListener("click", () => {
@@ -1575,10 +1585,10 @@
 
 						if (window.editMode) {
 							if (targetId === "section-intro") {
-								// ✅ "밴드 소개" 탭이면 기존 init 함수 호출로 유지
+								// "밴드 소개" 탭이면 기존 init 함수 호출로 유지
 								initBandIntro();
 							} else {
-								// ✅ 그 외 탭이면 원상복구
+								// 그 외 탭이면 원상복구
 								restoreProfileInfo();
 							}
 						}
@@ -1588,21 +1598,20 @@
 		</script>
 
 		<script>
-			// ✅ 활동사진 수정 버튼 (수정모드 진입 시 생성)
+			// 활동사진 수정 버튼 (수정모드 진입 시 생성)
 			function initGalleryEditButton() {
 				const sectionGallery = document.getElementById("section-gallery");
 
 				if (!sectionGallery) return;
 				if (window.editGalleryBtnCreated) return; // 이미 생성했으면 또 만들지 않음
 
-				// ✅ 1. 활동사진 수정 버튼 생성
+				// 1. 활동사진 수정 버튼 생성
 				const editGalleryBtn = document.createElement("button");
 				editGalleryBtn.id = "edit-gallery-btn";
 				editGalleryBtn.type = "button";
-				editGalleryBtn.textContent = "활동사진 수정";
+				editGalleryBtn.textContent = "活動写真編集";
 				editGalleryBtn.className = "btn-primary edit-only";
-
-				// 🔥 활동 추가 버튼과 같은 스타일로 수정
+				
 				editGalleryBtn.style.position = "absolute";
 				editGalleryBtn.style.top = "-40px";
 				editGalleryBtn.style.right = "20px";
@@ -1620,7 +1629,7 @@
 
 				window.editGalleryBtnCreated = true;
 
-				// ✅ 2. 팝업 생성
+				// 2. 팝업 생성
 				const galleryPopup = document.createElement("div");
 				galleryPopup.id = "gallery-edit-popup";
 				galleryPopup.style.cssText = `
@@ -1641,22 +1650,22 @@
   `;
 
 				galleryPopup.innerHTML = `
-    <h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">활동 사진 수정</h3>
+    <h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">活動写真編集</h3>
     <input type="file" id="gallery-thumb-upload" accept="image/*" style="width:100%; margin-bottom:20px;">
-    <input type="text" id="all-photo-youtube" name="youtubeUrl" placeholder="유튜브 주소 (예: https://www.youtube.com/watch?v=XXXXXX)"
+    <input type="text" id="all-photo-youtube" name="youtubeUrl" placeholder="ユーチューブアドレス (例: https://www.youtube.com/watch?v=XXXXXX)"
       style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px;">
-    <input type="text" id="gallery-title-input" placeholder="활동 제목" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px;">
-    <textarea id="gallery-desc-input" placeholder="활동 설명" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px; resize:vertical;"></textarea>
+    <input type="text" id="gallery-title-input" placeholder="活動タイトル" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px;">
+    <textarea id="gallery-desc-input" placeholder="活動説明" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px; resize:vertical;"></textarea>
     <input type="hidden" id="edit-photo-id" name="activityPhotoId" value="">
     <div id="gallery-button-wrapper" style="display:flex; justify-content:center; align-items:center; gap:10px; margin-top:5px;">
-      <button id="save-gallery-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">저장</button>
-      <button id="close-gallery-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">닫기</button>
+      <button id="save-gallery-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">保存する</button>
+      <button id="close-gallery-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">閉める</button>
     </div>
   `;
 
 				document.body.appendChild(galleryPopup);
 
-				// ✅ 3. 수정 버튼 클릭 시 현재 슬라이드 내용 반영 + 팝업 열기
+				// 3. 수정 버튼 클릭 시 현재 슬라이드 내용 반영 + 팝업 열기
 				editGalleryBtn.addEventListener("click", () => {
 					const activeSlide = document.querySelector("#section-gallery .media-slide.active");
 					if (!activeSlide) return;
@@ -1673,7 +1682,7 @@
 
 					const photoId = activeSlide.querySelector(".photo-id")?.textContent.trim() || "";
 
-					// ✅ input에 값 세팅
+					// input에 값 세팅
 					document.getElementById("gallery-title-input").value = title;
 					document.getElementById("gallery-desc-input").value = desc;
 					document.getElementById("all-photo-youtube").value = youtubeFull;
@@ -1682,12 +1691,12 @@
 					galleryPopup.style.display = "block";
 				});
 
-				// ✅ 닫기 버튼
+				// 닫기 버튼
 				document.getElementById("close-gallery-popup").addEventListener("click", () => {
 					galleryPopup.style.display = "none";
 				});
 
-				// ✅ 저장 버튼
+				// 저장 버튼
 				document.getElementById("save-gallery-btn").addEventListener("click", () => {
 					const title = document.getElementById("gallery-title-input").value.trim();
 					const desc = document.getElementById("gallery-desc-input").value.trim();
@@ -1697,7 +1706,7 @@
 					const photoFile = document.getElementById("gallery-thumb-upload").files[0];
 
 					if (!title || !desc) {
-						alert("활동 제목과 설명을 입력해주세요.");
+						alert("活動タイトルと説明を入力してください。");
 						return;
 					}
 
@@ -1724,25 +1733,25 @@
 					})
 						.then(response => {
 							if (response.ok) {
-								alert("활동 사진이 수정되었습니다.");
+								alert("活動写真が変更になりました。");
 
-								// ✅ 수정완료 버튼 자동 클릭 → 수정모드 종료
+								// 수정완료 버튼 자동 클릭 → 수정모드 종료
 								document.getElementById("edit-toggle-btn")?.click();
 
 							} else {
-								alert("수정 실패");
+								alert("編集失敗");
 							}
 						})
 						.catch(error => {
-							console.error("수정 실패:", error);
-							alert("수정 중 오류가 발생했습니다.");
+							console.error("編集失敗　:", error);
+							alert("編集中にエラーが発生しました。");
 						});
 				});
 			}
 		</script>
 
 		<script>
-			// ✅ 활동 사진 추가 (수정모드 진입 시 생성)
+			// 활동 사진 추가 (수정모드 진입 시 생성)
 			function initGalleryAddButton() {
 				const sectionGallery = document.getElementById("section-gallery");
 				if (!sectionGallery || !window.editMode || window.addAllBtnCreated) return;
@@ -1750,7 +1759,7 @@
 				const addAllBtn = document.createElement("button");
 				addAllBtn.id = "add-all-btn";
 				addAllBtn.type = "button";
-				addAllBtn.textContent = "활동사진 추가";
+				addAllBtn.textContent = "活動写真追加";
 				addAllBtn.className = "btn-primary edit-only";
 				Object.assign(addAllBtn.style, {
 					position: "absolute",
@@ -1791,16 +1800,16 @@
   `;
 
 				allPopup.innerHTML = `
-    <h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">활동 추가</h3>
+    <h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">活動写真追加</h3>
     <form id="all-photo-form" method="post" enctype="multipart/form-data">
       <input type="file" id="new-all-photo" name="photo" accept="image/*" style="width:100%; margin-bottom:20px;">
-      <input type="text" id="all-photo-youtube" name="youtubeUrl" placeholder="유튜브 주소 (예: https://www.youtube.com/watch?v=XXXXXX)" 
+      <input type="text" id="all-photo-youtube" name="youtubeUrl" placeholder="ユーチューブアドレス (例: https://www.youtube.com/watch?v=XXXXXX)" 
         style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px;">
-      <input type="text" id="all-photo-title" name="title" placeholder="활동 제목" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px;">
-      <textarea id="all-photo-desc" name="description" placeholder="활동 설명" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px; resize:vertical;"></textarea>
+      <input type="text" id="all-photo-title" name="title" placeholder="活動タイトル" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px;">
+      <textarea id="all-photo-desc" name="description" placeholder="活動説明" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px; resize:vertical;"></textarea>
       <div id="button-wrapper" style="display:flex; justify-content:center; align-items:center; gap:10px; margin-top:5px;">
-        <button type="button" id="save-all-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">저장</button>
-        <button type="button" id="close-all-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">닫기</button>
+        <button type="button" id="save-all-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">保存する</button>
+        <button type="button" id="close-all-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">閉める</button>
       </div>
     </form>
   `;
@@ -1844,7 +1853,7 @@
 					allPopup.style.display = "none";
 				});
 
-				// ✅ 저장 버튼
+				// 저장 버튼
 				document.getElementById("save-all-btn").addEventListener("click", () => {
 					const title = document.getElementById("all-photo-title").value.trim();
 					const desc = document.getElementById("all-photo-desc").value.trim();
@@ -1852,7 +1861,7 @@
 					const photoFile = document.getElementById("new-all-photo").files[0];
 
 					if (!title || !desc || !photoFile) {
-						alert("모든 항목을 입력해주세요!");
+						alert("全ての項目を入力してください。");
 						return;
 					}
 
@@ -1873,34 +1882,34 @@
 					})
 						.then(response => {
 							if (response.ok) {
-								alert("활동이 추가되었습니다.");
+								alert("活動写真が追加されました。");
 
-								// ✅ 수정모드 종료를 위해 '수정완료' 버튼 클릭
+								// 수정모드 종료를 위해 '수정완료' 버튼 클릭
 								document.getElementById("edit-toggle-btn")?.click();
 
 							} else {
-								alert("추가 실패");
+								alert("追加失敗");
 							}
 						})
 						.catch(error => {
-							console.error("추가 실패:", error);
-							alert("추가 중 오류가 발생했습니다.");
+							console.error("追加失敗:", error);
+							alert("活動写真追加ちっうエラーが発生しました。");
 						});
 				});
 			}
 		</script>
 
 		<script>
-			// ✅ 활동 기록 추가 (수정모드 진입 시 생성)
+			// 활동 기록 추가 (수정모드 진입 시 생성)
 			function initRecordAddButton() {
 				const sectionRecords = document.getElementById("section-records");
 				if (!sectionRecords || !window.editMode || window.addRecordBtnCreated) return;
 
-				// ✅ 버튼 생성
+				// 버튼 생성
 				const addRecordBtn = document.createElement("button");
 				addRecordBtn.id = "add-record-btn";
 				addRecordBtn.type = "button";
-				addRecordBtn.textContent = "활동기록 추가";
+				addRecordBtn.textContent = "活動記録追加";
 				addRecordBtn.className = "btn-primary edit-only";
 
 				Object.assign(addRecordBtn.style, {
@@ -1922,7 +1931,7 @@
 				sectionRecords.appendChild(addRecordBtn);
 				window.addRecordBtnCreated = true;
 
-				// ✅ 팝업 생성
+				// 팝업 생성
 				const popup = document.createElement("div");
 				popup.id = "add-record-popup";
 				popup.style.cssText = `
@@ -1943,33 +1952,33 @@
 				`;
 
 				popup.innerHTML = `
-					<h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">활동 기록 추가</h3>
-					<input type="text" id="new-title" placeholder="공연 제목" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+					<h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">活動記録追加</h3>
+					<input type="text" id="new-title" placeholder="公演タイトル" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
 					<input type="date" id="new-date" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
 					<input type="time" id="new-time" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
-					<input type="text" id="new-location" placeholder="장소" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
-					<input type="text" id="new-capacity" placeholder="인원수" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+					<input type="text" id="new-location" placeholder="場所" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+					<input type="text" id="new-capacity" placeholder="人数" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
 					<input type="file" id="new-thumb-upload" style="width:100%; padding:12px; font-size:16px; border:1px solid #ccc; border-radius:8px; margin-bottom:20px;">
-					<textarea id="new-desc" placeholder="간단한 설명" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; resize:vertical; margin-bottom:10px;"></textarea>
+					<textarea id="new-desc" placeholder="簡単な説明" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; resize:vertical; margin-bottom:10px;"></textarea>
 					<div style="display:flex; justify-content:center; align-items:center; gap:10px;">
-						<button id="save-new-record-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">저장</button>
-						<button id="close-new-record-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">닫기</button>
+						<button id="save-new-record-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">保存する</button>
+						<button id="close-new-record-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">閉める</button>
 					</div>
 				`;
 
 				document.body.appendChild(popup);
 
-				// ✅ 열기
+				// 열기
 				addRecordBtn.addEventListener("click", () => {
 					popup.style.display = "block";
 				});
 
-				// ✅ 닫기
+				// 닫기
 				document.getElementById("close-new-record-popup").addEventListener("click", () => {
 					popup.style.display = "none";
 				});
 
-				// ✅ 저장 처리
+				// 저장 처리
 				document.getElementById("save-new-record-btn").addEventListener("click", () => {
 					const title = document.getElementById("new-title").value.trim();
 					const date = document.getElementById("new-date").value.trim();
@@ -1980,7 +1989,7 @@
 					const imageFile = document.getElementById("new-thumb-upload").files[0];
 
 					if (!title || !date || !time || !location || !capacity || !desc || !imageFile) {
-						alert("모든 항목을 입력해주세요!");
+						alert("全ての項目を入力してください。");
 						return;
 					}
 
@@ -1993,11 +2002,11 @@
 					formData.append("recordDescription", desc);
 					formData.append("recordImage", imageFile);
 
-					// ✅ bandId 추가
+					// bandId 추가
 					const bandId = document.getElementById("band-id")?.textContent.trim();
 					formData.append("bandId", bandId || "");
 
-					// ✅ CSRF 처리
+					// CSRF 처리
 					const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
 					const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
 					if (csrfToken && csrfParam) {
@@ -2010,7 +2019,7 @@
 					})
 					.then(async response => {
 						if (response.ok) {
-							alert("활동 기록이 추가되었습니다.");
+							alert("活動記録が追加されました。");
 							document.getElementById("edit-toggle-btn")?.click(); // 자동 수정완료
 						} else {
 							const text = await response.text();
@@ -2021,14 +2030,14 @@
 					})
 					.catch(error => {
 						console.error("❌ 추가 실패:", error);
-						alert("추가 중 오류가 발생했습니다.");
+						alert("追加中エラーが発生しました。");
 					});
 				});
 			}
 		</script>
 
 		<script>
-		  // ✅ 활동 기록 수정 (수정모드 진입 시 생성)
+		  // 활동 기록 수정 (수정모드 진입 시 생성)
 		  function initRecordEditButton() {
 		    const sectionRecords = document.getElementById("section-records");
 		    if (!sectionRecords || window.editRecordBtnCreated) return;
@@ -2038,7 +2047,7 @@
 		    const editRecordBtn = document.createElement("button");
 		    editRecordBtn.id = "edit-record-btn";
 		    editRecordBtn.type = "button";
-		    editRecordBtn.textContent = "활동 기록 수정";
+		    editRecordBtn.textContent = "活動記録編集";
 		    editRecordBtn.className = "btn-primary edit-only";
 		    Object.assign(editRecordBtn.style, {
 		      position: "absolute",
@@ -2097,25 +2106,25 @@
 		      box-sizing: border-box;
 		    `;
 		    editRecordPopup.innerHTML = `
-		      <h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">활동 기록 수정</h3>
-			  <img id="edit-thumb-preview" src="" style="width:100%; border-radius:8px; margin-bottom:10px; display:none;" alt="썸네일 미리보기">
-		      <input type="text" id="edit-title" placeholder="공연 제목" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+		      <h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">活動記録編集</h3>
+			  <img id="edit-thumb-preview" src="" style="width:100%; border-radius:8px; margin-bottom:10px; display:none;" alt="サムネイルプレビュー">
+		      <input type="text" id="edit-title" placeholder="公演タイトル" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
 		      <input type="date" id="edit-date" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
-		      <input type="time" id="edit-time" placeholder="시간" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
-		      <input type="text" id="edit-location" placeholder="장소" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
-		      <input type="text" id="edit-capacity" placeholder="인원수" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+		      <input type="time" id="edit-time" placeholder="時間" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+		      <input type="text" id="edit-location" placeholder="場所" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+		      <input type="text" id="edit-capacity" placeholder="人数" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
 		      <input type="file" id="edit-thumb-upload" style="width:100%; padding:12px; font-size:16px; border:1px solid #ccc; border-radius:8px; margin-bottom:20px;">
-		      <textarea id="edit-desc" placeholder="간단한 설명" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; resize:vertical; margin-bottom:10px;"></textarea>
+		      <textarea id="edit-desc" placeholder="簡単な説明" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; resize:vertical; margin-bottom:10px;"></textarea>
 		      <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
-		        <button id="save-edit-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">저장</button>
-		        <button id="close-edit-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">닫기</button>
+		        <button id="save-edit-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">保存する</button>
+		        <button id="close-edit-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">閉める</button>
 		      </div>
 		    `;
 		    document.body.appendChild(editRecordPopup);
 
 		    editRecordBtn.addEventListener("click", () => {
 		      const selected = document.querySelector(".record-select-checkbox:checked");
-		      if (!selected) return alert("수정할 활동 기록을 선택해주세요.");
+		      if (!selected) return alert("編集する活動記録を選んでください。");
 
 		      const card = selected.closest(".record-card");
 			  
@@ -2160,7 +2169,7 @@
 		      const imageFile = document.getElementById("edit-thumb-upload").files[0];
 
 		      if (!title || !date || !time || !location || !capacity || !desc) {
-		        alert("모든 항목을 입력해주세요!");
+		        alert("全ての項目を入力してください。");
 		        return;
 		      }
 
@@ -2189,7 +2198,7 @@
 		      })
 		        .then(response => {
 		          if (response.ok) {
-		            alert("활동 기록 수정 완료!");
+		            alert("活動記録の編集を完了しました。");
 		            document.getElementById("edit-toggle-btn")?.click();
 		          } else {
 		            alert("수정 실패");
@@ -2197,7 +2206,7 @@
 		        })
 		        .catch(error => {
 		          console.error("수정 실패:", error);
-		          alert("수정 중 오류가 발생했습니다.");
+		          alert("編集中エラーが発生しました。");
 		        });
 		    });
 		  }
@@ -2205,9 +2214,9 @@
 		</script>
 
 
-		<!-- ✅ 세 번째: 수정모드 페이징 기능 (밴드소개 페이징) -->
+		<!-- 세 번째: 수정모드 페이징 기능 (밴드소개 페이징) -->
 		<script>
-			// ✅ 밴드소개 페이징 기능 (수정모드 진입 시 실행)
+			// 밴드소개 페이징 기능 (수정모드 진입 시 실행)
 			function initBandIntroPaging() {
 
 				const introItems = document.querySelectorAll("#section-intro .intro-list li");
@@ -2225,11 +2234,11 @@
 					introPages[introIndex].forEach(el => el.style.display = "block");
 				}
 
-				// ✅ 처음에 전부 숨기고 1페이지만 보여줌
+				// 처음에 전부 숨기고 1페이지만 보여줌
 				introItems.forEach(el => el.style.display = "none");
 				updateIntroPage(0);
 
-				// ✅ 페이징 버튼이 없으면 생성
+				// 페이징 버튼이 없으면 생성
 				if (!document.getElementById("intro-paging-controls")) {
 					const pagingWrap = document.createElement("div");
 					pagingWrap.id = "intro-paging-controls";
@@ -2264,7 +2273,7 @@
 		</script>
 
 		<script>
-			// ✅ 수정모드 토글 버튼 기능 초기화
+			// 수정모드 토글 버튼 기능 초기화
 			function initEditToggle() {
 				const editButton = document.getElementById("edit-toggle-btn");
 				if (!editButton) return;
@@ -2272,7 +2281,7 @@
 				const storedMode = sessionStorage.getItem("editMode") === "true";
 				window.editMode = storedMode;
 
-				// ✅ 이메일 표시 여부 처리
+				// 이메일 표시 여부 처리
 				const emailEl = document.getElementById("leader-email");
 				if (emailEl) {
 					emailEl.style.display = storedMode ? "none" : "block";
@@ -2296,9 +2305,9 @@
 				editButton.addEventListener("click", () => {
 					window.editMode = !window.editMode;
 					sessionStorage.setItem("editMode", window.editMode ? "true" : "false");
-					editButton.textContent = window.editMode ? "수정완료" : "수정하기";
+					editButton.textContent = window.editMode ? "編集完了" : "編集する";
 
-					// ✅ 이메일 표시 여부 다시 처리
+					// 이메일 표시 여부 다시 처리
 					if (emailEl) {
 						emailEl.style.display = window.editMode ? "none" : "block";
 					}
@@ -2322,7 +2331,7 @@
 		</script>
 
 		<script>
-			// ✅ 프로필 영역 원상복구 (이름/핸들/한줄소개)
+			// 프로필 영역 원상복구 (이름/핸들/한줄소개)
 			function restoreProfileInfo() {
 				const fields = [
 					{selector: ".band-name", defaultText: "Tomo Groove"},
@@ -2344,7 +2353,7 @@
 		</script>
 
 		<script>
-			// ✅ 밴드 소개 영역 원상복구 (+ 페이징 제거 포함)
+			// 밴드 소개 영역 원상복구 (+ 페이징 제거 포함)
 			function restoreBandIntro() {
 				const introList = document.querySelectorAll("#section-intro .intro-list li");
 
@@ -2367,11 +2376,11 @@
 						li.innerHTML = `<strong>${label}</strong><p class="band-description">${text || "Tomo Groove는 도쿄와 홍대 중심으로 활동하는 밴드입니다."}</p>`;
 					}
 
-					// ✅ 각 항목 display:block 으로 모두 표시
+					// 각 항목 display:block 으로 모두 표시
 					li.style.display = "list-item";
 				});
 
-				// ✅ 페이징 컨트롤 제거
+				// 페이징 컨트롤 제거
 				const paging = document.getElementById("intro-paging-controls");
 				if (paging) paging.remove();
 			}
@@ -2404,7 +2413,7 @@
 				const arrows = galleryWrapper.querySelectorAll(".gallery-arrow");
 				const dots = galleryWrapper.querySelector(".gallery-dots");
 
-				// ✅ 슬라이드가 하나라도 있으면 숨기지 않음
+				// 슬라이드가 하나라도 있으면 숨기지 않음
 				if (
 					galleryEmptyMessage &&
 					galleryEmptyMessage.textContent.includes("등록된 활동 사진이 없습니다") &&
@@ -2419,7 +2428,7 @@
 
 
 		<script>
-			// ✅ 수정모드 해제 시 생성된 수정 버튼들 제거
+			// 수정모드 해제 시 생성된 수정 버튼들 제거
 			function removeEditButtons() {
 				const elementIds = [
 					"edit-gallery-btn",
@@ -2456,17 +2465,17 @@
 			  const editMode = sessionStorage.getItem("editMode") === "true";
 
 			  if (editMode) {
-			    // ✅ 수정모드 중이면 무조건 숨김
+			    // 수정모드 중이면 무조건 숨김
 			    emailEl.style.display = "none";
 			  } else if (justExited) {
-			    // ✅ 저장 후 새로고침된 경우 → 딜레이 후 표시
+			    // 저장 후 새로고침된 경우 → 딜레이 후 표시
 			    emailEl.style.display = "none";
 			    setTimeout(() => {
 			      emailEl.style.display = "block";
 			      sessionStorage.removeItem("justExitedEditMode");
 			    }, 300); // 300ms 정도 딜레이
 			  } else {
-			    // ✅ 평상시에는 바로 보이도록
+			    // 평상시에는 바로 보이도록
 			    emailEl.style.display = "block";
 			  }
 			});
@@ -2490,9 +2499,77 @@
 
 		<script>
 			document.addEventListener("DOMContentLoaded", () => {
-				initEditToggle(); // ✅ 수정하기 버튼 기능 연결
+				initEditToggle(); // 수정하기 버튼 기능 연결
 			});
 		</script>
+		
+		<script>
+		  document.addEventListener("DOMContentLoaded", () => {
+		    const popup = document.getElementById("member-invite-popup");
+		    const acceptBtn = popup?.querySelector(".btn-accept");
+		    const declineBtn = popup?.querySelector(".btn-decline");
+
+		    // 팝업 무조건 표시
+		    if (popup) {
+		      popup.style.display = "block";
+		    }
+
+		    // 수락 버튼 클릭 시 처리
+		    acceptBtn?.addEventListener("click", () => {
+		      alert("초대를 수락했습니다."); // 추후 서버 요청 가능
+		      popup.style.display = "none";
+		    });
+
+		    // 거절 버튼 클릭 시 처리
+		    declineBtn?.addEventListener("click", () => {
+		      alert("초대를 거절했습니다.");
+		      popup.style.display = "none";
+		    });
+		  });
+		</script>
+		
+		<script>
+		  document.addEventListener("DOMContentLoaded", () => {
+		    const popup = document.getElementById("member-invite-popup");
+		    const toggleBtn = document.getElementById("invite-toggle-btn");
+		    const closeBtn = popup?.querySelector(".invite-close-btn");
+		    const acceptBtn = popup?.querySelector(".btn-accept");
+		    const declineBtn = popup?.querySelector(".btn-decline");
+
+		    // 페이지 로드 시 팝업 보이기
+		    if (popup) {
+		      popup.style.display = "block";
+		    }
+
+		    // 수락 버튼
+		    acceptBtn?.addEventListener("click", () => {
+		      alert("초대를 수락했습니다.");
+		      popup.style.display = "none";
+		      toggleBtn.style.display = "block";
+		    });
+
+		    // 거절 버튼
+		    declineBtn?.addEventListener("click", () => {
+		      alert("초대를 거절했습니다.");
+		      popup.style.display = "none";
+		      toggleBtn.style.display = "block";
+		    });
+
+		    // 닫기 버튼
+		    closeBtn?.addEventListener("click", () => {
+		      popup.style.display = "none";
+		      toggleBtn.style.display = "block";
+		    });
+
+		    // 다시 보기 버튼
+		    toggleBtn?.addEventListener("click", () => {
+		      popup.style.display = "block";
+		      toggleBtn.style.display = "none";
+		    });
+		  });
+		</script>
+
+
 		
 	</div>
 </body>
