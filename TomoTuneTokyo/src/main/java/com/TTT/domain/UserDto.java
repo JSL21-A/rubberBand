@@ -21,6 +21,7 @@ public class UserDto {
 	private String user_memo;
 	//user_profile
 	private String nickname;
+	private String user_img;
 	
 	
 	public String getUser_id() {
@@ -88,6 +89,12 @@ public class UserDto {
 	}
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+	public String getUser_img() {
+		return user_img;
+	}
+	public void setUser_img(String user_img) {
+		this.user_img = user_img;
 	}
 	
 	
