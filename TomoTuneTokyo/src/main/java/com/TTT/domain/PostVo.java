@@ -27,5 +27,5 @@ public class PostVo {
     private String comment_content;
     private Integer comment_cnt;
     private LocalDateTime comment_created_at;
-
+    // good
 }
