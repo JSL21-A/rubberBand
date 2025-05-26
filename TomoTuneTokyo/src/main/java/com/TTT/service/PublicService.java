@@ -39,4 +39,16 @@ public class PublicService {
     public List<PostVo> getNotiRecently() {
         return publicMapper.getNotiRecently();
     }
+
+    public PostVo getPostView(int post_id) {
+        return publicMapper.getPostView(post_id);
+    }
+
+    public List<PostVo> getComment(int post_id) {
+        return publicMapper.getComment(post_id);
+    }
+
+    public void insertComment(PostVo vo) {
+        publicMapper.insertComment(vo);
+    }
 }
