@@ -1,82 +1,96 @@
 package com.TTT.controller;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
+import java.security.Principal;
+import java.sql.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import com.TTT.domain.BandRecruitPostVo;
+import com.TTT.service.BandRecruitPostService;
 
 @Controller
 // 구인구직
 @RequestMapping("/bandlist")
 public class BandListController {
 
-//	@Autowired
-//	private BandListMapper bandListMapper;
-//	
-//	private final String uploadDir = "C:\\Users\\LG gram\\git\\rubberBand\\TomoTuneTokyo\\src\\main\\resources\\static\\images\\uploads\\bands\\"; // 이미지 저장 경로
-//	
-//	// 구인구직 리스트
-//	@GetMapping("/list")
-//		public String BandList() {
-//
-//		return "band/list";
-//	}
-//
-//	
-//	// 구인구직 입력폼
-//	@GetMapping("/listinsert")
-//	public String BandMemeberInsert(BandInsertSelectVo vo,  @RequestParam("band_images") MultipartFile[] band_images) {
-//	// 1. UUID 생성
-//	String postId = UUID.randomUUID().toString();
-//	vo.setPost_id(postId);
-//
-//	// 2. 고정값 세팅
-//	vo.setBoard_id("RECRUIT");
-//	vo.setPost_status("A");
-//	vo.setPost_like(0);
-//
-//	// 3. 대표 이미지 저장 (band_images[0])
-//	if (band_images != null && band_images.length > 0 && !band_images[0].isEmpty()) {
-//		try {
-//			String fileName = UUID.randomUUID() + "_" + band_images[0].getOriginalFilename();
-//			Path filePath = Paths.get(uploadDir + fileName);
-//			Files.copy(band_images[0].getInputStream(), filePath);
-//			vo.setPost_img(fileName);
-//		} catch (IOException e) {
-//			throw new RuntimeException("대표 이미지 저장 실패", e);
-//		}
-//	} else {
-//		vo.setPost_img(null);
-//	}
-//
-//	// 4. post_content 구성 (소개, 조건 등 조합 가능)
-//	String content = vo.getPost_title() + "\n\n" +
-//	                 "🎸 募集ポジション: " + vo.getRecruit_position() + "\n" +
-//	                 "📍 活動地域: " + vo.getActivity_area() + "\n" +
-//	                 "🧠 好きなジャンル: " + vo.getPreferred_genres() + "\n" +
-//	                 "💬 リーダーコメント: " + vo.getLeader_comment() + "\n" +
-//	                 "📅 締切: " + vo.getDeadline();
-//	vo.setPost_content(content);
-//
-//	// 5. insert 실행
-//	bandListMapper.BandMemeberInsert(vo);
-//	return "redirect:/bandlist/list";
-//	}
-//	
-//	@GetMapping("/view")
-//	public String viewPortfolio() {
-//		return "/band/view";
-//	}
-//	
-}
+	@Autowired
+	private BandRecruitPostService bandrecruitpostservice;
 
+	// 리스트 (페이징 포함)
+	@GetMapping("/list")
+	public String BandList(
+	    @RequestParam(value = "page", defaultValue = "1") int page,
+	    Model model
+	) {
+	    int size = 6;
+	    int totalPosts = bandrecruitpostservice.getTotalPostCount();
+	    int totalPages = (int) Math.ceil((double) totalPosts / size);
+
+	    List<BandRecruitPostVo> postList = bandrecruitpostservice.getRecruitPostsByPage(page, size);
+
+	    model.addAttribute("postList", postList);
+	    model.addAttribute("currentPage", page);
+	    model.addAttribute("totalPages", totalPages);
+
+	    return "band/list";
+	}
+
+	
+	// 구인구직 insert
+	@PostMapping("/insert")
+	public String insertRecruitPost(BandRecruitPostVo Vo, @RequestParam("band_id") Long band_id,
+	    @RequestParam("title") String title, @RequestParam("bandIntro") String bandIntro,
+	    @RequestParam("recruitPosition") String recruitPosition, @RequestParam("activityArea") String activityArea,
+	    @RequestParam("recruitCondition") String recruitCondition, @RequestParam("preferredGenres") String preferredGenres,
+	    @RequestParam("leaderComment") String leaderComment, @RequestParam("deadline") String deadline,
+	    @RequestParam("tagKeywords") String tagKeywords, @RequestParam("selectedGenres") String selectedGenres,
+	    @RequestParam("selectedPositions") String selectedPositions, @RequestParam("selectedGenders") String selectedGenders,
+	    @RequestParam("selectedAges") String selectedAges, @RequestParam("bandImages") MultipartFile[] files,
+	    Principal principal) throws IOException {
+
+	    String username = principal.getName();
+	    String userId = bandrecruitpostservice.findUserIdByUsername(username);
+	    
+	    BandRecruitPostVo vo = new BandRecruitPostVo();
+	    vo.setBand_id(band_id);
+	    vo.setUserId(userId);
+	    vo.setTitle(title);
+	    vo.setBandIntro(bandIntro);
+	    vo.setRecruitPosition(recruitPosition);
+	    vo.setActivityArea(activityArea);
+	    vo.setRecruitCondition(recruitCondition);
+	    vo.setPreferredGenres(preferredGenres);
+	    vo.setLeaderComment(leaderComment);
+	    vo.setTagKeywords(tagKeywords);
+	    if (deadline != null && !deadline.isBlank()) {
+	        vo.setDeadline(Date.valueOf(deadline));
+	    }
+
+	    // 등록하고 postId 반환받기
+	    Long postId = bandrecruitpostservice.insertRecruitPostWithTags(vo, files, selectedGenres, selectedPositions, selectedGenders, selectedAges);
+
+	    return "redirect:/bandlist/list?postId=" + postId;
+
+	}
+
+	@GetMapping("/mybands/all")
+	@ResponseBody
+	public List<BandRecruitPostVo> getMyBandList(Principal principal) {
+	    String username = principal.getName();
+	    String userId = bandrecruitpostservice.findUserIdByUsername(username);
+	    return bandrecruitpostservice.getMyBandList(userId);
+	}
+	
+
+
+}
