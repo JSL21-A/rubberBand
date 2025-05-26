@@ -16,7 +16,7 @@ import com.TTT.domain.BandInsertVo;
 public interface BandInsertMapper {
 	
 	// 밴드 멤버 정보 등록
-	@Insert("INSERT INTO band_member (band_id, user_id, member_type, stage_name, member_position, member_mbti, favorite_band, member_motto, photo, created_at) VALUES (#{band_id}, #{user_id}, #{member_type}, #{stage_name}, #{member_position}, #{member_mbti}, #{favorite_band}, #{member_motto}, #{photo}, NOW())")
+	@Insert("INSERT INTO band_member (band_id, user_id, member_type, stage_name, member_position, member_mbti, favorite_band, member_motto, created_at) VALUES (#{band_id}, #{user_id}, #{member_type}, #{stage_name}, #{member_position}, #{member_mbti}, #{favorite_band}, #{member_motto}, NOW())")
 	@Options(useGeneratedKeys = true, keyProperty = "band_member_id") // band_member_id 시퀀스 -> 자동으로 member_id 추가
 	void InsertBandMember(BandInsertVo vo);
 	
