@@ -3819,3 +3819,84 @@ body {
 	cursor: pointer;
 	z-index: 10;
 }
+
+/* ✅ 밴드 선택 팝업 전체 구조 */
+#selectBandModal .modal-content {
+  padding: 40px;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  font-family: 'Noto Sans JP', sans-serif;
+}
+
+/* 제목 */
+#selectBandModal .modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+/* 밴드 목록 리스트 스타일 */
+#selectBandModal #myBandList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#selectBandModal #myBandList .list-group-item {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 14px 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  background-color: #fafafa;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#selectBandModal #myBandList .list-group-item:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+/* 모달 강제 표시용 스타일 */
+.modal {
+  display: none;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1050;
+  transition: opacity 0.15s linear;
+}
+
+.modal.show {
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  z-index: 1050;
+}
+
+.modal-backdrop {
+  z-index: 1040;
+}
+
+/* ✅ 세로 중앙 정렬을 위한 modal-dialog 위치 조정 */
+#selectBandModal .modal-dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0; /* 기존 Bootstrap margin 제거 */
+}
+
+/* ✅ applyModal은 Bootstrap 기본 위치로 복원 */
+#applyModal .modal-dialog {
+  position: static !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  margin: 100px auto !important; /* 수직 간격 + 수평 중앙 정렬 */
+}
+
+
