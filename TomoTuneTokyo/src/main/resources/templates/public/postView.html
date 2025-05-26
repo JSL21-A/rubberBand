@@ -34,7 +34,11 @@
             }
 
             #middle {
-                padding: 2%;
+                width: 100%;
+                margin: 0 auto;
+                background-color: #fff;
+                border-radius: 30px;
+                box-shadow: 2px 2px 2px 2px #bbb;
             }
 
             .post_list ul {
@@ -54,7 +58,7 @@
                 text-align: center;
             }
 
-            .post_title {
+            .view_title {
                 text-align: inherit;
                 width: 100%;
                 margin: 0 auto;
@@ -148,7 +152,7 @@
                 width: 30%;
             }
 
-            .bottomUp{
+            .bottomUp {
                 display: flex;
                 justify-content: space-between;
                 margin: 0 2% 2% 2%;
@@ -174,6 +178,10 @@
                 background-color: #f4f6f8;
                 border-radius: 30px;
                 padding: 2% 1%;
+            }
+
+            .post_note img {
+                width: 100%;
             }
         </style>
         <div id="view">
@@ -207,7 +215,7 @@
                 </div>
             </div>
             <div id="middle">
-                <div class="post_title">
+                <div class="view_title">
                     <div class="viewTitle" th:text="${post.post_title}"></div>
                     <div class="viewHost" th:text="${post.nickname}"></div>
                 </div>
@@ -219,34 +227,33 @@
                         <button class="post_scrap">スクラップ</button>
                     </div>
                 </div>
-            </div>
-            <div id="bottom">
-                <div class="bottomUp">
-                    <button hx-get='./list' hx-target="#content">リストへ</button>
-                    <th:block th:if="${post.board_id != 7}">
-                        <a id="onPost" hx-get="./write" hx-target="#content" hx-push-url="true">作成</a>
-                    </th:block>
-                </div>
-                <div id="comment" th:if="${post.board_id != 7}">
-                <div id="writeComment">
-                    <div id="cnt">
-                        <p>コメント &nbsp;&nbsp;&nbsp;&nbsp;<th:block th:text="${comment_cnt}"></th:block>
-                        </p>
+                <div id="bottom">
+                    <div class="bottomUp">
+                        <button hx-get='./list'>リストへ</button>
+                        <th:block th:if="${post.board_id != 7}">
+                            <a id="onPost" hx-get="./write" hx-target="#content" hx-push-url="true">作成</a>
+                        </th:block>
                     </div>
-                    <textarea name="comment" id="commentContent"></textarea>
-                    <button id="comment_submit">登録</button>
-                </div>
-                <div id="viewComment">
-                    <ul id="commentList">
-                        <li th:each="comment: ${comment}" th:if="${comment != null}" class="viewComment">
-                            <div th:text="${comment.nickname}"></div>
-                            <div th:text="${comment.comment_content}"></div>
-                        </li>
-                    </ul>
+                    <div id="comment" th:if="${post.board_id != 7}">
+                        <div id="writeComment">
+                            <div id="cnt">
+                                <p>コメント &nbsp;&nbsp;&nbsp;&nbsp;<th:block th:text="${comment_cnt}"></th:block>
+                                </p>
+                            </div>
+                            <textarea name="comment" id="commentContent"></textarea>
+                            <button id="comment_submit">登録</button>
+                        </div>
+                        <div id="viewComment">
+                            <ul id="commentList">
+                                <li th:each="comment: ${comment}" th:if="${comment != null}" class="viewComment">
+                                    <div th:text="${comment.nickname}"></div>
+                                    <div th:text="${comment.comment_content}"></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-            </div>
-            
         </div>
         <script data-init>
             $(".sel_cate").on("click", function () {
