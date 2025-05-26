@@ -4093,5 +4093,34 @@ body {
   margin: 100px auto !important; /* 수직 간격 + 수평 중앙 정렬 */
 }
 
+/* ✅ applyModal 스크롤 잘림 방지 및 높이 제한 */
+#applyModal .modal-dialog {
+  max-height: 90vh;             /* 브라우저 높이 기준 제한 */
+  display: flex;
+  flex-direction: column;
+}
+
+#applyModal .modal-content {
+  max-height: 90vh;             /* 콘텐츠 영역 제한 */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#applyModal .modal-body {
+  flex: 1;
+  overflow-y: auto;             /* 세로 스크롤 허용 */
+  padding: 20px;
+}
+
+#memberSearchPopup {
+  z-index: 3000 !important;
+}
+
+#memberSearchResult {
+  max-height: 600px;   /* 10명 정도 기준 높이 */
+  overflow-y: auto;    /* 세로 스크롤 활성화 */
+}
+
 
 

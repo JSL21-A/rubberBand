@@ -15,7 +15,9 @@
 <body>
   <div layout:fragment="content" class="board-container">
     <div class="recruit-post-btn-wrap">
-      <button type="button" class="recruit-post-btn" data-toggle="modal" data-target="#applyModal">バンド結成登録</button>
+		<button type="button" class="recruit-post-btn" id="openApplyModal" data-toggle="modal" data-target="#applyModal">
+		  バンド結成登録
+		</button>
     </div>
     <h2 class="board-title">バンドリスト</h2>
 
@@ -261,7 +263,6 @@
 			 <!-- leaderInfo가 null일 때 (빈 필드) -->
 			 <input type="text" th:if="${leaderInfo == null}" value="" readonly>
 			 <input type="text" name="stage_name[]" class="form-control" placeholder="活動名" required>
-			     <input type="file" name="photo[]" class="form-control mb-2" accept="image/*">
 			     <input type="text" name="member_position[]" class="form-control mb-2" placeholder="ポジション: リーダー, プロデューサー">
 				 <input type="text" name="member_mbti[]" maxlength="4" pattern="[A-Za-z]{4}" placeholder="例: INFP" required>
 			     <input type="text" name="favorite_band[]" class="form-control mb-2" placeholder="好きなバンド: DAY6">
@@ -290,7 +291,6 @@
 
 		  <input type="text" class="form-control mb-2 nickname-display" placeholder="例: メンバー名" readonly>
 		  <input type="text" name="stage_name[]" class="form-control mb-2" placeholder="活動名" required>
-	      <input type="file" name="photo[]" class="form-control mb-2" accept="image/*">
 	      <input type="text" name="member_position[]" class="form-control mb-2" placeholder="ポジション: ボーカル">
 	      <input type="text" name="member_mbti[]" maxlength="4" pattern="[A-Za-z]{4}" class="form-control mb-2" placeholder="例: INFP" required>
 	      <input type="text" name="favorite_band[]" class="form-control mb-2" placeholder="好きなバンド: Aimer">
@@ -310,7 +310,6 @@
 
 		  <input type="text" class="form-control mb-2 nickname-display" placeholder="例: メンバー名" readonly>
 		  <input type="text" name="stage_name[]" class="form-control mb-2" placeholder="活動名" required>
-	      <input type="file" name="photo[]" class="form-control mb-2" accept="image/*">
 	      <input type="text" name="member_position[]" class="form-control mb-2" placeholder="ポジション: ギター">
 	      <input type="text" name="member_mbti[]" maxlength="4" pattern="[A-Za-z]{4}" class="form-control mb-2" placeholder="例: INFP" required>
 	      <input type="text" name="favorite_band[]" class="form-control mb-2" placeholder="好きなバンド: YOASOBI">
@@ -454,7 +453,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		
         <input type="hidden" name="user_id_list[]" class="user-id-hidden">
 		<input type="text" name="stage_name[]" class="form-control mb-2" placeholder="例: 活動名" required>
-        <input type="file" name="photo[]" class="form-control mb-2" accept="image/*">
         <input type="text" name="member_position[]" class="form-control mb-2" placeholder="ポジション: ボーカル">
         <input type="text" name="member_mbti[]" maxlength="4" class="form-control mb-2" placeholder="MBTI: ENFP">
         <input type="text" name="favorite_band[]" class="form-control mb-2" placeholder="好きなバンド: Aimer">
@@ -487,6 +485,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("selectedGenders").value = getSelectedValues("#gender-tags");
       document.getElementById("selectedAges").value = getSelectedValues("#age-tags");
 
+	  alert("バンドが正常に登録されました！");
     });
   }
 });
@@ -504,6 +503,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		$('#memberSearchInput').val('');
 		$('#memberSearchResult').empty();
 		$('#memberSearchInput').trigger('input'); // 팝업 열자마자 전체 조회
+		$('#memberSearchPopup').modal('show');
 	});
 
 	// 🔍 검색어 입력 시 (또는 자동 호출 시)
@@ -647,6 +647,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 </script>
+
+
 
 
 </div>
