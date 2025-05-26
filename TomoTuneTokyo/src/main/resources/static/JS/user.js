@@ -162,7 +162,7 @@ $('#login').on('click', async e => {
 
       // **추가**: 로그인 후 슬라이드 메뉴 헤더만 다시 불러와서
       // 서버 사이드에서 Thymeleaf로 렌더된 상태(인증 정보 반영)를 반영
-      $('#slideMenu').load('/user/header-fragment .welcome', function() {
+      $('#slideMenu').load('/user/header-fragment #mainPane, #notificationPane', function() {
         // 닫기 버튼 재바인딩
         $('.close-btn').off('click').on('click', () => {
           $('#slideMenu').removeClass('open');

@@ -9,6 +9,9 @@ $(function(){
 		}
 	})
 })
+const csrfToken  = document.querySelector('meta[name="_csrf"]').content;
+const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
 
 //로그인 요청 시 우측 사이드바 오픈
 $(function(){
@@ -148,3 +151,62 @@ $(function(){
 
 });
 
+
+function goToNotification() {
+  document.getElementById('mainPane').style.display = 'none';
+  const pane = document.getElementById('notificationPane');
+  pane.style.display = 'block';
+
+  fetch('/notify/unread')
+    .then(res => res.json())
+    .then(list => {
+      const ul = document.getElementById('notificationList');
+      ul.innerHTML = '';
+      if (list.length === 0) {
+        ul.innerHTML = '<li class="no-notify">새 알림이 없습니다.</li>';
+      } else {
+        list.forEach(n => {
+          const li = document.createElement('li');
+          li.className = 'notify-item';
+
+          const a = document.createElement('a');
+          a.textContent = n.message;
+          a.href = n.url;
+          a.style.display = 'block';
+          a.style.padding = '0.5rem 0';
+          a.style.borderBottom = '1px solid #ddd';
+          a.style.color = '#fff';
+          a.addEventListener('mouseover', () => a.style.textDecoration = 'underline');
+          a.addEventListener('mouseout', () => a.style.textDecoration = 'none');
+
+          // 클릭 시: ① 읽음 처리 API 호출 → ② 원래 URL로 이동
+          a.addEventListener('click', e => {
+            e.preventDefault();
+            fetch(`/notify/read/${n.notificationId}`, { 
+				method: 'POST', 
+				headers: { [csrfHeader]: csrfToken},
+				credentials: 'same-origin'
+			 })
+			 .then(res => {
+				if(!res.ok) throw new Error(res.status);
+				a.parentElement.remove();
+			 })
+              .catch(console.error)
+              .finally(() => {
+                window.location.href = n.url;
+              });
+          });
+
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+      }
+    })
+    .catch(console.error);
+}
+
+// 돌아가기 버튼 클릭 시 기본 메뉴로 복귀
+function showMainMenu() {
+  document.getElementById('notificationPane').style.display = 'none';
+  document.getElementById('mainPane').style.display = 'block';
+}

@@ -78,7 +78,7 @@ body {
 	justify-content: center;
 }
 
-.header-item a {
+/* .header-item a {
 	text-decoration: none;
 	color: #000;
 	font-weight: bold;
@@ -86,7 +86,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-}
+} */
 
 .header-icon {
 	height: 150px;
@@ -259,12 +259,24 @@ body {
 
 .slide-menu ul li {
 	margin-bottom: 20px;
+	white-space: nowrap !important;
+	word-break: keep-all !important;
+	overflow-wrap: normal !important;
 }
 
 .slide-menu ul li a {
 	color: #fff;
 	text-decoration: none;
 	font-size: 18px;
+	display: inline-flex !important;
+	align-items: center !important;
+	flex-wrap: nowrap !important;
+	gap: 0.6rem;
+	text-align: left;
+	white-space: nowrap !important;
+	word-break: keep-all !important;
+	overflow-wrap: normal !important;
+	flex-wrap: nowrap !important;
 }
 
 /* GNB 감추기 (햄버거 슬라이드용) */
@@ -523,6 +535,171 @@ body {
 		z-index: 10000;
 	}
 }
+
+/* 여기부터 사이드바 0526 작업 */
+/* .welcome {
+	position: fixed;
+	top: 0;
+	right: -260px; 사이드바 화면 우측 배치
+	transition: right 0.3s ease;
+	width: 260px;
+	height: 100%;
+	background: #000;
+	color: #fff;
+	box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+	padding: 2rem 1.2rem;
+	box-sizing: border-box;
+	z-index: 1000;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.welcome.active {
+	right: 0;
+} */
+
+.notification {
+	position: absolute;
+	top: 1.5rem;
+	right: 1.5rem;
+	cursor: pointer;
+	z-index: 1100;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.4rem;
+	background-color: transparent;
+	border-radius: 50%;
+	transition: background-color 0.2s ease;
+}
+
+.notification:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.welcome {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	
+}
+
+.welcome img {
+	width: 80px;
+	height: 80px;
+	border-radius: 50%;
+	object-fit: cover;
+	margin-bottom: 0.8rem;
+	border: 2px solid #fff;
+}
+
+.welcome .nickname {
+	font-weight: bold;
+	font-size: 1.1rem;
+	margin-bottom: 0.3rem;
+	color: #fff;
+}
+
+.welcome .userid {
+	font-size: 0.85rem;
+	color: #cbd5e1;
+	margin-bottom: 1.5rem;
+}
+
+.welcome nav {
+	width: 100%;
+}
+
+.welcome nav a {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	padding: 0.7rem 1rem;
+	color: #e5e7eb;
+	text-decoration: none;
+	border-radius: 8px;
+	transition: background-color 0.2s ease, color 0.2s ease;
+	font-size: 0.95rem;
+}
+
+.welcome nav a:hover {
+	background-color: #374151;
+	color: #fff;
+}
+
+.welcome nav a::before {
+	content: '▶';
+	font-size: 0.7rem;
+	color: #9ca3af;
+	transition: transform 0.2s ease;
+}
+
+.welcome nav a:hover::before {
+	transform: translateX(4px);
+	color: #fff;
+}
+
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.3);
+	z-index: 999;
+	display: none;
+}
+
+.overlay.active {
+	display: block;
+}
+
+/* 사이드바 미니 프로필 */
+.sidebar-profile {
+	text-align: center;
+	margin-bottom: 1.5rem;
+	padding-bottom: 1rem;
+}
+
+.sidebar-avatar {
+	width: 80px;
+	height: 80px;
+	object-fit: cover;
+	border-radius: 50%;
+	border: 2px solid #fff;
+	margin-bottom: 0.6rem;
+}
+
+.sidebar-nickname {
+	font-size: 1.1rem;
+	font-weight: bold;
+	color: #fff;
+}
+
+.sidebar-id, .sidebar-band, .sidebar-artist, .sidebar-email {
+	font-size: 0.85rem;
+	color: #cbd5e1;
+	margin-top: 2px;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.6rem;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.remove-btn:hover {
+  color: #dc3545;
+}
+
+/* 여기까지 사이드바 0526 작업 */
 
 /* 멤버 구직 리스트 */
 /* 공통 */
@@ -3820,6 +3997,23 @@ body {
 	z-index: 10;
 }
 
+
+.notify-btn{
+   padding: 0.4rem 0.8rem;
+   font-size: 0.85rem;
+   border-radius: 5px;
+   background-color: #000;
+   color: white;
+   border: none;
+   cursor: pointer;
+   transition: background-color 0.2s ease;
+	
+}
+
+.notify-btn:hover{
+	text-decoration: underline;
+}
+
 /* ✅ 밴드 선택 팝업 전체 구조 */
 #selectBandModal .modal-content {
   padding: 40px;
@@ -3898,5 +4092,6 @@ body {
   transform: none !important;
   margin: 100px auto !important; /* 수직 간격 + 수평 중앙 정렬 */
 }
+
 
 
