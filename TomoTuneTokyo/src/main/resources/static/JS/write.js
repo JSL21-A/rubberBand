@@ -165,7 +165,7 @@ $(document).on("click", ".write_select_box .write_selected", function (e) {
 
 // 바깥 누르면 닫기
 $(document).on("click", function (e) {
-    // 클릭한 요소가 select_box 내부에 있으거나 작성버튼이 아니면 (작성버튼의 경우 입력체크를 위한 용도)닫지 않음
+    // 클릭한 요소가 select_box 내부에 있거나 작성버튼이 아니면 (작성버튼의 경우 입력체크를 위한 용도)닫지 않음
     if (!$(e.target).closest(".write_select_box").length && !$(e.target).closest("#write_submit").length) {
         $(".write_select_option").removeClass("show");
     }
@@ -247,7 +247,7 @@ $(document).on("click", "#write_submit", function () {
             xhr.setRequestHeader(csrfHeader, csrfToken);
         },
         success: function (res) {
-            alert("게시물이 등록되었습니다.");
+            alert("投稿されました。");
             if (boardId == 7) {
                 window.location.href = "./notify";
             } else {
@@ -255,7 +255,7 @@ $(document).on("click", "#write_submit", function () {
             }
         },
         error: function (err) {
-            alert("등록 실패");
+            alert("登録失敗");
             console.error(err);
         },
     });

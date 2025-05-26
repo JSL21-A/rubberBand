@@ -41,6 +41,15 @@
   <script src="/JS/chat.js"></script>
   <script src="/JS/write.js"></script>
   <script src="/JS/notification.js"></script>
+  <script>
+    // 브라우저 bfcache 방지 + 뒤로가기 시 강제 리로드
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) { // bfcache에서 복원된 경우
+        window.location.reload(); // 1. 전체 페이지 리로드 (가장 확실)
+        // htmx.trigger('#main', 'refresh'); // 2. 부분 리로드 (HTMX 전용)
+      }
+    });
+  </script>
 </body>
 
 </html>

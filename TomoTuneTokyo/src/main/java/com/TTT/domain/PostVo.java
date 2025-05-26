@@ -22,4 +22,10 @@ public class PostVo {
     private LocalDateTime updated_at; // 수정날짜
     private LocalDateTime deleted_at; // 삭제날짜
 
+    // 댓글 테이블 그냥 여기서 충당
+    private String comment_id;
+    private String comment_content;
+    private Integer comment_cnt;
+    private LocalDateTime comment_created_at;
+
 }
