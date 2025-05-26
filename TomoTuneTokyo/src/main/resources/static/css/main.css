@@ -120,6 +120,15 @@
     transform: rotateY(180deg);
 }
 
+.card-front .front-image{
+	width: 100%;
+}
+
+.card-front .front-text{
+	text-align:center;
+	padding-bottom: 40px;
+}
+
 #rotateBtn {
     font-size: 100px;
     border: 0;
