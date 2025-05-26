@@ -53,6 +53,16 @@ public class NotificationController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	//안읽은 알림 개수 조회
+	@GetMapping("/unread/count")
+	public ResponseEntity<Long> getUnreadCount(
+            @AuthenticationPrincipal CustomUserDetails principal
+    ) {
+        String userId = principal.getUserDto().getUser_id();
+        long count = notificationService.countUnreadNotifications(userId);
+        return ResponseEntity.ok(count);
+    }
+	
 	
 	//읽지 않은 알림 불러오기
 	@GetMapping("/unread")

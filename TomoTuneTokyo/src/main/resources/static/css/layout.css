@@ -572,11 +572,29 @@ body {
 	background-color: transparent;
 	border-radius: 50%;
 	transition: background-color 0.2s ease;
+	
 }
 
 .notification:hover {
 	background-color: rgba(255, 255, 255, 0.1);
 }
+
+.notification-badge{
+  position: absolute;
+  top: -4px;     /* 아이콘 위쪽으로 살짝 올려 붙이기 */
+  right: -4px;   /* 오른쪽 끝에 붙이기 */
+  min-width: 18px;
+  height: 18px;
+  line-height: 18px;
+  padding: 0 4px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  border-radius: 9px;
+  text-align: center;
+  pointer-events: none;
+}
+
 
 .welcome {
 	display: flex;
@@ -4011,4 +4029,5 @@ body {
 
 .notify-btn:hover{
 	text-decoration: underline;
-}
+}   
+
