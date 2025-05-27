@@ -12,7 +12,7 @@ public class BandRecruitPostVo {
 	private Long band_id; // 밴드 ID
 	private String userId; // 작성자 ID
 
-	private String bandIntro; // 밴드 소개
+	private String band_intro; // 밴드 소개
 	private String title; // 모집 제목
 	private String recruitPosition; // 모집 포지션
 	private String activityArea; // 활동 지역
