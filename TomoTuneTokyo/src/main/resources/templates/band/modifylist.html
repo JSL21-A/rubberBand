@@ -15,7 +15,9 @@
 <body>
   <div layout:fragment="content" class="board-container">
     <div class="recruit-post-btn-wrap">
-      <button type="button" class="recruit-post-btn" data-toggle="modal" data-target="#applyModal">バンド結成登録</button>
+		<button type="button" class="recruit-post-btn" id="openApplyModal" data-toggle="modal" data-target="#applyModal">
+		  バンド結成登録
+		</button>
     </div>
     <h2 class="board-title">バンドリスト</h2>
 
@@ -142,7 +144,7 @@
 
 	  <div class="form-group">
 	    <label for="formationDate">結成日</label>
-	    <input type="date" class="form-control" id="formationDate" name="formation_date">
+		<input type="date" class="form-control" id="formationDate" name="formation_date" placeholder="年-月-日">
 	  </div>
 
 	  <div class="form-group">
@@ -203,9 +205,9 @@
 	  </div>
 
 	  <div class="form-group">
-	    <label for="bandEmail">メールアドレス</label>
-	    <input type="email" class="form-control" id="bandEmail" name="bandEmail" placeholder="例: band@example.com" required>
-	  </div>
+	  	    <label for="leaderComment">リーダーのコメント</label>
+	  	    <textarea class="form-control" id="leaderComment" name="leader_comment" rows="2" placeholder="リーダーからのメッセージ"></textarea>
+	  	  </div>
 
 	  <input type="hidden" name="selectedGenres" id="selectedGenres">
 	  <input type="hidden" name="selectedPositions" id="selectedPositions">
@@ -219,11 +221,6 @@
 
 	<!-- 2페이지 -->
 	<div id="page2" style="display:none;">
-	  <div class="form-group">
-	    <label for="leaderComment">リーダーのコメント</label>
-	    <textarea class="form-control" id="leaderComment" name="leader_comment" rows="2" placeholder="リーダーからのメッセージ"></textarea>
-	  </div>
-
 	  <div class="form-group">
 	    <label for="bandProfileImage">バンドプロフィール画像</label>
 	    <input type="file" class="form-control" id="bandProfileImage" name="bandProfileImage" accept="image/*">
@@ -266,7 +263,6 @@
 			 <!-- leaderInfo가 null일 때 (빈 필드) -->
 			 <input type="text" th:if="${leaderInfo == null}" value="" readonly>
 			 <input type="text" name="stage_name[]" class="form-control" placeholder="活動名" required>
-			     <input type="file" name="photo[]" class="form-control mb-2" accept="image/*">
 			     <input type="text" name="member_position[]" class="form-control mb-2" placeholder="ポジション: リーダー, プロデューサー">
 				 <input type="text" name="member_mbti[]" maxlength="4" pattern="[A-Za-z]{4}" placeholder="例: INFP" required>
 			     <input type="text" name="favorite_band[]" class="form-control mb-2" placeholder="好きなバンド: DAY6">
@@ -274,7 +270,7 @@
 	  </div>
 
 	  <div class="text-center">
-	    <button type="button" class="btn btn-default" id="prevPage">以前へ</button>
+	    <button type="button" class="btn btn-primary" id="prevPage">以前へ</button>
 	    <button type="button" class="btn btn-primary" id="toPage3">次へ</button>
 	  </div>
 	</div>
@@ -295,7 +291,6 @@
 
 		  <input type="text" class="form-control mb-2 nickname-display" placeholder="例: メンバー名" readonly>
 		  <input type="text" name="stage_name[]" class="form-control mb-2" placeholder="活動名" required>
-	      <input type="file" name="photo[]" class="form-control mb-2" accept="image/*">
 	      <input type="text" name="member_position[]" class="form-control mb-2" placeholder="ポジション: ボーカル">
 	      <input type="text" name="member_mbti[]" maxlength="4" pattern="[A-Za-z]{4}" class="form-control mb-2" placeholder="例: INFP" required>
 	      <input type="text" name="favorite_band[]" class="form-control mb-2" placeholder="好きなバンド: Aimer">
@@ -315,7 +310,6 @@
 
 		  <input type="text" class="form-control mb-2 nickname-display" placeholder="例: メンバー名" readonly>
 		  <input type="text" name="stage_name[]" class="form-control mb-2" placeholder="活動名" required>
-	      <input type="file" name="photo[]" class="form-control mb-2" accept="image/*">
 	      <input type="text" name="member_position[]" class="form-control mb-2" placeholder="ポジション: ギター">
 	      <input type="text" name="member_mbti[]" maxlength="4" pattern="[A-Za-z]{4}" class="form-control mb-2" placeholder="例: INFP" required>
 	      <input type="text" name="favorite_band[]" class="form-control mb-2" placeholder="好きなバンド: YOASOBI">
@@ -331,7 +325,7 @@
 	  </div>
 
 	  <div class="text-center mt-4" style="padding-top: 80px;">
-	    <button type="button" class="btn btn-default" id="toPage2">以前へ</button>
+	    <button type="button" class="btn btn-primary" id="toPage2">以前へ</button>
 	    <button type="submit" class="btn btn-primary" id="submitApply">登録する</button>
 	  </div>
 	</div>
@@ -343,12 +337,30 @@
 </div>
 
     <!-- 페이징 -->
-    <div class="board-pagination">
-      <button class="page-btn active">1</button>
-      <button class="page-btn">2</button>
-      <button class="page-btn">3</button>
-      <button class="page-btn">&raquo;</button>
-    </div>
+	<div class="board-pagination" th:if="${totalPages != null and totalPages > 1}">
+	  <!-- 이전 페이지 -->
+	  <button class="page-btn"
+	          th:if="${page > 1}"
+	          th:onclick="'location.href=\'' + @{/bandinsert/modifylist(page=${page - 1}, genre=${selectedGenre}, position=${selectedPosition}, gender=${selectedGender}, age=${selectedAge})} + '\''">
+	    &laquo;
+	  </button>
+
+	  <!-- 페이지 숫자 -->
+	  <button class="page-btn"
+	          th:each="i : ${#numbers.sequence(1, totalPages)}"
+	          th:classappend="${i} == ${page} ? ' active' : ''"
+	          th:onclick="'location.href=\'' + @{/bandinsert/modifylist(page=${i}, genre=${selectedGenre}, position=${selectedPosition}, gender=${selectedGender}, age=${selectedAge})} + '\''"
+	          th:text="${i}">
+	  </button>
+
+	  <!-- 다음 페이지 -->
+	  <button class="page-btn"
+	          th:if="${page < totalPages}"
+	          th:onclick="'location.href=\'' + @{/bandinsert/modifylist(page=${page + 1}, genre=${selectedGenre}, position=${selectedPosition}, gender=${selectedGender}, age=${selectedAge})} + '\''">
+	    &raquo;
+	  </button>
+	</div>
+
 <!-- 🔍 멤버 검색 팝업 -->
 <div id="memberSearchPopup" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="memberSearchLabel">
   <div class="modal-dialog" role="document">
@@ -441,7 +453,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		
         <input type="hidden" name="user_id_list[]" class="user-id-hidden">
 		<input type="text" name="stage_name[]" class="form-control mb-2" placeholder="例: 活動名" required>
-        <input type="file" name="photo[]" class="form-control mb-2" accept="image/*">
         <input type="text" name="member_position[]" class="form-control mb-2" placeholder="ポジション: ボーカル">
         <input type="text" name="member_mbti[]" maxlength="4" class="form-control mb-2" placeholder="MBTI: ENFP">
         <input type="text" name="favorite_band[]" class="form-control mb-2" placeholder="好きなバンド: Aimer">
@@ -474,6 +485,7 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("selectedGenders").value = getSelectedValues("#gender-tags");
       document.getElementById("selectedAges").value = getSelectedValues("#age-tags");
 
+	  alert("バンドが正常に登録されました！");
     });
   }
 });
@@ -491,6 +503,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		$('#memberSearchInput').val('');
 		$('#memberSearchResult').empty();
 		$('#memberSearchInput').trigger('input'); // 팝업 열자마자 전체 조회
+		$('#memberSearchPopup').modal('show');
 	});
 
 	// 🔍 검색어 입력 시 (또는 자동 호출 시)
@@ -561,6 +574,83 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 
 </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // ✅ 검색 파라미터 제거
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("keyword")) {
+      url.searchParams.delete("keyword");
+      window.history.replaceState({}, document.title, url.pathname + url.search);
+    }
+  });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const tags = document.querySelectorAll('a.tag');
+
+  tags.forEach(tag => {
+    const param = tag.getAttribute('href').split('=')[0].replace('?', '');
+    const value = tag.getAttribute('href').split('=')[1];
+
+    tag.addEventListener('click', function (e) {
+      e.preventDefault(); // 기본 링크 이동 막기
+
+      const url = new URL(window.location.href);
+      const current = url.searchParams.get(param);
+
+      if (current === value) {
+        url.searchParams.delete(param); // 현재 선택된 값 → 제거 (해제)
+      } else {
+        url.searchParams.set(param, value); // 새로운 값 → 설정
+      }
+
+      window.location.href = url.toString(); // 새 URL로 이동
+    });
+  });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const url = new URL(window.location.href);
+  const params = url.searchParams;
+
+  document.querySelectorAll('.tag').forEach(tag => {
+    const href = tag.getAttribute('href');
+    if (!href) return;
+
+    const match = href.match(/[?&]([^=]+)=([^&]+)/);
+    if (!match) return;
+
+    const key = match[1];
+    const value = match[2];
+
+    // 현재 URL 파라미터와 일치하면 active 클래스 추가
+    if (params.get(key) === value) {
+      tag.classList.add('active');
+    }
+
+    // 클릭 시 리로드 없이 선택/해제
+    tag.addEventListener('click', function (e) {
+      e.preventDefault();
+      const current = params.get(key);
+
+      if (current === value) {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+
+      window.location.href = url.pathname + '?' + params.toString();
+    });
+  });
+});
+</script>
+
+
+
+
 </div>
 </body>
 </html>

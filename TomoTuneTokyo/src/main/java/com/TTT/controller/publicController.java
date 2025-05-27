@@ -8,7 +8,6 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,10 +23,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.TTT.domain.PostVo;
 import com.TTT.service.AdminService;
+import com.TTT.service.NotificationService;
 import com.TTT.service.PublicService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequestMapping({ "/user", "/admin" })
@@ -38,21 +39,29 @@ public class publicController {
 
     @Autowired
     PublicService publicService;
+    
+    @Autowired
+    NotificationService notificationService;
 
+    // 글 목록 보여주기
     @GetMapping("/list")
     public String postList(HttpServletRequest request, Model model) {
         String Param = request.getParameter("board");
-        model.addAttribute("mParam", Param);
+        // 선택된 카테고리가 있으면
         if (Param == null) {
+            // 모든 카테고리에서 글 가져오기
             List<PostVo> list = publicService.getPostListAll();
             model.addAttribute("list", list);
-
+            // 상단에 배치될 가장 최근 공지사항 3개
             List<PostVo> noti = publicService.getNotiRecently();
             model.addAttribute("noti", noti);
+            // 카테고리가 선택되어 있으면
         } else {
+            // 해당 카테고리의 글 가져오기.(Param = board_id)
             List<PostVo> list = publicService.getPostList(Integer.parseInt(Param));
             model.addAttribute("list", list);
 
+            // 만일 선택된 카테고리가 공지사항이라면 모든 공지사항 가져오기
             if (!(Param.equals("7"))) {
                 List<PostVo> noti = publicService.getNotiRecently();
                 model.addAttribute("noti", noti);
@@ -61,27 +70,41 @@ public class publicController {
         return "public/postList";
     }
 
+    // 글쓰기
     @GetMapping("/write")
     public String writePost(HttpServletRequest request, Model model) {
+        // 현재 uri 가져오기.
         String uri = request.getRequestURI();
+        // htmx로 인한 요청인지 체크
         boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
         model.addAttribute("banner_title", "public/write :: banner_title");
+        // 이전 페이지의 데이터가 있다면.
         if (request.getHeader("referer") != null) {
+            // 이전 페이지의 경로 저장. (글쓴곳으로 다시 보내기 위함.)
             String prevUri = request.getHeader("referer")
                     .substring(request.getHeader("referer").lastIndexOf("/") + 1);
+            // 만약에 5,10 부분이 board라면
             if (prevUri.length() >= 12 && prevUri.substring(5, 10).equals("board")) {
+                // board 파라미터값 저장.
                 request.getSession().setAttribute("prev", prevUri.substring(11, 12));
             } else {
+                // 아니면 그냥 uri 저장.
                 request.getSession().setAttribute("prev", prevUri);
             }
         }
+        // htmx 요청이면
         if (isHtmx) {
+            // 페이지중 일부만 반환
             return "public/write :: content";
+            // 일반 요청이면
         } else {
             if (uri.startsWith("/admin")) {
+                // 어드민페이지에서 요청한거면 어드민 레이아웃
                 model.addAttribute("layout", "layouts/adminLayout");
+                // 전체 페이지 반환
                 return "public/write";
             }
+            // 어드민 페이지 아니면 메인 레이아웃.
             model.addAttribute("layout", "layouts/layout");
             return "public/write";
         }
@@ -95,8 +118,10 @@ public class publicController {
 
         // 1. 이미지 저장 (data-id -> 저장된 URL)
         Map<String, String> imageUrlMap = new HashMap<>();
+        // 이미지가 있으면
         if (images != null) {
             for (MultipartFile file : images) {
+                // 이미지 이름 추출
                 String originalFilename = file.getOriginalFilename();
                 if (originalFilename == null)
                     continue;
@@ -110,18 +135,22 @@ public class publicController {
             }
         }
 
-        // 2. HTML 파싱 및 <img src> 치환
+        // 2. HTML 전달 및 <img src> 치환. (src를 base64로 인코딩해서 바로 페이지에 보여주는거 실제 파일 경로로 바꾸기
+        // 위함.)
         Document doc = Jsoup.parseBodyFragment(content);
+        // 전달된 html에서 img에 data-id가 있는 태그만
         for (Element img : doc.select("img[data-id]")) {
+            // 위에서 자장한 uuid로 매핑되어 저장된 경로 가져오기.
             String dataId = img.attr("data-id");
             String imageUrl = imageUrlMap.get(dataId);
+            // url을 갖는 이미지가 있으면 src태그 치환.
             if (imageUrl != null) {
                 img.attr("src", imageUrl);
                 img.removeAttr("data-id");
             }
         }
 
-        // 3. YouTube iframe만 허용 (옵션)
+        // 3. YouTube iframe만 허용 (옵션) (되는지 안해봤음.)
         for (Element iframe : doc.select("iframe")) {
             String src = iframe.attr("src");
             if (!src.startsWith("https://www.youtube.com/embed/")) {
@@ -145,6 +174,7 @@ public class publicController {
         return ResponseEntity.ok().build();
     }
 
+    // 위에서 거르고 거른 진짜 업로드 되야하는 이미지만 업로드하기위한 함수.
     public String saveImage(MultipartFile file, String uuid) throws IOException {
 
         String originalFilename = file.getOriginalFilename();
@@ -153,9 +183,11 @@ public class publicController {
             ext = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
         }
 
+        // 이미지 이름을 uuid + 확장자로 저장
         String newFileName = uuid + "." + ext;
 
-        Path uploadDir = Paths.get(System.getProperty("user.dir") + "/upload/images");
+        // 당장은 프로젝트 폴더에 업로드 배포할땐 서버내의 업로드경로
+        Path uploadDir = Paths.get(System.getProperty("user.dir") + "/src/main/resources/static/images/uploads/");
         if (!Files.exists(uploadDir)) {
             Files.createDirectories(uploadDir);
         }
@@ -163,7 +195,7 @@ public class publicController {
         Path filePath = uploadDir.resolve(newFileName);
         file.transferTo(filePath.toFile());
 
-        return "/upload/images/" + newFileName;
+        return "/images/uploads/" + newFileName;
     }
 
     public void sanitizeHtml(Element body) {
@@ -178,4 +210,58 @@ public class publicController {
             el.removeAttr("style"); // 필요시 제거
         }
     }
+
+    @GetMapping("/view")
+    public String viewPost(HttpServletRequest request, Model model, Principal principal) {
+        boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
+        String uri = request.getRequestURI();
+
+        String Param = request.getParameter("post");
+        PostVo post = publicService.getPostView(Integer.parseInt(Param));
+        List<PostVo> comment = publicService.getComment(Integer.parseInt(Param));
+
+        if (comment == null || comment.size() <= 0) {
+            PostVo noComment = new PostVo();
+            noComment.setComment_cnt(0);
+            model.addAttribute("comment_cnt", 0);
+        } else {
+            model.addAttribute("comment_cnt", comment.get(0).getComment_cnt());
+            model.addAttribute("comment", comment);
+        }
+
+        model.addAttribute("post", post);
+        model.addAttribute("user", publicService.searchUserByUserName(principal.getName()));
+
+        if (isHtmx) {
+            // 페이지중 일부만 반환
+            return "public/postView :: content";
+            // 일반 요청이면
+        } else {
+            if (uri.startsWith("/admin")) {
+                // 어드민페이지에서 요청한거면 어드민 레이아웃
+                model.addAttribute("layout", "layouts/adminLayout");
+                // 전체 페이지 반환
+                return "public/postView";
+            }
+            // 어드민 페이지 아니면 메인 레이아웃.
+            model.addAttribute("layout", "layouts/layout");
+            return "public/postView";
+        }
+    }
+
+    @PostMapping("/commentWrite")
+    public ResponseEntity<Object> postMethodName(@RequestParam("comment") String comment,
+            @RequestParam("post_id") Long post_id, @RequestParam("post_user_id") String post_user_id ,Principal principal, PostVo vo) {
+        vo.setComment_content(comment);
+        vo.setPost_id(post_id);
+        vo.setUser_id(publicService.searchUserByUserName(principal.getName()));
+        publicService.insertComment(vo);
+        
+        //알림 전송 (post_user_id는 게시물 작성자)
+        notificationService.sendNotification(post_user_id , "comment", "新しいコメントが届きました。", "/user/view?post=" + post_id);
+        
+        
+        return ResponseEntity.ok().build();
+    }
+
 }

@@ -36,6 +36,7 @@
                 margin: 0 auto;
                 background-color: #fff;
                 border-radius: 30px;
+                box-shadow: 2px 2px 2px 2px #bbb;
             }
 
             .post_list ul {
@@ -139,6 +140,7 @@
                 display: flex;
                 justify-content: space-between;
                 margin: 2%;
+                margin-bottom: calc(2% + 40px);
             }
         </style>
         <div id="notice">
@@ -184,7 +186,8 @@
                         </li>
                         <li th:each="noti: ${noti}" th:if="${noti != null}" class="post_post">
                             <div class="post_title">
-                                <a hx-get="/admin/test" th:text="${noti.post_title}"></a>
+                                <a th:attr="hx-get='./view?post='+ ${noti.post_id}" th:text="${noti.post_title}"
+                                    hx-target="#content" hx-push-url="true"></a>
                             </div>
                             <div class="post_content">お知らせ</div>
                             <div class="post_content">管理者</div>
@@ -193,7 +196,8 @@
                         </li>
                         <li th:each="post: ${list}" class="post_post">
                             <div class="post_title">
-                                <a hx-get="/admin/test" th:text="${post.post_title}"></a>
+                                <a th:attr="hx-get='./view?post='+ ${post.post_id}" th:text="${post.post_title}"
+                                    hx-target="#content" hx-push-url="true"></a>
                             </div>
                             <div th:switch="${post.board_id}" class="post_content">
                                 <th:block th:case="1">メンバー募集</th:block>

@@ -28,7 +28,9 @@ public interface UserMapper {
 	void insertUserProfile(UserDto userDto);
 	
 	//userLogin
-	@Select("select user_id, username, password, role from users where username = #{username}")
+	@Select("select u.user_id, u.username, u.password, u.email, u.role, u.status, u.created_at, u.updated_at, deleted_at, u.user_memo, p.nickname, p.user_img\n"
+			+ "from users u\n"
+			+ "left join user_profile p on u.user_id = p.user_id where username = #{username}")
 	UserDto findByUsername(@Param("username") String username);
 	
 	//아이디, 이메일 일치여부 확인

@@ -22,133 +22,88 @@ public class BandInsertService {
 	@Autowired
 	private BandInsertMapper bandInsertMapper;
 
-	private final String uploadDir = "C:\\Users\\LG gram\\git\\rubberBand\\TomoTuneTokyo\\src\\main\\resources\\static\\images\\uploads\\bands\\"; // 이미지 저장 경로
-	
+	private final String uploadDir = "C:\\Users\\LG gram\\git\\rubberBand\\TomoTuneTokyo\\src\\main\\resources\\static\\images\\uploads\\bands\\"; // 이미지
+																																					// 저장
+																																					// 경로
+
 	// 밴드 결성 등록
-	public void bandInsert(BandInsertVo vo,
-	                       MultipartFile bandProfileImage,
-	                       MultipartFile bandCoverImage,
-	                       List<MultipartFile> photoList,
-	                       List<BandInsertVo> generalMemberList,
-	                       String selectedGenres,
-	                       String selectedPositions,
-	                       String selectedGenders,
-	                       String selectedAges) {
+	public void bandInsert(BandInsertVo vo, MultipartFile bandProfileImage, MultipartFile bandCoverImage,
+			List<BandInsertVo> generalMemberList, String selectedGenres, String selectedPositions,
+			String selectedGenders, String selectedAges) {
 
-	    // 1. 밴드 프로필 이미지 저장
-	    if (bandProfileImage != null && !bandProfileImage.isEmpty()) {
-	        try {
-	            String fileName = UUID.randomUUID() + "_" + bandProfileImage.getOriginalFilename();
-	            Path filePath = Paths.get(uploadDir + fileName);
-	            Files.copy(bandProfileImage.getInputStream(), filePath);
-	            vo.setBand_profile_img(fileName);
-	        } catch (IOException e) {
-	            throw new RuntimeException("밴드 프로필 이미지 저장 실패", e);
-	        }
-	    }
+		// 밴드 프로필 이미지 저장
+		if (bandProfileImage != null && !bandProfileImage.isEmpty()) {
+			try {
+				String fileName = UUID.randomUUID() + "_" + bandProfileImage.getOriginalFilename();
+				Path filePath = Paths.get(uploadDir + fileName);
+				Files.copy(bandProfileImage.getInputStream(), filePath);
+				vo.setBand_profile_img(fileName); // 저장된 파일명 설정
+			} catch (IOException e) {
+				throw new RuntimeException("밴드 프로필 이미지 저장 실패", e);
+			}
+		}
 
-	    // 2. 밴드 커버 이미지 저장
-	    if (bandCoverImage != null && !bandCoverImage.isEmpty()) {
-	        try {
-	            String fileName = UUID.randomUUID() + "_" + bandCoverImage.getOriginalFilename();
-	            Path filePath = Paths.get(uploadDir + fileName);
-	            Files.copy(bandCoverImage.getInputStream(), filePath);
-	            vo.setBand_cover_img(fileName);
-	        } catch (IOException e) {
-	            throw new RuntimeException("밴드 커버 이미지 저장 실패", e);
-	        }
-	    }
+		// 밴드 커버 이미지 저장
+		if (bandCoverImage != null && !bandCoverImage.isEmpty()) {
+			try {
+				String fileName = UUID.randomUUID() + "_" + bandCoverImage.getOriginalFilename();
+				Path filePath = Paths.get(uploadDir + fileName);
+				Files.copy(bandCoverImage.getInputStream(), filePath);
+				vo.setBand_cover_img(fileName); // 저장된 파일명 설정
+			} catch (IOException e) {
+				throw new RuntimeException("밴드 커버 이미지 저장 실패", e);
+			}
+		}
 
-	    // 3. 생성일자 세팅
-	    vo.setCreated_at(LocalDateTime.now());
+		// 생성일자 세팅
+		vo.setCreated_at(LocalDateTime.now());
 
-	    // 4. 밴드 기본 정보 등록 → band_id 생성됨
-	    bandInsertMapper.InsertBandInfo(vo);
-	    Long bandId = vo.getBand_id();
+		// 밴드 기본 정보 등록 → band_id 생성됨
+		bandInsertMapper.InsertBandInfo(vo);
+		Long bandId = vo.getBand_id();
 
-	    // 5. 장르 선택
-	    String[] types = {"genre", "position", "gender", "age"};
-	    String[] values = {vo.getSelectedGenres(), vo.getSelectedPositions(), vo.getSelectedGenders(), vo.getSelectedAges()};
+		// 장르 선택 처리
+		String[] types = { "genre", "position", "gender", "age" };
+		String[] values = { vo.getSelectedGenres(), vo.getSelectedPositions(), vo.getSelectedGenders(),
+				vo.getSelectedAges() };
 
-	    for (int i = 0; i < types.length; i++) {
-	        if (values[i] == null || values[i].isBlank()) continue;
+		for (int i = 0; i < types.length; i++) {
+			if (values[i] == null || values[i].isBlank())
+				continue;
 
-	        String[] splitTags = values[i].split(",");
-	        for (String tag : splitTags) {
-	            if (tag.trim().isEmpty()) continue;
+			String[] splitTags = values[i].split(",");
+			for (String tag : splitTags) {
+				if (tag.trim().isEmpty())
+					continue;
 
-	            BandInsertVo tagVo = new BandInsertVo();
-	            tagVo.setBand_id(bandId);
-	            tagVo.setTag_type(types[i]);
-	            tagVo.setTag_value(tag.trim());
+				BandInsertVo tagVo = new BandInsertVo();
+				tagVo.setBand_id(bandId);
+				tagVo.setTag_type(types[i]);
+				tagVo.setTag_value(tag.trim());
 
-	            bandInsertMapper.InsertBandTag(tagVo);
-	        }
-	    }
+				bandInsertMapper.InsertBandTag(tagVo);
+			}
+		}
 
+		// 리더 등록 
+		vo.setBand_id(bandId);
+		vo.setMember_type(MemberType.leader);
+		bandInsertMapper.InsertBandMember(vo);
 
-	    // 6. 리더 사진 저장 (photoList[0])
-	    if (photoList != null && photoList.size() > 0 && !photoList.get(0).isEmpty()) {
-	        try {
-	            MultipartFile leaderPhoto = photoList.get(0);
-	            String fileName = UUID.randomUUID() + "_" + leaderPhoto.getOriginalFilename();
-	            Path filePath = Paths.get(uploadDir + fileName);
-	            Files.copy(leaderPhoto.getInputStream(), filePath);
-	            vo.setPhoto(fileName);
-	        } catch (IOException e) {
-	            throw new RuntimeException("리더 사진 저장 실패", e);
-	        }
-	    } else {
-	        vo.setPhoto(null); // 또는 기본 이미지 처리
-	    }
+		// 일반 멤버 등록
+		for (int i = 0; i < generalMemberList.size(); i++) {
+			BandInsertVo member = generalMemberList.get(i);
+			member.setBand_id(bandId);
+			member.setMember_type(MemberType.member);
+			member.setCreated_at(LocalDateTime.now());
 
-	 // 리더도 대문자로 변환
-	    if (vo.getMember_mbti() != null) {
-	        vo.setMember_mbti(vo.getMember_mbti().toUpperCase());
-	    }
-	    System.out.println("📦 리더 MBTI 길이: " + (vo.getMember_mbti() != null ? vo.getMember_mbti().length() : "null"));
-	    System.out.println("📦 리더 MBTI 값: [" + vo.getMember_mbti() + "]");
-
-	    // 7. 리더 등록
-	    vo.setBand_id(bandId);
-	    vo.setMember_type(MemberType.leader);
-	    bandInsertMapper.InsertBandMember(vo);
-
-	    // 8. 일반 멤버 등록
-	    System.out.println("📦 일반 멤버 등록 시작: " + generalMemberList.size() + "명");
-	    for (int i = 0; i < generalMemberList.size(); i++) {
-	        BandInsertVo member = generalMemberList.get(i);
-	        member.setBand_id(bandId);
-	        member.setMember_type(MemberType.member);
-	        member.setCreated_at(LocalDateTime.now());
-	        
-	        if (member.getMember_mbti() != null) {
-	            member.setMember_mbti(member.getMember_mbti().toUpperCase());
-	        }
-	        
-	        System.out.println("🔍 멤버 " + (i + 1) + " user_id: " + member.getUser_id());
-		    System.out.println("🔍 멤버 " + (i + 1) + " stage_name: " + member.getStage_name());
-
-	        // 안전하게 photoList 인덱스 접근 (photoList[1]부터)
-	        if (photoList != null && photoList.size() > i + 1 && !photoList.get(i + 1).isEmpty()) {
-	            try {
-	                MultipartFile photo = photoList.get(i + 1);
-	                String fileName = UUID.randomUUID() + "_" + photo.getOriginalFilename();
-	                Path filePath = Paths.get(uploadDir + fileName);
-	                Files.copy(photo.getInputStream(), filePath);
-	                member.setPhoto(fileName);
-	            } catch (IOException e) {
-	                throw new RuntimeException("멤버 " + (i + 1) + " 사진 저장 실패", e);
-	            }
-	        } else {
-	            member.setPhoto(null); // 또는 기본 이미지 처리
-	        }
-
-	        bandInsertMapper.InsertBandMember(member);
-	    }
-	   
+			// 멤버 MBTI 대문자 변환 처리
+			if (member.getMember_mbti() != null) {
+				member.setMember_mbti(member.getMember_mbti().toUpperCase());
+			}
+			bandInsertMapper.InsertBandMember(member);
+		}
 	}
-
 
 	// 밴드 결성 입력폼 리더
 	// ✅ 2-1. username을 기반으로 user_id(UUID) 조회
@@ -175,12 +130,12 @@ public class BandInsertService {
 	public List<BandInsertVo> getAllBands() {
 		return bandInsertMapper.selectAllBands();
 	}
-	
-	// 필터 조건에 맞는 밴드를 list에서 조회
+
+	// 장르 필터 조건에 맞는 밴드를 list에서 조회
 	public List<BandInsertVo> getBandsByConditions(String genre, String position, String gender, String age) {
-	    return bandInsertMapper.selectBandsByConditions(genre, position, gender, age);
+		return bandInsertMapper.selectBandsByConditions(genre, position, gender, age);
 	}
-	
+
 	// band_id 호출
 	public Long getBandIdByBandName(String band_name) {
 		return bandInsertMapper.FindBandIdByBandId(band_name);
@@ -188,7 +143,18 @@ public class BandInsertService {
 
 	// 밴드명 검색창 검색
 	public List<BandInsertVo> searchByTeamNameOrPosition(String keyword) {
-	    return bandInsertMapper.searchBandsByName(keyword);
+		return bandInsertMapper.searchBandsByName(keyword);
+	}
+
+	// 전체 밴드 리스트 페이징 조회 (검색어 및 토글 필터 조건이 모두 비어있을 때만 작동)
+	public List<BandInsertVo> getAllBandsWithPaging(String genre, String position, String gender, String age,
+			String keyword, int start, int size) {
+		return bandInsertMapper.selectAllBandsWithPaging(genre, position, gender, age, keyword, start, size);
+	}
+
+	// 전체 밴드 수 조회 (페이징용) - 조건이 모두 비어 있을 때만 작동
+	public int countAllBands(String genre, String position, String gender, String age, String keyword) {
+		return bandInsertMapper.countAllBands(genre, position, gender, age, keyword);
 	}
 
 }

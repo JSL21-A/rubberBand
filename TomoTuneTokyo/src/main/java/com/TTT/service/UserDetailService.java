@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.TTT.domain.UserDto;
 import com.TTT.mapper.UserMapper;
+import com.TTT.security.CustomUserDetails;
 
 @Service
 public class UserDetailService implements UserDetailsService {
@@ -23,8 +24,7 @@ public class UserDetailService implements UserDetailsService {
 		if (userDto == null) {
 			throw new UsernameNotFoundException(username);
 		}
-		return org.springframework.security.core.userdetails.User.withUsername(userDto.getUsername())
-				.password(userDto.getPassword()).roles(userDto.getRole()).build();
+		return new CustomUserDetails(userDto);
 	}
 
 }
