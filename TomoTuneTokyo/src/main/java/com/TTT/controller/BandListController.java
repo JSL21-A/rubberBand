@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.TTT.domain.BandInsertVo;
 import com.TTT.domain.BandRecruitPostVo;
 import com.TTT.service.BandRecruitPostService;
 
@@ -30,16 +31,45 @@ public class BandListController {
 	@GetMapping("/list")
 	public String BandList(
 	    @RequestParam(value = "page", defaultValue = "1") int page,
+	    @RequestParam(value = "keyword", required = false) String keyword,
 	    Model model
 	) {
+	    System.out.println("검색어 keyword: '" + keyword + "'");
 	    int size = 6;
-	    int totalPosts = bandrecruitpostservice.getTotalPostCount();
-	    int totalPages = (int) Math.ceil((double) totalPosts / size);
 
-	    List<BandRecruitPostVo> postList = bandrecruitpostservice.getRecruitPostsByPage(page, size);
+	    List<BandRecruitPostVo> postList;
+	    int totalPages;
+	    int currentPage;
+
+	    if (keyword != null && !keyword.isBlank()) {
+	        // 검색어가 있을 때
+	        postList = bandrecruitpostservice.searchByTeamNameOrPosition(keyword);
+
+	        // band_name 세팅 (필요시)
+	        for (BandRecruitPostVo post : postList) {
+	            String bandName = bandrecruitpostservice.getBandNameById(post.getBand_id());
+	            post.setBand_name(bandName);
+	        }
+
+	        totalPages = 1; // 검색 결과는 페이징 없이 1페이지로 처리
+	        currentPage = 1;
+	        model.addAttribute("keyword", keyword);
+	    } else {
+	        // 검색어 없을 때 - 전체 목록 페이징
+	        int totalPosts = bandrecruitpostservice.getTotalPostCount();
+	        totalPages = (int) Math.ceil((double) totalPosts / size);
+	        postList = bandrecruitpostservice.getRecruitPostsByPage(page, size);
+
+	        for (BandRecruitPostVo post : postList) {
+	            String bandName = bandrecruitpostservice.getBandNameById(post.getBand_id());
+	            post.setBand_name(bandName);
+	        }
+
+	        currentPage = page;
+	    }
 
 	    model.addAttribute("postList", postList);
-	    model.addAttribute("currentPage", page);
+	    model.addAttribute("currentPage", currentPage);
 	    model.addAttribute("totalPages", totalPages);
 
 	    return "band/list";
@@ -65,7 +95,7 @@ public class BandListController {
 	    vo.setBand_id(band_id);
 	    vo.setUserId(userId);
 	    vo.setTitle(title);
-	    vo.setBandIntro(bandIntro);
+	    vo.setBand_intro(bandIntro);
 	    vo.setRecruitPosition(recruitPosition);
 	    vo.setActivityArea(activityArea);
 	    vo.setRecruitCondition(recruitCondition);

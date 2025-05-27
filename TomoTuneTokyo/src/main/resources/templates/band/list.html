@@ -38,10 +38,12 @@
 
 		<h2 class="board-title">メンバー募集</h2>
 		<!-- 🔍 검색창 -->
-		<form class="search-bar" th:action="@{/bandlist/list}" method="get">
-			<input type="text" class="search-input" name="keyword" placeholder="チーム名 or ポジション検索" th:value="${keyword}">
-			<button type="submit" class="search-btn">検索</button>
-		</form>
+		<div class="search-bar">
+			<form method="get" th:action="@{/bandlist/list}" style="display: contents;">
+			    <input type="text" class="search-input" name="keyword" placeholder="チーム名検索" th:value="${keyword}">
+			    <button type="submit" class="search-btn">検索</button>
+			  </form>
+			</div>
 		<div class="selected-tags-title"># 自分の好みであるキーワード検索</div>
 		<div class="selected-tags"></div>
 		<!-- 해시태그 선택 영역 -->
@@ -76,23 +78,21 @@
 			</div>
 		</div>
 
-
 		<!-- 카드 목록 -->
 		<div class="board-card-grid">
 		    <div class="board-card" th:each="post : ${postList}">
-				<a th:href="@{'/bandlist/view'(postId=${post.postId})}">
-					<p>[[${post.postId}]]</p>
-
-				  <img th:src="@{${post.image1Url != null ? '/images/uploads/bands/' + post.image1Url : '/images/default.png'}}" 
-				       alt="썸네일" class="card-image" />
+				<a th:href="@{'/bandlist/view(postId=${post.postId})}">
+				    <img th:src="@{${post.image1Url != null ? '/images/uploads/bands/' + post.image1Url : '/images/default.png'}}"
+				         alt="썸네일" class="card-image" />
 				</a>
-		        <div class="card-info">
-		            <h3 class="card-title" th:text="${post.title}">タイトル</h3>
-		            <p class="card-summary" th:text="${post.bandIntro}">バンド紹介</p>
-		            <p class="card-meta">
-		                <span th:text="${#dates.format(post.createdAt, 'yyyy.MM.dd')}">작성일</span>
-		            </p>
-		        </div>
+				<div class="card-info">
+					<p><strong>タイトル :</strong> <span th:text="${post.title}">sddssd</span></p>
+					<p><strong>バンド紹介 :</strong> <span th:text="${post.band_intro}">dassds</span></p>
+					<p><strong>バンド名 :</strong> <span th:text="${post.band_name}">LOL</span></p>
+				    <p class="card-meta">
+				        <span th:text="${#dates.format(post.createdAt, 'yyyy.MM.dd')}">작성일</span>
+				    </p>
+				</div>
 		    </div>
 		</div>
 
@@ -126,11 +126,10 @@
 								<label for="bandName">バンドのチーム名</label> <input type="text"
 									class="form-control" id="bandName" placeholder="Tomato Groove">
 							</div> -->
-								<div class="form-group">
-									<label for="bandIntro">バンド紹介</label>
-									<textarea class="form-control" id="bandIntro" name="bandIntro" rows="2"
-										placeholder="紹介をお願いします"></textarea>
-								</div>
+							<div class="form-group">
+							    <label for="bandIntro">バンド紹介</label>
+								<textarea class="form-control" id="bandIntro" name="bandIntro" rows="2" placeholder="紹介をお願いします"></textarea>
+							</div>
 
 								<!-- 리더 
 							<div class="form-group">
@@ -488,8 +487,8 @@
 		            li.dataset.bandId = band.band_id;
 
 		            li.addEventListener("click", () => {
-		              selectedBandId = li.dataset.bandId; // ✅ 전역 변수에 저장
-		              console.log("✅ 선택된 band_id:", selectedBandId);
+		              selectedBandId = li.dataset.bandId; // 전역 변수에 저장
+		              console.log("선택된 band_id:", selectedBandId);
 		              $('#selectBandModal').modal('hide');
 		              $('#applyModal').modal('show');
 		            });
@@ -506,6 +505,7 @@
 		        console.error("❌ 밴드 목록 조회 실패:", err);
 		      });
 		  });
+		  
 		  document.addEventListener("DOMContentLoaded", function () {
 		    const form = document.getElementById("applyForm");
 
@@ -574,16 +574,27 @@
 		  const keyword = new URLSearchParams(window.location.search).get("keyword");
 
 		  if (keyword) {
-		    document.querySelectorAll(".board-pagination a").forEach(link => {
-		      const url = new URL(link.href);
-		      url.searchParams.set("keyword", keyword);
-		      link.href = url.toString();
-		    });
-		  }
-		});
+		      document.querySelectorAll(".board-pagination a").forEach(link => {
+		        const url = new URL(link.href);
+		        url.searchParams.set("keyword", keyword);
+		        link.href = url.toString();
+		      });
+		    }
+		  });
 		</script>
+		
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+			  // 페이지가 로드될 때 keyword 쿼리 제거
+			  if (window.location.search.includes("keyword=")) {
+			    const url = new URL(window.location.href);
+			    url.searchParams.delete("keyword");
+			    // history.replaceState로 URL만 바꾸고 새로고침 없이 주소 변경
+			    history.replaceState(null, '', url.pathname);
+			  }
+			});
 
-
+		</script>
 
 	</div>
 

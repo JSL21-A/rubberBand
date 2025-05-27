@@ -35,4 +35,5 @@ public class BandActiveInsertVo {
 	// 뷰에서 사용할 날짜 포맷 (예: "5월")
 	private String formattedDate;
 	private String formattedDay;
+	
 }
