@@ -172,16 +172,19 @@
                 text-align: center;
                 font-size: 24px;
                 margin-bottom: 2%;
-            }
-
-            .viewHost {
-                background-color: #f4f6f8;
-                border-radius: 30px;
-                padding: 2% 1%;
+                width: 90%;
             }
 
             .post_note img {
                 width: 100%;
+            }
+
+            .titleBtn {
+                display: flex;
+                justify-content: space-between;
+                background-color: #f4f6f8;
+                border-radius: 30px;
+                padding: 2% 1%;
             }
         </style>
         <div id="view">
@@ -217,110 +220,165 @@
             <div id="middle">
                 <div class="view_title">
                     <div class="viewTitle" th:text="${post.post_title}"></div>
-                    <div class="viewHost" th:text="${post.nickname}"></div>
-                </div>
-                <div class="view_content">
-                    <div class="post_note" th:utext="${post.post_content}"></div>
-                    <div class="postBtn" th:if="${user != post.user_id}">
-                        <button class="post_report">通報</button>
-                        <button class="post_like">いいね</button>
-                        <button class="post_scrap">スクラップ</button>
-                    </div>
-                </div>
-                <div id="bottom">
-                    <div class="bottomUp">
-                        <button hx-get='./list'>リストへ</button>
-                        <th:block th:if="${post.board_id != 7}">
-                            <a id="onPost" hx-get="./write" hx-target="#content" hx-push-url="true">作成</a>
-                        </th:block>
-                    </div>
-                    <div id="comment" th:if="${post.board_id != 7}">
-                        <div id="writeComment">
-                            <div id="cnt">
-                                <p>コメント &nbsp;&nbsp;&nbsp;&nbsp;<th:block th:text="${comment_cnt}"></th:block>
-                                </p>
+                    <div class="titleBtn">
+                        <div class="viewHost" th:text="${post.nickname}"></div>
+                        <div>
+                            <div>
+                                <button>a</button>
+                                <button>b</button>
                             </div>
-                            <textarea name="comment" id="commentContent"></textarea>
-                            <button id="comment_submit">登録</button>
-                        </div>
-                        <div id="viewComment">
-                            <ul id="commentList">
-                                <li th:each="comment: ${comment}" th:if="${comment != null}" class="viewComment">
-                                    <div th:text="${comment.nickname}"></div>
-                                    <div th:text="${comment.comment_content}"></div>
-                                </li>
-                            </ul>
+                            <div>
+                                <button>c</button>
+                                <button>d</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="view_content">
+                <div class="post_note" th:utext="${post.post_content}"></div>
+                <div class="postBtn" th:if="${user != post.user_id}">
+                    <button class="post_report">通報</button>
+                    <button class="post_like">いいね</button>
+                    <button class="post_scrap">スクラップ</button>
+                </div>
+            </div>
+            <div id="bottom">
+                <div class="bottomUp">
+                    <button hx-get='./list' hx-target="#middle" hx-select="#middle" hx-push-url="true">リストへ</button>
+                    <th:block th:if="${post.board_id != 7}">
+                        <a id="onPost" hx-get="./write" hx-target="#content" hx-push-url="true">作成</a>
+                    </th:block>
+                </div>
+                <div id="comment" th:if="${post.board_id != 7}">
+                    <div id="writeComment">
+                        <div id="cnt">
+                            <p>コメント &nbsp;&nbsp;&nbsp;&nbsp;<th:block th:text="${comment_cnt}"></th:block>
+                            </p>
+                        </div>
+                        <textarea name="comment" id="commentContent"></textarea>
+                        <button id="comment_submit">登録</button>
+                    </div>
+                    <div id="viewComment">
+                        <ul id="commentList">
+                            <li th:each="comment: ${comment}" th:if="${comment != null}" class="viewComment">
+                                <div class="commentUser">
+                                    <div th:text="${comment.nickname}"></div>
+                                    <div th:text="${comment.comment_created_at}"></div>
+                                </div>
+                                <div class="commentWrapper">
+                                    <div th:text="${comment.comment_content}"></div>
+                                    <button class="comment_report"
+                                        th:attr="data-comment-id=${comment.comment_id}">通報</button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
-        <script data-init>
-            $(".sel_cate").on("click", function () {
-                if ($(this).data('board-id') == '7') {
-                    $('#onPost').hide();
-                } else {
-                    $('#onPost').show();
-                }
-            });
+    </div>
+    <script data-init>
+        $(".sel_cate").on("click", function () {
+            if ($(this).data('board-id') == '7') {
+                $('#onPost').hide();
+            } else {
+                $('#onPost').show();
+            }
+        });
 
-            //신고버튼 누르면
-            //.off가 달린 이유는 동적으로 로드하면서 레이아웃에 아래에 보이는 얘랑 동적으로 불러온 얘랑
-            //겹쳐버려서 3번씩 눌리기때문에 한번 해제해주고 이벤트 발생하는 식으로 해결.
-            $(document).off("click", ".post_report").on("click", ".post_report", function (e) {
-                e.stopPropagation();
-                console.log("on?");
-            });
+        //신고버튼 누르면
+        //.off가 달린 이유는 동적으로 로드하면서 레이아웃에 아래에 보이는 얘랑 동적으로 불러온 얘랑
+        //겹쳐버려서 3번씩 눌리기때문에 한번 해제해주고 이벤트 발생하는 식으로 해결.
+        $(document).off("click", ".post_report").on("click", ".post_report", function () {
+            type = "post";
+            target = '[[${post.post_id}]]';
+            doReport(target, type);
+        });
 
-            // 작성 버튼이 눌렸을때
-            $(document).off("click", "#comment_submit").on("click", "#comment_submit", function () {
-                $(this).prop("disabled", true);
-                // 내용이 공백이거나 비어있는지 체크
-                contentEmpty = $("#commentContent").val().trim();
+        $(document).off("click", ".comment_report").on("click", ".comment_report", function () {
+            type = "comment";
+            target = $(this).data("comment-id");
+            doReport(target, type);
+        });
 
-                if (contentEmpty.length < 2) {
-                    if (contentEmpty == "") {
-                        alert("内容を入力してください。");
-                    } else {
-                        alert("二文字以上入力してください。");
-                    }
-                    $(this).prop("disabled", false);
-                    $("#commentContent").focus();
-                    return;
-                }
-
-                const formData = new FormData();
-
-                const contentHtml = $("#commentContent").val();
-                formData.append("comment", contentHtml);
-
-                const postId = '[[${post.post_id}]]';
-
-                formData.append("post_id", postId);
-
-                const csrfToken = $("meta[name='_csrf']").attr("content");
-                const csrfHeader = $("meta[name='_csrf_header']").attr("content");
-
+        function doReport(target, type) {
+            const report = confirm("通報しますか？");
+            const reportData = new FormData();
+            reportData.append("type", type);
+            if (report) {
                 $.ajax({
-                    url: "./commentWrite",
+                    url: "./report?target=" + target,
                     method: "POST",
-                    data: formData,
+                    data: reportData,
                     processData: false,
                     contentType: false,
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader(csrfHeader, csrfToken);
                     },
                     success: function (res) {
-                        alert("コメントが登録されました。");
-                        $("#comment").load("/user/view?post=30 #comment > *");
+                        alert("通報されました。");
+                        window.location.href = "./list"
                     },
                     error: function (err) {
                         alert("登録失敗");
                         console.error(err);
                     },
                 });
+            } else {
+                return;
+            }
+        }
+
+        // 작성 버튼이 눌렸을때
+        $(document).off("click", "#comment_submit").on("click", "#comment_submit", function () {
+            $(this).prop("disabled", true);
+            // 내용이 공백이거나 비어있는지 체크
+            contentEmpty = $("#commentContent").val().trim();
+
+            if (contentEmpty.length < 2) {
+                if (contentEmpty == "") {
+                    alert("内容を入力してください。");
+                } else {
+                    alert("二文字以上入力してください。");
+                }
+                $(this).prop("disabled", false);
+                $("#commentContent").focus();
+                return;
+            }
+
+            const formData = new FormData();
+
+            const contentHtml = $("#commentContent").val();
+            formData.append("comment", contentHtml);
+
+            const postId = '[[${post.post_id}]]';
+
+            formData.append("post_id", postId);
+
+            const csrfToken = $("meta[name='_csrf']").attr("content");
+            const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+            $.ajax({
+                url: "./commentWrite",
+                method: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(csrfHeader, csrfToken);
+                },
+                success: function (res) {
+                    alert("コメントが登録されました。");
+                    $("#comment").load("/user/view?post=" + postId + " #comment > *");
+                },
+                error: function (err) {
+                    alert("登録失敗");
+                    console.error(err);
+                },
             });
-        </script>
+        });
+    </script>
     </div>
 </body>
 

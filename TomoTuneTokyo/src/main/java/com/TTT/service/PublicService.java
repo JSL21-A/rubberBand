@@ -51,4 +51,20 @@ public class PublicService {
     public void insertComment(PostVo vo) {
         publicMapper.insertComment(vo);
     }
+
+    public String getUserIdByPostId(Long target) {
+        return publicMapper.getUserIdByPostId(target);
+    }
+
+    public void postReport(String user_id, String target_id, Long target) {
+        publicMapper.postReport(user_id, target_id, target);
+    }
+
+    public String getUserIdBycommentId(Long target) {
+        return publicMapper.getUserIdByCommentId(target);
+    }
+
+    public void commentReport(String user_id, String target_id, Long target) {
+        publicMapper.commentReport(user_id, target_id, target);
+    }
 }

@@ -246,12 +246,29 @@ public class publicController {
     }
 
     @PostMapping("/commentWrite")
-    public ResponseEntity<Object> postMethodName(@RequestParam("comment") String comment,
+    public ResponseEntity<Object> writeComment(@RequestParam("comment") String comment,
             @RequestParam("post_id") Long post_id, Principal principal, PostVo vo) {
         vo.setComment_content(comment);
         vo.setPost_id(post_id);
         vo.setUser_id(publicService.searchUserByUserName(principal.getName()));
         publicService.insertComment(vo);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/report")
+    public ResponseEntity<Object> reportPost(@RequestParam("target") Long target, @RequestParam("type") String type,
+            Principal principal) {
+        if (type.equals("post")) {
+            String target_id = publicService.getUserIdByPostId(target);
+            String user_id = publicService.searchUserByUserName(principal.getName());
+            publicService.postReport(user_id, target_id, target);
+        }
+
+        if (type.equals("comment")) {
+            String target_id = publicService.getUserIdBycommentId(target);
+            String user_id = publicService.searchUserByUserName(principal.getName());
+            publicService.commentReport(user_id, target_id, target);
+        }
         return ResponseEntity.ok().build();
     }
 

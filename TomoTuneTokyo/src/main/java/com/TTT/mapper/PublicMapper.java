@@ -42,4 +42,21 @@ public interface PublicMapper {
 
     @Insert("INSERT INTO comments(post_id, user_id, comment_content) VALUES(#{post_id}, #{user_id}, #{comment_content}) ")
     void insertComment(PostVo vo);
+
+    @Select("SELECT user_id FROM posts WHERE post_id = #{post_id}")
+    String getUserIdByPostId(Long post_id);
+
+    @Select("SELECT user_id FROM comments WHERE comment_id = #{comment_id}")
+    String getUserIdByCommentId(Long comment_id);
+
+    @Insert("INSERT INTO reports(user_id, target_id, post_id) VALUES(#{user_id}, #{target_id}, #{post_id})")
+    void postReport(@Param("user_id") String user_id,
+            @Param("target_id") String target_id,
+            @Param("post_id") Long post_id);
+
+    @Insert("INSERT INTO reports(user_id, target_id, comment_id) VALUES(#{user_id}, #{target_id}, #{comment_id})")
+    void commentReport(@Param("user_id") String user_id,
+            @Param("target_id") String target_id,
+            @Param("comment_id") Long commnet_id);
+
 }
