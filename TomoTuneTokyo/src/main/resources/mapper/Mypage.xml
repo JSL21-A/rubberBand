@@ -5,58 +5,146 @@
 
 <mapper namespace="com.TTT.mapper.MypageMapper">
 
-	<!-- 이력서 작성 -->
-	<insert id="insertResume"
-		parameterType="com.TTT.domain.MypageDto" useGeneratedKeys="true"
-		keyProperty="resumeId">
-		INSERT INTO resume (
-		user_id,
-		stage_name,
-		gender,
-		birth,
-		sns,
-		area,
-		instrument,
-		genre,
-		practice_date,
-		practice_time,
-		detail_time,
-		note
-		) VALUES (
-		#{userId},
-		#{stageName},
-		#{gender},
-		#{birth},
-		#{sns},
-		#{area},
-		#{instrument},
-		#{genre},
-		#{practiceDate, jdbcType=VARCHAR},
-		#{practiceTime},
-		#{detailTime},
-		#{note}
-		)
-	</insert>
-	<!-- 밴드활동이력 추가-->
-	<insert id="insertBandHistory"
-		parameterType="com.TTT.domain.BandHistoryDto">
-		INSERT INTO band_history (
-		resume_id, band_name, band_part, band_start, band_end
-		) VALUES (
-		#{resumeId}, #{bandName}, #{bandPart}, #{bandStart}, #{bandEnd}
-		)
-	</insert>
-	<!-- 이력서페이지이동 (작성 or 조회) -->
-	<select id="countResumeByUserId" parameterType="String" resultType="int">
-    SELECT COUNT(*) 
-    FROM resume 
+  <!-- 이력서 조회 -->
+  <select id="selectResumeByUserId" resultType="com.TTT.domain.MypageDto" parameterType="String">
+    SELECT 
+      resume_id AS resumeId,
+      user_id AS userId,
+      stage_name AS stageName,
+      gender,
+      birth,
+      sns,
+      phone_number AS phoneNumber,
+      area,
+      instrument,
+      instrument_etc AS instrumentEtc,
+      genre,
+      genre_etc AS genreEtc,
+      practice_date AS practiceDate,
+      practice_time AS practiceTime,
+      detail_time AS detailTime,
+      note
+    FROM resume
     WHERE user_id = #{userId}
-</select>
- <!-- 이력서조회 -->
-<select id="selectResumeByUserId" resultType="com.TTT.domain.MypageDto" parameterType="String">
-    SELECT * FROM resume WHERE user_id = #{userId} LIMIT 1
-</select>
+    LIMIT 1
+  </select>
 
-	
+  <!-- 이력서 작성 -->
+  <insert id="insertResume"
+          parameterType="com.TTT.domain.MypageDto"
+          useGeneratedKeys="true"
+          keyProperty="resumeId">
+    INSERT INTO resume (
+      user_id,
+      stage_name,
+      gender,
+      birth,
+      sns,
+      phone_number,
+      area,
+      instrument,
+      instrument_etc,
+      genre,
+      genre_etc,
+      practice_date,
+      practice_time,
+      detail_time,
+      note
+    ) VALUES (
+      #{userId},
+      #{stageName},
+      #{gender},
+      #{birth},
+      #{sns},
+      #{phoneNumber},
+      #{area},
+      #{instrument},
+      #{instrumentEtc},
+      #{genre},
+      #{genreEtc},
+      #{practiceDate, jdbcType=VARCHAR},
+      #{practiceTime},
+      #{detailTime},
+      #{note}
+    )
+  </insert>
+
+  <!-- 밴드 활동 이력 -->
+  <insert id="insertBandHistory" parameterType="com.TTT.domain.BandHistoryDto">
+    INSERT INTO band_history (
+      resume_id, band_name, band_part, band_start, band_end
+    ) VALUES (
+      #{resumeId}, #{bandName}, #{bandPart}, #{bandStart}, #{bandEnd}
+    )
+  </insert>
+
+  <select id="selectBandHistoryByResumeId" parameterType="int" resultType="com.TTT.domain.BandHistoryDto">
+    SELECT
+      band_name AS bandName,
+      band_part AS bandPart,
+      band_start AS bandStart,
+      band_end AS bandEnd
+    FROM band_history
+    WHERE resume_id = #{resumeId}
+  </select>
+
+  <!-- 이력서 존재 여부 확인 -->
+  <select id="countResumeByUserId" parameterType="String" resultType="int">
+    SELECT COUNT(*) FROM resume WHERE user_id = #{userId}
+  </select>
+  
+  <!-- 이력서 조회 -->
+  <select id="findById" parameterType="long" resultType="com.TTT.domain.MypageDto">
+  SELECT 
+    resume_id AS resumeId,
+    user_id AS userId,
+    stage_name AS stageName,
+    gender,
+    birth,
+    sns,
+    phone_number AS phoneNumber,
+    area,
+    instrument,
+    instrument_etc AS instrumentEtc,
+    genre,
+    genre_etc AS genreEtc,
+    practice_date AS practiceDate,
+    practice_time AS practiceTime,
+    detail_time AS detailTime,
+    note
+  FROM resume
+  WHERE resume_id = #{id}
+</select>
+  
+
+  <!-- 삭제 -->
+  <delete id="deleteResumeByUserId" parameterType="String">
+    DELETE FROM resume WHERE user_id = #{userId}
+  </delete>
+
+  <delete id="deleteBandHistoryByResumeId" parameterType="int">
+    DELETE FROM band_history WHERE resume_id = #{resumeId}
+  </delete>
+  
+  <update id="updateResume" parameterType="com.TTT.domain.MypageDto">
+    UPDATE resume
+    SET
+        stage_name = #{stageName},
+        gender = #{gender},
+        birth = #{birth},
+        sns = #{sns},
+        phone_number = #{phoneNumber},
+        area = #{area},
+        instrument = #{instrument},
+        instrument_etc = #{instrumentEtc},
+        genre = #{genre},
+        genre_etc = #{genreEtc},
+        practice_date = #{practiceDate},
+        practice_time = #{practiceTime},
+        detail_time = #{detailTime},
+        note = #{note}
+    WHERE resume_id = #{resumeId}
+</update>
+  
 
 </mapper>

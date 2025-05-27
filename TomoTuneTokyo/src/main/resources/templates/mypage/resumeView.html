@@ -3,91 +3,44 @@
 <head>
 <meta charset="UTF-8" />
 <title>MYPAGE Resume View</title>
+
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+
 <style>
 body {
 	font-family: 'Noto Sans KR', sans-serif;
-	background-color: #f4f6f8;
+	background-color: #edf1f7;
 	margin: 0;
 	padding: 2rem;
-	color: #1f2d3d;
+	color: #1f2937;
 }
 
 .resume-preview {
-	max-width: 840px;
+	max-width: 800px;
 	margin: 0 auto;
 	background: #ffffff;
 	padding: 2.5rem 3rem;
-	border-radius: 14px;
-	box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
-}
-
-.resume-preview h2 {
-	font-size: 0.9rem;
-	font-weight: 600;
-	color: #111827;
-	margin-bottom: 1.5rem;
-	padding-bottom: 1rem;
-}
-
-.section {
-	margin-bottom: 2rem;
-}
-
-.section h3 {
-	font-size: 0.9rem;
-	font-weight: 500;
-	margin-bottom: 0.8rem;
-	color: #374151;
-}
-
-.info-item {
-	margin-bottom: 0.6rem;
-	line-height: 1.6;
-	color: #4b5563;
-}
-
-.info-label {
-	display: inline-block;
-	font-weight: 500;
-	color: #111827;
-	min-width: 80px;
-}
-
-.tag {
-	display: inline-block;
-	background-color: #eef2f7;
-	color: #1d4ed8;
-	padding: 6px 14px;
-	border-radius: 9999px;
-	font-size: 0.875rem;
-	margin: 0.3rem 0.4rem 0 0;
-	font-weight: 500;
-}
-
-.self-intro {
-	background-color: #f9fafb;
+	border-radius: 16px;
+	box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
 	border: 1px solid #e5e7eb;
-	border-radius: 8px;
-	padding: 1.2rem 1.4rem;
-	font-size: 0.9rem;
-	line-height: 1.7;
-	color: #374151;
 }
 
 .title-row {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	border-bottom: 1px solid #e5e7eb;
+	margin-bottom: 2rem;
 	padding-bottom: 1rem;
-	margin-bottom: 1.5rem;
+	border-bottom: 2px solid #d1d5db;
 }
 
 .title-row h2 {
-	font-size: 1.2rem;
-	font-weight: 600;
-	margin: 0;
+	font-size: 1.6rem;
+	font-weight: 700;
 	color: #111827;
+	margin: 0;
 }
 
 .action-buttons {
@@ -96,37 +49,175 @@ body {
 }
 
 .action-btn {
-	padding: 0.45rem 1rem;
-	font-size: 0.85rem;
-	border-radius: 6px;
+	padding: 0.5rem 1.1rem;
+	font-size: 0.9rem;
+	border-radius: 8px;
 	border: none;
 	cursor: pointer;
-	transition: background-color 0.2s ease;
+	font-weight: 600;
+	transition: all 0.2s ease;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .edit-btn {
-	background-color: #000;
-	color: white;
+	background-color: #000000;
+	color: #ffffff;
 }
 
 .edit-btn:hover {
-	background-color: #555;
+	opacity: 0.85;
 }
 
 .delete-btn {
-	background-color: #000;
-	color: white;
+	background-color: transparent;
+	color: #000000;
+	border: 1px solid #000000;
 }
 
 .delete-btn:hover {
-	background-color: #555;
+	background-color: #f3f4f6;
+}
+
+.section {
+	margin-bottom: 2.2rem;
+}
+
+.section h3 {
+	font-size: 1.05rem;
+	font-weight: 600;
+	color: #1f2937;
+	margin-bottom: 1rem;
+	position: relative;
+	padding-left: 0.6rem;
+}
+
+.section h3::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 5px;
+	width: 4px;
+	height: 1.2rem;
+	background-color: #3b82f6;
+	border-radius: 2px;
+}
+
+.info-item {
+	margin-bottom: 0.8rem;
+	font-size: 0.95rem;
+	line-height: 1.6;
+	color: #374151;
+}
+
+.info-label {
+	display: inline-block;
+	font-weight: 600;
+	color: #111827;
+	min-width: 90px;
+}
+
+.tag {
+	display: inline-block;
+	background-color: #eef2ff;
+	color: #4338ca;
+	padding: 6px 14px;
+	border-radius: 9999px;
+	font-size: 0.85rem;
+	margin: 0.3rem 0.4rem 0 0;
+	font-weight: 500;
+	box-shadow: inset 0 0 0 1px #c7d2fe;
+}
+
+.self-intro {
+	background-color: #f3f4f6;
+	border: 1px solid #d1d5db;
+	border-radius: 10px;
+	padding: 1.2rem 1.4rem;
+	font-size: 0.95rem;
+	line-height: 1.7;
+	color: #374151;
+	white-space: pre-wrap;
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+/* 이력서 삭제 modal */
+/* === 삭제 확인 모달 (Resume Delete Modal) === */
+#deleteModal.modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0, 0, 0, 0.4);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 3000;
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+#deleteModal.modal-overlay.active {
+	visibility: visible;
+	opacity: 1;
+}
+
+#deleteModal .modal-content {
+	background-color: #fff;
+	padding: 2rem;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	text-align: center;
+	max-width: 420px;
+	width: 90%;
+	font-size: 1rem;
+}
+
+#deleteModal .modal-content p {
+	margin-bottom: 1.2rem;
+	color: #111;
+}
+
+#deleteModal .modal-buttons {
+	display: flex;
+	justify-content: center;
+	gap: 1rem;
+}
+
+#deleteModal .modal-buttons button {
+	flex: 1;
+	padding: 0.5rem 1rem;
+	border-radius: 6px;
+	border: none;
+	cursor: pointer;
+	font-size: 0.95rem;
+	transition: background-color 0.2s ease;
+}
+
+#deleteModal .modal-buttons button:first-child {
+	background-color: #000;
+	color: #fff;
+}
+
+#deleteModal .modal-buttons button:first-child:hover {
+	background-color: #333;
+}
+
+#deleteModal .modal-buttons button:last-child {
+	background-color: #ccc;
+	color: #111;
+}
+
+#deleteModal .modal-buttons button:last-child:hover {
+	background-color: #bbb;
 }
 </style>
 </head>
 <body>
 	<div class="resume-preview">
 		<div class="title-row">
-			<h2>履歴書プレビュー</h2>
+			<h2>レジュメプレビュー</h2>
 			<div class="action-buttons">
 				<button class="action-btn edit-btn" onclick="editResume()">編集</button>
 				<button class="action-btn delete-btn" onclick="deleteResume()">削除</button>
@@ -134,24 +225,29 @@ body {
 		</div>
 
 		<div class="section">
-			<div class="info-item">
+			<div class="info-item"
+				th:if="${#strings.isEmpty(resume.stageName) == false}">
 				<span class="info-label">活動名:</span> <span
 					th:text="${resume.stageName}"></span>
 			</div>
-			<div class="info-item">
+			<div class="info-item"
+				th:if="${#strings.isEmpty(resume.gender) == false}">
 				<span class="info-label">性別:</span> <span
 					th:switch="${resume.gender}"> <span th:case="'F'">女性</span>
 					<span th:case="'M'">男性</span> <span th:case="*">未設定</span>
 				</span>
 			</div>
-			<div class="info-item">
+			<div class="info-item"
+				th:if="${#strings.isEmpty(resume.birth) == false}">
 				<span class="info-label">生年月日:</span> <span
 					th:text="${resume.birth}"></span>
 			</div>
-			<div class="info-item">
+			<div class="info-item"
+				th:if="${#strings.isEmpty(resume.sns) == false}">
 				<span class="info-label">Eメール:</span> <span th:text="${resume.sns}"></span>
 			</div>
-			<div class="info-item">
+			<div class="info-item"
+				th:if="${#strings.isEmpty(resume.phoneNumber) == false}">
 				<span class="info-label">連絡先:</span> <span
 					th:text="${resume.phoneNumber}"></span>
 			</div>
@@ -175,38 +271,123 @@ body {
 
 		<div class="section" th:if="${practiceDayList != null}">
 			<h3>練習可能な曜日</h3>
-			<span class="tag" th:each="day : ${practiceDayList}" th:text="${day}">曜日</span>
+			<span class="tag" th:each="day : ${practiceDayList}"> <span
+				th:switch="${day}"> <span th:case="'MON'">月</span> <span
+					th:case="'TUE'">火</span> <span th:case="'WED'">水</span> <span
+					th:case="'THU'">木</span> <span th:case="'FRI'">金</span> <span
+					th:case="'SAT'">土</span> <span th:case="'SUN'">日</span> <span
+					th:case="*">不明</span>
+			</span>
+			</span>
 		</div>
 
 		<div class="section">
 			<h3>練習可能時間帯</h3>
-			<div class="info-item" th:text="${resume.practiceTime}">午後（12時〜18時）</div>
-			<div class="info-item">
+			<span th:switch="${resume.practiceTime}"> <span
+				th:case="'MORNING'">午前（06時〜12時）</span> <span th:case="'AFTERNOON'">午後（12時〜18時）</span>
+				<span th:case="'EVENING'">夜（18時〜22時）</span> <span th:case="'OTHER'">その他</span>
+				<span th:case="*">未設定</span>
+			</span>
+
+			<div class="info-item"
+				th:if="${!#strings.isEmpty(resume.detailTime)}">
 				<span class="info-label">具体的な時間:</span> <span
-					th:text="${resume.detailTime}">13時〜17時</span>
+					th:text="${resume.detailTime}">例: 18時〜22時</span>
 			</div>
 		</div>
 
-		<div class="section">
+		<div class="section"
+			th:if="${resume.bandHistoryList != null and !resume.bandHistoryList.isEmpty()}">
+			<h3>バンド活動履歴</h3>
+			<div th:each="band : ${resume.bandHistoryList}" class="info-item">
+				<div>
+					<span class="info-label">バンド名:</span> <span
+						th:text="${band.bandName}">Oasis</span>
+				</div>
+				<div>
+					<span class="info-label">ポジション:</span> <span
+						th:text="${band.bandPart}">ボーカル</span>
+				</div>
+				<div>
+					<span class="info-label">活動期間:</span> <span
+						th:text="${band.bandStart}">2021-01</span> ～ <span
+						th:text="${band.bandEnd}">2022-05</span>
+				</div>
+				<hr
+					style="border: none; border-top: 1px dashed #ccc; margin: 0.5rem 0;">
+			</div>
+		</div>
+
+
+		<div class="section" th:if="${!#strings.isEmpty(resume.note)}">
 			<h3>自己紹介</h3>
 			<div class="self-intro" th:text="${resume.note}">
 				ギター歴3年、ロックバンド経験あり。よろしくお願いします！</div>
 		</div>
 
-		<script>
-      function editResume() {
-        window.location.href = "/mypage/resumeinsert";
-      }
-
-      function deleteResume() {
-        if (confirm("この履歴書を削除しますか？")) {
-          fetch('/mypage/delete', { method: 'POST' }).then(() => {
-            alert("履歴書が削除されました");
-            location.href = '/mypage/account';
-          });
-        }
-      }
-    </script>
 	</div>
+
+	<!-- 삭제 확인 모달 -->
+	<div id="deleteModal" class="modal-overlay">
+		<div class="modal-content">
+			<p>このレジュメを削除しますか？</p>
+			<div class="modal-buttons">
+				<button id="confirmDelete">はい</button>
+				<button onclick="closeDeleteModal()">いいえ</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- 이력서 수정폼 이동 -->
+	<div id="resumeData" th:data-id="${resume.resumeId}"></div>
+
+	<script>
+function editResume() {
+  const resumeId = document.getElementById("resumeData").dataset.id;
+  window.location.href = `/mypage/resumeEdit/${resumeId}`;
+}
+</script>
+	<script>
+function editResume() {
+	  const resumeId = document.getElementById("resumeData").dataset.id;
+	  window.location.href = `/mypage/resumeEdit/${resumeId}`;
+	}
+
+function deleteResume() {
+	document.getElementById("deleteModal").classList.add("active");
+}
+
+function closeDeleteModal() {
+	document.getElementById("deleteModal").classList.remove("active");
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+	const confirmBtn = document.getElementById("confirmDelete");
+	if (!confirmBtn) return;
+
+	confirmBtn.addEventListener("click", () => {
+		const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+		const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+		fetch('/mypage/delete', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				[header]: token
+			},
+			body: JSON.stringify({})
+		})
+		.then(res => {
+			if (res.ok) {
+				location.href = '/mypage/account';
+			} else {
+				alert("削除に失敗しました");
+			}
+		})
+		.catch(() => alert("通信エラーが発生しました"))
+		.finally(() => closeDeleteModal());
+	});
+});
+</script>
 </body>
 </html>

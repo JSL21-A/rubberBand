@@ -1,97 +1,117 @@
-  /* 계정 및 프로필 관리 페이지 */
-  
-  body {
-      font-family: 'Noto Sans JP', sans-serif;
-      background: #fff;
-      margin: 0;
-      padding: 3rem 1rem;
-      color: #111;
-    }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #f9fafb;
+  margin: 0;
+  padding: 3rem 1rem;
+  color: #111;
+}
 
-    .container {
-      max-width: 720px;
-      margin: auto;
-    }
+.container {
+  max-width: 720px;
+  margin: auto;
+  padding: 0 1rem;
+}
 
-    h1 {
-      text-align: center;
-      font-size: 1.4rem;
-      margin-bottom: 2.5rem;
-      color: #333;
-    }
+h1 {
+  text-align: center;
+  font-size: 1.6rem;
+  margin-bottom: 2.5rem;
+  color: #222;
+}
 
-    .section {
-      border-top: 1px solid #eee;
-      padding: 1.8rem 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1.5rem;
-    }
+a.btn-outline,
+a.btn-outline:visited,
+a.btn-outline:active,
+a.btn-outline:focus {
+  color: #fff;
+  text-decoration: none;
+}
 
-    .section:first-of-type {
-      border-top: none;
-    }
+a.btn-outline:hover {
+  background-color: #111;
+  color: #fff; /* hover 시에도 유지 */
+}
 
-    .section-title {
-      font-weight: bold;
-      color: #444;
-      margin-bottom: 0.3rem;
-    }
 
-    .section-desc {
-      font-size: 0.9rem;
-      color: #888;
-    }
+.section {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1.8rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
 
-    .info-block {
-      flex: 1;
-    }
+.section:last-of-type {
+  border-bottom: none;
+}
 
-    .profile-photo {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 1px solid #ccc;
-    }
+.section-title {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.4rem;
+  font-size: 1.05rem;
+}
 
-    .btn-outline {
-      border: 1px solid #999;
-      background: #fff;
-      padding: 0.4rem 1rem;
-      border-radius: 999px;
-      font-size: 0.85rem;
-      color: #333;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
+.section-desc {
+  font-size: 0.88rem;
+  color: #6b7280;
+}
 
-    .btn-outline:hover {
-      background: #000;
-      color: #fff;
-    }
+.info-block {
+  flex: 1;
+}
 
-    .btn-text-link {
-      font-size: 0.85rem;
-      color: #888;
-      text-decoration: underline;
-      cursor: pointer;
-    }
+.profile-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
 
-    .email {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
+.btn-outline {
+  background: #000;
+  border: none;
+  color: #fff;
+  padding: 0.5rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-block;
+  text-decoration: none;
+}
 
-    .nickname {
-      font-weight: bold;
-      font-size: 1rem;
-      margin-bottom: 0.2rem;
-    }
+.btn-outline:hover {
+  opacity: 0.85;
+}
 
-    .subtext {
-      font-size: 0.88rem;
-      color: #666;
-    }
+.btn-text-link {
+  font-size: 0.88rem;
+  color: #888;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-text-link:hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+.nickname {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
+
+.subtext {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.button-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
