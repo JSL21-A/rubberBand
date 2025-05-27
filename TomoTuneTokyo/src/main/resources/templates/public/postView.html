@@ -288,8 +288,10 @@
                 formData.append("comment", contentHtml);
 
                 const postId = '[[${post.post_id}]]';
+                const postUserId = '[[${post.user_id}]]';
 
                 formData.append("post_id", postId);
+                formData.append("post_user_id", postUserId);
 
                 const csrfToken = $("meta[name='_csrf']").attr("content");
                 const csrfHeader = $("meta[name='_csrf_header']").attr("content");

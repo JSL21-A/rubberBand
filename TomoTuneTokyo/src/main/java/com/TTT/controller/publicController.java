@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.TTT.domain.PostVo;
 import com.TTT.service.AdminService;
+import com.TTT.service.NotificationService;
 import com.TTT.service.PublicService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +39,9 @@ public class publicController {
 
     @Autowired
     PublicService publicService;
+    
+    @Autowired
+    NotificationService notificationService;
 
     // 글 목록 보여주기
     @GetMapping("/list")
@@ -247,11 +251,16 @@ public class publicController {
 
     @PostMapping("/commentWrite")
     public ResponseEntity<Object> postMethodName(@RequestParam("comment") String comment,
-            @RequestParam("post_id") Long post_id, Principal principal, PostVo vo) {
+            @RequestParam("post_id") Long post_id, @RequestParam("post_user_id") String post_user_id ,Principal principal, PostVo vo) {
         vo.setComment_content(comment);
         vo.setPost_id(post_id);
         vo.setUser_id(publicService.searchUserByUserName(principal.getName()));
         publicService.insertComment(vo);
+        
+        //알림 전송 (post_user_id는 게시물 작성자)
+        notificationService.sendNotification(post_user_id , "comment", "新しいコメントが届きました。", "/user/view?post=" + post_id);
+        
+        
         return ResponseEntity.ok().build();
     }
 
