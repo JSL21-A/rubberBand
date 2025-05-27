@@ -9,5 +9,9 @@ public interface NotificationRepository
 
     // 예: 특정 사용자의 읽지 않은 알림만 조회
     List<Notification> findByUserIdAndIsReadFalse(String userId);
+    
+    //안읽은 알림 개수 리턴
+    long countByUserIdAndIsReadFalse(String userId);
+
 
 }
