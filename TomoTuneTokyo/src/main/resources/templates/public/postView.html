@@ -209,7 +209,7 @@
             <div id="middle">
                 <div class="post_title">
                     <div class="viewTitle" th:text="${post.post_title}"></div>
-                    <div class="viewHost" th:text="${post.nickname}"></div>
+                    <div class="viewHost" th:attr="data-user-id=${post.user_id}" th:text="${post.nickname}"></div>
                 </div>
                 <div class="view_content">
                     <div class="post_note" th:utext="${post.post_content}"></div>
@@ -315,6 +315,19 @@
                     },
                 });
             });
+            
+            $(document).on('click', '.viewHost', function(){
+            	const $host = $(this);
+            	const targetId = $host.data('user-id');
+            	if(!targetId || targetId === window.currentUser) return;
+            	
+            	$('.inline-chat-btn').remove();
+            	
+            	const $btn = $('<button class = "inline-chat-btn">チャットする</button>');
+            	$host.after($btn);
+            });
+            
+            
         </script>
     </div>
 </body>
