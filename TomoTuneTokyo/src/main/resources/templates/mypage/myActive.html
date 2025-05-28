@@ -112,31 +112,22 @@
     </div>
 
     <table>
-      <thead>
-        <tr>
-          <th class="checkbox"><input type="checkbox"></th>
-          <th>タイトル</th>
-          <th>投稿日</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="checkbox"><input type="checkbox"></td>
-          <td><a href="#">初ライブ最高でした！</a></td>
-          <td>2025-04-01</td>
-        </tr>
-        <tr>
-          <td class="checkbox"><input type="checkbox"></td>
-          <td><a href="#">メンバー募集中</a></td>
-          <td>2025-04-02</td>
-        </tr>
-        <tr>
-          <td class="checkbox"><input type="checkbox"></td>
-          <td><a href="#">バンド応募：Moonlight Cats</a></td>
-          <td>2025-04-05</td>
-        </tr>
-      </tbody>
-    </table>
+  <thead>
+    <tr>
+      <th>コメント内容</th>
+      <th>投稿日</th>
+      <th>投稿リンク</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="comment : ${commentList}">
+      <td th:text="${comment.commentContent}">サンプルコメント</td>
+      <td th:text="${#temporals.format(comment.commentCreatedAt.toLocalDateTime(), 'yyyy-MM-dd')}">2025-01-01</td>
+      <td><a th:href="@{/post/view/{id}(id=${comment.postId})}">投稿を見る</a></td>
+    </tr>
+  </tbody>
+</table>
+
 
     <div class="controls">
       <button>削除</button>

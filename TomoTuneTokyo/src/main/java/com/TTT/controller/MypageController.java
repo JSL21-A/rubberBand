@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.TTT.domain.MyActiveDto;
 import com.TTT.domain.MypageDto;
 import com.TTT.domain.UserDto;
 import com.TTT.domain.UserProfileDto;
@@ -318,5 +319,23 @@ public class MypageController {
 
 		return "redirect:/mypage/account";
 	}
+	// 나의활동 이동 
+
+	@GetMapping("/activity")
+	public String showMyActivity(Model model, Principal principal) {
+	    if (principal != null) {
+	        String username = principal.getName();
+	        String userId = userService.findByUsername(username).getUser_id();
+
+	        // 댓글 목록 조회
+	        List<MyActiveDto> commentList = mypageService.getCommentsByUserId(userId);
+
+	        model.addAttribute("commentList", commentList); // 모델에 추가
+	    }
+
+	    return "mypage/myActive";
+	}
+
+
 
 }

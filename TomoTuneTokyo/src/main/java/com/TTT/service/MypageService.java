@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.TTT.domain.BandHistoryDto;
+import com.TTT.domain.MyActiveDto;
 import com.TTT.domain.MypageDto;
 import com.TTT.domain.UserDto;
 import com.TTT.domain.UserProfileDto;
@@ -236,6 +237,10 @@ public class MypageService {
 	    public boolean isNicknameDuplicate(String nickname) {
 	        // user_profile 테이블에서 닉네임 존재 여부 체크
 	        return mypageMapper.countByNickname(nickname) > 0;
+	    }
+	    
+	    public List<MyActiveDto> getCommentsByUserId(String userId) {
+	        return mypageMapper.findCommentsByUserId(userId);
 	    }
 
 

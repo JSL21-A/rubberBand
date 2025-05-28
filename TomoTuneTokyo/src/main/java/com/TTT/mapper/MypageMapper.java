@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.TTT.domain.BandHistoryDto;
+import com.TTT.domain.MyActiveDto;
 import com.TTT.domain.MypageDto;
-import com.TTT.domain.UserDto;
 import com.TTT.domain.UserProfileDto;
 
 @Mapper
@@ -44,6 +44,10 @@ public interface MypageMapper {
 	// 닉네임 중복 여부 체크
 	// Mapper 인터페이스
 	int countByNickname(String nickname);
+	//댓글조회
+	// MypageMapper.java
+	List<MyActiveDto> findCommentsByUserId(String userId);
+
 
 
 
