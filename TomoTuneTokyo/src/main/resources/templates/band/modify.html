@@ -57,7 +57,7 @@
 				<!-- 수정/채팅 버튼 -->
 				<div class="band-actions">
 					<button class="btn-edit" id="edit-toggle-btn" type="button" th:if="${isLeader}">編集する</button>
-					<button class="btn-chat">チャットする</button>
+					<button id="btn-chat" class="btn-chat" th:if="${currentUserId != leader.user_id}" th:attr="data-user-id=${leader.user_id}">チャットする</button> 
 				</div>
 			</div>
 
