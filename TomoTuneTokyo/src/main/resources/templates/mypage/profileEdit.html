@@ -5,196 +5,212 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>プロフィール編集</title>
 <style>
-  /* Reset */
-  * {
-    box-sizing: border-box;
-  }
-
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      "Helvetica Neue", Arial, sans-serif;
-    background: #fff;
-    color: #222;
-    line-height: 1.5;
-  }
-
-  .container {
-    max-width: 640px;
-    margin: 60px auto 80px;
-    padding: 0 20px;
-  }
-
-  h1 {
-    font-weight: 600;
-    font-size: 28px;
-    margin-bottom: 40px;
-    text-align: center;
-  }
-
-  /* 프로필 사진 */
-  .profile-photo-wrapper {
-    position: relative;
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 32px;
-    border-radius: 50%;
-    overflow: visible;
-  }
-
-  .profile-photo-wrapper img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    display: block;
-  }
-
-.error-message {
-  color: red;
-  margin-bottom: 20px;
-  font-size: 13px;
+/* Reset */
+* {
+	box-sizing: border-box;
 }
 
-  /* 사진 편집 아이콘 */
-  .photo-edit-label {
-  position: absolute;
-  right: -10px;
-  bottom: -10px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: #fff;
-  /* border: none; */        /* 테두리 삭제 */
-  box-shadow: 0 0 6px rgb(0 0 0 / 0.08); /* 은은한 그림자 추가 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+body {
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+		"Helvetica Neue", Arial, sans-serif;
+	background: #fff;
+	color: #222;
+	line-height: 1.5;
+}
+
+.container {
+	max-width: 640px;
+	margin: 60px auto 80px;
+	padding: 0 20px;
+}
+
+h1 {
+	font-weight: 600;
+	font-size: 28px;
+	margin-bottom: 40px;
+	text-align: center;
+}
+
+/* 프로필 사진 */
+.profile-photo-wrapper {
+	position: relative;
+	width: 100px;
+	height: 100px;
+	margin: 0 auto 32px;
+	border-radius: 50%;
+	overflow: visible;
+}
+
+.profile-photo-wrapper img {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	object-fit: cover;
+	display: block;
+}
+
+.error-message {
+	color: red;
+	margin-bottom: 20px;
+	font-size: 13px;
+}
+
+/* 사진 편집 아이콘 */
+.photo-edit-label {
+	position: absolute;
+	right: -10px;
+	bottom: -10px;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: #fff;
+	/* border: none; */ /* 테두리 삭제 */
+	box-shadow: 0 0 6px rgb(0 0 0/ 0.08); /* 은은한 그림자 추가 */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
 }
 
 .photo-edit-label:hover {
-  background: #f5f5f5;
-  box-shadow: 0 0 10px rgb(0 0 0 / 0.15);
+	background: #f5f5f5;
+	box-shadow: 0 0 10px rgb(0 0 0/ 0.15);
 }
 
+.photo-edit-label input[type="file"] {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	cursor: pointer;
+}
 
-  .photo-edit-label input[type="file"] {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-  }
+/* 닉네임 입력 */
+.form-group {
+	margin-bottom: 48px;
+	max-width: 480px;
+	margin-left: auto;
+	margin-right: auto;
+}
 
-  /* 닉네임 입력 */
-  .form-group {
-    margin-bottom: 48px;
-    max-width: 480px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+label {
+	display: block;
+	font-weight: 600;
+	font-size: 14px;
+	color: #444;
+	margin-bottom: 8px;
+}
 
-  label {
-    display: block;
-    font-weight: 600;
-    font-size: 14px;
-    color: #444;
-    margin-bottom: 8px;
-  }
+label .required {
+	color: #1abf9c;
+	margin-left: 4px;
+}
 
-  label .required {
-    color: #1abf9c;
-    margin-left: 4px;
-  }
+input[type="text"] {
+	width: 100%;
+	font-size: 18px;
+	padding: 6px 0;
+	border: none;
+	border-bottom: 2px solid #ddd;
+	outline: none;
+	transition: border-color 0.25s ease;
+	background: transparent;
+}
 
-  input[type="text"] {
-    width: 100%;
-    font-size: 18px;
-    padding: 6px 0;
-    border: none;
-    border-bottom: 2px solid #ddd;
-    outline: none;
-    transition: border-color 0.25s ease;
-    background: transparent;
-  }
+input[type="text"]:focus {
+	border-color: #1abf9c;
+}
 
-  input[type="text"]:focus {
-    border-color: #1abf9c;
-  }
+/* 버튼 그룹 */
+.button-group {
+	display: flex;
+	justify-content: center;
+	gap: 24px;
+}
 
-  /* 버튼 그룹 */
-  .button-group {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-  }
+button {
+	font-weight: 600;
+	color: #000;
+	font-size: 16px;
+	cursor: pointer;
+	border: none;
+	background: #000;
+	padding: 8px 28px;
+	border-radius: 24px;
+	transition: color 0.3s ease, background-color 0.3s ease;
+	user-select: none;
+	min-width: 120px;
+}
 
-  button {
-    font-weight: 600;
-    color : #000;
-    font-size: 16px;
-    cursor: pointer;
-    border: none;
-    background: #000;
-    padding: 8px 28px;
-    border-radius: 24px;
-    transition: color 0.3s ease, background-color 0.3s ease;
-    user-select: none;
-    min-width: 120px;
-  }
+button.cancel-btn {
+	color: #fff;
+	border: 1.5px solid #222;
+}
 
-  button.cancel-btn {
-    color: #fff;
-    border: 1.5px solid #222;
-  }
-
-  button.save-btn {
-    color: #fff;
-    border: 1.5px solid #222;
-  }
-
+button.save-btn {
+	color: #fff;
+	border: 1.5px solid #222;
+}
 </style>
 </head>
 <body>
-  <div class="container">
-    <h1>プロフィール編集</h1>
-    
-  <form action="/mypage/profileEdit" method="post" enctype="multipart/form-data" novalidate>
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-    <input type="hidden" name="userId" th:value="${userProfile.userId}" />
-      <div class="profile-photo-wrapper">
-  <img th:src="${userProfile.userImg != null} ? @{/images/{img}(img=${userProfile.userImg})} : @{/images/tttpanda.png}" 
-       alt="プロフィール写真" />
-  <label for="profilePhoto" class="photo-edit-label" tabindex="0" aria-label="プロフィール写真を変更">
-    <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*" />
-    <!-- 구글 Material Symbols Photo Camera 아이콘 SVG -->
-    <svg xmlns="http://www.w3.org/2000/svg" fill="#e3e3e3" height="24" viewBox="0 0 24 24" width="24">
-      <path d="M20 5h-3.17l-1.83-2H8L6.17 5H3c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h17c1.11 0 2-.9 2-2V7c0-1.11-.89-2-2-2zm-8 10a5 5 0 110-10 5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6z"/>
-    </svg>
-  </label>
-</div>
+	<div class="container">
+		<h1>プロフィール編集</h1>
 
+		<form action="/mypage/profileEdit" method="post"
+			enctype="multipart/form-data">
 
-      <div class="form-group">
-        <label for="nickname">ニックネーム<span class="required">*</span></label>
-       <input type="text" id="nickname" name="nickname"
-       th:value="${userProfile.nickname}"
-       placeholder="ニックネームを入力してください" required />
+			<input type="hidden" th:name="${_csrf.parameterName}"
+				th:value="${_csrf.token}" /> <input type="hidden" name="userId"
+				th:value="${userProfile.userId}" />
 
+			<div class="profile-photo-wrapper">
+				<img id="previewImage"
+					th:src="${userProfile.userImg != null} ? @{${userProfile.userImg}} : @{/images/tttpanda.png}"
+					alt="プロフィール写真" /> <label for="profilePhoto"
+					class="photo-edit-label" tabindex="0" aria-label="プロフィール写真を変更">
+					<input type="file" id="profilePhoto" name="profilePhoto"
+					accept="image/*" onchange="previewProfileImage(this)" /> <!-- 아이콘 -->
+					<svg xmlns="http://www.w3.org/2000/svg" fill="#e3e3e3" height="24"
+						viewBox="0 0 24 24" width="24">
+          <path
+							d="M20 5h-3.17l-1.83-2H8L6.17 5H3c-1.11 0-2 .89-2 2v12c0 1.1.89 2 2 2h17c1.11 0 2-.9 2-2V7c0-1.11-.89-2-2-2zm-8 10a5 5 0 110-10 5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6z" />
+        </svg>
+				</label>
+			</div>
 
- <div th:if="${errorMessage}" class="error-message">
-    <p th:text="${errorMessage}"></p>
-  </div>
+			<div class="form-group">
+				<label for="nickname">ニックネーム<span class="required">*</span></label>
+				<input type="text" id="nickname" name="nickname"
+					th:value="${userProfile.nickname}" placeholder="ニックネームを入力してください"
+					required />
 
-      </div>
+				<div th:if="${errorMessage}" class="error-message">
+					<p th:text="${errorMessage}"></p>
+				</div>
+			</div>
 
-      <div class="button-group">
-     <button type="button" class="cancel-btn" onclick="location.href='/mypage/account'">キャンセル</button>
+			<div class="button-group">
+				<button type="button" class="cancel-btn"
+					onclick="location.href='/mypage/account'">キャンセル</button>
+				<button type="submit" class="save-btn">保存する</button>
+			</div>
+		</form>
+	</div>
 
-        <button type="submit" class="save-btn">保存する</button>
-      </div>
-    </form>
-  </div>
+	<!-- ✅ 이미지 미리보기 스크립트 -->
+	<script>
+		function previewProfileImage(input) {
+			const preview = document.getElementById("previewImage");
+			if (input.files && input.files[0]) {
+				const reader = new FileReader();
+				reader.onload = function(e) {
+					preview.src = e.target.result;
+				};
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+	</script>
 </body>
 </html>

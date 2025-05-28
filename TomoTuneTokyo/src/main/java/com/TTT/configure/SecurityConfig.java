@@ -52,7 +52,7 @@ public class SecurityConfig {
 
               "/", 
               "/css/**", "/JS/**", "/images/**", 
-              "/resume/**","/mypage/**",
+              "/resume/**","/mypage/**","/uploads/**",
               "/user/check-username",
               "/user/check-nickname",
               "/user/send-email-code",

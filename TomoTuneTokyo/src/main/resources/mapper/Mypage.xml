@@ -158,7 +158,8 @@
 
 <update id="updateUserProfile" parameterType="com.TTT.domain.UserProfileDto">
     UPDATE user_profile
-    SET nickname = #{nickname}
+    SET nickname = #{nickname},
+    user_img = #{userImg}
     WHERE user_id = #{userId}
 </update>
 

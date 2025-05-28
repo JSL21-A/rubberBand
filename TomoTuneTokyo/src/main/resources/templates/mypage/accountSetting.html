@@ -24,9 +24,9 @@
    <div class="sub-text" th:text="'@' + ${currentUser.username}"></div>
   </div>
 
-  <img th:src="${userProfile.userImg != null} ? @{/profile-images/{img}(img=${userProfile.userImg})} : @{/images/tttpanda.png}"
-       alt="プロフィール"
-       class="profile-photo" />
+ <img th:src="@{${userProfile.userImg != null ? userProfile.userImg : '/images/tttpanda.png'}}"
+     alt="プロフィール" class="profile-photo" />
+
 
   <a href="/mypage/profileEdit" class="btn-outline" role="button">プロフィール編集</a>
 </div>
