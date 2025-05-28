@@ -156,5 +156,7 @@ public class BandInsertService {
 	public int countAllBands(String genre, String position, String gender, String age, String keyword) {
 		return bandInsertMapper.countAllBands(genre, position, gender, age, keyword);
 	}
+	
+
 
 }

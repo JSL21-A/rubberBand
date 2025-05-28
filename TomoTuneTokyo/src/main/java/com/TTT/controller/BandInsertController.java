@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.TTT.domain.BandInsertVo;
 import com.TTT.service.BandInsertService;
+import com.TTT.service.NotificationService;
 
 // 밴드 결성 관련 콘트롤러 
 @Controller
@@ -27,6 +28,9 @@ public class BandInsertController {
 	
 	@Autowired
 	private BandInsertService bandInsertService;
+	
+	@Autowired
+	NotificationService notificationService;
 	
 	// 밴드 list
 	@GetMapping("/modifylist")
@@ -106,6 +110,7 @@ public class BandInsertController {
 	       @RequestParam("selectedPositions") String selectedPositions,
 	       @RequestParam("selectedGenders") String selectedGenders,
 	       @RequestParam("selectedAges") String selectedAges,
+	       @RequestParam("band_id") String band_id,
 	       Principal principal
 	   ) {
 	       // 1. 로그인된 사용자 UUID (user_id) 가져오기
@@ -139,6 +144,8 @@ public class BandInsertController {
 	       } else {
 	           vo.setBand_cover_img(null);
 	       }
+	       
+	       vo.setStatus("A");
 
 	       // 5. 일반 멤버 리스트 처리
 	       List<BandInsertVo> generalMemberList = new ArrayList<>();
@@ -191,9 +198,15 @@ public class BandInsertController {
 	           // 하고 싶은 말 (motto)
 	           if (mottos.size() > i + 1) member.setMember_motto(mottos.get(i + 1));
 
+	           
 	           // 멤버 이미지 관련 코드 제거됨
+	           
+	           member.setStatus("I");
 
 	           generalMemberList.add(member);
+	           
+	           notificationService.sendNotification(convertedUserId, "invite", "バンドから参加のお誘いが届きました", "/bandinsertselect/modify?band_id=" + band_id);
+	           
 	       }
 
 	       // 6. 서비스 호출

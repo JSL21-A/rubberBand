@@ -220,4 +220,19 @@ public class BandInsertSelectService {
 	 public void updateInstagramLink(Long bandId, String instagramLink) {
 		 bandinsertselectMapper.updateInstagramLink(bandId, instagramLink);
 		}
+	 
+	//초대여부 조회
+	public BandInsertVo SelectBandMemberByUserId(String user_id, Long band_id) {
+		return bandinsertselectMapper.selectBandMemberUserId(user_id, band_id);
+		}
+	
+	//초대 수락
+	public void acceptBandInvite(String user_id, Long band_id) {
+		bandinsertselectMapper.acceptBandInvite(user_id, band_id);
+	}
+	
+	//초대 거절
+	public void declineBandInvite(String user_id, Long band_id) {
+		bandinsertselectMapper.declineBandInvite(user_id, band_id);
+	}
 }
