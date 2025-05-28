@@ -2520,7 +2520,7 @@
 
 			
 			document.getElementById('btn-accept').addEventListener('click', () => {
-				fetch(`/bandinsert/${band_id}/invite/${currentUser}/accept`, {
+				fetch(`/bandinvite/${band_id}/invite/${currentUser}/accept`, {
 					method: 'POST',
 					headers: { [csrfHeader]: csrfToken }
 				})
@@ -2535,7 +2535,7 @@
 				})
 			})
 			document.getElementById('btn-decline').addEventListener('click', () => {
-				fetch(`/bandinsert/${band_id}/invite/${currentUser}/decline`, {
+				fetch(`/bandinvite/${band_id}/invite/${currentUser}/decline`, {
 					method: 'POST',
 					headers: { [csrfHeader]: csrfToken }
 				})

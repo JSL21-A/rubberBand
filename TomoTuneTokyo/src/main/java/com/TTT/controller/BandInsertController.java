@@ -110,7 +110,6 @@ public class BandInsertController {
 	       @RequestParam("selectedPositions") String selectedPositions,
 	       @RequestParam("selectedGenders") String selectedGenders,
 	       @RequestParam("selectedAges") String selectedAges,
-	       @RequestParam("band_id") String band_id,
 	       Principal principal
 	   ) {
 	       // 1. 로그인된 사용자 UUID (user_id) 가져오기
@@ -145,7 +144,6 @@ public class BandInsertController {
 	           vo.setBand_cover_img(null);
 	       }
 	       
-	       vo.setStatus("A");
 
 	       // 5. 일반 멤버 리스트 처리
 	       List<BandInsertVo> generalMemberList = new ArrayList<>();
@@ -201,11 +199,9 @@ public class BandInsertController {
 	           
 	           // 멤버 이미지 관련 코드 제거됨
 	           
-	           member.setStatus("I");
 
 	           generalMemberList.add(member);
 	           
-	           notificationService.sendNotification(convertedUserId, "invite", "バンドから参加のお誘いが届きました", "/bandinsertselect/modify?band_id=" + band_id);
 	           
 	       }
 

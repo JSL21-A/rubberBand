@@ -11,7 +11,7 @@ import com.TTT.service.BandInsertSelectService;
 
 
 @RestController
-@RequestMapping("/bandinsert")
+@RequestMapping("/bandinvite")
 public class BandRestController {
 	
 	@Autowired

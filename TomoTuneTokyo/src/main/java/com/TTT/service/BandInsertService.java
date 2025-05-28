@@ -21,6 +21,9 @@ public class BandInsertService {
 
 	@Autowired
 	private BandInsertMapper bandInsertMapper;
+	
+	@Autowired
+	NotificationService notificationService;
 
 	private final String uploadDir = "C:\\Users\\LG gram\\git\\rubberBand\\TomoTuneTokyo\\src\\main\\resources\\static\\images\\uploads\\bands\\"; // 이미지
 																																					// 저장
@@ -88,6 +91,7 @@ public class BandInsertService {
 		// 리더 등록 
 		vo.setBand_id(bandId);
 		vo.setMember_type(MemberType.leader);
+		vo.setStatus("A");
 		bandInsertMapper.InsertBandMember(vo);
 
 		// 일반 멤버 등록
@@ -96,12 +100,15 @@ public class BandInsertService {
 			member.setBand_id(bandId);
 			member.setMember_type(MemberType.member);
 			member.setCreated_at(LocalDateTime.now());
+			member.setStatus("I");
 
 			// 멤버 MBTI 대문자 변환 처리
 			if (member.getMember_mbti() != null) {
 				member.setMember_mbti(member.getMember_mbti().toUpperCase());
 			}
 			bandInsertMapper.InsertBandMember(member);
+	        notificationService.sendNotification(member.getUser_id(), "invite", "バンドから参加のお誘いが届きました", "/bandinsertselect/modify?band_id=" + bandId);
+
 		}
 	}
 
