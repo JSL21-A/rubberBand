@@ -265,7 +265,7 @@
 	createDirectChannel(targetId);
   })
   // 2) createOneOnOneChannel 로직을 재활용한 helper
-  async function createDirectChannel(targetId) {
+  window.createDirectChannel = async function createDirectChannel(targetId) {
     if (!sb || !sb.currentUser) {
       return alert('チャット初期化中です。しばらくして再度お試しください。');
     }
@@ -306,6 +306,17 @@
       alert('チャットを開始できませんでした。');
     }
   }
+  
+  $(document).on('click', '.inline-chat-btn', function(){
+              	const $btn = $(this);
+              	const targetId = $btn.prev('.viewHost').data('user-id');
+              	
+              	if(!$('#chat-wrapper').hasClass('open')){
+              	$('#chat-toggle').trigger('click');
+              }
+              	
+              	createDirectChannel(targetId);
+              })
   
 
 })(jQuery);
