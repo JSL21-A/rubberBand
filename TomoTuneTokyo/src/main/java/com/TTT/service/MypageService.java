@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.TTT.domain.BandHistoryDto;
 import com.TTT.domain.MypageDto;
+import com.TTT.domain.UserDto;
+import com.TTT.domain.UserProfileDto;
 import com.TTT.mapper.MypageMapper;
 
 @Service
@@ -127,22 +129,22 @@ public class MypageService {
 		if (resume != null) {
 			List<BandHistoryDto> bandList = mypageMapper.selectBandHistoryByResumeId(resume.getResumeId()); // 밴드 이력 추가로
 																											// 조회
-			resume.setBandHistoryList(bandList); 
+			resume.setBandHistoryList(bandList);
 		}
 		return resume;
 	}
-	
+
 	// 특정 계정 이력서 조회
 	public MypageDto getResumeById(Long id) {
-	    MypageDto resume = mypageMapper.findById(id);
-	    if (resume != null) {
-	        List<BandHistoryDto> bandList = mypageMapper.selectBandHistoryByResumeId(resume.getResumeId());
-	        resume.setBandHistoryList(bandList);
-	    }
-	    return resume;
+		MypageDto resume = mypageMapper.findById(id);
+		if (resume != null) {
+			List<BandHistoryDto> bandList = mypageMapper.selectBandHistoryByResumeId(resume.getResumeId());
+			resume.setBandHistoryList(bandList);
+		}
+		return resume;
 	}
-	
-	//이력서 삭제
+
+	// 이력서 삭제
 	public boolean deleteResumeByUserId(String userId) {
 	    try {
 
@@ -163,6 +165,7 @@ public class MypageService {
 	        return false;
 	    }
 	}
+
 	public void updateResume(MypageDto dto) {
 	    // 활동가능지역
 	    if (dto.getRegion() != null && !dto.getRegion().isEmpty()) {
@@ -216,6 +219,24 @@ public class MypageService {
 	    // 최종 이력서 update
 	    mypageMapper.updateResume(dto);
 	}
+	
+	 // 프로필 조회 
+	 public UserProfileDto getUserProfileByUserId(String userId) {
+	        return mypageMapper.selectUserProfileByUserId(userId);
+	    }
+
+	    // 프로필 수정 저장
+	    public void updateUserProfile(UserProfileDto userProfileDto) {
+	    	System.out.println("서비스 - updateUserProfile 호출됨: " + userProfileDto.getNickname());
+	        mypageMapper.updateUserProfile(userProfileDto);
+	        System.out.println("서비스 - updateUserProfile 완료");
+	    }
+	    
+	    // 닉네임 중복 체크 
+	    public boolean isNicknameDuplicate(String nickname) {
+	        // user_profile 테이블에서 닉네임 존재 여부 체크
+	        return mypageMapper.countByNickname(nickname) > 0;
+	    }
 
 
 }

@@ -145,6 +145,29 @@
         note = #{note}
     WHERE resume_id = #{resumeId}
 </update>
-  
+
+<!-- 프로필편집 -->
+<select id="selectUserProfileByUserId" parameterType="String" resultType="com.TTT.domain.UserProfileDto">
+    SELECT USER_PROFILE_ID AS userProfileId,
+           USER_ID AS userId,
+           NICKNAME AS nickname,
+           USER_IMG AS userImg
+    FROM user_profile
+    WHERE USER_ID = #{userId}
+</select>
+
+<update id="updateUserProfile" parameterType="com.TTT.domain.UserProfileDto">
+    UPDATE user_profile
+    SET nickname = #{nickname}
+    WHERE user_id = #{userId}
+</update>
+
+<!-- 닉네임 중복여부 체크 -->
+<!-- Mapper XML -->
+<select id="countByNickname" parameterType="String" resultType="int">
+  SELECT COUNT(*) FROM user_profile WHERE nickname = #{nickname}
+</select>
+
+
 
 </mapper>

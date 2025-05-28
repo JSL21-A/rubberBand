@@ -15,16 +15,23 @@
 		<h1>設定</h1>
 
 		<!-- 프로필 -->
-		<div class="section">
-			<div class="info-block">
-				<div class="section-title">プロフィール</div>
-				<div class="nickname">IROYA</div>
-				<div class="subtext">@iroiro0107</div>
-				<span>sionkang98@gmail.com</span>
-			</div>
-			<img src="" alt="프로필" class="profile-photo" onerror="">
-			<button class="btn-outline">プロフィール編集</button>
-		</div>
+<!-- 프로필 -->
+<!-- 프로필 -->
+<div class="section">
+  <div class="info-block">
+    <div class="section-title">プロフィール</div>
+    <div class="nickname" th:text="${userProfile.nickname}"></div>
+   <div class="sub-text" th:text="'@' + ${currentUser.username}"></div>
+  </div>
+
+  <img th:src="${userProfile.userImg != null} ? @{/profile-images/{img}(img=${userProfile.userImg})} : @{/images/tttpanda.png}"
+       alt="プロフィール"
+       class="profile-photo" />
+
+  <a href="/mypage/profileEdit" class="btn-outline" role="button">プロフィール編集</a>
+</div>
+
+
 
 		<div class="section">
 			<div class="info-block">
@@ -45,7 +52,7 @@
 		<!-- 밴드 -->
 		<div class="section">
 			<div class="info-block">
-				<div class="section-title">マイバンド管理</div>
+				<div class="section-title">マイバンド</div>
 				<span>Tokyo Noise</span>
 
 				<div class="email">

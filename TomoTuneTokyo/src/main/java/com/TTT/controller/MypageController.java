@@ -1,5 +1,6 @@
 package com.TTT.controller;
 
+import java.nio.file.Path;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,8 +15,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.TTT.domain.MypageDto;
+import com.TTT.domain.UserDto;
+import com.TTT.domain.UserProfileDto;
 import com.TTT.service.MypageService;
 import com.TTT.service.UserService;
+
+import java.nio.file.Paths; 
+import java.nio.file.Files;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+
 
 @Controller
 @RequestMapping("/mypage")
@@ -111,15 +120,18 @@ public class MypageController {
 			.toList();
 	}
 
-	// 계정 및 프로필 관리 페이지
+	// 설정페이지
 	@GetMapping("/account")
 	public String accountSetting(Model model, Principal principal) {
 	    String userId = getCurrentUserId(principal);
 	    boolean hasResume = mypageService.hasResume(userId);
+	    //유저 프로필 불러오기
+	    UserProfileDto userProfile = mypageService.getUserProfileByUserId(userId);
+	    model.addAttribute("userProfile", userProfile);
 	    model.addAttribute("hasResume", hasResume);
 	    return "mypage/accountSetting";
 	}
-
+	
 	// 이력서 삭제
 	@PostMapping("/delete")
 	@ResponseBody
@@ -214,4 +226,88 @@ public class MypageController {
 		mypageService.updateResume(dto);
 		return "redirect:/mypage/resumeView";
 	}
+	
+	// 프로필 편집 페이지로 이동 (GET)
+	@GetMapping("/profileEdit")
+	public String profileEdit(Model model, Principal principal) {
+	    String userId = getCurrentUserId(principal);
+	    UserProfileDto userProfile = mypageService.getUserProfileByUserId(userId);
+	    if (userProfile == null) {
+	        return "redirect:/mypage/account";
+	    }
+	    model.addAttribute("userProfile", userProfile);
+	    return "mypage/profileEdit";  // 프로필 편집 뷰
+	}
+
+	@PostMapping("/profileEdit")
+	public String profileEditSubmit(
+	        @ModelAttribute UserProfileDto userProfileDto,
+	        @RequestParam("profilePhoto") MultipartFile profilePhoto,
+	        Principal principal,
+	        RedirectAttributes redirectAttrs) throws IOException {
+
+	    String userId = getCurrentUserId(principal);
+	    UserProfileDto existingProfile = mypageService.getUserProfileByUserId(userId);
+
+	    // 닉네임 null/빈문자열일 때 기존 닉네임 사용
+	    String nickname = userProfileDto.getNickname();
+	    if (nickname == null || nickname.trim().isEmpty()) {
+	        nickname = existingProfile.getNickname();
+	    }
+	    nickname = nickname.trim();
+
+	    // 닉네임 유효성 검사
+	    if (!nickname.matches("^[ぁ-んァ-ン一-龥a-zA-Z0-9가-힣]+$")) {
+	        redirectAttrs.addFlashAttribute("errorMessage", "ニックネームに空白や記号は使えません。別のニックネームを入力してください。");
+	        return "redirect:/mypage/profileEdit";
+	    }
+	    if (nickname.matches("^[0-9]+$")) {
+	        redirectAttrs.addFlashAttribute("errorMessage", "数字だけのニックネームは使えません。別のニックネームを入力してください。");
+	        return "redirect:/mypage/profileEdit";
+	    }
+	    if (nickname.length() > 10) {
+	        redirectAttrs.addFlashAttribute("errorMessage", "ニックネームは10文字以内で入力してください。");
+	        return "redirect:/mypage/profileEdit";
+	    }
+	    if (!nickname.equals(existingProfile.getNickname()) && mypageService.isNicknameDuplicate(nickname)) {
+	        redirectAttrs.addFlashAttribute("errorMessage", "このニックネームは既に使われています。別のニックネームを入力してください。");
+	        return "redirect:/mypage/profileEdit";
+	    }
+
+	    if (!userId.equals(userProfileDto.getUserId())) {
+	        return "redirect:/mypage/account";
+	    }
+
+	    // 최종 닉네임 세팅
+	    userProfileDto.setNickname(nickname);
+
+	    // 프로필 사진 업로드 처리
+	    if (profilePhoto != null && !profilePhoto.isEmpty()) {
+	        String uploadDir = "src/main/resources/static/images/uploads/";
+	        String originalFilename = profilePhoto.getOriginalFilename();
+	        String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
+	        String newFilename = userId + "_" + System.currentTimeMillis() + ext;
+
+	        Path path = Paths.get(uploadDir + newFilename);
+	        Files.createDirectories(path.getParent());
+	        profilePhoto.transferTo(path.toFile());
+
+	        userProfileDto.setUserImg("images/uploads/" + newFilename);
+	    } else {
+	        // 사진 미업로드시 기존 이미지 유지
+	        userProfileDto.setUserImg(existingProfile.getUserImg());
+	    }
+
+	    // 서비스 업데이트 호출
+	    mypageService.updateUserProfile(userProfileDto);
+	    redirectAttrs.addFlashAttribute("successMessage", "プロフィールが更新されました。");
+
+	    return "redirect:/mypage/account";
+	}
+
+
+
+	
+	
+	
 }
