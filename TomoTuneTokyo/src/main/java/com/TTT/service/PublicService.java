@@ -67,4 +67,8 @@ public class PublicService {
     public void commentReport(String user_id, String target_id, Long target) {
         publicMapper.commentReport(user_id, target_id, target);
     }
+
+    public void editPost(PostVo postVo) {
+        publicMapper.editPost(postVo);
+    }
 }

@@ -25,7 +25,8 @@
             <div class="write_category_list" th:unless="${session.prev == 'notify'}">
                 <div class="write_select_box">
                     <!-- 글 카테고리 -->
-                    <input type="hidden" name="board_id" th:value="${session.prev.length() == 1 ? session.prev : 6}"
+                    <input type="hidden" name="board_id"
+                        th:value="${post?.board_id != null ? post.board_id : session.prev.length() == 1 ? session.prev : 6}"
                         id="write_board_id">
                     <div class="write_selected">
                         <span>コミュニティ</span>
@@ -63,7 +64,8 @@
                     </div>
                 </div>
                 <!-- 제목 작성 input -->
-                <input type="text" name="post_title" id="write_post_title" placeholder="タイトルを入力してください">
+                <input type="text" name="post_title" id="write_post_title" placeholder="タイトルを入力してください"
+                    th:value="${post?.post_title != null ? post.post_title : ''}">
             </div>
         </div>
         <!-- 글 효과 툴바 -->
@@ -102,7 +104,8 @@
         </div>
         <div class="write_edit-area">
             <!-- 글 작성 AREA -->
-            <div class="write_note-editable" contenteditable="true"></div>
+            <div class="write_note-editable" contenteditable="true"
+                th:utext="${post?.post_content} != null ? ${post.post_content} : ''"></div>
             <div class="write_note-placeholder">
                 <div>名誉毀損、虚偽情報、非正常プレイ流布など法律、約款、運営政策に違反する掲示文登録時に利用が制限されることがあります。<br>掲示文の作成時に大切な個人情報を含めないようにご注意お願いします
                 </div>

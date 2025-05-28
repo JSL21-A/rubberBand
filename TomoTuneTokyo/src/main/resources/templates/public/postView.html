@@ -76,6 +76,10 @@
                 margin-top: 10px;
             }
 
+            .viewHost {
+                line-height: 50px;
+            }
+
             .post_date {
                 text-align: end;
             }
@@ -223,13 +227,10 @@
                     <div class="titleBtn">
                         <div class="viewHost" th:text="${post.nickname}"></div>
                         <div>
-                            <div>
-                                <button>a</button>
-                                <button>b</button>
-                            </div>
-                            <div>
-                                <button>c</button>
-                                <button>d</button>
+                            <div th:if="${user == post.user_id} or ${#authorization.expression('hasRole(''A'')')}">
+                                <button id="editPost" th:attr="hx-get='./write?edit=' + ${post.post_id}"
+                                    hx-target="#content" hx-push-url="true">修正</button>
+                                <button id="delPost">削除</button>
                             </div>
                         </div>
                     </div>
@@ -300,6 +301,36 @@
             type = "comment";
             target = $(this).data("comment-id");
             doReport(target, type);
+        });
+
+        //삭제버튼 눌렸을때
+        $(document).off("click", "#delPost").on("click", "#delPost", function () {
+            const postId = '[[${post.post_id}]]';
+            isDel = confirm("本当に削除しますか？");
+            if (isDel) {
+                $.ajax({
+                    url: "./delete?target=" + postId,
+                    method: "GET",
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(csrfHeader, csrfToken);
+                    },
+                    success: function (res) {
+                        alert("削除ました。");
+                        window.location.href = "./list";
+                    },
+                    error: function (err) {
+                        alert(err.status);
+                        if (err.status == 400) {
+                            window.location.href = "./error";
+                        } else {
+                            alert("削除失敗");
+                            console.error(err);
+                        }
+                    },
+                });
+            }
         });
 
         function doReport(target, type) {

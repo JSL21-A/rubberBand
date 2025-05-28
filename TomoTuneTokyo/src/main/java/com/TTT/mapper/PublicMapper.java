@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.TTT.domain.PostVo;
 
@@ -16,6 +17,9 @@ public interface PublicMapper {
     @Insert("INSERT INTO posts (board_id, user_id, post_title, post_content, post_img, post_pinned) "
             + "VALUES (#{board_id}, #{user_id}, #{post_title}, #{post_content}, #{post_img}, #{post_pinned})")
     void insertPost(PostVo postVo);
+
+    @Update("UPDATE posts SET board_id = #{board_id}, user_id = #{user_id}, post_title = #{post_title}, post_content = #{post_content}, post_img = #{post_img}, post_pinned = #{post_pinned} WHERE post_id = #{post_id}")
+    void editPost(PostVo postVo);
 
     // 로그인한 username으로 user_id 찾기
     @Select("SELECT user_id FROM users WHERE username = #{username}")

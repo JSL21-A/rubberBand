@@ -68,7 +68,17 @@ public class publicController {
 
     // 글쓰기
     @GetMapping("/write")
-    public String writePost(HttpServletRequest request, Model model) {
+    public String writePost(HttpServletRequest request, Model model,
+            @RequestParam(name = "edit", required = false) String postId, Principal principal) {
+        // 수정이라면 수정할 글 가져오기
+        if (postId != null) {
+            PostVo post = publicService.getPostView(Integer.parseInt(postId));
+            if (post.getUser_id().equals(publicService.searchUserByUserName(principal.getName()))) {
+                model.addAttribute("post", post);
+            } else {
+                return "redirect:/user/error";
+            }
+        }
         // 현재 uri 가져오기.
         String uri = request.getRequestURI();
         // htmx로 인한 요청인지 체크
@@ -108,6 +118,7 @@ public class publicController {
 
     @PostMapping("/doWrite")
     public ResponseEntity<?> doPost(@RequestParam("content") String content,
+            @RequestParam(name = "edit", required = false) Long postId,
             @RequestParam(name = "images", required = false) List<MultipartFile> images,
             @RequestParam("title") String title, @RequestParam("board_id") Long board_id,
             Principal principal, PostVo vo) throws IOException {
@@ -165,6 +176,11 @@ public class publicController {
         vo.setPost_content(cleanedHtml);
         vo.setUser_id(publicService.searchUserByUserName(principal.getName()));
 
+        if (postId != null) {
+            vo.setPost_id(postId);
+            publicService.editPost(vo);
+            return ResponseEntity.ok().build();
+        }
         publicService.insertPost(vo);
 
         return ResponseEntity.ok().build();
@@ -270,6 +286,24 @@ public class publicController {
             publicService.commentReport(user_id, target_id, target);
         }
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/delete")
+    public ResponseEntity<Object> deletePost(@RequestParam("target") Long target, Principal principal, Model model) {
+        String target_user_id = publicService.getUserIdByPostId(target);
+        String user_id = publicService.searchUserByUserName(principal.getName());
+        if (target_user_id.equals(user_id)) {
+
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/error")
+    public String errorPage(Model model) {
+        model.addAttribute("layout", "layouts/layout");
+        return "public/error";
     }
 
 }
