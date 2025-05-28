@@ -250,5 +250,62 @@
     $('#message-input').off('keypress').on('keypress', e => { if (e.key==='Enter') sendMessage(); });
     $('#file-input').off('change').on('change', function(){ sendFile(this.files[0]); this.value=null; });
   }
+  
+  //채팅버튼 눌러서 채팅 연결
+  $('#btn-chat').off('click').on('click', function(){
+	const targetId = $(this).data('user-id')
+	if (!targetId){
+		return alert('リーダーのIDが取得できませんでした');
+	}
+	
+	if(!$('#chat-wrapper').hasClass('open')){
+		$('#chat-toggle').trigger('click');
+	}
+	
+	createDirectChannel(targetId);
+  })
+  // 2) createOneOnOneChannel 로직을 재활용한 helper
+  async function createDirectChannel(targetId) {
+    if (!sb || !sb.currentUser) {
+      return alert('チャット初期化中です。しばらくして再度お試しください。');
+    }
+
+    const me = sb.currentUser.userId;
+    const params = new sb.GroupChannelParams();
+    params.isDistinct = true;
+    params.addUserId(me);
+    params.addUserId(targetId);
+
+    try {
+      const channel = await new Promise((resolve, reject) => {
+        sb.GroupChannel.createChannel(params, (ch, err) =>
+          err ? reject(err) : resolve(ch)
+        );
+      });
+
+      // displayName 계산
+      const other = channel.members.find(m => m.userId !== me);
+      const displayName = other.nickname || other.userId;
+
+      // 중복 체크용 data-url 심어서 아이템 생성
+      const $item = $(`
+        <div class="channel-item" data-url="${channel.url}">
+          ${displayName}
+        </div>
+      `);
+      $item.on('click', () => openChannel(channel));
+
+      // 이미 있으면 추가하지 않음
+      if (!$(`.channel-item[data-url="${channel.url}"]`).length) {
+        $('.channel-list').prepend($item);
+      }
+
+      openChannel(channel);
+    } catch (err) {
+      console.error('ダイレクトチャネル作成失敗', err);
+      alert('チャットを開始できませんでした。');
+    }
+  }
+  
 
 })(jQuery);

@@ -143,4 +143,8 @@ public interface BandInsertSelectMapper {
 	@Delete("delete from band_member where user_id = #{user_id} and band_id = #{band_id}")
 	void declineBandInvite(@Param("user_id") String user_id, @Param("band_id") Long band_id);
 	
+	// 리더 user_id 불러오기
+	@Select("select user_id from band_member where band_id = #{band_id} and member_type = 'LEADER'")
+	String findLeaderId(@Param("band_id") Long band_id);
+	
 }

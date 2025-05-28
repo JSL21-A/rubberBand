@@ -235,4 +235,9 @@ public class BandInsertSelectService {
 	public void declineBandInvite(String user_id, Long band_id) {
 		bandinsertselectMapper.declineBandInvite(user_id, band_id);
 	}
+	
+	//리더 유저 아이디
+	public String findLeaderId(Long band_id) {
+		return bandinsertselectMapper.findLeaderId(band_id);
+	}
 }
