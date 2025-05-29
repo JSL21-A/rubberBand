@@ -180,7 +180,7 @@
             }
 
             .post_note img {
-                width: 100%;
+                max-width: 100%;
             }
 
             .titleBtn {
@@ -225,7 +225,12 @@
                 <div class="view_title">
                     <div class="viewTitle" th:text="${post.post_title}"></div>
                     <div class="titleBtn">
-                        <div class="viewHost" th:text="${post.nickname}"></div>
+                        <th:block th:if="${post.board_id != 7}">
+                            <div class="viewHost" th:text="${post.nickname}"></div>
+                        </th:block>
+                        <th:block th:unless="${post.board_id != 7}">
+                            <div class="viewHost">管理者</div>
+                        </th:block>
                         <div>
                             <div th:if="${user == post.user_id} or ${#authorization.expression('hasRole(''A'')')}">
                                 <button id="editPost" th:attr="hx-get='./write?edit=' + ${post.post_id}"
