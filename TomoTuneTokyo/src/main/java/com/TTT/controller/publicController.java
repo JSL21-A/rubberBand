@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.TTT.domain.PostVo;
+import com.TTT.domain.UserDto;
 import com.TTT.service.AdminService;
 import com.TTT.service.PublicService;
 
@@ -289,15 +290,16 @@ public class publicController {
     }
 
     @GetMapping("/delete")
-    public ResponseEntity<Object> deletePost(@RequestParam("target") Long target, Principal principal, Model model) {
+    public ResponseEntity<Object> deletePost(@RequestParam("target") Long target, Principal principal, Model model,
+            UserDto dto) {
         String target_user_id = publicService.getUserIdByPostId(target);
-        String user_id = publicService.searchUserByUserName(principal.getName());
-        if (target_user_id.equals(user_id)) {
-
+        dto = publicService.getUserIdAndRoleByUsername(principal.getName());
+        if (dto.getRole().equals("A") || target_user_id.equals(dto.getUser_id())) {
+            publicService.deletePost(target);
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("bad request");
         }
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/error")

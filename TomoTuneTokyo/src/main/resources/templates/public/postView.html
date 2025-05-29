@@ -278,138 +278,138 @@
                 </div>
             </div>
         </div>
-    </div>
-    <script data-init>
-        $(".sel_cate").on("click", function () {
-            if ($(this).data('board-id') == '7') {
-                $('#onPost').hide();
-            } else {
-                $('#onPost').show();
-            }
-        });
+        <script data-init>
+            $(".sel_cate").on("click", function () {
+                if ($(this).data('board-id') == '7') {
+                    $('#onPost').hide();
+                } else {
+                    $('#onPost').show();
+                }
+            });
 
-        //신고버튼 누르면
-        //.off가 달린 이유는 동적으로 로드하면서 레이아웃에 아래에 보이는 얘랑 동적으로 불러온 얘랑
-        //겹쳐버려서 3번씩 눌리기때문에 한번 해제해주고 이벤트 발생하는 식으로 해결.
-        $(document).off("click", ".post_report").on("click", ".post_report", function () {
-            type = "post";
-            target = '[[${post.post_id}]]';
-            doReport(target, type);
-        });
+            //신고버튼 누르면
+            //.off가 달린 이유는 동적으로 로드하면서 레이아웃에 아래에 보이는 얘랑 동적으로 불러온 얘랑
+            //겹쳐버려서 3번씩 눌리기때문에 한번 해제해주고 이벤트 발생하는 식으로 해결.
+            $(document).off("click", ".post_report").on("click", ".post_report", function () {
+                type = "post";
+                target = '[[${post.post_id}]]';
+                doReport(target, type);
+            });
 
-        $(document).off("click", ".comment_report").on("click", ".comment_report", function () {
-            type = "comment";
-            target = $(this).data("comment-id");
-            doReport(target, type);
-        });
+            $(document).off("click", ".comment_report").on("click", ".comment_report", function () {
+                type = "comment";
+                target = $(this).data("comment-id");
+                doReport(target, type);
+            });
 
-        //삭제버튼 눌렸을때
-        $(document).off("click", "#delPost").on("click", "#delPost", function () {
-            const postId = '[[${post.post_id}]]';
-            isDel = confirm("本当に削除しますか？");
-            if (isDel) {
-                $.ajax({
-                    url: "./delete?target=" + postId,
-                    method: "GET",
-                    processData: false,
-                    contentType: false,
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader(csrfHeader, csrfToken);
-                    },
-                    success: function (res) {
-                        alert("削除ました。");
-                        window.location.href = "./list";
-                    },
-                    error: function (err) {
-                        alert(err.status);
-                        if (err.status == 400) {
-                            window.location.href = "./error";
-                        } else {
-                            alert("削除失敗");
+            //삭제버튼 눌렸을때
+            $(document).off("click", "#delPost").on("click", "#delPost", function () {
+                console.log("??")
+                const postId = '[[${post.post_id}]]';
+                isDel = confirm("本当に削除しますか？");
+                if (isDel) {
+                    $.ajax({
+                        url: "./delete?target=" + postId,
+                        method: "GET",
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader(csrfHeader, csrfToken);
+                        },
+                        success: function (res) {
+                            alert("削除しました。");
+                            window.location.href = "./list";
+                        },
+                        error: function (err) {
+                            alert(err.status);
+                            if (err.status == 400) {
+                                window.location.href = "/user/error";
+                            } else {
+                                alert("削除失敗");
+                                console.error(err);
+                            }
+                        },
+                    });
+                }
+            });
+
+            function doReport(target, type) {
+                const report = confirm("通報しますか？");
+                const reportData = new FormData();
+                reportData.append("type", type);
+                if (report) {
+                    $.ajax({
+                        url: "./report?target=" + target,
+                        method: "POST",
+                        data: reportData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader(csrfHeader, csrfToken);
+                        },
+                        success: function (res) {
+                            alert("通報されました。");
+                            window.location.href = "./list"
+                        },
+                        error: function (err) {
+                            alert("登録失敗");
                             console.error(err);
-                        }
-                    },
-                });
+                        },
+                    });
+                } else {
+                    return;
+                }
             }
-        });
 
-        function doReport(target, type) {
-            const report = confirm("通報しますか？");
-            const reportData = new FormData();
-            reportData.append("type", type);
-            if (report) {
+            // 작성 버튼이 눌렸을때
+            $(document).off("click", "#comment_submit").on("click", "#comment_submit", function () {
+                $(this).prop("disabled", true);
+                // 내용이 공백이거나 비어있는지 체크
+                contentEmpty = $("#commentContent").val().trim();
+
+                if (contentEmpty.length < 2) {
+                    if (contentEmpty == "") {
+                        alert("内容を入力してください。");
+                    } else {
+                        alert("二文字以上入力してください。");
+                    }
+                    $(this).prop("disabled", false);
+                    $("#commentContent").focus();
+                    return;
+                }
+
+                const formData = new FormData();
+
+                const contentHtml = $("#commentContent").val();
+                formData.append("comment", contentHtml);
+
+                const postId = '[[${post.post_id}]]';
+
+                formData.append("post_id", postId);
+
+                const csrfToken = $("meta[name='_csrf']").attr("content");
+                const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
                 $.ajax({
-                    url: "./report?target=" + target,
+                    url: "./commentWrite",
                     method: "POST",
-                    data: reportData,
+                    data: formData,
                     processData: false,
                     contentType: false,
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader(csrfHeader, csrfToken);
                     },
                     success: function (res) {
-                        alert("通報されました。");
-                        window.location.href = "./list"
+                        alert("コメントが登録されました。");
+                        $("#comment").load("/user/view?post=" + postId + " #comment > *");
                     },
                     error: function (err) {
                         alert("登録失敗");
                         console.error(err);
                     },
                 });
-            } else {
-                return;
-            }
-        }
-
-        // 작성 버튼이 눌렸을때
-        $(document).off("click", "#comment_submit").on("click", "#comment_submit", function () {
-            $(this).prop("disabled", true);
-            // 내용이 공백이거나 비어있는지 체크
-            contentEmpty = $("#commentContent").val().trim();
-
-            if (contentEmpty.length < 2) {
-                if (contentEmpty == "") {
-                    alert("内容を入力してください。");
-                } else {
-                    alert("二文字以上入力してください。");
-                }
-                $(this).prop("disabled", false);
-                $("#commentContent").focus();
-                return;
-            }
-
-            const formData = new FormData();
-
-            const contentHtml = $("#commentContent").val();
-            formData.append("comment", contentHtml);
-
-            const postId = '[[${post.post_id}]]';
-
-            formData.append("post_id", postId);
-
-            const csrfToken = $("meta[name='_csrf']").attr("content");
-            const csrfHeader = $("meta[name='_csrf_header']").attr("content");
-
-            $.ajax({
-                url: "./commentWrite",
-                method: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader(csrfHeader, csrfToken);
-                },
-                success: function (res) {
-                    alert("コメントが登録されました。");
-                    $("#comment").load("/user/view?post=" + postId + " #comment > *");
-                },
-                error: function (err) {
-                    alert("登録失敗");
-                    console.error(err);
-                },
             });
-        });
-    </script>
+        </script>
     </div>
 </body>
 

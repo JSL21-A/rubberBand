@@ -28,6 +28,10 @@ public class PublicService {
         return publicMapper.searchUserByUserName(username);
     }
 
+    public UserDto getUserIdAndRoleByUsername(String username) {
+        return publicMapper.getUserIdAndRoleByUsername(username);
+    }
+
     public List<PostVo> getPostList(int board_id) {
         return publicMapper.getPostList(board_id);
     }
@@ -70,5 +74,9 @@ public class PublicService {
 
     public void editPost(PostVo postVo) {
         publicMapper.editPost(postVo);
+    }
+
+    public void deletePost(Long post_id) {
+        publicMapper.deletePost(post_id);
     }
 }
