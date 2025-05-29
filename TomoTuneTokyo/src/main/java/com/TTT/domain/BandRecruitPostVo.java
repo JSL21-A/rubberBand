@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class BandRecruitPostVo {
 
-	private Long postId; // 게시글 ID
+	private Long post_id; // 게시글 ID
 	private Long band_id; // 밴드 ID
 	private String userId; // 작성자 ID
 
@@ -36,4 +36,8 @@ public class BandRecruitPostVo {
 	private String tag_value; // 실제 태그 내용
 
 	private String  band_name; // 밴드 이름
+	
+	private Long bandrecruitpost_count; // 조회수
+	
+	
 }

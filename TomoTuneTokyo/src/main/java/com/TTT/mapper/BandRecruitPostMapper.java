@@ -8,7 +8,6 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import com.TTT.domain.BandInsertVo;
 import com.TTT.domain.BandRecruitPostVo;
 
 @Mapper
@@ -20,12 +19,14 @@ public interface BandRecruitPostMapper {
 	String findUserIdByUsername(@Param("username") String username);
 
 	// 밴드 구인구직 insert
-	@Insert("INSERT INTO band_recruit_post (band_id, user_id, band_intro, title, recruit_position, activity_area, recruit_condition, preferred_genres, leader_comment, deadline, tag_keywords, image1_url, image2_url, image3_url, image4_url, created_at, updated_at) VALUES (#{band_id}, #{userId}, #{band_intro}, #{title}, #{recruitPosition}, #{activityArea}, #{recruitCondition}, #{preferredGenres}, #{leaderComment}, #{deadline}, #{tagKeywords}, #{image1Url}, #{image2Url}, #{image3Url}, #{image4Url}, NOW(), NOW())")
-	@Options(useGeneratedKeys = true, keyProperty = "postId")
+	@Insert("INSERT INTO band_recruit_post (band_id, user_id, band_intro, title, recruit_position, activity_area, recruit_condition, preferred_genres, leader_comment, deadline, tag_keywords, image1_url, image2_url, image3_url, image4_url, created_at, updated_at) " +
+	        "VALUES (#{band_id}, #{userId}, #{band_intro}, #{title}, #{recruitPosition}, #{activityArea}, #{recruitCondition}, #{preferredGenres}, #{leaderComment}, #{deadline}, #{tagKeywords}, #{image1Url}, #{image2Url}, #{image3Url}, #{image4Url}, NOW(), NOW())")
+	@Options(useGeneratedKeys = true, keyProperty = "post_id")
 	void insertBandRecruitPost(BandRecruitPostVo vo);
 
+
 	// 구인구직 추천 태그 insert
-	@Insert("INSERT INTO recruit_tags (post_id, tag_type, tag_value) VALUES (#{postId}, #{tag_type}, #{tag_value})")
+	@Insert("INSERT INTO recruit_tags (post_id, tag_type, tag_value) VALUES (#{post_id}, #{tag_type}, #{tag_value})")
 	void insertRecruitTag(BandRecruitPostVo vo);
 	
 	// band_id 조회

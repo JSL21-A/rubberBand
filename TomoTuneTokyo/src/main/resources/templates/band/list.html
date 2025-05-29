@@ -81,21 +81,21 @@
 		<!-- 카드 목록 -->
 		<div class="board-card-grid">
 		    <div class="board-card" th:each="post : ${postList}">
-				<a th:href="@{'/bandlist/view(postId=${post.postId})}">
+		        <!-- 이미지 클릭 시 상세 페이지로 이동 -->
+				<a th:href="@{'/bandselect/view?postId=' + ${post.post_id}}">
 				    <img th:src="@{${post.image1Url != null ? '/images/uploads/bands/' + post.image1Url : '/images/default.png'}}"
 				         alt="썸네일" class="card-image" />
 				</a>
-				<div class="card-info">
-					<p><strong>タイトル :</strong> <span th:text="${post.title}">sddssd</span></p>
-					<p><strong>バンド紹介 :</strong> <span th:text="${post.band_intro}">dassds</span></p>
-					<p><strong>バンド名 :</strong> <span th:text="${post.band_name}">LOL</span></p>
-				    <p class="card-meta">
-				        <span th:text="${#dates.format(post.createdAt, 'yyyy.MM.dd')}">작성일</span>
-				    </p>
-				</div>
+		        <div class="card-info">
+		            <p><strong>タイトル :</strong> <span th:text="${post.title}">sddssd</span></p>
+		            <p><strong>バンド紹介 :</strong> <span th:text="${post.band_intro}">dassds</span></p>
+		            <p><strong>バンド名 :</strong> <span th:text="${post.band_name}">LOL</span></p>
+		            <p class="card-meta">
+		                <span th:text="${#dates.format(post.createdAt, 'yyyy.MM.dd')}">작성일</span>
+		            </p>
+		        </div>
 		    </div>
 		</div>
-
 		<!-- 지원하기 모달 내 폼 페이징 구조 -->
 		<!-- ✅ HTML 구조 -->
 		<div class="modal fade" id="applyModal" tabindex="-1" role="dialog" aria-labelledby="applyModalLabel">
@@ -115,6 +115,7 @@
 						<form id="applyForm" action="/bandlist/insert" method="post" enctype="multipart/form-data">
 
 							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+							
 							<input type="hidden" name="selectedGenres" id="selectedGenres">
 							<input type="hidden" name="selectedPositions" id="selectedPositions">
 							<input type="hidden" name="selectedGenders" id="selectedGenders">

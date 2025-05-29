@@ -69,7 +69,8 @@ public class BandRecruitPostService {
 
 		// post insert
 		bandRecruitpostMapper.insertBandRecruitPost(vo);
-		Long postId = vo.getPostId(); 
+		Long postId = vo.getPost_id(); 
+		 System.out.println("Generated post_id: " + postId); 
 
 		// 태그 저장
 		String[] types = { "genre", "position", "gender", "age" };
@@ -84,7 +85,7 @@ public class BandRecruitPostService {
 					continue;
 
 				BandRecruitPostVo tagVo = new BandRecruitPostVo();
-				tagVo.setPostId(postId);
+				tagVo.setPost_id(postId);
 				tagVo.setTag_type(types[i]);
 				tagVo.setTag_value(tag.trim());
 
