@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>マイアクティビティ</title>
+  <style>
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 2rem;
+      color: #222;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 1.5rem;
+      border-bottom: 2px solid #ddd;
+      margin-bottom: 1rem;
+    }
+
+    .tab {
+      font-weight: bold;
+      padding-bottom: 0.5rem;
+      cursor: pointer;
+      color: #333;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab.active {
+      border-color: #000;
+    }
+
+    table {
+      width: 100%;
+      background: white;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    td a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    td a:hover {
+      text-decoration: underline;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    input[type="text"] {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 200px;
+    }
+
+    button {
+      padding: 0.5rem 1rem;
+      background: #000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #333;
+    }
+
+    .pagination {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .checkbox {
+      text-align: center;
+    }
+    
+    .container {
+  max-width: 720px;
+  margin: 0 auto;
+}
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>マイアクティビティ</h2>
+
+    <div class="tabs">
+      <div class="tab active">投稿</div>
+      <div class="tab">コメント</div>
+      <div class="tab">いいね</div>
+      <div class="tab">スクラップ</div>
+      <div class="tab">バンド応募履歴</div>
+    </div>
+
+    <table>
+  <thead>
+    <tr>
+      <th>コメント内容</th>
+      <th>投稿日</th>
+      <th>投稿リンク</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr th:each="comment : ${commentList}">
+      <td th:text="${comment.commentContent}">サンプルコメント</td>
+      <td th:text="${#temporals.format(comment.commentCreatedAt.toLocalDateTime(), 'yyyy-MM-dd')}">2025-01-01</td>
+      <td><a th:href="@{/post/view/{id}(id=${comment.postId})}">投稿を見る</a></td>
+    </tr>
+  </tbody>
+</table>
+
+
+    <div class="controls">
+      <button>削除</button>
+      <input type="text" placeholder="タイトルで検索">
+      <button>検索</button>
+    </div>
+
+    <div class="pagination">
+      <span>1</span>
+    </div>
+  </div>
+</body>
+
+</html>
