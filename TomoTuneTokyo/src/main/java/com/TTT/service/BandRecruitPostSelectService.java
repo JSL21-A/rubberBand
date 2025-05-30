@@ -49,6 +49,7 @@ public class BandRecruitPostSelectService {
 		} else {
 			return new ArrayList<>();
 		}
+
 	}
 
 	// username을 기반으로 user_id(UUID) 조회
@@ -80,6 +81,31 @@ public class BandRecruitPostSelectService {
 	    return bandRecruitPostSelectMapper.countExistingApplication(params) > 0;
 	}
 
+	// 스크랩 중복 확인 
+	public boolean hasAlreadyScrapped(Long postId, String userId) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("postId", postId);
+	    params.put("userId", userId);
+	    int count = bandRecruitPostSelectMapper.countScrapByUserAndPost(params);
+	    return count > 0;
+	}
+
+	// 스크랩 추가 
+	public void insertScrap(Long postId, String userId) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("postId", postId);
+	    params.put("userId", userId);
+	    bandRecruitPostSelectMapper.insertScrap(params);
+	}
+
+
+	// 스크랩 해제
+	public void deleteScrap(Long postId, String userId) {
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("postId", postId);
+	    param.put("userId", userId);
+	    bandRecruitPostSelectMapper.deleteScrap(param);
+	}
 
 
 }

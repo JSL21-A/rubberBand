@@ -33,7 +33,9 @@ public class BandRecruitPostSelectController {
 			@RequestParam(value = "genre", required = false, defaultValue = "") String genre,
 			@RequestParam(value = "position", required = false, defaultValue = "") String position,
 			@RequestParam(value = "gender", required = false, defaultValue = "") String gender,
-			@RequestParam(value = "age", required = false, defaultValue = "") String age, Model model) {
+
+			@RequestParam(value = "age", required = false, defaultValue = "") String age, Model model,
+			Principal principal) {
 
 		// 게시글 정보 불러오기
 		BandRecruitPostVo post = bandRecruitPostSelectService.getPostById(postId);
@@ -41,7 +43,7 @@ public class BandRecruitPostSelectController {
 
 		// postId로 bandId를 추출
 		Long bandId = post.getBand_id(); // 게시글에서 bandId를 불러옴
-		
+
 		// 밴드 리더 정보 가져오기
 		BandInsertVo leaderInfo = bandinsertselectservice.selectLeaderInfo(bandId);
 		model.addAttribute("leader", leaderInfo);
@@ -65,62 +67,102 @@ public class BandRecruitPostSelectController {
 
 		List<String> recommendedTags = bandRecruitPostSelectService.getRecommendedTags(postId);
 		model.addAttribute("recommendedTags", recommendedTags);
-		
-		
+
+
+		boolean isScrapped = false;
+		if (principal != null) {
+			String username = principal.getName();
+			String userId = bandRecruitPostSelectService.findUserIdByUsername(username);
+			if (userId != null) {
+				isScrapped = bandRecruitPostSelectService.hasAlreadyScrapped(postId, userId);
+			}
+		}
+		model.addAttribute("isScrapped", isScrapped);
+
 
 		return "band/view"; // 해당 게시글에 대한 상세보기 페이지
 	}
-
 
 	// 이력서
 	@GetMapping("/resume/list")
 	@ResponseBody
 	public List<Long> getResumeIdList(Principal principal) {
-	    String username = principal.getName();
-	    System.out.println("✅ username: " + username);
+		String username = principal.getName();
+		System.out.println("✅ username: " + username);
 
-	    String userId = bandRecruitPostSelectService.findUserIdByUsername(username);
-	    System.out.println("✅ userId (UUID): " + userId);
+		String userId = bandRecruitPostSelectService.findUserIdByUsername(username);
+		System.out.println("✅ userId (UUID): " + userId);
 
-	    List<Long> resumes = bandRecruitPostSelectService.getAllResumeIdsByUserId(userId);
-	    System.out.println("✅ 불러온 이력서 개수: " + resumes.size());
+		List<Long> resumes = bandRecruitPostSelectService.getAllResumeIdsByUserId(userId);
+		System.out.println("✅ 불러온 이력서 개수: " + resumes.size());
 
-	    return resumes;
+		return resumes;
 	}
 
 	// 지원하기
 	@PostMapping("/apply")
-    public String applyToPost(@RequestParam("postId") Long postId,
-                               @RequestParam("resume_id") Long resumeId,
-                               @RequestParam("band_id") Long bandId,
-                               RedirectAttributes redirectAttributes,
-                               Principal principal) {
 
-		   if (principal == null) {
-		        throw new RuntimeException("ログインされた使用者のみに接近出来ます。");
-		    }
-		   
-        String username = principal.getName();
-        String userId = bandRecruitPostSelectService.findUserIdByUsername(username); // UUID
-        
-        if (userId == null) {
-            throw new RuntimeException("유효한 user_id를 찾을 수 없습니다.");
-        }
-        
-        System.out.println("📌 post_id: " + postId + ", resume_id: " + resumeId + ", band_id: " + bandId);
+	public String applyToPost(@RequestParam("postId") Long postId, @RequestParam(value = "resume_id", required = false) Long resumeId,
+			@RequestParam("band_id") Long bandId, RedirectAttributes redirectAttributes, Principal principal) {
 
-        // 지원 중복 방지 (한 band_id 당 한 번만 지원가능)
-        boolean alreadyApplied = bandRecruitPostSelectService.hasAlreadyApplied(postId, userId);
-        if (!alreadyApplied) {
-            bandRecruitPostSelectService.insertApplication(postId, userId, resumeId, bandId);
-        }
+		if (principal == null) {
+			throw new RuntimeException("ログインされた使用者のみに接近出来ます。");
+		}
 
-        // FlashAttribute 없이 URL 파라미터로 메시지 전달
-        String message = alreadyApplied ? "duplicate" : "success";
+		String username = principal.getName();
+		String userId = bandRecruitPostSelectService.findUserIdByUsername(username); // UUID
+
+		if (userId == null) {
+			throw new RuntimeException("유효한 user_id를 찾을 수 없습니다.");
+		}
+
+		System.out.println("post_id: " + postId + ", resume_id: " + resumeId + ", band_id: " + bandId);
+
+		  // ✅ 이력서 없을 경우 에러 메시지 리다이렉트
+		if (resumeId == null) {
+			return "redirect:/bandselect/view?postId=" + postId + "&band_id=" + bandId + "&message=noresume";
+		}
+
+		// 지원 중복 방지 (한 band_id 당 한 번만 지원가능)
+		boolean alreadyApplied = bandRecruitPostSelectService.hasAlreadyApplied(postId, userId);
+		if (!alreadyApplied) {
+			bandRecruitPostSelectService.insertApplication(postId, userId, resumeId, bandId);
+		}
+
+		// FlashAttribute 없이 URL 파라미터로 메시지 전달
+		String message = alreadyApplied ? "duplicate" : "success";
+
+		return "redirect:/bandselect/view?postId=" + postId + "&band_id=" + bandId + "&resume_id=" + resumeId
+				+ "&message=" + message;
+	}
+
+	// 스크랩
+	@PostMapping("/scrap")
+	public String insertScrap(@RequestParam("postId") Long postId, Principal principal) {
+		if (principal == null) {
+			throw new RuntimeException("ログインが必要とされます。");
+		}
+
+		String username = principal.getName();
+		String userId = bandRecruitPostSelectService.findUserIdByUsername(username);
+
+		if (userId == null) {
+			throw new RuntimeException("ログインしてください。");
+		}
+
+		boolean alreadyScrapped = bandRecruitPostSelectService.hasAlreadyScrapped(postId, userId);
+
+		if (alreadyScrapped) {
+			bandRecruitPostSelectService.deleteScrap(postId, userId); // 해제
+		} else {
+			bandRecruitPostSelectService.insertScrap(postId, userId); // 추가
+		}
+
+		int status = alreadyScrapped ? 0 : 1;
+		return "redirect:/bandselect/view?postId=" + postId + "&scrap=" + status;
+	}
 
 
-        return "redirect:/bandselect/view?postId=" + postId + "&band_id=" + bandId + "&resume_id=" + resumeId + "&message=" + message;
-    }
 
 
 
