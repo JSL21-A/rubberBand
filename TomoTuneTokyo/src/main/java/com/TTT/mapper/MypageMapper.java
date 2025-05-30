@@ -7,7 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 import com.TTT.domain.BandHistoryDto;
 import com.TTT.domain.MyActiveDto;
 import com.TTT.domain.MypageDto;
+import com.TTT.domain.PostVo;
 import com.TTT.domain.UserProfileDto;
+import org.apache.ibatis.annotations.Param;
+
 
 @Mapper
 public interface MypageMapper {
@@ -47,6 +50,16 @@ public interface MypageMapper {
 	//댓글조회
 	// MypageMapper.java
 	List<MyActiveDto> findCommentsByUserId(String userId);
+
+	//댓글 작성글 이동
+	 PostVo findPostById(Long postId);
+	 
+	// 비밀번호 조회
+	 String getPasswordByUserId(String userId);
+
+	 // 비밀번호 변경
+	 int updatePassword(@Param("userId") String userId, @Param("password") String password);
+
 
 
 
