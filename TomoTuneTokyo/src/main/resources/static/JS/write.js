@@ -238,7 +238,7 @@ $(document).on("click", "#write_submit", function () {
     const csrfHeader = $("meta[name='_csrf_header']").attr("content");
 
     $.ajax({
-        url: "./doWrite",
+        url: window.location.search == "" ? "./doWrite" : "./doWrite" + window.location.search,
         method: "POST",
         data: formData,
         processData: false,
@@ -263,6 +263,7 @@ $(document).on("click", "#write_submit", function () {
 
 //htmx로 동적로드하면 바인딩안되는 망할 상황을 위한 수동바인딩.
 document.body.addEventListener("htmx:afterSwap", function (evt) {
+    togglePlaceholder();
     const scripts = evt.detail.target.querySelectorAll("script");
     scripts.forEach((oldScript) => {
         const newScript = document.createElement("script");
@@ -278,7 +279,6 @@ document.body.addEventListener("htmx:afterSwap", function (evt) {
         document.head.removeChild(newScript); // 깔끔하게 처리
     });
     boardId = $("#write_board_id").val();
-    console.log(boardId);
     //카테고리에 해당 카테고리 표시
     setText = $($("li[data-board_id=" + boardId + "]")).text();
     $($(".write_select_box")[0]).find(".write_selected span").text(setText);

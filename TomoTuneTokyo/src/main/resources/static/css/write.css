@@ -3,6 +3,11 @@ body {
     overflow: scroll;
 }
 
+#content {
+    width: 90vw;
+    margin: 0 auto;
+}
+
 .write_edit-area {
     position: relative;
 }
@@ -143,7 +148,9 @@ body {
 .write_btn-area {
     display: flex;
     justify-content: space-between;
-    padding: 1% 3%;
+    padding: 1%;
+    margin: 2%;
+    margin-bottom: calc(2% + 40px);
 }
 
 #write_img-selector {
