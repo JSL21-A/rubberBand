@@ -205,6 +205,38 @@ function goToNotification() {
     .catch(console.error);
 }
 
+// badge 업데이트 함수
+function updateNotifyBadge() {
+  fetch('/notify/unread/count', { credentials: 'same-origin' })
+    .then(res => res.json())
+    .then(count => {
+      document.querySelectorAll('.notification-badge').forEach(badge => {
+        if (count > 0) {
+          badge.textContent = count;
+          badge.style.display = 'block';
+        } else {
+          badge.style.display = 'none';
+        }
+      });
+    })
+    .catch(console.error);
+}
+
+// (1) 페이지 로드 시 초기 한 번
+document.addEventListener('DOMContentLoaded', () => {
+  updateNotifyBadge();
+});
+
+// (2) SSE로 새로운 알림 받으면 갱신
+if (window.currentUser && window.currentUser !== 'anonymous') {
+  const evtSource = new EventSource('/notify/connect');
+  evtSource.addEventListener('notification', e => {
+    const n = JSON.parse(e.data);
+    showToast(n.message, n.url);
+    updateNotifyBadge();  // 새 알림 올 때마다 badge 업데이트
+  });
+}
+
 // 돌아가기 버튼 클릭 시 기본 메뉴로 복귀
 function showMainMenu() {
   document.getElementById('notificationPane').style.display = 'none';

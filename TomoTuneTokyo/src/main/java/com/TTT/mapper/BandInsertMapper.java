@@ -16,7 +16,7 @@ import com.TTT.domain.BandInsertVo;
 public interface BandInsertMapper {
 	
 	// 밴드 멤버 정보 등록
-	@Insert("INSERT INTO band_member (band_id, user_id, member_type, stage_name, member_position, member_mbti, favorite_band, member_motto, photo, created_at) VALUES (#{band_id}, #{user_id}, #{member_type}, #{stage_name}, #{member_position}, #{member_mbti}, #{favorite_band}, #{member_motto}, #{photo}, NOW())")
+	@Insert("INSERT INTO band_member (band_id, user_id, member_type, stage_name, member_position, member_mbti, favorite_band, member_motto, created_at, status) VALUES (#{band_id}, #{user_id}, #{member_type}, #{stage_name}, #{member_position}, #{member_mbti}, #{favorite_band}, #{member_motto}, NOW(), #{status})")
 	@Options(useGeneratedKeys = true, keyProperty = "band_member_id") // band_member_id 시퀀스 -> 자동으로 member_id 추가
 	void InsertBandMember(BandInsertVo vo);
 	
@@ -45,7 +45,6 @@ public interface BandInsertMapper {
 	@Select("SELECT user_id, nickname, user_img FROM user_profile WHERE user_id <> #{excludeUserId}")
 	List<BandInsertVo> selectAllMembersSelect(@Param("excludeUserId") String excludeUserId);
 
-
 	// 결성된 밴드 list에서 조회
 	@Select("SELECT b.band_id, b.band_name, b.band_intro, b.band_profile_img, b.created_at, m.stage_name AS stage_name FROM bands b JOIN band_member m ON b.band_id = m.band_id WHERE m.member_type = 'LEADER' ORDER BY b.created_at DESC")
 	List<BandInsertVo> selectAllBands();
@@ -69,6 +68,7 @@ public interface BandInsertMapper {
 	// 전체 밴드 수 조회 (페이징용)
 	@Select("SELECT COUNT(*) FROM bands WHERE (#{genre} IS NULL OR #{genre} = '') AND (#{position} IS NULL OR #{position} = '') AND (#{gender} IS NULL OR #{gender} = '') AND (#{age} IS NULL OR #{age} = '') AND (#{keyword} IS NULL OR #{keyword} = '')")
 	int countAllBands(@Param("genre") String genre, @Param("position") String position, @Param("gender") String gender, @Param("age") String age, @Param("keyword") String keyword);
+
 
 
 

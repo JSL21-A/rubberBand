@@ -167,6 +167,7 @@ $('#login').on('click', async e => {
         $('.close-btn').off('click').on('click', () => {
           $('#slideMenu').removeClass('open');
         });
+		updateNotifyBadge();
       });
 	   await initChat(currentUser);
 	      })

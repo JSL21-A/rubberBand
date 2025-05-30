@@ -23,15 +23,16 @@
 				<img th:src="@{'/images/uploads/bands/' + ${band.band_cover_img}}" alt="커버 이미지">
 				
 				<!-- 초대 알림 고정 팝업 (오른쪽 상단) -->
-				<div id="member-invite-popup" class="member-invite-fixed" style="display: none;">
+				
+				<div id="member-invite-popup" class="member-invite-fixed" th:if="${currentUserVo != null  && currentUserVo.status == 'I'}" style="display: none;">
 				  <button class="invite-close-btn">×</button>
 				  <h4 class="popup-title">バンド招待のお知らせ</h4>
 				  <p class="popup-message">
-				    <strong>“Tomo Groove”</strong> バンドからメンバー招待を受けました。<span class="register-question">登録しますか？</span>
+				    <strong>バンド名</strong>から バンドからメンバー招待を受けました。<span class="register-question">登録しますか？</span>
 				  </p>
 				  <div class="popup-buttons">
-				    <button class="btn-accept">受諾</button>
-				    <button class="btn-decline">拒絶</button>
+				    <button id = "btn-accept" class="btn-accept">受諾</button>
+				    <button id = "btn-decline" class="btn-decline">拒絶</button>
 				  </div>
 				</div>
 
@@ -56,7 +57,7 @@
 				<!-- 수정/채팅 버튼 -->
 				<div class="band-actions">
 					<button class="btn-edit" id="edit-toggle-btn" type="button" th:if="${isLeader}">編集する</button>
-					<button class="btn-chat">チャットする</button>
+					<button id="btn-chat" class="btn-chat" th:if="${currentUserId != leader.user_id}" th:attr="data-user-id=${leader.user_id}">チャットする</button> 
 				</div>
 			</div>
 
@@ -2503,70 +2504,52 @@
 			});
 		</script>
 		
-		<script>
-		  document.addEventListener("DOMContentLoaded", () => {
-		    const popup = document.getElementById("member-invite-popup");
-		    const acceptBtn = popup?.querySelector(".btn-accept");
-		    const declineBtn = popup?.querySelector(".btn-decline");
-
-		    // 팝업 무조건 표시
-		    if (popup) {
-		      popup.style.display = "block";
-		    }
-
-		    // 수락 버튼 클릭 시 처리
-		    acceptBtn?.addEventListener("click", () => {
-		      alert("초대를 수락했습니다."); // 추후 서버 요청 가능
-		      popup.style.display = "none";
-		    });
-
-		    // 거절 버튼 클릭 시 처리
-		    declineBtn?.addEventListener("click", () => {
-		      alert("초대를 거절했습니다.");
-		      popup.style.display = "none";
-		    });
-		  });
-		</script>
 		
+		
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		  const band_id      = [[${band.band_id}]];
+		  const currentUser = [[${currentUserVo?.user_id}]];
+		/*]]>*/
+		</script>
 		<script>
-		  document.addEventListener("DOMContentLoaded", () => {
-		    const popup = document.getElementById("member-invite-popup");
-		    const toggleBtn = document.getElementById("invite-toggle-btn");
-		    const closeBtn = popup?.querySelector(".invite-close-btn");
-		    const acceptBtn = popup?.querySelector(".btn-accept");
-		    const declineBtn = popup?.querySelector(".btn-decline");
+		const popup = document.getElementById('member-invite-popup');
+		if(popup){
+			
+		    popup.style.display = "block";
 
-		    // 페이지 로드 시 팝업 보이기
-		    if (popup) {
-		      popup.style.display = "block";
-		    }
-
-		    // 수락 버튼
-		    acceptBtn?.addEventListener("click", () => {
-		      alert("초대를 수락했습니다.");
-		      popup.style.display = "none";
-		      toggleBtn.style.display = "block";
-		    });
-
-		    // 거절 버튼
-		    declineBtn?.addEventListener("click", () => {
-		      alert("초대를 거절했습니다.");
-		      popup.style.display = "none";
-		      toggleBtn.style.display = "block";
-		    });
-
-		    // 닫기 버튼
-		    closeBtn?.addEventListener("click", () => {
-		      popup.style.display = "none";
-		      toggleBtn.style.display = "block";
-		    });
-
-		    // 다시 보기 버튼
-		    toggleBtn?.addEventListener("click", () => {
-		      popup.style.display = "block";
-		      toggleBtn.style.display = "none";
-		    });
-		  });
+			
+			document.getElementById('btn-accept').addEventListener('click', () => {
+				fetch(`/bandinvite/${band_id}/invite/${currentUser}/accept`, {
+					method: 'POST',
+					headers: { [csrfHeader]: csrfToken }
+				})
+				.then(res => {
+					if (!res.ok) throw new Error('수락 실패');
+					popup.style.display = 'none';
+					alert('招待を受け入れました')
+				})
+				.catch(err => {
+					console.error(err);
+					alert('수락 중 오류 발생')
+				})
+			})
+			document.getElementById('btn-decline').addEventListener('click', () => {
+				fetch(`/bandinvite/${band_id}/invite/${currentUser}/decline`, {
+					method: 'POST',
+					headers: { [csrfHeader]: csrfToken }
+				})
+				.then(res => {
+					if (!res.ok) throw new Error('거절 실패');
+					popup.style.display = 'none';
+					alert('招待を拒否しました')
+				})
+				.catch(err => {
+					console.error(err);
+					alert('거절 중 오류 발생')
+				})
+			})
+		}
 		</script>
 
 

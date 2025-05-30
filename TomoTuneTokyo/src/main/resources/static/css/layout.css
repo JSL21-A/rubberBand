@@ -572,11 +572,29 @@ body {
 	background-color: transparent;
 	border-radius: 50%;
 	transition: background-color 0.2s ease;
+	
 }
 
 .notification:hover {
 	background-color: rgba(255, 255, 255, 0.1);
 }
+
+.notification-badge{
+  position: absolute;
+  top: -4px;     /* 아이콘 위쪽으로 살짝 올려 붙이기 */
+  right: -4px;   /* 오른쪽 끝에 붙이기 */
+  min-width: 18px;
+  height: 18px;
+  line-height: 18px;
+  padding: 0 4px;
+  background: red;
+  color: white;
+  font-size: 12px;
+  border-radius: 9px;
+  text-align: center;
+  pointer-events: none;
+}
+
 
 .welcome {
 	display: flex;
@@ -1021,6 +1039,7 @@ textarea::placeholder {
 /*상세보기 모바일 UI*/
 /* ✅ 모바일 및 좁은 화면 대응 전체 CSS */
 
+
 @media (max-width: 1024px) {
 	.band-and-detail-container {
 		display: flex;
@@ -1060,27 +1079,6 @@ textarea::placeholder {
 		color: #000;
 	}
 
-	/* 팝업 슬라이더 */
-	#profile-popup {
-		width: 100%;
-		overflow: hidden;
-		display: flex;
-		justify-content: center;
-		margin-top: 16px;
-	}
-
-	.swiper.profile-swiper {
-		width: 100%;
-		max-width: 360px;
-		position: relative;
-	}
-
-	.swiper-slide img {
-		width: 100%;
-		height: auto;
-		object-fit: contain;
-		max-width: 100%;
-	}
 
 	.swiper-button-prev,
 	.swiper-button-next {
@@ -1190,15 +1188,17 @@ textarea::placeholder {
 .detail-container {
 	display: flex;
 	width: 100%;
+	height: 100%;
 	max-width: 1800px;
-	margin: -50px auto;
+	margin: 20px auto;
 	border-radius: 10px;
 	background: #fff;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 	gap: 40px;
 	align-items: flex-start;
 	overflow: visible;
-	margin-bottom: 20px;
+	
+	margin-bottom: 100px;
 }
 
 /*구인 모집 마감일*/
@@ -1218,6 +1218,7 @@ textarea::placeholder {
 .deadline-text {
 	color: #000;
 	font-weight: 700;
+	
 }
 
 /* 왼쪽 이미지 */
@@ -1434,15 +1435,23 @@ textarea::placeholder {
 /* 프로필 팝업 이미지 고정 위치 표시용 */
 
 #profile-popup {
-	position: absolute;
-	top: 0;
-	left: 100%;
-	/* ✅ band-profile-area 오른쪽에 붙게 */
-	margin-left: 30px;
-	/* ✅ 살짝 띄워서 간격 확보 */
-	z-index: 999;
-	display: none;
-	pointer-events: auto;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    /* band-profile-area 오른쪽에 붙게 */
+    margin-left: 30px;
+    /* 살짝 띄워서 간격 확보 */
+    z-index: 999;
+    display: none;
+    pointer-events: auto;
+    visibility: hidden;  /* 기본적으로 숨김 */
+    opacity: 0;           /* 기본적으로 투명 */
+    transition: opacity 0.3s ease, visibility 0s 0.3s; /* 부드럽게 표시/숨김 */
+}
+
+#profile-popup.visible {
+    visibility: visible; /* 마우스 오버 시 보이도록 설정 */
+    opacity: 1;          /* 불투명하게 설정 */
 }
 
 .band-info-container,
@@ -1532,7 +1541,7 @@ textarea::placeholder {
 /* 작은 이미지 */
 .image-container img {
 	width: 100%;
-	height: 100%;
+	height: auto;
 	object-fit: cover;
 	border-radius: 50%;
 }
@@ -1618,11 +1627,9 @@ textarea::placeholder {
 .band-info-container {
 	display: flex;
 	flex-direction: column;
-	/* ✅ 세로 정렬로 변경 */
 	align-items: center;
-	/* ✅ 가운데 정렬 */
 	gap: 40px;
-	margin: 40px auto;
+	margin: 40px 180px;
 	max-width: 1100px;
 	position: relative;
 }
@@ -1653,7 +1660,7 @@ textarea::placeholder {
 
 .band-comment-area {
 	position: relative;
-	background: #fafafa;
+	background: #e4e4e4 !important;
 	padding: 24px 32px;
 	border-radius: 20px;
 	font-size: 16px;
@@ -1680,18 +1687,7 @@ textarea::placeholder {
 	padding: 20px 24px;
 }
 
-/* 말풍선 꼬리 추가 (왼쪽 아래 삼각형) */
-.band-comment-area::after {
-	content: "";
-	position: absolute;
-	bottom: -20px;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 0;
-	height: 0;
-	border: 12px solid transparent;
-	border-top-color: #fafafa;
-}
+
 
 .apply-btn-wrap.right-align {
 	display: flex;
@@ -1734,7 +1730,6 @@ textarea::placeholder {
 	text-align: center;
 	font-size: 35px;
 	font-weight: bold;
-	margin-bottom: 60px;
 }
 
 .band-title span {
@@ -4093,5 +4088,168 @@ body {
   margin: 100px auto !important; /* 수직 간격 + 수평 중앙 정렬 */
 }
 
+/* ✅ applyModal 스크롤 잘림 방지 및 높이 제한 */
+#applyModal .modal-dialog {
+  max-height: 90vh;             /* 브라우저 높이 기준 제한 */
+  display: flex;
+  flex-direction: column;
+}
 
+#applyModal .modal-content {
+  max-height: 90vh;             /* 콘텐츠 영역 제한 */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#applyModal .modal-body {
+  flex: 1;
+  overflow-y: auto;             /* 세로 스크롤 허용 */
+  padding: 20px;
+}
+
+#memberSearchPopup {
+  z-index: 3000 !important;
+}
+
+#memberSearchResult {
+  max-height: 600px;   /* 10명 정도 기준 높이 */
+  overflow-y: auto;    /* 세로 스크롤 활성화 */
+}
+
+/* form을 감싸는 기본 스타일 */
+.post-detail-form {
+    display: block;
+    width: 100%;
+    max-width: 950px;
+    margin: 0 -0.5px;
+    padding: 20px;
+	
+}
+
+/* title-and-button 영역 스타일 */
+.post-detail-form .title-and-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.post-detail-form .title-and-button h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+    color: #000;
+}
+
+/* 버튼 스타일 */
+.post-detail-form .apply-btn-absolute {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.post-detail-form .apply-btn-absolute:hover {
+    background-color: #333;
+}
+
+/* meta 영역 스타일 */
+.post-detail-form .detail-meta {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 30px;
+}
+
+.post-detail-form .detail-meta span {
+    margin-right: 15px;
+}
+
+/* content 영역 스타일 */
+.post-detail-form .detail-content {
+    font-size: 16px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.post-detail-form .detail-content h3 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+/* 상세 텍스트 스타일 */
+.post-detail-form .detail-content p {
+    font-size: 16px;
+    color: #444;
+    margin-top: 8px;
+}
+
+/* 기본 팝업 스타일 (기본적으로 숨겨두기) */
+#profile-popup {
+    display: none;
+    position: absolute;
+    top: 60px;  /* 리더 이미지 바로 아래로 팝업 위치 */
+    left: 0;
+    z-index: 1000;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+/* 팝업 내용 */
+.swiper.profile-swiper {
+    width: 400px;
+    height: 300px;
+    border-radius: 10px;
+}
+
+.swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.tag-black-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.tag-black {
+    display: inline-block;
+    padding: 10px 14px;
+    background-color: #000;
+    color: #fff;
+    border-radius: 20px;
+    font-size: 14px;
+    white-space: nowrap;
+	font-weight: bold;
+}
+
+/*view 수정하기 버튼*/
+.edit-button-container {
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+.btn-edit {
+    background-color: #f0ad4e;
+    border: none;
+    padding: 8px 16px;
+    font-weight: bold;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
 

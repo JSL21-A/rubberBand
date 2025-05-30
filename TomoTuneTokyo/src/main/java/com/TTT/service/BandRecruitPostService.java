@@ -13,10 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.TTT.domain.BandRecruitPostVo;
-import com.TTT.mapper.BandInsertMapper;
 import com.TTT.mapper.BandRecruitPostMapper;
 
-// 밴드 결성 후 밴드 상세 조회
+// 구인구인 list
 @Service
 public class BandRecruitPostService {
 
@@ -68,9 +67,10 @@ public class BandRecruitPostService {
 			}
 		}
 
-		// ✅ post insert
+		// post insert
 		bandRecruitpostMapper.insertBandRecruitPost(vo);
-		Long postId = vo.getPostId(); // auto_increment PK 받기
+		Long postId = vo.getPost_id(); 
+		 System.out.println("Generated post_id: " + postId); 
 
 		// 태그 저장
 		String[] types = { "genre", "position", "gender", "age" };
@@ -85,7 +85,7 @@ public class BandRecruitPostService {
 					continue;
 
 				BandRecruitPostVo tagVo = new BandRecruitPostVo();
-				tagVo.setPostId(postId);
+				tagVo.setPost_id(postId);
 				tagVo.setTag_type(types[i]);
 				tagVo.setTag_value(tag.trim());
 
@@ -119,10 +119,28 @@ public class BandRecruitPostService {
 	// 페이징된 리스트 조회
 	public List<BandRecruitPostVo> getRecruitPostsByPage(int page, int size) {
 	    int offset = Math.max(0, (page - 1) * size);
-	    return bandRecruitpostMapper.getRecruitPostsByPage(size, offset);
+	    List<BandRecruitPostVo> postList = bandRecruitpostMapper.getRecruitPostsByPage(size, offset);
+	    
+	    // 각 게시글의 band_id로 band_name을 조회하여 설정
+	    for (BandRecruitPostVo post : postList) {
+	        String bandName = bandRecruitpostMapper.findBandNameById(post.getBand_id());
+	        post.setBand_name(bandName);
+	    }
+	    return postList;
 	}
 
-	
+
+	// 밴드명 검색창 검색
+	public List<BandRecruitPostVo> searchByTeamNameOrPosition(String keyword) {
+	    return bandRecruitpostMapper.searchBandsByName(keyword);
+	}
+
+	// band_name 불러오기
+	public String getBandNameById(Long bandId) {
+	    return bandRecruitpostMapper.findBandNameById(bandId);
+	}
+
+
 	
 
 }

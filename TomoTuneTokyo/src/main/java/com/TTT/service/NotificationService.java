@@ -80,5 +80,10 @@ public class NotificationService {
             notificationRepo.save(n);
         });
     }
+    
+    //안읽은 알림 개수 조회하기
+    public long countUnreadNotifications(String userId) {
+        return notificationRepo.countByUserIdAndIsReadFalse(userId);
+    }
 
 }
