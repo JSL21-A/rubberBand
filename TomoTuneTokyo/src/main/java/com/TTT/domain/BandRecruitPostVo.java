@@ -39,5 +39,10 @@ public class BandRecruitPostVo {
 	
 	private Long bandrecruitpost_count; // 조회수
 	
+	private Long POST_APPLY_ID;
+	private Long resume_id;
+
+	
+	
 	
 }

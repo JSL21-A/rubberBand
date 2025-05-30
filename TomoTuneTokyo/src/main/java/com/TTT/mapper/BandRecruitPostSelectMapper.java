@@ -1,7 +1,11 @@
 package com.TTT.mapper;
 
+import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.data.repository.query.Param;
@@ -29,8 +33,32 @@ public interface BandRecruitPostSelectMapper {
 	@Select("SELECT bandrecruitpost_count FROM band_recruit_post WHERE post_id = #{postId}")
 	Long getViewCount(Long postId);
 
+	// 추천 태그 조회s
 	@Select("SELECT tag_keywords FROM band_recruit_post WHERE post_id = #{postId}")
 	String getTagKeywords(Long postId);
 
+	// 최신 RESUME_ID 1개 조회 (UUID 기준)
+	@Select("SELECT resume_id FROM resume WHERE user_id = #{userId} ORDER BY created_at DESC LIMIT 1")
+	Long getLatestResumeIdByUserId(@Param("userId") String userId);
+	
+	// 등록된 모든 RESUME_ID 리스트 조회 (UUID 기준)
+	@Select("SELECT resume_id FROM resume WHERE user_id = #{userId} ORDER BY created_at DESC")
+	List<Long> getAllResumeIdsByUserId(@Param("userId") String userId);
 
+	// username으로 user_id(UUID) 조회
+	@Select("SELECT user_id FROM users WHERE username = #{username}")
+	String findUserIdByUsername(@Param("username") String username);
+
+	// 지원하기 post_id가 param 인식이 안되서 우회로 작성
+	@Insert("INSERT INTO post_apply (post_id, user_id, resume_id, band_id, created_at) " +
+	        "VALUES (#{postId}, #{userId}, #{resumeId}, #{bandId}, NOW())")
+	void insertApplication(Map<String, Object> params);
+	
+	// 지원 중복 방지 (한 band_id 당 한 번만 지원가능)
+	@Select("SELECT COUNT(*) FROM post_apply WHERE post_id = #{postId} AND user_id = #{userId}")
+	int countExistingApplication(Map<String, Object> params);
+
+
+
+	
 }
