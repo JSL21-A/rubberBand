@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.TTT.domain.PostVo;
+import com.TTT.domain.UserDto;
 import com.TTT.service.AdminService;
 import com.TTT.service.NotificationService;
 import com.TTT.service.PublicService;
@@ -39,7 +40,7 @@ public class publicController {
 
     @Autowired
     PublicService publicService;
-    
+
     @Autowired
     NotificationService notificationService;
 
@@ -72,7 +73,17 @@ public class publicController {
 
     // 글쓰기
     @GetMapping("/write")
-    public String writePost(HttpServletRequest request, Model model) {
+    public String writePost(HttpServletRequest request, Model model,
+            @RequestParam(name = "edit", required = false) String postId, Principal principal) {
+        // 수정이라면 수정할 글 가져오기
+        if (postId != null) {
+            PostVo post = publicService.getPostView(Integer.parseInt(postId));
+            if (post.getUser_id().equals(publicService.searchUserByUserName(principal.getName()))) {
+                model.addAttribute("post", post);
+            } else {
+                return "redirect:/user/error";
+            }
+        }
         // 현재 uri 가져오기.
         String uri = request.getRequestURI();
         // htmx로 인한 요청인지 체크
@@ -112,6 +123,7 @@ public class publicController {
 
     @PostMapping("/doWrite")
     public ResponseEntity<?> doPost(@RequestParam("content") String content,
+            @RequestParam(name = "edit", required = false) Long postId,
             @RequestParam(name = "images", required = false) List<MultipartFile> images,
             @RequestParam("title") String title, @RequestParam("board_id") Long board_id,
             Principal principal, PostVo vo) throws IOException {
@@ -169,6 +181,11 @@ public class publicController {
         vo.setPost_content(cleanedHtml);
         vo.setUser_id(publicService.searchUserByUserName(principal.getName()));
 
+        if (postId != null) {
+            vo.setPost_id(postId);
+            publicService.editPost(vo);
+            return ResponseEntity.ok().build();
+        }
         publicService.insertPost(vo);
 
         return ResponseEntity.ok().build();
@@ -252,16 +269,49 @@ public class publicController {
     @PostMapping("/commentWrite")
     public ResponseEntity<Object> postMethodName(@RequestParam("comment") String comment,
             @RequestParam("post_id") Long post_id, @RequestParam("post_user_id") String post_user_id ,Principal principal, PostVo vo) {
+                
         vo.setComment_content(comment);
-        vo.setPost_id(post_id);
         vo.setUser_id(publicService.searchUserByUserName(principal.getName()));
         publicService.insertComment(vo);
         
         //알림 전송 (post_user_id는 게시물 작성자)
         notificationService.sendNotification(post_user_id , "comment", "新しいコメントが届きました。", "/user/view?post=" + post_id);
-        
-        
+
+    
+    @PostMapping("/report")
+    public ResponseEntity<Object> reportPost(@RequestParam("target") Long target, @RequestParam("type") String type,
+            Principal principal) {
+        if (type.equals("post")) {
+            String target_id = publicService.getUserIdByPostId(target);
+            String user_id = publicService.searchUserByUserName(principal.getName());
+            publicService.postReport(user_id, target_id, target);
+        }
+
+        if (type.equals("comment")) {
+            String target_id = publicService.getUserIdBycommentId(target);
+            String user_id = publicService.searchUserByUserName(principal.getName());
+            publicService.commentReport(user_id, target_id, target);
+        }
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/delete")
+    public ResponseEntity<Object> deletePost(@RequestParam("target") Long target, Principal principal, Model model,
+            UserDto dto) {
+        String target_user_id = publicService.getUserIdByPostId(target);
+        dto = publicService.getUserIdAndRoleByUsername(principal.getName());
+        if (dto.getRole().equals("A") || target_user_id.equals(dto.getUser_id())) {
+            publicService.deletePost(target);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().body("bad request");
+        }
+    }
+
+    @GetMapping("/error")
+    public String errorPage(Model model) {
+        model.addAttribute("layout", "layouts/layout");
+        return "public/error";
     }
 
 }
