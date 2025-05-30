@@ -39,6 +39,7 @@ public class BandRecruitPostVo {
 	
 	private Long bandrecruitpost_count; // 조회수
 	
+
 	// 지원하기
 	private Long POST_APPLY_ID;
 	private Long resume_id;
@@ -46,6 +47,9 @@ public class BandRecruitPostVo {
 	// 스크랩
 	private Long POST_SCRAP_ID;
 	
+
+
+
 	
 	
 	

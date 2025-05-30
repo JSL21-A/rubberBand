@@ -33,6 +33,7 @@ public class BandRecruitPostSelectController {
 			@RequestParam(value = "genre", required = false, defaultValue = "") String genre,
 			@RequestParam(value = "position", required = false, defaultValue = "") String position,
 			@RequestParam(value = "gender", required = false, defaultValue = "") String gender,
+
 			@RequestParam(value = "age", required = false, defaultValue = "") String age, Model model,
 			Principal principal) {
 
@@ -67,6 +68,7 @@ public class BandRecruitPostSelectController {
 		List<String> recommendedTags = bandRecruitPostSelectService.getRecommendedTags(postId);
 		model.addAttribute("recommendedTags", recommendedTags);
 
+
 		boolean isScrapped = false;
 		if (principal != null) {
 			String username = principal.getName();
@@ -76,6 +78,7 @@ public class BandRecruitPostSelectController {
 			}
 		}
 		model.addAttribute("isScrapped", isScrapped);
+
 
 		return "band/view"; // 해당 게시글에 대한 상세보기 페이지
 	}
@@ -98,6 +101,7 @@ public class BandRecruitPostSelectController {
 
 	// 지원하기
 	@PostMapping("/apply")
+
 	public String applyToPost(@RequestParam("postId") Long postId, @RequestParam(value = "resume_id", required = false) Long resumeId,
 			@RequestParam("band_id") Long bandId, RedirectAttributes redirectAttributes, Principal principal) {
 
@@ -157,5 +161,9 @@ public class BandRecruitPostSelectController {
 		int status = alreadyScrapped ? 0 : 1;
 		return "redirect:/bandselect/view?postId=" + postId + "&scrap=" + status;
 	}
+
+
+
+
 
 }

@@ -49,6 +49,7 @@ public class BandRecruitPostSelectService {
 		} else {
 			return new ArrayList<>();
 		}
+
 	}
 
 	// username을 기반으로 user_id(UUID) 조회
@@ -96,6 +97,7 @@ public class BandRecruitPostSelectService {
 	    params.put("userId", userId);
 	    bandRecruitPostSelectMapper.insertScrap(params);
 	}
+
 
 	// 스크랩 해제
 	public void deleteScrap(Long postId, String userId) {

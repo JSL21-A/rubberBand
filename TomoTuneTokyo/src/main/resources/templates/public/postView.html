@@ -34,7 +34,11 @@
             }
 
             #middle {
-                padding: 2%;
+                width: 100%;
+                margin: 0 auto;
+                background-color: #fff;
+                border-radius: 30px;
+                box-shadow: 2px 2px 2px 2px #bbb;
             }
 
             .post_list ul {
@@ -54,7 +58,7 @@
                 text-align: center;
             }
 
-            .post_title {
+            .view_title {
                 text-align: inherit;
                 width: 100%;
                 margin: 0 auto;
@@ -70,6 +74,10 @@
                 border-radius: 30px;
                 padding: 2%;
                 margin-top: 10px;
+            }
+
+            .viewHost {
+                line-height: 50px;
             }
 
             .post_date {
@@ -148,7 +156,7 @@
                 width: 30%;
             }
 
-            .bottomUp{
+            .bottomUp {
                 display: flex;
                 justify-content: space-between;
                 margin: 0 2% 2% 2%;
@@ -168,9 +176,16 @@
                 text-align: center;
                 font-size: 24px;
                 margin-bottom: 2%;
+                width: 90%;
             }
 
-            .viewHost {
+            .post_note img {
+                max-width: 100%;
+            }
+
+            .titleBtn {
+                display: flex;
+                justify-content: space-between;
                 background-color: #f4f6f8;
                 border-radius: 30px;
                 padding: 2% 1%;
@@ -207,9 +222,32 @@
                 </div>
             </div>
             <div id="middle">
-                <div class="post_title">
+                <div class="view_title">
                     <div class="viewTitle" th:text="${post.post_title}"></div>
-                    <div class="viewHost" th:attr="data-user-id=${post.user_id}" th:text="${post.nickname}"></div>
+                    <div class="titleBtn">
+                        <th:block th:if="${post.board_id != 7}">
+                            <div class="viewHost" th:text="${post.nickname}"></div>
+                        </th:block>
+                        <th:block th:unless="${post.board_id != 7}">
+                            <div class="viewHost">管理者</div>
+                        </th:block>
+                        <div>
+                            <div th:if="${user == post.user_id} or ${#authorization.expression('hasRole(''A'')')}">
+                                <button id="editPost" th:attr="hx-get='./write?edit=' + ${post.post_id}"
+                                    hx-target="#content" hx-push-url="true">修正</button>
+                                <button id="delPost">削除</button>
+                            </div>
+                        </div>
+                        <div class="viewHost" th:attr="data-user-id=${post.user_id}" th:text="${post.nickname}"></div>
+                    </div>
+                    <div class="view_content">
+                        <div class="post_note" th:utext="${post.post_content}"></div>
+                        <div class="postBtn" th:if="${user != post.user_id}">
+                            <button class="post_report">通報</button>
+                            <button class="post_like">いいね</button>
+                            <button class="post_scrap">スクラップ</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="view_content">
                     <div class="post_note" th:utext="${post.post_content}"></div>
@@ -219,117 +257,188 @@
                         <button class="post_scrap">スクラップ</button>
                     </div>
                 </div>
-            </div>
-            <div id="bottom">
-                <div class="bottomUp">
-                    <button hx-get='./list' hx-target="#content">リストへ</button>
-                    <th:block th:if="${post.board_id != 7}">
-                        <a id="onPost" hx-get="./write" hx-target="#content" hx-push-url="true">作成</a>
-                    </th:block>
-                </div>
-                <div id="comment" th:if="${post.board_id != 7}">
-                <div id="writeComment">
-                    <div id="cnt">
-                        <p>コメント &nbsp;&nbsp;&nbsp;&nbsp;<th:block th:text="${comment_cnt}"></th:block>
-                        </p>
+                <div id="bottom">
+                    <div class="bottomUp">
+                        <button hx-get='./list' hx-target="#middle" hx-select="#middle" hx-push-url="true">リストへ</button>
+                        <th:block th:if="${post.board_id != 7}">
+                            <a id="onPost" hx-get="./write" hx-target="#content" hx-push-url="true">作成</a>
+                        </th:block>
                     </div>
-                    <textarea name="comment" id="commentContent"></textarea>
-                    <button id="comment_submit">登録</button>
-                </div>
-                <div id="viewComment">
-                    <ul id="commentList">
-                        <li th:each="comment: ${comment}" th:if="${comment != null}" class="viewComment">
-                            <div th:text="${comment.nickname}"></div>
-                            <div th:text="${comment.comment_content}"></div>
-                        </li>
-                    </ul>
+                    <div id="comment" th:if="${post.board_id != 7}">
+                        <div id="writeComment">
+                            <div id="cnt">
+                                <p>コメント &nbsp;&nbsp;&nbsp;&nbsp;<th:block th:text="${comment_cnt}"></th:block>
+                                </p>
+                            </div>
+                            <textarea name="comment" id="commentContent"></textarea>
+                            <button id="comment_submit">登録</button>
+                        </div>
+                        <div id="viewComment">
+                            <ul id="commentList">
+                                <li th:each="comment: ${comment}" th:if="${comment != null}" class="viewComment">
+                                    <div class="commentUser">
+                                        <div th:text="${comment.nickname}"></div>
+                                        <div th:text="${comment.comment_created_at}"></div>
+                                    </div>
+                                    <div class="commentWrapper">
+                                        <div th:text="${comment.comment_content}"></div>
+                                        <button class="comment_report"
+                                            th:attr="data-comment-id=${comment.comment_id}">通報</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-            </div>
-            
-        </div>
-        <script data-init>
-            $(".sel_cate").on("click", function () {
-                if ($(this).data('board-id') == '7') {
-                    $('#onPost').hide();
-                } else {
-                    $('#onPost').show();
-                }
-            });
-
-            //신고버튼 누르면
-            //.off가 달린 이유는 동적으로 로드하면서 레이아웃에 아래에 보이는 얘랑 동적으로 불러온 얘랑
-            //겹쳐버려서 3번씩 눌리기때문에 한번 해제해주고 이벤트 발생하는 식으로 해결.
-            $(document).off("click", ".post_report").on("click", ".post_report", function (e) {
-                e.stopPropagation();
-                console.log("on?");
-            });
-
-            // 작성 버튼이 눌렸을때
-            $(document).off("click", "#comment_submit").on("click", "#comment_submit", function () {
-                $(this).prop("disabled", true);
-                // 내용이 공백이거나 비어있는지 체크
-                contentEmpty = $("#commentContent").val().trim();
-
-                if (contentEmpty.length < 2) {
-                    if (contentEmpty == "") {
-                        alert("内容を入力してください。");
+            <script data-init>
+                $(".sel_cate").on("click", function () {
+                    if ($(this).data('board-id') == '7') {
+                        $('#onPost').hide();
                     } else {
-                        alert("二文字以上入力してください。");
+                        $('#onPost').show();
                     }
-                    $(this).prop("disabled", false);
-                    $("#commentContent").focus();
-                    return;
+                });
+
+                //신고버튼 누르면
+                //.off가 달린 이유는 동적으로 로드하면서 레이아웃에 아래에 보이는 얘랑 동적으로 불러온 얘랑
+                //겹쳐버려서 3번씩 눌리기때문에 한번 해제해주고 이벤트 발생하는 식으로 해결.
+                $(document).off("click", ".post_report").on("click", ".post_report", function () {
+                    type = "post";
+                    target = '[[${post.post_id}]]';
+                    doReport(target, type);
+                });
+
+                $(document).off("click", ".comment_report").on("click", ".comment_report", function () {
+                    type = "comment";
+                    target = $(this).data("comment-id");
+                    doReport(target, type);
+                });
+
+                //삭제버튼 눌렸을때
+                $(document).off("click", "#delPost").on("click", "#delPost", function () {
+                    console.log("??")
+                    const postId = '[[${post.post_id}]]';
+                    isDel = confirm("本当に削除しますか？");
+                    if (isDel) {
+                        $.ajax({
+                            url: "./delete?target=" + postId,
+                            method: "GET",
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader(csrfHeader, csrfToken);
+                            },
+                            success: function (res) {
+                                alert("削除しました。");
+                                window.location.href = "./list";
+                            },
+                            error: function (err) {
+                                alert(err.status);
+                                if (err.status == 400) {
+                                    window.location.href = "/user/error";
+                                } else {
+                                    alert("削除失敗");
+                                    console.error(err);
+                                }
+                            },
+                        });
+                    }
+                });
+
+                function doReport(target, type) {
+                    const report = confirm("通報しますか？");
+                    const reportData = new FormData();
+                    reportData.append("type", type);
+                    if (report) {
+                        $.ajax({
+                            url: "./report?target=" + target,
+                            method: "POST",
+                            data: reportData,
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader(csrfHeader, csrfToken);
+                            },
+                            success: function (res) {
+                                alert("通報されました。");
+                                window.location.href = "./list"
+                            },
+                            error: function (err) {
+                                alert("登録失敗");
+                                console.error(err);
+                            },
+                        });
+                    } else {
+                        return;
+                    }
                 }
 
-                const formData = new FormData();
+                // 작성 버튼이 눌렸을때
+                $(document).off("click", "#comment_submit").on("click", "#comment_submit", function () {
+                    $(this).prop("disabled", true);
+                    // 내용이 공백이거나 비어있는지 체크
+                    contentEmpty = $("#commentContent").val().trim();
 
-                const contentHtml = $("#commentContent").val();
-                formData.append("comment", contentHtml);
+                    if (contentEmpty.length < 2) {
+                        if (contentEmpty == "") {
+                            alert("内容を入力してください。");
+                        } else {
+                            alert("二文字以上入力してください。");
+                        }
+                        $(this).prop("disabled", false);
+                        $("#commentContent").focus();
+                        return;
+                    }
 
-                const postId = '[[${post.post_id}]]';
-                const postUserId = '[[${post.user_id}]]';
+                    const formData = new FormData();
 
-                formData.append("post_id", postId);
-                formData.append("post_user_id", postUserId);
+                    const contentHtml = $("#commentContent").val();
+                    formData.append("comment", contentHtml);
 
-                const csrfToken = $("meta[name='_csrf']").attr("content");
-                const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+                    const postId = '[[${post.post_id}]]';
+                    const postUserId = '[[${post.user_id}]]';
 
-                $.ajax({
-                    url: "./commentWrite",
-                    method: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader(csrfHeader, csrfToken);
-                    },
-                    success: function (res) {
-                        alert("コメントが登録されました。");
-                        $("#comment").load("/user/view?post=30 #comment > *");
-                    },
-                    error: function (err) {
-                        alert("登録失敗");
-                        console.error(err);
-                    },
+                    formData.append("post_id", postId);
+                    formData.append("post_user_id", postUserId);
+
+                    const csrfToken = $("meta[name='_csrf']").attr("content");
+                    const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+                    $.ajax({
+                        url: "./commentWrite",
+                        method: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader(csrfHeader, csrfToken);
+                        },
+                        success: function (res) {
+                            alert("コメントが登録されました。");
+                            $("#comment").load("/user/view?post=" + postId + " #comment > *");
+                        },
+                        error: function (err) {
+                            alert("登録失敗");
+                            console.error(err);
+                        },
+                    });
                 });
-            });
-            
-            $(document).on('click', '.viewHost', function(){
-            	const $host = $(this);
-            	const targetId = $host.data('user-id');
-            	if(!targetId || targetId === window.currentUser) return;
-            	
-            	$('.inline-chat-btn').remove();
-            	
-            	const $btn = $('<button class = "inline-chat-btn">チャットする</button>');
-            	$host.after($btn);
-            });
-            
-            
-        </script>
-    </div>
+
+                $(document).on('click', '.viewHost', function () {
+                    const $host = $(this);
+                    const targetId = $host.data('user-id');
+                    if (!targetId || targetId === window.currentUser) return;
+
+                    $('.inline-chat-btn').remove();
+
+                    const $btn = $('<button class = "inline-chat-btn">チャットする</button>');
+                    $host.after($btn);
+                });
+
+
+            </script>
+        </div>
 </body>
 
 

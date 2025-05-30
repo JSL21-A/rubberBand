@@ -28,6 +28,10 @@ public class PublicService {
         return publicMapper.searchUserByUserName(username);
     }
 
+    public UserDto getUserIdAndRoleByUsername(String username) {
+        return publicMapper.getUserIdAndRoleByUsername(username);
+    }
+
     public List<PostVo> getPostList(int board_id) {
         return publicMapper.getPostList(board_id);
     }
@@ -50,5 +54,29 @@ public class PublicService {
 
     public void insertComment(PostVo vo) {
         publicMapper.insertComment(vo);
+    }
+
+    public String getUserIdByPostId(Long target) {
+        return publicMapper.getUserIdByPostId(target);
+    }
+
+    public void postReport(String user_id, String target_id, Long target) {
+        publicMapper.postReport(user_id, target_id, target);
+    }
+
+    public String getUserIdBycommentId(Long target) {
+        return publicMapper.getUserIdByCommentId(target);
+    }
+
+    public void commentReport(String user_id, String target_id, Long target) {
+        publicMapper.commentReport(user_id, target_id, target);
+    }
+
+    public void editPost(PostVo postVo) {
+        publicMapper.editPost(postVo);
+    }
+
+    public void deletePost(Long post_id) {
+        publicMapper.deletePost(post_id);
     }
 }

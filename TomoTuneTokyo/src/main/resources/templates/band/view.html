@@ -124,8 +124,10 @@
 		<input type="hidden" id="applyBandId" th:value="${post.band_id}" name="band_id">
 		<input type="hidden" id="selectedResumeIdInput" name="resume_id">
 		<button type="submit" class="btn btn-primary">応募する</button>
+
 		<button id="scrapBtn" title="스크랩" type="button"
 		        th:class="'scrap-button' + (${isScrapped} ? ' active' : '')">
+
 			  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 			    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
 			    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
@@ -333,8 +335,7 @@
 	});
 	</script>
 
-	
-	<script>
+<script>
 		// 지원하기
 	  document.addEventListener('DOMContentLoaded', function() {
 	    const submitBtn = document.getElementById('submitApply');

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.data.repository.query.Param;
@@ -33,13 +34,14 @@ public interface BandRecruitPostSelectMapper {
 	@Select("SELECT bandrecruitpost_count FROM band_recruit_post WHERE post_id = #{postId}")
 	Long getViewCount(Long postId);
 
-	// 추천 태그 조회s
+	// 추천 태그 조회
 	@Select("SELECT tag_keywords FROM band_recruit_post WHERE post_id = #{postId}")
 	String getTagKeywords(Long postId);
 
 	// 최신 RESUME_ID 1개 조회 (UUID 기준)
 	@Select("SELECT resume_id FROM resume WHERE user_id = #{userId} ORDER BY created_at DESC LIMIT 1")
 	Long getLatestResumeIdByUserId(@Param("userId") String userId);
+
 
 	// 등록된 모든 RESUME_ID 리스트 조회 (UUID 기준)
 	@Select("SELECT resume_id FROM resume WHERE user_id = #{userId} ORDER BY created_at DESC")
@@ -72,4 +74,6 @@ public interface BandRecruitPostSelectMapper {
 
 
 
+
+	
 }
