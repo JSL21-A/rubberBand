@@ -22,7 +22,7 @@ public interface BandInsertSelectMapper {
 	BandInsertVo selectBandDetail(@Param("bandId") Long bandId);
 
 	// 2. 밴드 멤버 + 프로필 정보
-	@Select("SELECT bm.band_member_id, bm.band_id, bm.user_id, bm.member_type, bm.stage_name, bm.member_position, bm.member_mbti, bm.favorite_band, bm.member_motto, bm.photo, bm.created_at, up.nickname, up.user_img FROM band_member bm JOIN user_profile up ON bm.user_id = up.user_id WHERE bm.band_id = #{bandId} ORDER BY bm.member_type DESC, bm.band_member_id ASC")
+	@Select("SELECT bm.band_member_id, bm.band_id, bm.user_id, bm.member_type, bm.stage_name, bm.member_position, bm.member_mbti, bm.favorite_band, bm.member_motto, bm.photo, bm.created_at, up.nickname, up.user_img FROM band_member bm JOIN user_profile up ON bm.user_id = up.user_id WHERE bm.band_id = #{bandId} and bm.status = 'A' ORDER BY bm.member_type DESC, bm.band_member_id ASC")
 	List<BandInsertVo> selectBandMembers(@Param("bandId") Long bandId);
 
 	// 3. 밴드 태그 정보
@@ -131,7 +131,20 @@ public interface BandInsertSelectMapper {
 	@Update("UPDATE bands SET instagram_link = #{instagramLink}, updated_at = NOW() WHERE band_id = #{bandId}")
 	void updateInstagramLink(@Param("bandId") Long bandId, @Param("instagramLink") String instagramLink);
 
-
-
-
+	//초대 여부 조회하기
+	@Select("select * from band_member where user_id = #{user_id} and band_id = #{band_id} and status = 'I'")
+	BandInsertVo selectBandMemberUserId(@Param("user_id") String user_id, @Param("band_id") Long band_id);
+	
+	//초대 수락하기
+	@Update("update band_member set status = 'A' where user_id = #{user_id} and band_id = #{band_id}")
+	void acceptBandInvite(@Param("user_id") String user_id, @Param("band_id") Long band_id);
+	
+	//초대 거절하기
+	@Delete("delete from band_member where user_id = #{user_id} and band_id = #{band_id}")
+	void declineBandInvite(@Param("user_id") String user_id, @Param("band_id") Long band_id);
+	
+	// 리더 user_id 불러오기
+	@Select("select user_id from band_member where band_id = #{band_id} and member_type = 'LEADER'")
+	String findLeaderId(@Param("band_id") Long band_id);
+	
 }

@@ -16,7 +16,7 @@ import com.TTT.domain.BandInsertVo;
 public interface BandInsertMapper {
 	
 	// 밴드 멤버 정보 등록
-	@Insert("INSERT INTO band_member (band_id, user_id, member_type, stage_name, member_position, member_mbti, favorite_band, member_motto, created_at) VALUES (#{band_id}, #{user_id}, #{member_type}, #{stage_name}, #{member_position}, #{member_mbti}, #{favorite_band}, #{member_motto}, NOW())")
+	@Insert("INSERT INTO band_member (band_id, user_id, member_type, stage_name, member_position, member_mbti, favorite_band, member_motto, created_at, status) VALUES (#{band_id}, #{user_id}, #{member_type}, #{stage_name}, #{member_position}, #{member_mbti}, #{favorite_band}, #{member_motto}, NOW(), #{status})")
 	@Options(useGeneratedKeys = true, keyProperty = "band_member_id") // band_member_id 시퀀스 -> 자동으로 member_id 추가
 	void InsertBandMember(BandInsertVo vo);
 	
@@ -68,6 +68,7 @@ public interface BandInsertMapper {
 	// 전체 밴드 수 조회 (페이징용)
 	@Select("SELECT COUNT(*) FROM bands WHERE (#{genre} IS NULL OR #{genre} = '') AND (#{position} IS NULL OR #{position} = '') AND (#{gender} IS NULL OR #{gender} = '') AND (#{age} IS NULL OR #{age} = '') AND (#{keyword} IS NULL OR #{keyword} = '')")
 	int countAllBands(@Param("genre") String genre, @Param("position") String position, @Param("gender") String gender, @Param("age") String age, @Param("keyword") String keyword);
+
 
 
 

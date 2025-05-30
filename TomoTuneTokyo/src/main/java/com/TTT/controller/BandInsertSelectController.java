@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.TTT.domain.BandActiveInsertVo;
 import com.TTT.domain.BandInsertVo;
 import com.TTT.domain.MemberType;
+import com.TTT.domain.UserDto;
 import com.TTT.service.BandInsertSelectService;
 
 
@@ -55,7 +56,7 @@ public class BandInsertSelectController {
 			isLeader = bandinsertselectservice.isUserLeader(bandId, userId); // ✅ userId(UUID)로 리더 여부 체크
 		}
 		model.addAttribute("isLeader", isLeader);
-
+		
 		// 2. 멤버 정보
 		List<BandInsertVo> members = bandinsertselectservice.getBandMembers(bandId);
 		model.addAttribute("members", members);
@@ -132,6 +133,13 @@ public class BandInsertSelectController {
 			}
 		}
 		model.addAttribute("recordChunks", recordChunks);
+		
+		
+		String currentUsername = principal.getName();
+		String currentUserId = bandinsertselectservice.findUserIdByUsername(currentUsername);
+		BandInsertVo currentUserVo = bandinsertselectservice.SelectBandMemberByUserId(currentUserId, bandId);
+		
+		model.addAttribute("currentUserVo", currentUserVo);
 
 		return "/band/modify";
 	}

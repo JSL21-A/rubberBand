@@ -25,6 +25,7 @@ public class BandInsertVo {
 	  private Long user_profile_id;
 	  private String stage_name; // 활동명
 	  private String photo; 
+	  private String status;
 	  
 	  // bands 테이블
 	  private String  band_name; // 밴드 이름
