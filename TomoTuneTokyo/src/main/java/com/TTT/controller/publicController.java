@@ -267,7 +267,7 @@ public class publicController {
     }
 
     @PostMapping("/commentWrite")
-    public ResponseEntity<Object> postMethodName(@RequestParam("comment") String comment,
+    public ResponseEntity<Object> commentWrite(@RequestParam("comment") String comment,
             @RequestParam("post_id") Long post_id, @RequestParam("post_user_id") String post_user_id,
             Principal principal, PostVo vo) {
 
@@ -277,11 +277,13 @@ public class publicController {
 
         // 알림 전송 (post_user_id는 게시물 작성자)
         notificationService.sendNotification(post_user_id, "comment", "新しいコメントが届きました。", "/user/view?post=" + post_id);
+        return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Object> reportPost(@RequestParam("target") Long target, @RequestParam("type") String type, Principal principal) {
+    public ResponseEntity<Object> reportPost(@RequestParam("target") Long target, @RequestParam("type") String type,
+            Principal principal) {
+
         if (type.equals("post")) {
-            
             String target_id = publicService.getUserIdByPostId(target);
             String user_id = publicService.searchUserByUserName(principal.getName());
             publicService.postReport(user_id, target_id, target);
