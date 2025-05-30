@@ -13,6 +13,12 @@
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/plugins/monthSelect/style.css">
 
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  const selectedDays = /*[[${selectedDays}]]*/ [];
+  /*]]>*/
+</script>
+
 </head>
 
 <body>
@@ -59,25 +65,33 @@
 	<div class="page">
 		<div class="box content-box">
 			<div class="resume-form">
-				<form id="resumeForm" th:action="@{/mypage/insert}" method="post">
+				<form id="resumeForm" th:action="@{/mypage/update}" method="post"
+					th:object="${resume}">
 					<input type="hidden" th:name="${_csrf.parameterName}"
-						th:value="${_csrf.token}" />
+						th:value="${_csrf.token}" /> <input type="hidden"
+						th:field="*{resumeId}" /><input type="hidden"
+						th:field="*{userId}" />
+
+
+					<!-- 이력서 ID 반드시 필요 -->
+
 					<!-- 활동명(필수) -->
 					<h4>
 						<label class="field-label">アーティスト名<span
 							class="required-label">必須</span></label>
 					</h4>
-					<input type="text" name="stageName" id="stageName"
+					<input type="text" th:field="*{stageName}" id="stageName"
 						placeholder="例: NANA" />
+
 					<div class="error-message" id="error-stageName"></div>
 					<!-- 성별(필수) 체크박스 -->
 					<h4>
 						<label class="field-label">性別<span class="required-label">必須</span></label>
 					</h4>
 					<div class="gender-group">
-						<label><input type="radio" name="gender" value="F">
-							女性</label> <label><input type="radio" name="gender" value="M">
-							男性</label>
+						<label><input type="radio" th:field="*{gender}" value="F" />
+							女性</label> <label><input type="radio" th:field="*{gender}"
+							value="M" /> 男性</label>
 					</div>
 					<div class="error-message" id="error-gender"></div>
 
@@ -85,21 +99,22 @@
 					<h4>
 						<label class="field-label">生年月日</label>
 					</h4>
-					<input type="text" id="birth" name="birth"
+					<input type="text" th:field="*{birth}" id="birth"
 						placeholder="例: 2001-01-01" />
 					<!-- 이메일(선택) -->
 					<h4>
 						<label class="field-label">Eメール</label>
 					</h4>
-					<input type="text" id="emailInput" name="sns"
+					<input type="text" th:field="*{sns}" id="emailInput"
 						placeholder="例: example@mail.com" />
+
 					<div id="emailError" class="error-message">
 						正しいメールアドレス形式で入力してください。</div>
 					<!-- 연락처(선택) -->
 					<h4>
 						<label class="field-label">連絡先</label>
 					</h4>
-					<input type="text" name="phoneNumber"
+					<input type="text" th:field="*{phoneNumber}"
 						placeholder="例: 080-1234-5678" />
 					<!-- 활동가능지역 체크박스(복수선택가능) (필수)-->
 					<h4>
@@ -142,25 +157,41 @@
 						<button type="button" onclick="addRegion()">+ 地域追加</button>
 					</div>
 					<!-- 선택된 지역 목록 -->
-					<ul id="selected-regions"></ul>
+					<ul id="selected-regions">
+						<li th:each="region : ${areaList}" th:data-value="${region}">
+							<span th:text="${region}"></span> <input type="hidden"
+							name="region[]" th:value="${region}" />
+							<button type="button" onclick="this.parentElement.remove()">✕</button>
+						</li>
+					</ul>
+
 					<!-- 포지션 체크박스 복수선택가능 (필수)-->
 					<h4>
 						<label class="field-label">ポジション（複数追加可能）<span
 							class="required-label">必須</span></label>
 					</h4>
 					<div class="form-block checkbox-group">
-						<label><input type="checkbox" name="instrument" value="Vo">
-							Vo（ボーカル）</label><br /> <label><input type="checkbox"
-							name="instrument" value="Gt"> Gt（ギター）</label><br /> <label><input
-							type="checkbox" name="instrument" value="Ba"> Ba（ベース）</label><br />
-						<label><input type="checkbox" name="instrument" value="Dr">
-							Dr（ドラム）</label><br /> <label><input type="checkbox"
-							name="instrument" value="Kb"> Kb（キーボード）</label><br /> <label><input
-							type="checkbox" name="instrument" value="etc" id="position-etc">
-							その他</label><br /> <input type="text" id="position-etc-input"
-							name="instrumentEtc" class="hidden" placeholder="例: DJ" />
+						<label><input type="checkbox" name="instrument" value="Vo"
+							th:checked="${instrumentList.contains('Vo')}"> Vo（ボーカル）</label><br>
+						<label><input type="checkbox" name="instrument" value="Gt"
+							th:checked="${instrumentList.contains('Gt')}"> Gt（ギター）</label><br>
+						<label><input type="checkbox" name="instrument" value="Ba"
+							th:checked="${instrumentList.contains('Ba')}"> Ba（ベース）</label><br>
+						<label><input type="checkbox" name="instrument" value="Dr"
+							th:checked="${instrumentList.contains('Dr')}"> Dr（ドラム）</label><br>
+						<label><input type="checkbox" name="instrument" value="Kb"
+							th:checked="${instrumentList.contains('Kb')}"> Kb（キーボード）</label><br>
+						<label><input type="checkbox" name="instrument"
+							value="etc" id="position-etc"
+							th:checked="${instrumentEtc != null}"> その他</label><br>
 
+						<!-- 기타 텍스트 입력 -->
+						<input type="text" id="position-etc-input" name="instrumentEtc"
+							th:value="${instrumentEtc}"
+							th:classappend="${instrumentEtc != null} ? '' : 'hidden'"
+							placeholder="例: DJ" />
 					</div>
+
 					<div class="error-message" id="error-position"></div>
 					<!-- 선호하는 음악장르, 드롭다운 복수선택가능 -->
 					<h4>
@@ -177,14 +208,32 @@
 						<option value="その他">その他</option>
 					</select>
 					<div class="error-message" id="error-position"></div>
-					<input type="text" id="genre-other" name="genreEtc" class="hidden"
+					<input type="text" id="genre-other" name="genreEtc"
+						th:value="${genreEtc}"
+						th:classappend="${genreEtc != null} ? '' : 'hidden'"
 						placeholder="例: 演歌" />
+
+
+
 
 					<!-- 추가하기 버튼 -->
 					<div class="form-block">
 						<button type="button" onclick="addGenre()">+ ジャンル追加</button>
 					</div>
-					<ul id="selected-genres"></ul>
+					<ul id="selected-genres">
+						<li th:each="genre : ${genreList}" th:data-value="${genre}">
+							<span th:text="${genre}"></span> <input type="hidden"
+							name="genreList" th:value="${genre}" />
+							<button type="button" onclick="this.parentElement.remove()">✕</button>
+						</li>
+						<li th:if="${genreEtc != null}" th:data-value="${genreEtc}">
+							<span th:text="${genreEtc}"></span> <input type="hidden"
+							name="genreList" th:value="${genreEtc}" />
+							<button type="button" onclick="this.parentElement.remove()">✕</button>
+						</li>
+					</ul>
+
+
 					<!-- 엽습가능요일, 체크박스 복수선택 가능 (선택) -->
 					<h4>
 						<label class="field-label">練習時間（複数追加可能）</label>
@@ -202,29 +251,51 @@
 							value="日"> 日</label><br />
 					</div>
 					<!-- 연습가능시간대, 드롭다운 복수선택가능 (선택) -->
-					<label>時間代 </label> <select id="timeSlot" name="practiceTime">
+					<label>時間代 </label> <select th:field="*{practiceTime}"
+						id="timeSlot">
 						<option value="">-- 選択してください --</option>
 						<option value="morning">午前（06時〜12時）</option>
 						<option value="afternoon">午後（12時〜18時）</option>
 						<option value="evening">夜（18時〜22時）</option>
 					</select>
 					<!-- その他 -->
-					<label>具体的な時間</label> <input type="text" id="customTime"
-						name="detailTime" placeholder="例）18時〜22時">
+					<label>具体的な時間</label> <input type="text" th:field="*{detailTime}"
+						id="customTime" placeholder="例）18時〜22時" />
 					<!-- 밴드활동이력추가, 버튼 클릭시 입력폼이 나오게(선택) -->
 					<h4>
 						<label class="field-label">バンド活動履歴（複数追加可能）</label>
 					</h4>
-					<div id="band-history"></div>
-					<div class="form-block">
-						<button type="button" onclick="addBandHistory()">+ 活動履歴追加</button>
+					<div id="band-history">
+						<div th:each="band, stat : ${resume.bandHistoryList}"
+							class="band-card" style="position: relative;">
+							<button class="remove-btn" type="button" title="削除"
+								onclick="this.parentElement.remove()">✕</button>
+
+							<label>バンド名</label> <input type="text"
+								th:name="'bandHistoryList[' + ${stat.index} + '].bandName'"
+								th:value="${band.bandName}" placeholder="例: Oasis" /> <label>ポジション</label>
+							<input type="text"
+								th:name="'bandHistoryList[' + ${stat.index} + '].bandPart'"
+								th:value="${band.bandPart}" placeholder="例: ボーカル" /> <label>活動期間</label>
+							<div class="band-period">
+								<input type="text" th:id="'band-start-' + ${stat.index}"
+									th:name="'bandHistoryList[' + ${stat.index} + '].bandStart'"
+									th:value="${band.bandStart}" /> <span>から</span> <input
+									type="text" th:id="'band-end-' + ${stat.index}"
+									th:name="'bandHistoryList[' + ${stat.index} + '].bandEnd'"
+									th:value="${band.bandEnd}" /> <span>まで</span>
+							</div>
+						</div>
 					</div>
+
 					<!-- 자기소개, 텍스트창 (선택) -->
 					<h4>
 						<label class="field-label">自己紹介</label>
 					</h4>
-					<textarea id="note" name="note" rows="5" cols="50"
+					<textarea th:field="*{note}" rows="5" cols="50"
 						placeholder="例：ギター歴3年、ロックバンド経験あり。よろしくお願いします！"></textarea>
+
+
 					<!-- 작성취소 / 리셋 / 저장 버튼  -->
 					<div class="button-group">
 						<button type="button" onclick="cancelForm()">作成取消</button>
@@ -606,9 +677,10 @@ document.querySelectorAll('input[name="instrument"]').forEach((checkbox) => {
 			<script>
   // "その他" 선택 시 input 표시
   document.getElementById("genre-select").addEventListener("change", function () {
-    const other = document.getElementById("genre-other");
-    other.style.display = this.value === "その他" ? "inline-block" : "none";
-  });
+  const otherInput = document.getElementById("genre-other");
+  otherInput.classList.toggle("hidden", this.value !== "その他");
+});
+
 
   // 장르 추가 함수
   function addGenre() {
@@ -679,6 +751,56 @@ document.getElementById('position-etc').addEventListener('change', function () {
 	  regionOther.classList.toggle('hidden', regionSelect.value !== 'その他');
 	});
 </script>
+			<!-- 연습요일 수정 -->
+			<script>
+			document.addEventListener("DOMContentLoaded", function () {
+				  const checkboxes = document.querySelectorAll('input[name="practiceDateList"]');
+				  checkboxes.forEach(checkbox => {
+				    if (selectedDays.includes(checkbox.value)) {
+				      checkbox.checked = true;
+				    }
+				  });
+				});
+
+</script>
+
+			<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // 기타 장르 입력 필드 자동 표시
+  const genreOtherInput = document.getElementById("genre-other");
+  const genreSelect = document.getElementById("genre-select");
+
+  if (genreOtherInput && genreOtherInput.value.trim() !== "") {
+    genreOtherInput.classList.remove("hidden");
+    if (genreSelect) genreSelect.value = "その他";
+  }
+});
+</script>
+
+
+			<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // 기타 텍스트 필드 자동 표시
+  const genreOtherInput = document.getElementById("genre-other");
+  if (genreOtherInput && genreOtherInput.value.trim() !== "") {
+    genreOtherInput.classList.remove("hidden");
+    const genreSelect = document.getElementById("genre-select");
+    if (genreSelect) genreSelect.value = "その他";
+  }
+});
+</script>
+
+			<script th:inline="javascript">
+/*<![CDATA[*/
+document.addEventListener("DOMContentLoaded", function () {
+  const practiceTime = /*[['${practiceTime}']]*/ '';
+  if (practiceTime) {
+    document.getElementById("timeSlot").value = practiceTime;
+  }
+});
+/*]]>*/
+</script>
+
 		</div>
 	</div>
 

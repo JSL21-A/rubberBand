@@ -1,0 +1,117 @@
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #f9fafb;
+  margin: 0;
+  padding: 3rem 1rem;
+  color: #111;
+}
+
+.container {
+  max-width: 720px;
+  margin: auto;
+  padding: 0 1rem;
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.6rem;
+  margin-bottom: 2.5rem;
+  color: #222;
+}
+
+a.btn-outline,
+a.btn-outline:visited,
+a.btn-outline:active,
+a.btn-outline:focus {
+  color: #fff;
+  text-decoration: none;
+}
+
+a.btn-outline:hover {
+  background-color: #111;
+  color: #fff; /* hover 시에도 유지 */
+}
+
+
+.section {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1.8rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.section:last-of-type {
+  border-bottom: none;
+}
+
+.section-title {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.4rem;
+  font-size: 1.05rem;
+}
+
+.section-desc {
+  font-size: 0.88rem;
+  color: #6b7280;
+}
+
+.info-block {
+  flex: 1;
+}
+
+.profile-photo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
+
+.btn-outline {
+  background: #000;
+  border: none;
+  color: #fff;
+  padding: 0.5rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.btn-outline:hover {
+  opacity: 0.85;
+}
+
+.btn-text-link {
+  font-size: 0.88rem;
+  color: #888;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-text-link:hover {
+  color: #000;
+  text-decoration: underline;
+}
+
+.nickname {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
+
+.subtext {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.button-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
