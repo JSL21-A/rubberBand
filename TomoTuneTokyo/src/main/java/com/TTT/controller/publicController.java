@@ -48,37 +48,34 @@ public class publicController {
     @GetMapping("/list")
     public String postList(HttpServletRequest request, Model model) {
         String Param = request.getParameter("board");
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 0;
+        int showPage = (page <= 1) ? 0 : (page - 1) * 10;
+        int count = 0;
+
         List<PostVo> list = null;
+        List<PostVo> noti = null;
         // 선택된 카테고리가 있으면
         if (Param == null) {
             // 모든 카테고리에서 글 가져오기
-            list = publicService.getPostListAll();
+            list = publicService.getPostListAll(showPage);
+            count = publicService.getPostCountAll();
             // 상단에 배치될 가장 최근 공지사항 3개
-            List<PostVo> noti = publicService.getNotiRecently();
-            model.addAttribute("noti", noti);
+            noti = publicService.getNotiRecently();
             // 카테고리가 선택되어 있으면
         } else {
             // 해당 카테고리의 글 가져오기.(Param = board_id)
-            list = publicService.getPostList(Integer.parseInt(Param));
-
+            list = publicService.getPostList(Integer.parseInt(Param), showPage);
+            count = publicService.getPostCount(Integer.parseInt(Param));
             // 만일 선택된 카테고리가 공지사항이라면 모든 공지사항 가져오기
             if (!(Param.equals("7"))) {
-                List<PostVo> noti = publicService.getNotiRecently();
-                model.addAttribute("noti", noti);
+                noti = publicService.getNotiRecently();
+                count = publicService.getNotiCount();
             }
         }
-        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 0;
-        int showPage = 0;
-        System.out.println(page);
-        if (page == 1) {
-            page = 0;
-            showPage = 10;
-        }
-        showPage = (page - 1) * 10;
 
-        List<PostVo> subList = list.subList(0, Math.min(10, list.size()));
-        model.addAttribute("count", list);
-        model.addAttribute("list", subList);
+        model.addAttribute("count", count);
+        model.addAttribute("list", list);
+        model.addAttribute("noti", noti);
         return "public/postList";
     }
 
