@@ -48,19 +48,18 @@ public class publicController {
     @GetMapping("/list")
     public String postList(HttpServletRequest request, Model model) {
         String Param = request.getParameter("board");
+        List<PostVo> list = null;
         // 선택된 카테고리가 있으면
         if (Param == null) {
             // 모든 카테고리에서 글 가져오기
-            List<PostVo> list = publicService.getPostListAll();
-            model.addAttribute("list", list);
+            list = publicService.getPostListAll();
             // 상단에 배치될 가장 최근 공지사항 3개
             List<PostVo> noti = publicService.getNotiRecently();
             model.addAttribute("noti", noti);
             // 카테고리가 선택되어 있으면
         } else {
             // 해당 카테고리의 글 가져오기.(Param = board_id)
-            List<PostVo> list = publicService.getPostList(Integer.parseInt(Param));
-            model.addAttribute("list", list);
+            list = publicService.getPostList(Integer.parseInt(Param));
 
             // 만일 선택된 카테고리가 공지사항이라면 모든 공지사항 가져오기
             if (!(Param.equals("7"))) {
@@ -68,6 +67,18 @@ public class publicController {
                 model.addAttribute("noti", noti);
             }
         }
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 0;
+        int showPage = 0;
+        System.out.println(page);
+        if (page == 1) {
+            page = 0;
+            showPage = 10;
+        }
+        showPage = (page - 1) * 10;
+
+        List<PostVo> subList = list.subList(0, Math.min(10, list.size()));
+        model.addAttribute("count", list);
+        model.addAttribute("list", subList);
         return "public/postList";
     }
 
