@@ -216,3 +216,9 @@ a.btn-outline:hover {
 	margin-bottom: 1rem;
 	text-align: center;
 }
+
+#passwordModal.modal {
+  /* JS에서 display: flex를 줄 테니, opacity/visibility만 덮어쓰기 */
+  opacity: 1 !important;
+  visibility: visible !important;
+}
