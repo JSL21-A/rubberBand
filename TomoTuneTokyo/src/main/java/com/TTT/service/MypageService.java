@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.TTT.domain.BandHistoryDto;
+import com.TTT.domain.BandInsertVo;
 import com.TTT.domain.MyActiveDto;
 import com.TTT.domain.MypageDto;
 import com.TTT.domain.UserDto;
@@ -241,6 +242,16 @@ public class MypageService {
 	    
 	    public List<MyActiveDto> getCommentsByUserId(String userId) {
 	        return mypageMapper.findCommentsByUserId(userId);
+	    }
+	    
+	    //소속 밴드 조회
+	    public BandInsertVo findMyBand(String user_id) {
+	    	return mypageMapper.findMyBand(user_id);
+	    }
+	    
+	    //소속 밴드 탈퇴
+	    public void leaveMyBand(String user_id, Long band_id) {
+	    	mypageMapper.leaveMyBand(user_id, band_id);
 	    }
 
 

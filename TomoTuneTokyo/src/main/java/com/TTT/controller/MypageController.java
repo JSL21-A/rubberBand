@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.TTT.domain.BandInsertVo;
 import com.TTT.domain.MyActiveDto;
 import com.TTT.domain.MypageDto;
 import com.TTT.domain.UserDto;
@@ -127,6 +128,9 @@ public class MypageController {
 		UserProfileDto userProfile = mypageService.getUserProfileByUserId(userId);
 		model.addAttribute("userProfile", userProfile);
 		model.addAttribute("hasResume", hasResume);
+		//영배 추가(내 밴드 정보)
+		BandInsertVo myBand = mypageService.findMyBand(userId);
+		model.addAttribute("myBand", myBand);
 		return "mypage/accountSetting";
 	}
 
@@ -335,6 +339,8 @@ public class MypageController {
 
 	    return "mypage/myActive";
 	}
+	
+
 
 
 
