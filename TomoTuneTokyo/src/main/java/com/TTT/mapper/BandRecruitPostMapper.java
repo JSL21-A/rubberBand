@@ -24,7 +24,6 @@ public interface BandRecruitPostMapper {
 	@Options(useGeneratedKeys = true, keyProperty = "post_id")
 	void insertBandRecruitPost(BandRecruitPostVo vo);
 
-
 	// 구인구직 추천 태그 insert
 	@Insert("INSERT INTO recruit_tags (post_id, tag_type, tag_value) VALUES (#{post_id}, #{tag_type}, #{tag_value})")
 	void insertRecruitTag(BandRecruitPostVo vo);
@@ -46,7 +45,7 @@ public interface BandRecruitPostMapper {
 	int countRecruitPosts();
 
 	// 페이징된 리스트 조회
-	@Select("SELECT post_id, title, band_id, band_intro, image1_url AS image1Url, created_at FROM band_recruit_post ORDER BY created_at DESC LIMIT #{limit} OFFSET #{offset}")
+	@Select("SELECT post_id, title, band_id, band_intro, image1_url AS image1Url, deadline, created_at FROM band_recruit_post ORDER BY created_at DESC LIMIT #{limit} OFFSET #{offset}")
 	List<BandRecruitPostVo> getRecruitPostsByPage(@Param("limit") int limit, @Param("offset") int offset);
 
 	// 밴드 팀명 검색창
@@ -57,8 +56,10 @@ public interface BandRecruitPostMapper {
 	@Select("SELECT band_name FROM bands WHERE band_id = #{bandId}")
 	String findBandNameById(@Param("bandId") Long bandId);
 
+	// 상단 마감일 남은 카드목록 조회
+	@Select("SELECT post_id, band_id, user_id, band_intro, title, recruit_position AS recruitPosition, activity_area AS activityArea, recruit_condition AS recruitCondition, preferred_genres AS preferredGenres, leader_comment AS leaderComment, deadline, tag_keywords AS tagKeywords, image1_url AS image1Url, image2_url AS image2Url, image3_url AS image3Url, image4_url AS image4Url, created_at AS createdAt, updated_at AS updatedAt FROM band_recruit_post WHERE deadline IS NULL OR deadline >= CURRENT_DATE ORDER BY created_at DESC")
+	List<BandRecruitPostVo> findAllActiveRecruitPosts();
 
-
-
+	
 
 }
