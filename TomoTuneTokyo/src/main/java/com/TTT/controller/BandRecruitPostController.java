@@ -31,6 +31,10 @@ public class BandRecruitPostController {
 	@GetMapping("/list")
 	public String BandList(@RequestParam(value = "postId", required = false) Long postId,
 			@RequestParam(value = "page", defaultValue = "1") int page,
+			@RequestParam(value = "genre", required = false) String genre,
+			@RequestParam(value = "position", required = false) String position,
+			@RequestParam(value = "gender", required = false) String gender,
+			@RequestParam(value = "age", required = false) String age,
 			@RequestParam(value = "keyword", required = false) String keyword, Model model) {
 		int size = 6;
 
@@ -65,6 +69,17 @@ public class BandRecruitPostController {
 			currentPage = page;
 		}
 
+		// 🔹 마감일이 지나지 않은 전체 목록 (슬라이더용)
+		List<BandRecruitPostVo> sliderPostList = bandrecruitpostservice.getAllActiveRecruitPosts();
+
+		// 🔹 밴드명 설정
+		for (BandRecruitPostVo post : sliderPostList) {
+			String bandName = bandrecruitpostservice.getBandNameById(post.getBand_id());
+			post.setBand_name(bandName);
+		}
+
+		// 🔹 뷰로 전달
+		model.addAttribute("sliderPostList", sliderPostList);
 		model.addAttribute("postList", postList);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("totalPages", totalPages);
@@ -111,6 +126,7 @@ public class BandRecruitPostController {
 
 	}
 
+	// 멤버 정보 불러오기
 	@GetMapping("/mybands/all")
 	@ResponseBody
 	public List<BandRecruitPostVo> getMyBandList(Principal principal) {
