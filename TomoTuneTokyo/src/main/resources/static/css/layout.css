@@ -2048,6 +2048,7 @@ textarea::placeholder {
 }
 
 .board-card {
+	position: relative;
 	border: 1px solid #eee;
 	border-radius: 12px;
 	overflow: hidden;
@@ -3763,7 +3764,7 @@ body {
 	top: auto;
 	left: 500px;
 	right: 20px;
-	bottom: 50px;
+	bottom: -110px;
 	z-index: 900;
 	background-color: #fff;
 	border-radius: 10px;
@@ -3771,6 +3772,7 @@ body {
 	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 	width: 600px;
 	max-width: 90%;
+	
 }
 
 #genre-popup .popup-close {
@@ -4088,6 +4090,8 @@ body {
   margin: 100px auto !important; /* 수직 간격 + 수평 중앙 정렬 */
 }
 
+
+
 /* ✅ applyModal 스크롤 잘림 방지 및 높이 제한 */
 #applyModal .modal-dialog {
   max-height: 90vh;             /* 브라우저 높이 기준 제한 */
@@ -4331,4 +4335,119 @@ body {
 .scrap-button:hover svg {
   fill: #fff3cd;    /* 연한 노란색 */
   stroke: black;
+}
+.deadline-badge {
+    position: absolute;
+    top: 20px;
+    left: -70px;
+    background-color: #ccc;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.deadline-text {
+    color: #000;
+    font-weight: 700;
+}
+
+.board-card {
+  position: relative; /* D-day badge 기준 */
+  border: 1px solid #eee;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+  padding: 0;
+}
+
+.deadline-badge {
+  position: absolute;
+  background-color: #ccc;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.deadline-badge.list-version {
+  top: 10px;
+  left: 10px;
+  font-size: 13px;
+  padding: 5px 10px;
+}
+
+.deadline-text {
+  color: #000;
+  font-weight: 700;
+}
+
+/* 슬라이더 전용 카드 스타일 */
+.slider-card {
+  flex: 0 0 auto;
+  width: 450px;
+  margin-right: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* 슬라이드 애니메이션 */
+.autoscroll-wrapper {
+  overflow: hidden;
+  width: 100%;
+  max-width: 1800px; /* ✅ 컨테이너 최대 너비 제한 */
+  margin: 0 auto; /* ✅ 가운데 정렬 */
+  padding: 40px 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.autoscroll-track {
+  display: flex;
+  gap: 20px;
+  animation: scroll-left 40s linear infinite;
+  white-space: nowrap;    
+  flex-wrap: nowrap;      
+}
+
+
+@keyframes scroll-left {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.card-list-section-title {
+  border-top: 1px solid #e0e0e0;
+  padding-top: 32px;
+  margin-top: 48px;
+  margin-bottom: 24px;
+}
+
+.card-list-section-title h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* 기존 board-card용 마감일 스타일을 slider-card에도 동일하게 적용 */
+.deadline-badge.list-version {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #ccc;
+  color: #000;
+  padding: 5px 10px;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 13px;
+  z-index: 10;
+}
+
+.slider-card {
+  position: relative;
 }
