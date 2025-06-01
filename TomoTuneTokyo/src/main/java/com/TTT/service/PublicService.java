@@ -28,12 +28,16 @@ public class PublicService {
         return publicMapper.searchUserByUserName(username);
     }
 
-    public List<PostVo> getPostList(int board_id) {
-        return publicMapper.getPostList(board_id);
+    public UserDto getUserIdAndRoleByUsername(String username) {
+        return publicMapper.getUserIdAndRoleByUsername(username);
     }
 
-    public List<PostVo> getPostListAll() {
-        return publicMapper.getPostListAll();
+    public List<PostVo> getPostList(int board_id, int showPage) {
+        return publicMapper.getPostList(board_id, showPage);
+    }
+
+    public List<PostVo> getPostListAll(int showPage) {
+        return publicMapper.getPostListAll(showPage);
     }
 
     public List<PostVo> getNotiRecently() {
@@ -50,5 +54,41 @@ public class PublicService {
 
     public void insertComment(PostVo vo) {
         publicMapper.insertComment(vo);
+    }
+
+    public String getUserIdByPostId(Long target) {
+        return publicMapper.getUserIdByPostId(target);
+    }
+
+    public void postReport(String user_id, String target_id, Long target) {
+        publicMapper.postReport(user_id, target_id, target);
+    }
+
+    public String getUserIdBycommentId(Long target) {
+        return publicMapper.getUserIdByCommentId(target);
+    }
+
+    public void commentReport(String user_id, String target_id, Long target) {
+        publicMapper.commentReport(user_id, target_id, target);
+    }
+
+    public void editPost(PostVo postVo) {
+        publicMapper.editPost(postVo);
+    }
+
+    public void deletePost(Long post_id) {
+        publicMapper.deletePost(post_id);
+    }
+
+    public int getPostCount(int board_id) {
+        return publicMapper.getPostCount(board_id);
+    }
+
+    public int getPostCountAll() {
+        return publicMapper.getPostCountAll();
+    }
+
+    public int getNotiCount() {
+        return publicMapper.getNotiCount();
     }
 }

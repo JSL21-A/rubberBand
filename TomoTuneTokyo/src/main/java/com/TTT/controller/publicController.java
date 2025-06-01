@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.TTT.domain.PostVo;
+import com.TTT.domain.UserDto;
 import com.TTT.service.AdminService;
 import com.TTT.service.NotificationService;
 import com.TTT.service.PublicService;
@@ -39,7 +40,7 @@ public class publicController {
 
     @Autowired
     PublicService publicService;
-    
+
     @Autowired
     NotificationService notificationService;
 
@@ -47,32 +48,50 @@ public class publicController {
     @GetMapping("/list")
     public String postList(HttpServletRequest request, Model model) {
         String Param = request.getParameter("board");
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 0;
+        int showPage = (page <= 1) ? 0 : (page - 1) * 10;
+        int count = 0;
+
+        List<PostVo> list = null;
+        List<PostVo> noti = null;
         // 선택된 카테고리가 있으면
         if (Param == null) {
             // 모든 카테고리에서 글 가져오기
-            List<PostVo> list = publicService.getPostListAll();
-            model.addAttribute("list", list);
+            list = publicService.getPostListAll(showPage);
+            count = publicService.getPostCountAll();
             // 상단에 배치될 가장 최근 공지사항 3개
-            List<PostVo> noti = publicService.getNotiRecently();
-            model.addAttribute("noti", noti);
+            noti = publicService.getNotiRecently();
             // 카테고리가 선택되어 있으면
         } else {
             // 해당 카테고리의 글 가져오기.(Param = board_id)
-            List<PostVo> list = publicService.getPostList(Integer.parseInt(Param));
-            model.addAttribute("list", list);
-
+            list = publicService.getPostList(Integer.parseInt(Param), showPage);
+            count = publicService.getPostCount(Integer.parseInt(Param));
             // 만일 선택된 카테고리가 공지사항이라면 모든 공지사항 가져오기
             if (!(Param.equals("7"))) {
-                List<PostVo> noti = publicService.getNotiRecently();
-                model.addAttribute("noti", noti);
+                noti = publicService.getNotiRecently();
+                count = publicService.getNotiCount();
             }
         }
+
+        model.addAttribute("count", count);
+        model.addAttribute("list", list);
+        model.addAttribute("noti", noti);
         return "public/postList";
     }
 
     // 글쓰기
     @GetMapping("/write")
-    public String writePost(HttpServletRequest request, Model model) {
+    public String writePost(HttpServletRequest request, Model model,
+            @RequestParam(name = "edit", required = false) String postId, Principal principal) {
+        // 수정이라면 수정할 글 가져오기
+        if (postId != null) {
+            PostVo post = publicService.getPostView(Integer.parseInt(postId));
+            if (post.getUser_id().equals(publicService.searchUserByUserName(principal.getName()))) {
+                model.addAttribute("post", post);
+            } else {
+                return "redirect:/user/error";
+            }
+        }
         // 현재 uri 가져오기.
         String uri = request.getRequestURI();
         // htmx로 인한 요청인지 체크
@@ -112,6 +131,7 @@ public class publicController {
 
     @PostMapping("/doWrite")
     public ResponseEntity<?> doPost(@RequestParam("content") String content,
+            @RequestParam(name = "edit", required = false) Long postId,
             @RequestParam(name = "images", required = false) List<MultipartFile> images,
             @RequestParam("title") String title, @RequestParam("board_id") Long board_id,
             Principal principal, PostVo vo) throws IOException {
@@ -169,6 +189,11 @@ public class publicController {
         vo.setPost_content(cleanedHtml);
         vo.setUser_id(publicService.searchUserByUserName(principal.getName()));
 
+        if (postId != null) {
+            vo.setPost_id(postId);
+            publicService.editPost(vo);
+            return ResponseEntity.ok().build();
+        }
         publicService.insertPost(vo);
 
         return ResponseEntity.ok().build();
@@ -250,18 +275,53 @@ public class publicController {
     }
 
     @PostMapping("/commentWrite")
-    public ResponseEntity<Object> postMethodName(@RequestParam("comment") String comment,
-            @RequestParam("post_id") Long post_id, @RequestParam("post_user_id") String post_user_id ,Principal principal, PostVo vo) {
+    public ResponseEntity<Object> commentWrite(@RequestParam("comment") String comment,
+            @RequestParam("post_id") Long post_id, @RequestParam("post_user_id") String post_user_id,
+            Principal principal, PostVo vo) {
+
         vo.setComment_content(comment);
-        vo.setPost_id(post_id);
         vo.setUser_id(publicService.searchUserByUserName(principal.getName()));
         publicService.insertComment(vo);
-        
-        //알림 전송 (post_user_id는 게시물 작성자)
-        notificationService.sendNotification(post_user_id , "comment", "新しいコメントが届きました。", "/user/view?post=" + post_id);
-        
-        
+
+        // 알림 전송 (post_user_id는 게시물 작성자)
+        notificationService.sendNotification(post_user_id, "comment", "新しいコメントが届きました。", "/user/view?post=" + post_id);
         return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<Object> reportPost(@RequestParam("target") Long target, @RequestParam("type") String type,
+            Principal principal) {
+
+        if (type.equals("post")) {
+            String target_id = publicService.getUserIdByPostId(target);
+            String user_id = publicService.searchUserByUserName(principal.getName());
+            publicService.postReport(user_id, target_id, target);
+        }
+
+        if (type.equals("comment")) {
+            String target_id = publicService.getUserIdBycommentId(target);
+            String user_id = publicService.searchUserByUserName(principal.getName());
+            publicService.commentReport(user_id, target_id, target);
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/delete")
+    public ResponseEntity<Object> deletePost(@RequestParam("target") Long target, Principal principal, Model model,
+            UserDto dto) {
+        String target_user_id = publicService.getUserIdByPostId(target);
+        dto = publicService.getUserIdAndRoleByUsername(principal.getName());
+        if (dto.getRole().equals("A") || target_user_id.equals(dto.getUser_id())) {
+            publicService.deletePost(target);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().body("bad request");
+        }
+    }
+
+    @GetMapping("/error")
+    public String errorPage(Model model) {
+        model.addAttribute("layout", "layouts/layout");
+        return "public/error";
     }
 
 }

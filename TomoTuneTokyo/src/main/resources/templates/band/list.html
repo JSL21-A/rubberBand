@@ -44,52 +44,61 @@
 			    <button type="submit" class="search-btn">検索</button>
 			  </form>
 			</div>
-		<div class="selected-tags-title"># 自分の好みであるキーワード検索</div>
-		<div class="selected-tags"></div>
-		<!-- 해시태그 선택 영역 -->
-		<div class="keyword-box">
-			<div class="keyword-row">
-				<div class="keyword-category">ジャンル</div>
-				<div class="keyword-tags">
-					<span class="tag">ロック</span> <span class="tag">ポップ</span> <span class="tag">ジャズ</span> <span
-						class="tag">ヒップホップ</span> <span class="tag">クラシック</span><span class="tag">EDM</span><span
-						class="tag">その他</span>
-				</div>
+			
+		<!-- ⭐ 자동 슬라이더 섹션 시작 -->
+		<div class="autoscroll-wrapper">
+		  <div class="autoscroll-track">
+		    <div class="slider-card" th:each="post : ${sliderPostList}">
+		      <!-- 마감일 뱃지 -->
+		      <div class="deadline-badge list-version" th:if="${post.deadline != null}">
+		        <span class="deadline-text"
+		              th:attr="data-deadline=${#dates.format(post.deadline, 'yyyy-MM-dd')}">D-?</span>
+		      </div>
+
+		      <!-- 이미지 클릭 시 상세 페이지 이동 -->
+			  <a th:href="@{'/bandselect/view?postId=' + ${post.post_id}}">
+		            <img th:src="@{${post.image1Url != null ? '/images/uploads/bands/' + post.image1Url : '/images/default.png'}}"
+		                 alt="썸네일" class="card-image" /></a>
+
+		      <!-- 카드 본문 정보 -->
+		      <div class="card-info">
+		        <p><strong>タイトル :</strong> <span th:text="${post.title}">제목</span></p>
+		        <p><strong>バンド紹介 :</strong> <span th:text="${post.band_intro}">소개</span></p>
+		        <p><strong>バンド名 :</strong> <span th:text="${post.band_name}">밴드명</span></p>
+		        <p class="card-meta">
+		          <span th:text="${#dates.format(post.createdAt, 'yyyy.MM.dd')}">작성일</span>
+			        </p>
+			      </div>
+			    </div>
+			  </div>
 			</div>
-			<div class="keyword-row">
-				<div class="keyword-category">ポジション</div>
-				<div class="keyword-tags">
-					<span class="tag">Vo（ボーカル</span> <span class="tag">Gt（ギター）</span> <span class="tag">Ba（ベース)</span>
-					<span class="tag">Dr（ドラム</span> <span class="tag">Kb（キーボード)</span><span class="tag">その他</span>
-				</div>
+			<!-- ⭐ 자동 슬라이더 섹션 끝 -->
+							
+			<!-- 구분선 + 제목 -->
+			<div class="card-list-section-title">
+			  <h3>📋 登録されたメンバー募集一覧</h3>
 			</div>
-			<div class="keyword-row">
-				<div class="keyword-category">性別</div>
-				<div class="keyword-tags">
-					<span class="tag">男性バンド</span> <span class="tag">女性バンド</span> <span class="tag">混成バンド</span>
-				</div>
-			</div>
-			<div class="keyword-row">
-				<div class="keyword-category">年齢代</div>
-				<div class="keyword-tags">
-					<span class="tag">10代</span> <span class="tag">20代</span> <span class="tag">30代</span> <span
-						class="tag">40代</span> <span class="tag">50代以上</span>
-				</div>
-			</div>
-		</div>
 
 		<!-- 카드 목록 -->
 		<div class="board-card-grid">
 		    <div class="board-card" th:each="post : ${postList}">
-		        <!-- 이미지 클릭 시 상세 페이지로 이동 -->
-				<a th:href="@{'/bandselect/view?postId=' + ${post.post_id}}">
-				    <img th:src="@{${post.image1Url != null ? '/images/uploads/bands/' + post.image1Url : '/images/default.png'}}"
-				         alt="썸네일" class="card-image" />
-				</a>
+		        <!-- 마감일 뱃지 (D-day 계산용) -->
+				<div class="deadline-badge list-version" th:if="${post.deadline != null}">
+				  <span class="deadline-text"
+				        th:attr="data-deadline=${#dates.format(post.deadline, 'yyyy-MM-dd')}">D-?</span>
+				</div>
+
+		        <!-- 이미지 클릭 시 상세 페이지 이동 -->
+		        <a th:href="@{'/bandselect/view?postId=' + ${post.post_id}}">
+		            <img th:src="@{${post.image1Url != null ? '/images/uploads/bands/' + post.image1Url : '/images/default.png'}}"
+		                 alt="썸네일" class="card-image" />
+		        </a>
+
+		        <!-- 카드 본문 정보 -->
 		        <div class="card-info">
-		            <p><strong>タイトル :</strong> <span th:text="${post.title}">sddssd</span></p>
-		            <p><strong>バンド紹介 :</strong> <span th:text="${post.band_intro}">dassds</span></p>
-		            <p><strong>バンド名 :</strong> <span th:text="${post.band_name}">LOL</span></p>
+		            <p><strong>タイトル :</strong> <span th:text="${post.title}">제목</span></p>
+		            <p><strong>バンド紹介 :</strong> <span th:text="${post.band_intro}">소개</span></p>
+		            <p><strong>バンド名 :</strong> <span th:text="${post.band_name}">밴드명</span></p>
 		            <p class="card-meta">
 		                <span th:text="${#dates.format(post.createdAt, 'yyyy.MM.dd')}">작성일</span>
 		            </p>
@@ -105,8 +114,8 @@
 					<!-- 헤더 -->
 					<div class="modal-header">
 						<h4 class="modal-title" id="applyModalLabel">募集登録の内容作成</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+						<button type="button" class="close" id="applyModalCloseBtn" aria-label="Close">
+						  <span aria-hidden="true">&times;</span>
 						</button>
 					</div>
 
@@ -209,47 +218,56 @@
 								<div id="genre-popup" class="keyword-popup" style="display: none;">
 									<button id="genre-popup-close" class="popup-close" type="button">×</button>
 									<div class="keyword-box">
-										<div class="keyword-row">
-											<div class="keyword-category">ジャンル</div>
-											<div class="keyword-tags">
-												<span class="tag">ロック</span>
-												<span class="tag">ポップ</span>
-												<span class="tag">ジャズ</span>
-												<span class="tag">ヒップホップ</span>
-												<span class="tag">クラシック</span>
-												<span class="tag">EDM</span>
-												<span class="tag">その他</span>
-											</div>
-										</div>
-										<div class="keyword-row">
-											<div class="keyword-category">ポジション</div>
-											<div class="keyword-tags">
-												<span class="tag">Vo（ボーカル)</span>
-												<span class="tag">Gt（ギター）</span>
-												<span class="tag">Ba（ベース)</span>
-												<span class="tag">Dr（ドラム）</span>
-												<span class="tag">Kb（キーボード)</span>
-												<span class="tag">その他</span>
-											</div>
-										</div>
-										<div class="keyword-row">
-											<div class="keyword-category">性別</div>
-											<div class="keyword-tags">
-												<span class="tag">男性バンド</span>
-												<span class="tag">女性バンド</span>
-												<span class="tag">混成バンド</span>
-											</div>
-										</div>
-										<div class="keyword-row">
-											<div class="keyword-category">年齢代</div>
-											<div class="keyword-tags">
-												<span class="tag">10代</span>
-												<span class="tag">20代</span>
-												<span class="tag">30代</span>
-												<span class="tag">40代</span>
-												<span class="tag">50代以上</span>
-											</div>
-										</div>
+
+									  <!-- ✅ ジャンル -->
+									  <div class="keyword-row">
+									    <div class="keyword-category">ジャンル</div>
+									    <div class="keyword-tags">
+									      <span class="tag" data-category="ジャンル">ロック</span>
+									      <span class="tag" data-category="ジャンル">ポップ</span>
+									      <span class="tag" data-category="ジャンル">ジャズ</span>
+									      <span class="tag" data-category="ジャンル">ヒップホップ</span>
+									      <span class="tag" data-category="ジャンル">クラシック</span>
+									      <span class="tag" data-category="ジャンル">EDM</span>
+									      <span class="tag" data-category="ジャンル">その他</span>
+									    </div>
+									  </div>
+
+									  <!-- ✅ ポジション -->
+									  <div class="keyword-row">
+									    <div class="keyword-category">ポジション</div>
+									    <div class="keyword-tags">
+									      <span class="tag" data-category="ポジション">Vo（ボーカル）</span>
+									      <span class="tag" data-category="ポジション">Gt（ギター）</span>
+									      <span class="tag" data-category="ポジション">Ba（ベース）</span>
+									      <span class="tag" data-category="ポジション">Dr（ドラム）</span>
+									      <span class="tag" data-category="ポジション">Kb（キーボード）</span>
+									      <span class="tag" data-category="ポジション">その他</span>
+									    </div>
+									  </div>
+
+									  <!-- ✅ 性別 -->
+									  <div class="keyword-row">
+									    <div class="keyword-category">性別</div>
+									    <div class="keyword-tags">
+									      <span class="tag" data-category="性別">男性バンド</span>
+									      <span class="tag" data-category="性別">女性バンド</span>
+									      <span class="tag" data-category="性別">混成バンド</span>
+									    </div>
+									  </div>
+
+									  <!-- ✅ 年齢代 -->
+									  <div class="keyword-row">
+									    <div class="keyword-category">年齢代</div>
+									    <div class="keyword-tags">
+									      <span class="tag" data-category="年齢代">10代</span>
+									      <span class="tag" data-category="年齢代">20代</span>
+									      <span class="tag" data-category="年齢代">30代</span>
+									      <span class="tag" data-category="年齢代">40代</span>
+									      <span class="tag" data-category="年齢代">50代以上</span>
+									    </div>
+									  </div>
+
 									</div>
 								</div>
 
@@ -293,9 +311,10 @@
 		       th:text="${i}">1</a>
 
 		    <!-- 다음 페이지 버튼 -->
-		    <a th:if="${currentPage < totalPages}"
-		       th:href="@{'/bandlist/list'(page=${currentPage + 1})}"
-		       class="page-btn">&raquo;</a>
+			<a th:if="${currentPage != null and currentPage < totalPages}"
+			   th:href="@{'/bandlist/list'(page='__' + (${currentPage != null ? currentPage + 1 : 2}))}"
+			   class="page-btn">&raquo;</a>
+
 		</div>
 
 		<script>
@@ -595,6 +614,73 @@
 			  }
 			});
 
+		</script>
+		
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+			    const deadlineElements = document.querySelectorAll('.deadline-text');
+
+			    deadlineElements.forEach(function (el) {
+			        const deadlineStr = el.getAttribute('data-deadline');
+			        if (!deadlineStr) return;
+
+			        const today = new Date();
+			        const deadline = new Date(deadlineStr);
+			        deadline.setHours(0, 0, 0, 0);
+			        today.setHours(0, 0, 0, 0);
+
+			        const diffTime = deadline - today;
+			        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+			        if (diffDays > 0) {
+			            el.textContent = `D-${diffDays}`;
+			        } else if (diffDays === 0) {
+			            el.textContent = 'D-Day';
+			        } else {
+			            el.textContent = '締切';
+			        }
+			    });
+			});
+		</script>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+			  const closeBtn = document.getElementById("applyModalCloseBtn");
+			  if (closeBtn) {
+			    closeBtn.addEventListener("click", function () {
+			      $('#applyModal').modal('hide'); // Bootstrap 3용 수동 닫기
+			    });
+			  }
+			});
+
+		</script>
+		
+		<script>
+			document.addEventListener("DOMContentLoaded", () => {
+			  const track = document.querySelector(".autoscroll-track");
+			  if (track) {
+			    const cards = track.innerHTML;
+			    track.innerHTML += cards; // 카드 1세트를 반복해서 2배로 만들기
+			  }
+			});
+
+		</script>
+		
+		<script>
+		  document.addEventListener("DOMContentLoaded", () => {
+		    const sortButtons = document.querySelectorAll(".sort-btn");
+
+		    sortButtons.forEach(button => {
+		      button.addEventListener("click", () => {
+		        sortButtons.forEach(btn => btn.classList.remove("active"));
+		        button.classList.add("active");
+
+		        const sortType = button.dataset.sort;
+		        // 예시: location.href = `/bandlist/list?sort=${sortType}`;
+		        console.log("선택된 정렬 기준:", sortType);
+		      });
+		    });
+		  });
 		</script>
 
 	</div>

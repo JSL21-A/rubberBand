@@ -11,7 +11,10 @@ import com.TTT.domain.BandHistoryDto;
 import com.TTT.domain.BandInsertVo;
 import com.TTT.domain.MyActiveDto;
 import com.TTT.domain.MypageDto;
+import com.TTT.domain.PostVo;
 import com.TTT.domain.UserProfileDto;
+import org.apache.ibatis.annotations.Param;
+
 
 @Mapper
 public interface MypageMapper {
@@ -52,6 +55,7 @@ public interface MypageMapper {
 	// MypageMapper.java
 	List<MyActiveDto> findCommentsByUserId(String userId);
 
+
 	//user_id로 소속 밴드(가장 최근 밴드 하나만) 정보 불러오기(영배 작업)
 	@Select("SELECT "
 			+ "        m.band_member_id, "
@@ -78,6 +82,19 @@ public interface MypageMapper {
 	//마이페이지 밴드 탈퇴(영배 작업)
 	@Update("update band_member set status = 'D' where user_id = #{user_id} and band_id = #{band_id}")
 	void leaveMyBand(@Param("user_id") String user_id, @Param("band_id") Long band_id);
+
+	//댓글 작성글 이동
+	 PostVo findPostById(Long postId);
+	 
+	// 비밀번호 조회
+	 String getPasswordByUserId(String userId);
+
+	 // 비밀번호 변경
+	 int updatePassword(@Param("userId") String userId, @Param("password") String password);
+
+
+
+
 
 
 }

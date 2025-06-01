@@ -22,8 +22,9 @@ public class BandRecruitPostService {
 	@Autowired
 	private BandRecruitPostMapper bandRecruitpostMapper;
 
-	private final String uploadDir = "C:\\Users\\LG gram\\git\\rubberBand\\TomoTuneTokyo\\src\\main\\resources\\static\\images\\uploads\\bands\\"; // 이미지 저장 경로
-																																				
+	private final String uploadDir = "C:\\Users\\LG gram\\git\\rubberBand\\TomoTuneTokyo\\src\\main\\resources\\static\\images\\uploads\\bands\\"; // 이미지
+																																					// 저장
+																																					// 경로
 
 	// username을 기반으로 user_id(UUID) 조회
 	public String findUserIdByUsername(String username) {
@@ -69,8 +70,8 @@ public class BandRecruitPostService {
 
 		// post insert
 		bandRecruitpostMapper.insertBandRecruitPost(vo);
-		Long postId = vo.getPost_id(); 
-		 System.out.println("Generated post_id: " + postId); 
+		Long postId = vo.getPost_id();
+		System.out.println("Generated post_id: " + postId);
 
 		// 태그 저장
 		String[] types = { "genre", "position", "gender", "age" };
@@ -113,34 +114,35 @@ public class BandRecruitPostService {
 
 	// 전체 게시글 수 조회
 	public int getTotalPostCount() {
-	    return bandRecruitpostMapper.countRecruitPosts();
+		return bandRecruitpostMapper.countRecruitPosts();
 	}
 
 	// 페이징된 리스트 조회
 	public List<BandRecruitPostVo> getRecruitPostsByPage(int page, int size) {
-	    int offset = Math.max(0, (page - 1) * size);
-	    List<BandRecruitPostVo> postList = bandRecruitpostMapper.getRecruitPostsByPage(size, offset);
-	    
-	    // 각 게시글의 band_id로 band_name을 조회하여 설정
-	    for (BandRecruitPostVo post : postList) {
-	        String bandName = bandRecruitpostMapper.findBandNameById(post.getBand_id());
-	        post.setBand_name(bandName);
-	    }
-	    return postList;
-	}
+		int offset = Math.max(0, (page - 1) * size);
+		List<BandRecruitPostVo> postList = bandRecruitpostMapper.getRecruitPostsByPage(size, offset);
 
+		// 각 게시글의 band_id로 band_name을 조회하여 설정
+		for (BandRecruitPostVo post : postList) {
+			String bandName = bandRecruitpostMapper.findBandNameById(post.getBand_id());
+			post.setBand_name(bandName);
+		}
+		return postList;
+	}
 
 	// 밴드명 검색창 검색
 	public List<BandRecruitPostVo> searchByTeamNameOrPosition(String keyword) {
-	    return bandRecruitpostMapper.searchBandsByName(keyword);
+		return bandRecruitpostMapper.searchBandsByName(keyword);
 	}
 
 	// band_name 불러오기
 	public String getBandNameById(Long bandId) {
-	    return bandRecruitpostMapper.findBandNameById(bandId);
+		return bandRecruitpostMapper.findBandNameById(bandId);
+	}
+	
+	public List<BandRecruitPostVo> getAllActiveRecruitPosts() {
+	    return bandRecruitpostMapper.findAllActiveRecruitPosts();
 	}
 
-
-	
 
 }
