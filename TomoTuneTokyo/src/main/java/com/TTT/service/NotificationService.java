@@ -68,7 +68,7 @@ public class NotificationService {
      * 아직 읽지 않은 알림만 조회
      */
     public List<Notification> getUnreadNotifications(String userId) {
-        return notificationRepo.findByUserIdAndIsReadFalse(userId);
+        return notificationRepo.findByUserIdAndIsReadFalseOrderByCreatedAtDesc(userId);
     }
 
     /**
