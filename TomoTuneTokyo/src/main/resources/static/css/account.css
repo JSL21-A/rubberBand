@@ -190,6 +190,32 @@ a.btn-outline:hover {
 	appearance: none;
 }
 
+.input-group input[type="email"] {
+	width: 100%;
+	padding: 0.75rem 1rem;
+	border: 1px solid #ccc;
+	border-radius: 8px !important;
+	background: #fafafa;
+	font-size: 1rem;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+.input-group input[type="text"] {
+	width: 100%;
+	padding: 0.75rem 1rem;
+	border: 1px solid #ccc;
+	border-radius: 8px !important;
+	background: #fafafa;
+	font-size: 1rem;
+	box-sizing: border-box;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
 .input-group input:focus {
 	border-color: #000;
 	outline: none;
@@ -219,6 +245,11 @@ a.btn-outline:hover {
 
 #passwordModal.modal {
   /* JS에서 display: flex를 줄 테니, opacity/visibility만 덮어쓰기 */
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+#emailChangeModal.modal {
   opacity: 1 !important;
   visibility: visible !important;
 }
