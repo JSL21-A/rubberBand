@@ -23,4 +23,12 @@ public class AdminService {
     public List<PostVo> getNotiList() {
         return adminMapper.getNotiList();
     }
+
+    public List<PostVo> getRpostsList() {
+        return adminMapper.getRpostsList();
+    }
+
+    // public List<PostVo> getRcommentList() {
+    // return adminMapper.getRcommentList();
+    // }
 }

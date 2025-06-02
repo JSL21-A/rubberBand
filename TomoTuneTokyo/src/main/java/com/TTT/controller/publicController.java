@@ -54,7 +54,7 @@ public class publicController {
 
         List<PostVo> list = null;
         List<PostVo> noti = null;
-        // 선택된 카테고리가 있으면
+        // 선택된 카테고리가 으면
         if (Param == null) {
             // 모든 카테고리에서 글 가져오기
             list = publicService.getPostListAll(showPage);
@@ -69,7 +69,7 @@ public class publicController {
             // 만일 선택된 카테고리가 공지사항이라면 모든 공지사항 가져오기
             if (!(Param.equals("7"))) {
                 noti = publicService.getNotiRecently();
-                count = publicService.getNotiCount();
+                count = publicService.getPostCount(Integer.parseInt(Param));
             }
         }
 

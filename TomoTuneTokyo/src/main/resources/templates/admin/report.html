@@ -1,93 +1,101 @@
 <!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" data-layout-decorate=~{layouts/adminLayout}>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<style>
-    #report {
-        margin: 0;
-        padding: 0;
-    }
 
-    #content {
-        width: 80vw;
-        margin: 0 auto;
-        margin-top: 60px;
-    }
-
-    #top {
-        display: flex;
-        flex-direction: row-reverse;
-    }
-
-    #middle {
-        width: 100%;
-        margin: 0 auto;
-        display: flex;
-    }
-
-    ul {
-        list-style: none;
-        padding: 0 3%;
-    }
-
-    li {
-        border-bottom: 1px dotted black;
-    }
-
-    .noti_list {
-        border-radius: 30px;
-        width: 100%;
-        box-shadow: 5px 5px 5px 5px gray;
-    }
-
-    .noti_post {
-        display: flex;
-        justify-content: space-between;
-        padding: 1%;
-    }
-
-    .noti_post a {
-        text-decoration: none;
-        color: #333;
-    }
-
-    #bottom {
-        display: flex;
-        justify-content: space-between;
-        width: 95%;
-        padding: 4% 0;
-    }
-
-    #book {
-        padding-top: 4%;
-    }
-
-    #book .mark {
-        margin-bottom: 20%;
-        background-color: #000;
-        color: #fff;
-        width: 150%;
-        text-align: center;
-        height: 10%;
-        box-shadow: 5px 5px 5px gray;
-        height: 35px;
-        z-index: 1056;
-    }
-
-    #book .mark.active {
-        background-color: #fff;
-        color: #000;
-        box-shadow: 10px 5px 5px gray;
-        z-index: 1056;
-    }
-</style>
 
 <body>
     <h1 id="banner-font" hx-swap-oob="true">通報管理</h1>
-    <div id="content">
+    <div id="content" layout:fragment="content" th:fragment="content">
+        <style>
+            #report {
+                margin: 0;
+                padding: 0;
+            }
+
+            #content {
+                width: 90vw;
+                margin: 0 auto;
+                margin-top: 60px;
+            }
+
+            #top {
+                display: flex;
+                flex-direction: row-reverse;
+            }
+
+            #middle {
+                width: 100%;
+                margin: 0 auto;
+                display: flex;
+            }
+
+            ul {
+                list-style: none;
+                padding: 0 3%;
+            }
+
+            li {
+                border-bottom: 1px dotted black;
+            }
+
+            .noti_list {
+                border-radius: 30px;
+                width: 85vw;
+                box-shadow: 5px 5px 5px 5px gray;
+                min-height: 200px;
+                position: absolute;
+            }
+
+            .noti_post {
+                display: flex;
+                justify-content: space-between;
+                padding: 1%;
+            }
+
+            .noti_post a {
+                text-decoration: none;
+                color: #333;
+            }
+
+            #bottom {
+                display: flex;
+                justify-content: space-between;
+                width: 95%;
+                padding: 4% 0;
+            }
+
+            #book {
+                padding-top: 4%;
+                left: 90vw;
+                position: absolute;
+            }
+
+            #book .mark {
+                margin-bottom: 20%;
+                background-color: #000;
+                color: #fff;
+                width: 150%;
+                text-align: center;
+                height: 10%;
+                box-shadow: 5px 5px 5px gray;
+                height: 35px;
+                position: relative;
+                z-index: 1056;
+            }
+
+            #book .mark.active {
+                background-color: #fff;
+                color: #000;
+                box-shadow: 10px 5px 5px gray;
+                z-index: 1056;
+            }
+        </style>
         <div id="report">
             <div id="top">
 
@@ -101,54 +109,35 @@
                             <div>ユーザー名</div>
                             <div class="noti_date">作成日</div>
                         </li>
-                        <li class="noti_post">
+                        <li class="noti_post" th:each="post: ${posts}">
                             <a hx-get="/admin/test">
                                 <div class="noti_title">testThings1</div>
                             </a>
                             <div></div>
                             <div class="noti_date">2025.04.30</div>
                         </li>
+                    </ul>
+                </div>
+                <div class="noti_list">
+                    <ul>
                         <li class="noti_post">
+                            <div class="noti_title">タイトル</div>
+                            <div>カテゴリー</div>
+                            <div>ユーザー名</div>
+                            <div class="noti_date">作成日</div>
+                        </li>
+                        <li class="noti_post" th:each="post: ${posts}">
                             <a hx-get="/admin/test">
                                 <div class="noti_title">testThings1</div>
                             </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
-                            <div class="noti_date">2025.04.30</div>
-                        </li>
-                        <li class="noti_post">
-                            <a href="#">
-                                <div class="noti_title">testThings1</div>
-                            </a>
+                            <div></div>
                             <div class="noti_date">2025.04.30</div>
                         </li>
                     </ul>
                 </div>
                 <div id="book">
-                    <div class="mark active">投稿物</div>
-                    <div class="mark">コメント</div>
+                    <div class="mark post active">投稿物</div>
+                    <div class="mark comment">コメント</div>
                 </div>
 
             </div>
@@ -157,13 +146,14 @@
             </div>
 
         </div>
+        <script>
+            $(document).off('click', '.mark').on('click', '.mark', function () {
+                $('.mark').removeClass("active");
+                console.log($(this).hasClass("post"));
+                $(this).addClass("active");
+            })
+        </script>
     </div>
-    <script>
-        $('.mark').on('click', function () {
-            $('.mark').removeClass("active");
-            $(this).addClass("active");
-        })
-    </script>
 </body>
 
 </html>

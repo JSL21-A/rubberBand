@@ -72,7 +72,7 @@ public interface PublicMapper {
                         @Param("target_id") String target_id,
                         @Param("comment_id") Long commnet_id);
 
-        @Select("SELECT COUNT(*) FROM posts WHERE board_id = #{board_id} AND board_id != 7")
+        @Select("SELECT COUNT(*) FROM posts WHERE board_id = #{board_id}")
         int getPostCount(int board_id);
 
         @Select("SELECT COUNT(*) FROM posts WHERE board_id != 7")

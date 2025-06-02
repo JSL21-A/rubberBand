@@ -67,11 +67,15 @@ public class AdminController {
     }
 
     @GetMapping("/reports")
-    public String reportList(HttpServletRequest request) {
+    public String reportList(HttpServletRequest request, Model model) {
+        List<PostVo> posts = adminService.getRpostsList();
+        // List<PostVo> comments = adminService.getRcommentList();
+        model.addAttribute("posts", posts);
+        // model.addAttribute("comment", comments);
         if ("true".equals(request.getHeader("HX-Request"))) {
-            return "admin/report";
+            return "admin/report :: content";
         } else {
-            return "redirect:/admin/main";
+            return "admin/report";
         }
     }
 
