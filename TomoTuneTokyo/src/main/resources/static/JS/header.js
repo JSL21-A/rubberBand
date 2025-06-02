@@ -242,3 +242,4 @@ function showMainMenu() {
   document.getElementById('notificationPane').style.display = 'none';
   document.getElementById('mainPane').style.display = 'block';
 }
+
