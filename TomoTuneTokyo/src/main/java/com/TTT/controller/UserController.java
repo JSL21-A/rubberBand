@@ -1,9 +1,12 @@
 package com.TTT.controller;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import com.TTT.domain.UserDto;
+import com.TTT.security.CustomUserDetails;
 import com.TTT.service.MailService;
+import com.TTT.service.MypageService;
 import com.TTT.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
@@ -101,6 +106,37 @@ public class UserController {
 		return ResponseEntity.ok(ok);
 	}
 	
+	//비밀번호 검증
+	@PostMapping("/verify-current-password")
+	public ResponseEntity<Map<String, Object>> verifyCurrentPassword(
+			@RequestBody Map<String, String> body,
+			@AuthenticationPrincipal CustomUserDetails principal){
+		String currentPassword = body.get("currentPassword");
+		String userId = principal.getUserDto().getUser_id();
+		
+		boolean ok = userService.checkPassword(userId, currentPassword);
+		return ResponseEntity.ok(Collections.singletonMap("ok", ok));
+	}
+	
+	//이메일 업데이트
+	@PostMapping("/update-email")
+	public ResponseEntity<Map<String, Object>> updateEmail(
+	        @RequestParam("user_id") String userId,
+	        @RequestParam("new_email") String newEmail) {
+
+	    boolean success = userService.updateEmail(userId, newEmail);
+
+	    Map<String, Object> responseBody = new HashMap<>();
+	    responseBody.put("success", success);
+	    if (!success) {
+	        responseBody.put("message", "メール更新に失敗しました。");
+	    }
+
+	    return ResponseEntity
+	            .ok()
+	            .header("Content-Type", "application/json")
+	            .body(responseBody);
+	}
 	
 	
 	
