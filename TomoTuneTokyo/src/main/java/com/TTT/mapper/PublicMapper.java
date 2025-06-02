@@ -81,4 +81,7 @@ public interface PublicMapper {
         @Select("SELECT COUNT(*) FROM posts WHERE board_id = 7")
         int getNotiCount();
 
+        @Delete("DELETE FROM comments WHERE comment_id = #{comment_id}")
+        void deleteComment(Long comment_id);
+
 }

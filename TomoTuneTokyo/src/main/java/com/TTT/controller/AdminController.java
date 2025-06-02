@@ -69,9 +69,9 @@ public class AdminController {
     @GetMapping("/reports")
     public String reportList(HttpServletRequest request, Model model) {
         List<PostVo> posts = adminService.getRpostsList();
-        // List<PostVo> comments = adminService.getRcommentList();
+        List<PostVo> comments = adminService.getRcommentList();
         model.addAttribute("posts", posts);
-        // model.addAttribute("comment", comments);
+        model.addAttribute("comment", comments);
         if ("true".equals(request.getHeader("HX-Request"))) {
             return "admin/report :: content";
         } else {
@@ -79,14 +79,4 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/test")
-    public String modalTest(HttpServletRequest request, UserDto userDto, Model model) {
-        if ("true".equals(request.getHeader("HX-Request"))) {
-            adminService.modalTest(userDto);
-            model.addAttribute("test", userDto.getNickname());
-            return "admin/testModal";
-        } else {
-            return "redirect:/admin/main";
-        }
-    }
 }

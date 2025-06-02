@@ -28,7 +28,7 @@ public class AdminService {
         return adminMapper.getRpostsList();
     }
 
-    // public List<PostVo> getRcommentList() {
-    // return adminMapper.getRcommentList();
-    // }
+    public List<PostVo> getRcommentList() {
+        return adminMapper.getRcommentList();
+    }
 }

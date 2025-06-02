@@ -318,6 +318,19 @@ public class publicController {
         }
     }
 
+    @GetMapping("/delComment")
+    public ResponseEntity<Object> deleteComment(@RequestParam("target") Long target, Principal principal, Model model,
+            UserDto dto) {
+        String target_user_id = publicService.getUserIdByCommentId(target);
+        dto = publicService.getUserIdAndRoleByUsername(principal.getName());
+        if (dto.getRole().equals("A") || target_user_id.equals(dto.getUser_id())) {
+            publicService.deleteComment(target);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().body("bad request");
+        }
+    }
+
     @GetMapping("/error")
     public String errorPage(Model model) {
         model.addAttribute("layout", "layouts/layout");

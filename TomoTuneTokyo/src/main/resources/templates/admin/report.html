@@ -50,9 +50,14 @@
                 box-shadow: 5px 5px 5px 5px gray;
                 min-height: 200px;
                 position: absolute;
+                display: none;
             }
 
-            .noti_post {
+            .noti_list.active {
+                display: inline;
+            }
+
+            .noti_list .noti_post {
                 display: flex;
                 justify-content: space-between;
                 padding: 1%;
@@ -101,7 +106,7 @@
 
             </div>
             <div id="middle">
-                <div class="noti_list">
+                <div class="noti_list post active">
                     <ul>
                         <li class="noti_post">
                             <div class="noti_title">タイトル</div>
@@ -110,15 +115,16 @@
                             <div class="noti_date">作成日</div>
                         </li>
                         <li class="noti_post" th:each="post: ${posts}">
-                            <a hx-get="/admin/test">
-                                <div class="noti_title">testThings1</div>
+                            <a th:attr="href='/user/view?post='+ ${post.post_id}">
+                                <div class="noti_title" th:text="${post.post_title}"></div>
                             </a>
-                            <div></div>
+                            <div th:text="${post.board_name}"></div>
+                            <div th:text="${post.nickname}"></div>
                             <div class="noti_date">2025.04.30</div>
                         </li>
                     </ul>
                 </div>
-                <div class="noti_list">
+                <div class="noti_list comment">
                     <ul>
                         <li class="noti_post">
                             <div class="noti_title">タイトル</div>
@@ -149,7 +155,12 @@
         <script>
             $(document).off('click', '.mark').on('click', '.mark', function () {
                 $('.mark').removeClass("active");
-                console.log($(this).hasClass("post"));
+                $('.noti_list').removeClass("active");
+                if ($(this).hasClass("post")) {
+                    $('.noti_list.post').addClass('active');
+                } else {
+                    $('.noti_list.comment').addClass('active');
+                };
                 $(this).addClass("active");
             })
         </script>
