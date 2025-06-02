@@ -39,6 +39,16 @@
   <script src="/JS/chat.js"></script>
   <script src="/JS/write.js"></script>
   <script src="/JS/notification.js"></script>
+  <script>
+    document.addEventListener("click", function(event) {
+      const btn = event.target.closest(".open-account-btn");
+      if (!btn) return;
+      event.preventDefault();
+      window.open("/mypage/account", "AccountSettings",
+        "width=600,height=800,menubar=no,toolbar=no,location=no,status=no"
+      );
+    });
+  </script>
 </body>
 
 </html>
