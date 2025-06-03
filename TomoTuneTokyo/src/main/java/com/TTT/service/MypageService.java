@@ -267,15 +267,47 @@ public class MypageService {
 		String encoded = passwordEncoder.encode(newPassword);
 		return mypageMapper.updatePassword(userId, encoded) > 0;
 	}
-  
- //소속 밴드 조회
+
+	// 소속 밴드 조회
 	public BandInsertVo findMyBand(String user_id) {
-    return mypageMapper.findMyBand(user_id);
-  }
-	    
-	//소속 밴드 탈퇴
+		return mypageMapper.findMyBand(user_id);
+	}
+
+	// 소속 밴드 탈퇴
 	public void leaveMyBand(String user_id, Long band_id) {
-	   mypageMapper.leaveMyBand(user_id, band_id);
-	}  
+		mypageMapper.leaveMyBand(user_id, band_id);
+	}
+
+	// 내가 쓴 게시글 정보
+	public List<PostVo> getMyPosts(String userId) {
+		return mypageMapper.getMyPosts(userId);
+	}
+
+	// 내가 쓴 댓글 정보
+	public List<MyActiveDto> getMyComments(String userId) {
+		return mypageMapper.getMyComments(userId);
+	}
+
+	// 댓글삭제
+	public boolean deleteCommentsByIds(String userId, List<Long> commentIds) {
+		try {
+			int deletedCount = mypageMapper.deleteCommentsByIds(userId, commentIds);
+			return deletedCount > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	// 게시글 삭제
+	public boolean deletePostsByIds(String userId, List<Long> postIds) {
+		try {
+			int deleted = mypageMapper.deletePostsByIds(userId, postIds);
+			return deleted > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 }
