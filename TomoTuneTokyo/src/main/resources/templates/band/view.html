@@ -88,8 +88,6 @@
 
 <!-- 멤버들 -->
 <div class="band-members">
-	<p th:if="${members == null}">❌ members는 null입니다</p>
-		<p th:if="${#lists.isEmpty(members)}">❌ members는 비어 있습니다</p>
 	<div class="member" th:each="member : ${members}">
 		<img th:src="@{${member.user_img != null ? '/upload/' + member.user_img : '/images/default.png'}}"
 			src="/images/default.png" alt="멤버 프로필" class="profile-image" data-index="1">
