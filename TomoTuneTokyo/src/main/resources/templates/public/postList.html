@@ -207,7 +207,7 @@
                                 <th:block th:case="5">ライブ告知</th:block>
                                 <th:block th:case="6">コミュニティ</th:block>
                             </div>
-                            <div class="post_content" th:text="${post.nickname}"></div>
+                            <div class="post_content" th:text="${post.board_id != 7 ? post.nickname : '管理者'}"></div>
                             <div class="post_date" th:text="${#temporals.format(post.created_at, 'yyyy.MM.dd')}">
                             </div>
                         </li>
@@ -223,15 +223,11 @@
         <script th:inline="javascript">
 
             $(document).ready(function () {
+                $('#doctor_paging').empty();
                 pagingBase($('.post_list').data('count'), 10);
             });
 
             $(document).on('htmx:afterSwap', function (event) {
-                const swappedElement = event.originalEvent.detail.target;
-
-                // 전체 로그 출력
-                console.log('HTMX swap 완료!', swappedElement);
-
                 $('#doctor_paging').empty();
 
                 pagingBase($('.post_list').data('count'), 10);
@@ -286,7 +282,7 @@
                     text: '<<',
                     class: 'pageBtn',
                     type: 'button'
-                }).prop('disabled', currentPage === 1).on('click', () => {
+                }).prop('hidden', currentPage === 1).on('click', () => {
                     const url = new URL(window.location.href);
                     url.searchParams.set('page', 1);
                     window.location.href = url.toString();
@@ -325,7 +321,7 @@
                     text: '>>',
                     class: 'pageBtn',
                     type: 'button'
-                }).prop('disabled', currentPage === totalPages).on('click', () => {
+                }).prop('hidden', currentPage === totalPages).on('click', () => {
                     const url = new URL(window.location.href);
                     url.searchParams.set('page', totalPages);
                     window.location.href = url.toString();
