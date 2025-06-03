@@ -98,7 +98,6 @@ public class BandRecruitPostSelectService {
 	    bandRecruitPostSelectMapper.insertScrap(params);
 	}
 
-
 	// 스크랩 해제
 	public void deleteScrap(Long postId, String userId) {
 	    Map<String, Object> param = new HashMap<>();
@@ -107,5 +106,8 @@ public class BandRecruitPostSelectService {
 	    bandRecruitPostSelectMapper.deleteScrap(param);
 	}
 
-
+	// 구인구직 글 삭제
+	public void deletePostById(Long postId) {
+	    bandRecruitPostSelectMapper.deletePostById(postId);
+	}
 }

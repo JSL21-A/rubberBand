@@ -71,7 +71,10 @@ public interface BandRecruitPostSelectMapper {
 	// 스크랩 해제
 	@Delete("DELETE FROM post_scrap WHERE post_id = #{postId} AND user_id = #{userId}")
 	void deleteScrap(Map<String, Object> param);
-
+	
+	// 구인구직 글 삭제 
+	@Delete("DELETE FROM band_recruit_post WHERE post_id = #{postId}")
+	void deletePostById(Long postId);
 
 
 
