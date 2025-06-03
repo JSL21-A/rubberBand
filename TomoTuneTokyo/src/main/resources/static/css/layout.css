@@ -89,12 +89,13 @@ body {
 } */
 
 .header-icon {
-    height: 150px;
-    width: auto;
-    object-fit: contain;
-    margin-bottom: 5px;
-    margin-top: 10px;
-    margin-left: 100px;
+
+	height: 130px;
+	width: auto;
+	object-fit: contain;
+	margin-bottom: 5px;
+	margin-top: 10px;
+	margin-left: 100px;
 }
 
 .header-item.center h1 {

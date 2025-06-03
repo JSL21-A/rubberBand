@@ -151,6 +151,11 @@
     background-color: #fff;
 }
 
+.card-front img {
+	width: 100%;
+	height: auto;
+}
+
 .card-back {
     background-color: #f4f4f4;
     transform: rotateY(180deg);
