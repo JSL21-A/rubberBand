@@ -249,14 +249,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="view_content">
-                    <div class="post_note" th:utext="${post.post_content}"></div>
-                    <div class="postBtn" th:if="${user != post.user_id}">
-                        <button class="post_report">通報</button>
-                        <button class="post_like">いいね</button>
-                        <button class="post_scrap">スクラップ</button>
-                    </div>
-                </div>
                 <div id="bottom">
                     <div class="bottomUp">
                         <button hx-get='./list' hx-target="#middle" hx-select="#middle" hx-push-url="true">リストへ</button>
@@ -284,6 +276,9 @@
                                         <div th:text="${comment.comment_content}"></div>
                                         <button class="comment_report"
                                             th:attr="data-comment-id=${comment.comment_id}">通報</button>
+                                        <button class="comment_delete"
+                                            th:if="${user == comment.user_id || #authorization.expression('hasRole(''A'')')}"
+                                            th:attr="data-comment-id=${comment.comment_id}">削除</button>
                                     </div>
                                 </li>
                             </ul>
@@ -313,6 +308,32 @@
                     type = "comment";
                     target = $(this).data("comment-id");
                     doReport(target, type);
+                });
+
+                $(document).off("click", ".comment_delete").on("click", ".comment_delete", function () {
+                    target = $(this).data("comment-id");
+                    const postId = '[[${post.post_id}]]';
+                    $.ajax({
+                        url: "./delComment?target=" + target,
+                        method: "GET",
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader(csrfHeader, csrfToken);
+                        },
+                        success: function (res) {
+                            alert("削除しました。");
+                            $("#comment").load("/user/view?post=" + postId + " #comment > *");
+                        },
+                        error: function (err) {
+                            if (err.status == 400) {
+                                window.location.href = "/user/error";
+                            } else {
+                                alert("削除失敗");
+                                console.error(err);
+                            }
+                        },
+                    });
                 });
 
                 //삭제버튼 눌렸을때

@@ -1,6 +1,6 @@
 body {
     background-color: #f4f6f8;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 #content {

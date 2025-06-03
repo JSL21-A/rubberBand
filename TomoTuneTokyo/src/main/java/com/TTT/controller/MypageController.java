@@ -4,7 +4,9 @@ import java.nio.file.Path;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +16,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.TTT.domain.BandInsertVo;
 import com.TTT.domain.MyActiveDto;
 import com.TTT.domain.MypageDto;
+import com.TTT.domain.PostVo;
 import com.TTT.domain.UserDto;
 import com.TTT.domain.UserProfileDto;
 import com.TTT.service.MypageService;
@@ -127,7 +131,11 @@ public class MypageController {
 		UserProfileDto userProfile = mypageService.getUserProfileByUserId(userId);
 		model.addAttribute("userProfile", userProfile);
 		model.addAttribute("hasResume", hasResume);
-		return "mypage/accountSetting";
+		//영배 추가(내 밴드 정보)
+		BandInsertVo myBand = mypageService.findMyBand(userId);
+		model.addAttribute("myBand", myBand);
+		model.addAttribute("currentUserId", userId);
+			return "mypage/accountSetting_popup";
 	}
 
 	// 이력서 삭제
@@ -277,41 +285,38 @@ public class MypageController {
 
 		// 프로필 사진 업로드 처리
 		if (profilePhoto != null && !profilePhoto.isEmpty()) {
-		    String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/images/uploads/";
-		    System.out.println("Upload directory: " + uploadDir);
+			String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/images/uploads/";
+			System.out.println("Upload directory: " + uploadDir);
 
-		    String originalFilename = profilePhoto.getOriginalFilename();
-		    String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
-		    String newFilename = userId + "_" + System.currentTimeMillis() + ext;
+			String originalFilename = profilePhoto.getOriginalFilename();
+			String ext = originalFilename.substring(originalFilename.lastIndexOf("."));
+			String newFilename = userId + "_" + System.currentTimeMillis() + ext;
 
-		    // 디렉토리 만들기
-		    Path uploadPath = Paths.get(uploadDir);
-		    Files.createDirectories(uploadPath);
+			// 디렉토리 만들기
+			Path uploadPath = Paths.get(uploadDir);
+			Files.createDirectories(uploadPath);
 
-		    Path fullPath = uploadPath.resolve(newFilename);
-		    profilePhoto.transferTo(fullPath.toFile());
+			Path fullPath = uploadPath.resolve(newFilename);
+			profilePhoto.transferTo(fullPath.toFile());
 
-		    System.out.println("파일 저장 여부 확인: " + fullPath.toFile().exists());
+			System.out.println("파일 저장 여부 확인: " + fullPath.toFile().exists());
 
-		    // DB에는 웹에서 접근할 수 있는 상대 경로만 저장
-		    userProfileDto.setUserImg("images/uploads/" + newFilename);
-		
+			// DB에는 웹에서 접근할 수 있는 상대 경로만 저장
+			userProfileDto.setUserImg("images/uploads/" + newFilename);
 
+			// 기존 파일 삭제 (새 파일 저장된 경우에만)
+			if (existingProfile.getUserImg() != null && !existingProfile.getUserImg().isEmpty()) {
+				Path oldImagePath = Paths.get(System.getProperty("user.dir"), existingProfile.getUserImg());
+				Files.deleteIfExists(oldImagePath);
+			}
 
-		    // 기존 파일 삭제 (새 파일 저장된 경우에만)
-		    if (existingProfile.getUserImg() != null && !existingProfile.getUserImg().isEmpty()) {
-		        Path oldImagePath = Paths.get(System.getProperty("user.dir"), existingProfile.getUserImg());
-		        Files.deleteIfExists(oldImagePath);
-		    }
-
-		    // 새 이미지로 저장
-		    userProfileDto.setUserImg("/uploads/" + newFilename);
+			// 새 이미지로 저장
+			userProfileDto.setUserImg("/uploads/" + newFilename);
 
 		} else {
-		    // 사진 미업로드 시 기존 이미지 유지
-		    userProfileDto.setUserImg(existingProfile.getUserImg());
+			// 사진 미업로드 시 기존 이미지 유지
+			userProfileDto.setUserImg(existingProfile.getUserImg());
 		}
-
 
 		// 서비스 업데이트 호출
 		mypageService.updateUserProfile(userProfileDto);
@@ -319,23 +324,62 @@ public class MypageController {
 
 		return "redirect:/mypage/account";
 	}
-	// 나의활동 이동 
+	// 나의활동 이동
 
 	@GetMapping("/activity")
 	public String showMyActivity(Model model, Principal principal) {
-	    if (principal != null) {
-	        String username = principal.getName();
-	        String userId = userService.findByUsername(username).getUser_id();
+		if (principal != null) {
+			String username = principal.getName();
+			String userId = userService.findByUsername(username).getUser_id();
 
-	        // 댓글 목록 조회
-	        List<MyActiveDto> commentList = mypageService.getCommentsByUserId(userId);
+			// 댓글 목록 조회
+			List<MyActiveDto> commentList = mypageService.getCommentsByUserId(userId);
 
-	        model.addAttribute("commentList", commentList); // 모델에 추가
-	    }
+			model.addAttribute("commentList", commentList); // 모델에 추가
+		}
 
-	    return "mypage/myActive";
+		return "mypage/myActive";
+	}
+	
+
+
+	// 댓글 작성한 게시글 이동
+	@GetMapping("/{boardId}/post/{postId}")
+	public String viewPost(@PathVariable Long boardId, @PathVariable Long postId, Model model) {
+
+		PostVo post = mypageService.getPostById(postId);
+
+		if (post == null || !post.getBoard_id().equals(boardId)) {
+			return "error/404"; // 존재하지 않으면 에러 페이지
+		}
+
+		model.addAttribute("post", post);
+		return "board/postView";
 	}
 
+	// 비밀번호 변경 (변경버튼 클릭 > 현재 비밀번호 인증 + 새로운 비밀번호 입력 + 일치여부확인)
+	// 비밀번호 인증
+	@PostMapping("/update-password")
+	@ResponseBody
+	public Map<String, Object> updatePassword(@RequestBody Map<String, String> body, Principal principal) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		String userId = getCurrentUserId(principal);
 
+		String currentPassword = body.get("currentPassword");
+		String newPassword = body.get("newPassword");
+
+		// 1. 현재 비밀번호 확인
+		boolean match = mypageService.checkCurrentPassword(userId, currentPassword);
+		if (!match) {
+			result.put("success", false);
+			result.put("message", "現在のパスワードが正しくありません。");
+			return result;
+		}
+
+		// 2. 비밀번호 업데이트
+		boolean updated = mypageService.updateUserPassword(userId, newPassword);
+		result.put("success", updated);
+		return result;
+	}
 
 }

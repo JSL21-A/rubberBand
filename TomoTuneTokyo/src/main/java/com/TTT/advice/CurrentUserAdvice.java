@@ -15,3 +15,5 @@ public class CurrentUserAdvice {
 		return principal != null ? principal.getUserDto() : null;
 	}
 }
+
+

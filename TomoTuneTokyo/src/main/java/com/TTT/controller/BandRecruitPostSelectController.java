@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -78,6 +79,15 @@ public class BandRecruitPostSelectController {
 			}
 		}
 		model.addAttribute("isScrapped", isScrapped);
+		
+		boolean isLeader = false;
+		if (principal != null) {
+			String username = principal.getName(); // 로그인한 사용자명
+			String userId = bandinsertselectservice.findUserIdByUsername(username); //username 사용
+			System.out.println("로그인한 사용자 ID: " + userId);
+			isLeader = bandinsertselectservice.isUserLeader(bandId, userId); // userId(UUID)로 리더 여부 체크
+		}
+		model.addAttribute("isLeader", isLeader);
 
 
 		return "band/view"; // 해당 게시글에 대한 상세보기 페이지
@@ -161,9 +171,28 @@ public class BandRecruitPostSelectController {
 		int status = alreadyScrapped ? 0 : 1;
 		return "redirect:/bandselect/view?postId=" + postId + "&scrap=" + status;
 	}
+	
+	// 구인구직 글 삭제
+	@PostMapping("/delete")
+	public String deletePost(@RequestParam("postId") Long postId, Principal principal) {
+	    if (principal == null) {
+	        throw new RuntimeException("ログインが必要です。");
+	    }
+
+	    String username = principal.getName();
+	    String userId = bandRecruitPostSelectService.findUserIdByUsername(username);
+	    BandRecruitPostVo post = bandRecruitPostSelectService.getPostById(postId);
+
+	    // 리더가 맞는지 체크
+	    boolean isLeader = bandinsertselectservice.isUserLeader(post.getBand_id(), userId);
+	    if (!isLeader) {
+	        throw new RuntimeException("削除権限がありません。");
+	    }
+
+	    bandRecruitPostSelectService.deletePostById(postId);
+	    return "redirect:/bandlist/list"; 
+	}
 
 
-
-
-
+	
 }
