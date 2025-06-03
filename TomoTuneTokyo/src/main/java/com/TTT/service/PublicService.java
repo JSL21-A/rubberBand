@@ -60,6 +60,10 @@ public class PublicService {
         return publicMapper.getUserIdByPostId(target);
     }
 
+    public String getUserIdByCommentId(Long target) {
+        return publicMapper.getUserIdByCommentId(target);
+    }
+
     public void postReport(String user_id, String target_id, Long target) {
         publicMapper.postReport(user_id, target_id, target);
     }
@@ -90,5 +94,9 @@ public class PublicService {
 
     public int getNotiCount() {
         return publicMapper.getNotiCount();
+    }
+
+    public void deleteComment(Long comment_id) {
+        publicMapper.deleteComment(comment_id);
     }
 }

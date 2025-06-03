@@ -54,7 +54,7 @@ public class publicController {
 
         List<PostVo> list = null;
         List<PostVo> noti = null;
-        // 선택된 카테고리가 있으면
+        // 선택된 카테고리가 으면
         if (Param == null) {
             // 모든 카테고리에서 글 가져오기
             list = publicService.getPostListAll(showPage);
@@ -69,7 +69,7 @@ public class publicController {
             // 만일 선택된 카테고리가 공지사항이라면 모든 공지사항 가져오기
             if (!(Param.equals("7"))) {
                 noti = publicService.getNotiRecently();
-                count = publicService.getNotiCount();
+                count = publicService.getPostCount(Integer.parseInt(Param));
             }
         }
 
@@ -312,6 +312,19 @@ public class publicController {
         dto = publicService.getUserIdAndRoleByUsername(principal.getName());
         if (dto.getRole().equals("A") || target_user_id.equals(dto.getUser_id())) {
             publicService.deletePost(target);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().body("bad request");
+        }
+    }
+
+    @GetMapping("/delComment")
+    public ResponseEntity<Object> deleteComment(@RequestParam("target") Long target, Principal principal, Model model,
+            UserDto dto) {
+        String target_user_id = publicService.getUserIdByCommentId(target);
+        dto = publicService.getUserIdAndRoleByUsername(principal.getName());
+        if (dto.getRole().equals("A") || target_user_id.equals(dto.getUser_id())) {
+            publicService.deleteComment(target);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().body("bad request");

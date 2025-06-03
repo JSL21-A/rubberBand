@@ -1,271 +1,274 @@
 <!DOCTYPE html>
-<html lang="ja"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      layout:decorate="~{layouts/layout}">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{layouts/layout}">
 
 <head>
 </head>
-<body>
-<div layout:fragment="content">
 
-	<div class="main-menu">
-		<div class="menu-container">
-			<div class="menu-inner">
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 1</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 2</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
+<body>
+	<div layout:fragment="content">
+
+		<div class="main-menu">
+			<div class="menu-container">
+				<div class="menu-inner">
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 1</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 3</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 4</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 2</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 5</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 6</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 3</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 1</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 2</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 4</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 3</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 4</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 5</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 5</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 6</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 6</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 1</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 2</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 1</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 3</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 4</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 2</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 5</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 6</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 3</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 1</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 2</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 4</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 3</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 4</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 5</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 5</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 6</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="menu-card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 6</h2>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 1</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
 						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
+					</div>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 2</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
+						</div>
+					</div>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 3</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
+						</div>
+					</div>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 4</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
+						</div>
+					</div>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 5</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
+						</div>
+					</div>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 6</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
+						</div>
+					</div>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 1</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
+						</div>
+					</div>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 2</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
+						</div>
+					</div>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 3</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
+						</div>
+					</div>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 4</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
+						</div>
+					</div>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 5</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
+						</div>
+					</div>
+					<div class="menu-card">
+						<div class="card-inner">
+							<div class="card-front">
+								<h2>카드 6</h2>
+							</div>
+							<div class="card-back">
+								<p>추가 정보 표시</p>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="menu-arrow">
+				<!-- 회전 트리거 버튼 -->
+				<div class="arrow-wrapper left">
+					<button class="arrow left" id="rotateBtn"></button>
+				</div>
+				<div class="arrow-wrapper right">
+					<button class="arrow right" id="rotateBtn"></button>
+				</div>
+			</div>
 		</div>
-		<div class="menu-arrow">
-			<!-- 회전 트리거 버튼 -->
-			<button class="arrow left" id="rotateBtn">❮</button>
-			<button class="arrow right" id="rotateBtn">❯</button>
-		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/Draggable.min.js"></script>
+		<script src="/JS/index.js"></script>
+
 	</div>
-
-	<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/Draggable.min.js"></script>
-	<script src="/JS/index.js"></script>
-
-</div>
 </body>
+
 </html>
