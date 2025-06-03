@@ -12,7 +12,7 @@
     <div id="content" layout:fragment="content">
         <style>
             body {
-                overflow: scroll;
+                overflow-y: scroll;
             }
 
             #notice {
@@ -145,6 +145,39 @@
                 justify-content: space-between;
                 margin: 2%;
                 margin-bottom: calc(2% + 40px);
+                padding: 0 2%;
+            }
+
+            #bottom #doctor_paging {
+                display: flex;
+                gap: 5px;
+            }
+
+            #bottom .pageBtn {
+                width: 30px;
+                height: 30px;
+                background-color: #fff;
+                box-shadow: 1px 1px 1px 1px #bbb;
+                border-radius: 5px;
+                border: none;
+            }
+
+            #bottom .pageBtn.active {
+                background-color: #2D2D2D;
+                color: #fff;
+                box-shadow: none;
+                border: none;
+            }
+
+            #onPost {
+                padding: 0.4rem 0.8rem;
+                font-size: 1rem;
+                border-radius: 5px;
+                background-color: #2D2D2D;
+                color: white;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
             }
         </style>
         <div id="notice">
@@ -316,6 +349,7 @@
                     // 현재 페이지일 경우 비활성화
                     if (i === currentPage) {
                         pagingButton.prop('disabled', true);
+                        pagingButton.addClass("active");
                     }
 
                     // DOM에 추가
