@@ -34,15 +34,21 @@
 	<div th:replace="fragments/footer :: footer"></div>
 	<div th:replace="fragments/notification :: notification"></div>
 
-	<script>
-		const path = window.location.pathname;      // "/board/view/123"
-		const segments = path.split("/");           // ["", "board", "view", "123"]
-		const postId = segments[3];                 //</script>
 	<script src="/JS/header.js"></script>
 	<script src="/JS/user.js"></script>
 	<script src="/JS/chat.js"></script>
 	<script src="/JS/write.js"></script>
 	<script src="/JS/notification.js"></script>
+	<script>
+		document.addEventListener("click", function (event) {
+			const btn = event.target.closest(".open-account-btn");
+			if (!btn) return;
+			event.preventDefault();
+			window.open("/mypage/account", "AccountSettings",
+				"width=600,height=800,menubar=no,toolbar=no,location=no,status=no"
+			);
+		});
+	</script>
 </body>
 
 </html>

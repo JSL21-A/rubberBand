@@ -134,7 +134,8 @@ public class MypageController {
 		//영배 추가(내 밴드 정보)
 		BandInsertVo myBand = mypageService.findMyBand(userId);
 		model.addAttribute("myBand", myBand);
-		return "mypage/accountSetting";
+		model.addAttribute("currentUserId", userId);
+			return "mypage/accountSetting_popup";
 	}
 
 	// 이력서 삭제

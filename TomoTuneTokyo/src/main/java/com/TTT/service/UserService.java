@@ -3,6 +3,7 @@ package com.TTT.service;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +59,20 @@ public class UserService {
 	public UserDto findByUsername(String username) {
 		return userMapper.findByUsername(username);
 	}
+	
+	//패스워드 확인
+	public boolean checkPassword(String userId, String rawPassword) {
+		UserDto userDto = userMapper.selectByUserId(userId);
+		if(userDto == null) return false;
+		return passwordEncoder.matches(rawPassword, userDto.getPassword());
+	}
+	
+	public boolean updateEmail(String userId, String newEmail) {
+		int updatedRows = userMapper.updateEmailByUserId(userId, newEmail);
+		return updatedRows > 0;
+	}
+	
+	
 	
 	
 }
