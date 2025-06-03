@@ -1055,7 +1055,7 @@ textarea::placeholder {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-	}
+	}.band-and-detail-container
 
 	.band-profile-area {
 		width: 100%;
