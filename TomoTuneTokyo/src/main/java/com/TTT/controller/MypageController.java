@@ -141,7 +141,7 @@ public class MypageController {
 		UserProfileDto userProfile = mypageService.getUserProfileByUserId(userId);
 		model.addAttribute("userProfile", userProfile);
 		model.addAttribute("hasResume", hasResume);
-		return "mypage/accountSetting";
+		return "mypage/accountSetting_popup";
 	}
 
 	// 이력서 삭제
