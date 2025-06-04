@@ -313,6 +313,8 @@
                 $(document).off("click", ".comment_delete").on("click", ".comment_delete", function () {
                     target = $(this).data("comment-id");
                     const postId = '[[${post.post_id}]]';
+                    const csrfToken = $("meta[name='_csrf']").attr("content");
+                    const csrfHeader = $("meta[name='_csrf_header']").attr("content");
                     $.ajax({
                         url: "./delComment?target=" + target,
                         method: "GET",
@@ -338,7 +340,8 @@
 
                 //삭제버튼 눌렸을때
                 $(document).off("click", "#delPost").on("click", "#delPost", function () {
-                    console.log("??")
+                    const csrfToken = $("meta[name='_csrf']").attr("content");
+                    const csrfHeader = $("meta[name='_csrf_header']").attr("content");
                     const postId = '[[${post.post_id}]]';
                     isDel = confirm("本当に削除しますか？");
                     if (isDel) {
@@ -368,6 +371,8 @@
                 });
 
                 function doReport(target, type) {
+                    const csrfToken = $("meta[name='_csrf']").attr("content");
+                    const csrfHeader = $("meta[name='_csrf_header']").attr("content");
                     const report = confirm("通報しますか？");
                     const reportData = new FormData();
                     reportData.append("type", type);

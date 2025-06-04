@@ -18,6 +18,10 @@ body {
     padding: 1% 2%;
     min-height: 30vh;
     width: 100%;
+    word-break: break-word;
+    /* 단어 단위로 줄바꿈 허용 */
+    white-space: pre-wrap;
+    /* 줄바꿈도 인식되게 */
 }
 
 .write_note-editable img {

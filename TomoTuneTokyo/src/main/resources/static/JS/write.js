@@ -1,4 +1,4 @@
-function writePage() {
+function writeJS() {
     focusEditor();
     // 글 작성 효과적용 스크립트
     $(document).on("click", ".write_text-effect", function () {
