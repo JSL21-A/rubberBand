@@ -28,4 +28,6 @@ public class PostVo {
     private Integer comment_cnt;
     private LocalDateTime comment_created_at;
     // good
+
+    private String board_name; // 카테고리 이름
 }

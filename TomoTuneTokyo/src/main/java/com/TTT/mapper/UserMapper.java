@@ -41,6 +41,14 @@ public interface UserMapper {
 	@Update("update users set password = #{password} where username=#{username}")
 	void updatePassword(@Param("username") String username, @Param("password") String password);
 	
+	//userId로 User 정보 조회
+	@Select("select user_id, password, email from users where user_id = #{userId}")
+	UserDto selectByUserId(@Param("userId") String userId);
+	
+	//user테이블 이메일 변경
+	@Update("update users set email = #{newEmail} where user_id = #{userId}")
+	int updateEmailByUserId(@Param("userId") String userId, @Param("newEmail") String newEmail);
+	
 	
 	
 }

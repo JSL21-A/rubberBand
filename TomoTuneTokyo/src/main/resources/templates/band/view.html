@@ -88,8 +88,6 @@
 
 <!-- 멤버들 -->
 <div class="band-members">
-	<p th:if="${members == null}">❌ members는 null입니다</p>
-		<p th:if="${#lists.isEmpty(members)}">❌ members는 비어 있습니다</p>
 	<div class="member" th:each="member : ${members}">
 		<img th:src="@{${member.user_img != null ? '/upload/' + member.user_img : '/images/default.png'}}"
 			src="/images/default.png" alt="멤버 프로필" class="profile-image" data-index="1">
@@ -113,27 +111,31 @@
 <!-- 오른쪽: 구인/구직 글 -->
 <form th:action="@{/bandselect/apply}" method="post" class="post-detail-form">
 	 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-	<!-- 수정 버튼: 리더에게만 보임 -->
-	<div th:if="${isLeader}" class="edit-button-container">
-		<button type="button" class="btn btn-warning btn-edit" id="editBandBtn">修正する</button>
-	</div>
 
-    <div class="title-and-button">
-        <h2 class="detail-title" th:text="${post.title}"></h2>
-		<input type="hidden" id="applyPostId" th:value="${post.post_id}" name="postId">
-		<input type="hidden" id="applyBandId" th:value="${post.band_id}" name="band_id">
-		<input type="hidden" id="selectedResumeIdInput" name="resume_id">
-		<button type="submit" class="btn btn-primary">応募する</button>
+	 <div class="title-and-button">
+	   <h2 class="detail-title" th:text="${post.title}"></h2>
 
-		<button id="scrapBtn" title="스크랩" type="button"
-		        th:class="'scrap-button' + (${isScrapped} ? ' active' : '')">
+	   <input type="hidden" id="applyPostId" th:value="${post.post_id}" name="postId">
+	   <input type="hidden" id="applyBandId" th:value="${post.band_id}" name="band_id">
+	   <input type="hidden" id="selectedResumeIdInput" name="resume_id">
 
-			  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-			    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-			    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-			  </svg>
-			</button>
-    </div>
+	   <!-- ✅ 리더 전용: 삭제 버튼 -->
+	   <button type="button" class="btn btn-primary" id="deletePostBtn" th:if="${isLeader}">削除する</button>
+
+	   <!-- ✅ 리더가 아닌 사용자 전용: 응모 버튼 -->
+	   <button type="submit" class="btn btn-primary" th:if="${!isLeader}">応募する</button>
+
+	   <!-- ✅ 공통: 스크랩 버튼 -->
+	   <button id="scrapBtn" title="스크랩" type="button"
+	           th:class="'scrap-button' + (${isScrapped} ? ' active' : '')">
+	     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+	          fill="none" stroke="currentColor" stroke-width="2"
+	          stroke-linecap="round" stroke-linejoin="round">
+	       <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+	     </svg>
+	   </button>
+	 </div>
+	 
     <div class="detail-meta">
         <span>作成者: <span th:text="${leader.stage_name}">ガム</span></span> <!-- 리더 이름 -->
         <span>作成日: <span th:text="${#dates.format(post.createdAt, 'yyyy.MM.dd')}">2024.05.12</span></span> <!-- 생성일 -->
@@ -408,7 +410,7 @@
 
 		  // 1. alert 처리
 		  if (scrapStatus === "1") {
-		    alert("スクラップが追加されました。");
+		    alert("スクラップが出来ました。");
 		  } else if (scrapStatus === "0") {
 		    alert("スクラップが解除されました。");
 		  }
@@ -436,8 +438,66 @@
 		  }
 		});
 		</script>
+		
+		<script>
+		document.addEventListener('DOMContentLoaded', function () {
+		  const deleteBtn = document.getElementById('deletePostBtn');
+		  const postId = document.getElementById('applyPostId')?.value;
+		  const deadlineValue = document.getElementById('deadline')?.value;
 
-	
+		  const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+		  const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
+
+		  if (deleteBtn && postId) {
+		    deleteBtn.addEventListener('click', function () {
+		      deleteBtn.blur(); // 포커스 제거
+
+		      if (!confirm('メンバー募集文を削除しますか。')) {
+		        return;
+		      }
+
+		      // 마감일이 남아 있는 경우 한 번 더 confirm
+		      if (deadlineValue) {
+		        const today = new Date();
+		        const deadline = new Date(deadlineValue);
+		        deadline.setHours(0, 0, 0, 0);
+		        today.setHours(0, 0, 0, 0);
+
+		        const diffDays = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+
+		        if (diffDays > 0) {
+		          const confirmMsg = `まだ締切まで (${diffDays}日) 残っていますが、削除してもよろしいですか。`;
+		          if (!confirm(confirmMsg)) {
+		            return;
+		          }
+		        }
+		      }
+
+		      fetch('/bandselect/delete', {
+		        method: 'POST',
+		        headers: {
+		          'Content-Type': 'application/x-www-form-urlencoded',
+		          [csrfHeader]: csrfToken
+		        },
+		        body: new URLSearchParams({ postId })
+		      })
+		      .then(res => {
+		        if (res.ok) {
+		          alert('削除が完了しました。');
+		          window.location.href = '/bandlist/list';
+		        } else {
+		          alert('削除に失敗しました。');
+		        }
+		      })
+		      .catch(err => {
+		        alert('エラーが発生しました。');
+		        console.error(err);
+		      });
+		    });
+		  }
+		});
+		</script>
+
 	</div>
 </body>
 

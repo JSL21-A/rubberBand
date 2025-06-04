@@ -7,9 +7,12 @@ import lombok.Data;
 @Data
 //댓글
 public class MyActiveDto {
-    private Long commentId;
-    private Long postId;
+    private long commentId;
+    private long postId;
+    private long boardId;
     private String userId;
     private String commentContent;
     private Timestamp commentCreatedAt;
+   
+
 }

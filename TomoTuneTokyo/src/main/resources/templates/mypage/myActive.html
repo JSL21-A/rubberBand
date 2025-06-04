@@ -91,12 +91,11 @@
     .checkbox {
       text-align: center;
     }
-    
+
     .container {
-  max-width: 720px;
-  margin: 0 auto;
-}
-    
+      max-width: 720px;
+      margin: 0 auto;
+    }
   </style>
 </head>
 <body>
@@ -104,41 +103,56 @@
     <h2>マイアクティビティ</h2>
 
     <div class="tabs">
-      <div class="tab active">投稿</div>
-      <div class="tab">コメント</div>
+      <div class="tab">投稿</div>
+      <div class="tab active">コメント</div>
       <div class="tab">いいね</div>
       <div class="tab">スクラップ</div>
       <div class="tab">バンド応募履歴</div>
     </div>
 
-    <table>
-  <thead>
-    <tr>
-      <th>コメント内容</th>
-      <th>投稿日</th>
-      <th>投稿リンク</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr th:each="comment : ${commentList}">
-      <td th:text="${comment.commentContent}">サンプルコメント</td>
-      <td th:text="${#temporals.format(comment.commentCreatedAt.toLocalDateTime(), 'yyyy-MM-dd')}">2025-01-01</td>
-      <td><a th:href="@{/post/view/{id}(id=${comment.postId})}">投稿を見る</a></td>
-    </tr>
-  </tbody>
-</table>
+    <form method="post" action="/comment/delete">
+      <table>
+        <thead>
+          <tr>
+            <th class="checkbox"><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
+            <th>コメント内容</th>
+            <th>投稿日</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="comment : ${commentList}">
+            <td class="checkbox">
+              <input type="checkbox" name="commentIds" th:value="${comment.commentId}">
+            </td>
+            <td>
+ <a th:href="@{/board/{boardId}/post/{postId}(boardId=${comment.boardId}, postId=${comment.postId})}"
+   th:text="${comment.commentContent}">
+</a>
 
+</td>
 
-    <div class="controls">
-      <button>削除</button>
-      <input type="text" placeholder="タイトルで検索">
-      <button>検索</button>
-    </div>
+            <td th:text="${#temporals.format(comment.commentCreatedAt.toLocalDateTime(), 'yyyy-MM-dd')}">2025-01-01</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="controls">
+        <button type="submit">削除</button>
+        <input type="text" name="keyword" placeholder="タイトルで検索">
+        <button type="submit" formaction="/comment/search">検索</button>
+      </div>
+    </form>
 
     <div class="pagination">
       <span>1</span>
     </div>
   </div>
-</body>
 
+  <script>
+    function toggleAll(source) {
+      const checkboxes = document.querySelectorAll('input[name="commentIds"]');
+      checkboxes.forEach(cb => cb.checked = source.checked);
+    }
+  </script>
+</body>
 </html>

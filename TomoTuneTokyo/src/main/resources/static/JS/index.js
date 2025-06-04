@@ -131,11 +131,17 @@ $(function () {
 
     $(".arrow").on("click", function () {
         rotation = gsap.getProperty(menu.get(0), "rotation");
+        //연속으로 안눌리게 비활성화
+        $(this).prop("disabled", true);
         if ($(this).hasClass("right")) {
             RightRotation = rotation - 15;
         } else {
             RightRotation = rotation + 15;
         }
         gsap.to(menu.get(0), { rotation: RightRotation });
+
+        setTimeout(() => {
+            $(this).prop("disabled", false);
+        }, 450); // 0.45초 후 다시 활성화 (필요 없으면 제거)
     });
 });

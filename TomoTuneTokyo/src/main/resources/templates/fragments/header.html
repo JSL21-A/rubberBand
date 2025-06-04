@@ -16,8 +16,8 @@
         </div>
 		<div class="header-item right">
 			<div id="hamburgerBtn" class="hamburger-icon">
-				<img th:src="@{/images/member1.png}" 
-					th:data-hover-src="@{/images/member2.png}"
+				<img th:src="@{/images/memberIcon.png}" 
+					th:data-hover-src="@{/images/memberIcon_hover.png}"
 					class="header-icon hamburger-icon"
 					alt="Hamburger Icon">
 				<div id="slideMenu" th:fragment="slideMenu" class="slide-menu">
@@ -63,8 +63,10 @@
 								</div>
 								<!-- 사이드바 메뉴 -->
 								<nav>
-									<a href="/settings#profile">プロフィール編集</a> <a href="/settings#account">アカウント設定</a>
-									<a href="/activity">アクティビティ</a> <a href="/logout">ログアウト</a>
+									<a href="#" onclick="window.open('/mypage/profileEdit', 'AccountSettings', 'width=600,height=800,menubar=no,toolbar=no,location=no,status=no'); return false;">プロフィール編集</a> 
+									<a href="#" onclick="window.open('/mypage/account', 'AccountSettings', 'width=600,height=800,menubar=no,toolbar=no,location=no,status=no'); return false;" class="open-account-btn">アカウント設定</a>
+									<a href="/activity">アクティビティ</a> 
+									<a href="/logout">ログアウト</a>
 								</nav>
 	   						
 	  					</div>
@@ -90,8 +92,10 @@
 								</div>
 								<!-- 사이드바 메뉴 -->
 								<nav>
-									<a href="/settings#profile">プロフィール編集</a> <a href="/settings#account">アカウント設定</a>
-									<a href="/mypage/activity">アクティビティ</a> <a href="/logout">ログアウト</a>
+									<a href="#" onclick="window.open('/mypage/profileEdit', 'AccountSettings', 'width=600,height=800,menubar=no,toolbar=no,location=no,status=no'); return false;">プロフィール編集</a>
+									<a href="#" onclick="window.open('/mypage/account', 'AccountSettings', 'width=600,height=800,menubar=no,toolbar=no,location=no,status=no'); return false;" class="open-account-btn">アカウント設定</a>
+									<a href="/mypage/activity">アクティビティ</a>
+									<a href="/logout">ログアウト</a>
 								</nav>
 												
 						</div>
@@ -162,37 +166,11 @@
 		</div>
 	</div>
 
-      <!-- 네비게이션 -->
-      <div class="gnb_group" th:if="${isIndex != true}">
-        <nav class="gnb">
-          <ul class="nav_1depth">
-            <li><a href="gratings.html">기업소개</a>
-              <ul class="nav_2depth">
-                <li><a href="gratings.html">인사말</a></li>
-                <li><a href="history.html">연혁 및</a></li>
-                <li><a href="gratings.html">교직원소개</a></li>
-                <li><a href="../gallery/photo.html">대우갤러리</a></li>
-                <li><a href="map.html">찾아오시는길</a></li>
-              </ul>
-            </li>
-            <li><a th:href="@{/port/list}">포트폴리오</a>
-              <ul class="nav_2depth">
-                <li><a th:href="@{/port/list}">포트폴리오</a></li>
-              </ul>
-            </li>
-            <li><a th:href="@{/notice/list}">커뮤니티</a>
-              <ul class="nav_2depth">
-                <li><a th:href="@{/notice/list}">공지사항</a></li>
-                <li><a href="../qna/qa.html">질문과답변</a></li>
-                <li><a href="../faq/faq.html">FAQ</a></li>
-                <li><a href="../pds/pds.html">자료실</a></li>
-                <li><a href="../adm/admin.html">관리자</a></li>
-              </ul>
-            </li>
-          </ul>
-        </nav>
-      </div>
+      <!-- 네비게이션 (삭제)-->
+      
     </header>
+    
+
    
   </div>
 </div>
