@@ -78,7 +78,7 @@ public interface BandInsertSelectMapper {
 	void updateBandActivePhoto(BandActiveInsertVo vo);
 	
 	// activity_photo_id 조회
-	@Select("SELECT * FROM band_gallery WHERE activity_photo_id = #{id}")
+	@Select("SELECT activity_photo_id AS activityPhotoId, band_id AS bandId, user_id AS userId, image_url AS imageUrl, activity_youtube_url AS activityYoutubeUrl, activity_title AS activityTitle, activity_content AS activityContent, created_at AS createdAt, updated_at AS updatedAt FROM band_gallery WHERE activity_photo_id = #{id}")
 	BandActiveInsertVo selectBandActivePhotoById(Long id);
 
 	// 활동기록 추가
