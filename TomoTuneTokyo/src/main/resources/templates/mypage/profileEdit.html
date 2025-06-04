@@ -167,7 +167,7 @@ button.save-btn {
 
 			<div class="profile-photo-wrapper">
 				<img id="previewImage"
-					th:src="${userProfile.userImg != null} ? @{${userProfile.userImg}} : @{/images/tttpanda.png}"
+					th:src="${userProfile.userImg != null} ? @{${'/images' + currentUser.user_img}} : @{/images/defaultIcon.png}"
 					alt="プロフィール写真" /> <label for="profilePhoto"
 					class="photo-edit-label" tabindex="0" aria-label="プロフィール写真を変更">
 					<input type="file" id="profilePhoto" name="profilePhoto"

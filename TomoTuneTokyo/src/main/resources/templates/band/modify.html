@@ -162,8 +162,8 @@
 									  data-member-type='leader'">
 					      <!-- 리더 이미지: 값 있으면 업로드, 없으면 기본 이미지 -->
 					      <img th:src="@{${leader != null and leader.user_img != null and !#strings.isEmpty(leader.user_img) 
-					        ? '/upload/' + leader.user_img 
-					        : '/images/member1.png'}}" 
+					        ? '/images' + leader.user_img 
+					        : '/images/defaultIcon.png'}}" 
 					        alt="리더" class="member-img"
 					        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
 
@@ -188,7 +188,7 @@
 					                  data-member-motto=${member.member_motto}">
 					      <!-- 프로필 이미지: user_img 없으면 기본 이미지 -->
 					      <img th:src="@{${member.user_img != null and !#strings.isEmpty(member.user_img) 
-					        ? '/upload/' + member.user_img 
+					        ? '/images' + member.user_img 
 					        : '/images/member1.png'}}" 
 					        class="member-img" alt="멤버 이미지"
 					        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
