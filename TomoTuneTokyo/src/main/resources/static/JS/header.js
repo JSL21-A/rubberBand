@@ -54,7 +54,6 @@ function header() {
             }
         );
     });
-
     //헤더 사이드 메뉴 슬라이드
     $("#hamburgerBtn").on("click", function (e) {
         e.stopPropagation(); // 문서 클릭에 의한 즉시 닫힘 방지
@@ -145,7 +144,6 @@ function header() {
             $(".login-form").show();
         });
     });
-
     function goToNotification() {
         document.getElementById("mainPane").style.display = "none";
         const pane = document.getElementById("notificationPane");
@@ -157,7 +155,7 @@ function header() {
                 const ul = document.getElementById("notificationList");
                 ul.innerHTML = "";
                 if (list.length === 0) {
-                    ul.innerHTML = '<li class="no-notify">새 알림이 없습니다.</li>';
+                    ul.innerHTML = '<li class="no-notify">新しい通知がありません</li>';
                 } else {
                     list.forEach((n) => {
                         const li = document.createElement("li");

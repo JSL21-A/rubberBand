@@ -79,7 +79,7 @@
 						<ul class="intro-list">
 							<li>
 							  <strong>結成日 : </strong>
-							  <div class="formation-date" th:text="${#temporals.format(band.formation_date, 'yyyy-MM-dd')}">2022-05-01</div>
+							  <span class="formation-date" th:text="${#temporals.format(band.formation_date, 'yyyy-MM-dd')}">2022-05-01</span>
 							</li>
 							<li>
 							  <strong>ジャンル : </strong>
@@ -138,11 +138,11 @@
 							</div>
 							<li>
 							  <strong>活動地域 : </strong>
-							  <div class="band-region" th:text="${band.region}"></div>
+							  <span class="band-region" th:text="${band.region}">東京</span>
 							</li>
 							<li>
 							  <strong>バンド紹介 : </strong>
-							  <div class="band-one-liner" th:text="${band.band_intro}"></div>
+							  <span class="band-one-liner" th:text="${band.band_intro}"></span>
 							</li>
 						</ul>
 					</section>
@@ -162,13 +162,13 @@
 									  data-member-type='leader'">
 					      <!-- 리더 이미지: 값 있으면 업로드, 없으면 기본 이미지 -->
 					      <img th:src="@{${leader != null and leader.user_img != null and !#strings.isEmpty(leader.user_img) 
-					        ? '/upload/' + leader.user_img 
-					        : '/images/member1.png'}}" 
+					        ? '/images' + leader.user_img 
+					        : '/images/defaultIcon.png'}}" 
 					        alt="리더" class="member-img"
 					        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
 
 					      <!-- 이름 -->
-					      <div class="member-name" th:text="'리더 · ' + ${leader.stage_name}"></div>
+					      <div class="member-name" th:text="'リーダー · ' + ${leader.stage_name}"></div>
 
 					      <!-- JS에서 내용 삽입할 빈 팝업 -->
 					      <div class="member-popup"></div>
@@ -188,13 +188,13 @@
 					                  data-member-motto=${member.member_motto}">
 					      <!-- 프로필 이미지: user_img 없으면 기본 이미지 -->
 					      <img th:src="@{${member.user_img != null and !#strings.isEmpty(member.user_img) 
-					        ? '/upload/' + member.user_img 
+					        ? '/images' + member.user_img 
 					        : '/images/member1.png'}}" 
 					        class="member-img" alt="멤버 이미지"
 					        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
 
 					      <!-- 이름 = 포지션 -->
-					      <div class="member-name" th:text="'멤버 · ' + ${member.stage_name}"></div>
+					      <div class="member-name" th:text="'メンバー · ' + ${member.stage_name}"></div>
 
 					      <!-- JS에서 내용 삽입할 빈 팝업 -->
 					      <div class="member-popup"></div>
@@ -212,7 +212,7 @@
 							</div>
 
 							<!-- ◀ 왼쪽 화살표 -->
-							<button class="gallery-arrow gallery-prev">◀</button>
+							<button class="gallery-arrow gallery-prev" th:if="${not #lists.isEmpty(galleryList)}">◀</button>
 
 							<!-- 활동사진 슬라이드 반복 -->
 							<div th:each="photo, stat : ${galleryList}" th:if="${photo != null}" class="media-slide"
@@ -233,19 +233,26 @@
 										style="display: none;"></span>
 
 									<!-- 유튜브 영상 -->
-									<div class="video-wrapper" th:if="${photo.activityYoutubeUrl != null}">
-										<iframe
-											th:src="'https://www.youtube.com/embed/' + ${#strings.substringAfter(photo.activityYoutubeUrl, 'v=')}"
-											title="유튜브 영상" frameborder="0"
-											allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-											allowfullscreen>
-										</iframe>
+									<div class="video-wrapper"
+									     th:if="${photo.activityYoutubeUrl != null and #strings.contains(photo.activityYoutubeUrl, 'v=')}">
+										 <iframe
+										   th:if="${photo.activityYoutubeUrl != null}"
+										   th:src="${#strings.contains(photo.activityYoutubeUrl, 'v=') 
+										               ? 'https://www.youtube.com/embed/' + #strings.substringAfter(photo.activityYoutubeUrl, 'v=') 
+										               : (#strings.contains(photo.activityYoutubeUrl, 'youtu.be/') 
+										                   ? 'https://www.youtube.com/embed/' + #strings.substringAfter(photo.activityYoutubeUrl, 'youtu.be/') 
+										                   : 'https://www.youtube.com/embed/' + #strings.substringAfter(photo.activityYoutubeUrl, 'embed/'))}"
+										   width="560" height="315"
+										   frameborder="0"
+										   allowfullscreen>
+										 </iframe>
+									  <p th:text="'src 파싱 확인: https://www.youtube.com/embed/' + ${#strings.substringBefore(#strings.substringAfter(photo.activityYoutubeUrl, 'v='), '&')}"></p>
 									</div>
 								</div>
 							</div>
 
 							<!-- ▶ 오른쪽 화살표 -->
-							<button class="gallery-arrow gallery-next">▶</button>
+							<button class="gallery-arrow gallery-next" th:if="${not #lists.isEmpty(galleryList)}">▶</button>
 						</div>
 
 						<!-- 하단 도트 -->
@@ -515,7 +522,7 @@
 			  const coverBtn = document.createElement("button");
 			  coverBtn.id = "cover-file-btn";
 			  coverBtn.type = "button";
-			  coverBtn.textContent = "커버 변경";
+			  coverBtn.textContent = "カバーイメージ変更";
 			  coverBtn.className = "btn-primary";
 
 			  Object.assign(coverBtn.style, {
@@ -2417,7 +2424,7 @@
 				// 슬라이드가 하나라도 있으면 숨기지 않음
 				if (
 					galleryEmptyMessage &&
-					galleryEmptyMessage.textContent.includes("등록된 활동 사진이 없습니다") &&
+					galleryEmptyMessage.textContent.includes("登録された活動写真がありません。") &&
 					realSlides.length === 0
 				) {
 					arrows.forEach(arrow => arrow.style.display = "none");

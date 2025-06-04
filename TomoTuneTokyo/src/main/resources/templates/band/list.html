@@ -278,7 +278,7 @@
 								  <div id="bandImagesContainer">
 									<input type="file" name="bandImages" class="form-control mb-2">
 								  </div>
-								  <button type="button" id="addBandImageBtn" class="btn btn-secondary mt-2">＋ 写真追加</button>
+								  <button type="button" id="addBandImageBtn" class="btn btn-secondary mt-2" style = "margin-top: 10px;">＋ 写真追加</button>
 								  <small class="text-muted d-block mt-2">※ 最大４枚のイメージが登録可能です。</small>
 								</div>
 
@@ -682,6 +682,15 @@
 		    });
 		  });
 		</script>
+		
+		<script>
+		  document.getElementById('bandImages').addEventListener('change', function () {
+		    const fileNameSpan = document.querySelector('.custom-file-upload .file-name');
+		    const fileName = this.files.length > 0 ? this.files[0].name : '選択されたファイルがありません';
+		    fileNameSpan.textContent = fileName;
+		  });
+		</script>
+
 
 	</div>
 

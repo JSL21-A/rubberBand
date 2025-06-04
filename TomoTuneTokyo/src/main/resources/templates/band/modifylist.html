@@ -244,17 +244,14 @@
 	  <div class="member-input-group leader-member">
 	    <label>リーダー</label>
 	
-		<!-- 리더 이미지: 값이 있는 경우에만 업로드된 이미지 표시 -->
-		<img th:if="${leaderInfo != null and leaderInfo.user_img != null and !#strings.isEmpty(leaderInfo.user_img)}"
-		     th:src="@{'/upload/' + ${leaderInfo.user_img}}"
-		     class="member-image-preview mb-2"
-		     style="width:60px; height:60px; border-radius:50%; object-fit:cover;" alt="프로필">
+		
 
 		<!-- 리더 이미지: 값이 없거나 leaderInfo 자체가 null일 경우 기본 이미지 표시 -->
-		<img th:if="${leaderInfo == null or leaderInfo.user_img == null or #strings.isEmpty(leaderInfo.user_img)}"
-		     th:src="@{/images/member1.png}"
-		     class="member-image-preview mb-2"
-		     style="width:60px; height:60px; border-radius:50%; object-fit:cover;" alt="기본">
+		 <img th:src="@{${leaderInfo != null and leaderInfo.user_img != null and !#strings.isEmpty(leaderInfo.user_img) 
+					        ? '/images' + leaderInfo.user_img 
+					        : '/images/defaultIcon.png'}}" 
+					        alt="리더" class="member-img"
+					        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
 
 
 			 <!-- leaderInfo가 존재할 때 -->
@@ -531,8 +528,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			members.forEach(user => {
 				const userImg = user.user_img && user.user_img.trim() !== ''
-					? `/upload/${user.user_img}`
-					: '/images/member1.png';
+					? `/images${user.user_img}`
+					: '/images/defaultIcon.png';
 
 					const li = $(`
 					  <li class="list-group-item member-result-item" style="cursor:pointer"
