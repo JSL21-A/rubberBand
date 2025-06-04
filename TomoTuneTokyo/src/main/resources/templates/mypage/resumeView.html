@@ -9,12 +9,30 @@
 
 
 <style>
+@import
+	url("https://fonts.googleapis.com/css2?family=Baloo&display=swap");
+
+@import
+	url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Baloo&display=swap")
+	;
+
+@import
+	url('https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap');
+
+@font-face {
+	font-family: "kiwi";
+	src: url("https://fonts.google.com/specimen/Kiwi+Maru?lang=ja_Jpan");
+	font-weight: normal;
+	font-style: normal;
+}
+
 body {
 	font-family: 'Noto Sans KR', sans-serif;
 	background-color: #edf1f7;
 	margin: 0;
 	padding: 2rem;
 	color: #1f2937;
+	font-family: "Kiwi Maru", serif;
 }
 
 .resume-preview {
@@ -389,5 +407,14 @@ document.addEventListener("DOMContentLoaded", function () {
 	});
 });
 </script>
+
+<script>
+  function openResumePopup(resumeId) {
+    const url = `/mypage/resumeEdit/${resumeId}`;
+    window.open(url, 'ResumeEdit', 'width=600,height=760,scrollbars=yes,resizable=no');
+  }
+</script>
+
+
 </body>
 </html>

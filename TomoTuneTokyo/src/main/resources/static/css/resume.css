@@ -1,5 +1,21 @@
 /* 이력서 작성 폼 (resume insert form) */
 
+@import
+	url("https://fonts.googleapis.com/css2?family=Baloo&display=swap");
+
+@import
+	url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Baloo&display=swap")
+	;
+
+@import
+	url('https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap');
+
+@font-face {
+	font-family: "kiwi";
+	src: url("https://fonts.google.com/specimen/Kiwi+Maru?lang=ja_Jpan");
+	font-weight: normal;
+	font-style: normal;
+}
 
 body {
 	font-family: 'Noto Sans KR', sans-serif;
@@ -7,19 +23,22 @@ body {
 	line-height: 1.6;
 	background-color: #f4f6f8; /* 연한 그레이색 */
 	color: #333;
+		font-family: "Kiwi Maru", serif;
+	
 }
 
 .page {
-	display: flex;
-	max-width: 840px;
+	max-width: 560px; 
 	margin: 0 auto;
-	padding: 2rem;
+	padding: 2rem 1.5rem;
+	display: flex;
+	flex-direction: column;
 	gap: 2rem;
 }
 
 .content-box {
+	padding: 1.5rem;
 	background-color: #fff;
-	padding: 2rem;
 	border-radius: 10px;
 	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
@@ -45,9 +64,8 @@ h4 {
 }
 
 .resume-form form {
-	display: flex;
-	flex-direction: column;
-	gap: 0.5rem;
+	width: 100%;
+	max-width: 100%;
 }
 
 .resume-form label {
@@ -59,17 +77,18 @@ h4 {
 
 input[type="text"], input[type="email"], input[type="date"], select,
 	textarea {
-	max-width: 520px;
+	max-width: 200px;
 	border: 1px solid #ccc;
 	border-radius: 5px;
 	box-sizing: border-box;
-	  height: 36px;         /* 고정 높이 */
-  padding: 0 0.6rem;    /* 좌우 여백만 */
-  font-size: 0.9rem;
-  line-height: 1.2;
+	height: 36px;
+	padding: 0 0.6rem;
+	font-size: 0.9rem;
+	line-height: 1.2;
 }
 
 textarea {
+	max-width: 1000px;
 	line-height: 1.4;
 	font-size: 0.9rem;
 	padding: 0.6rem 0.8rem;
@@ -254,7 +273,7 @@ ul li {
 	gap: 0.5rem;
 	margin-top: 0.3rem;
 }
-	
+
 .band-card .band-period span {
 	font-size: 0.9rem;
 	color: #666;
@@ -382,105 +401,100 @@ textarea#selfIntro {
 
 /* 기본 박스 및 버튼 스타일 */
 .resume-form .button-group {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  justify-content: center;
+	display: flex;
+	gap: 1rem;
+	margin-top: 1.5rem;
+	justify-content: center;
 }
 
 .button-group button {
-  padding: 0.5rem 1.2rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: none;
-  background-color: #333;
-  color: #fff;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+	padding: 0.5rem 1.2rem;
+	font-size: 1rem;
+	border-radius: 8px;
+	border: none;
+	background-color: #333;
+	color: #fff;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
 }
 
 .button-group button:hover {
-  background-color: #555;
+	background-color: #555;
 }
-
 
 /* 활동지역, 장르 선택 목록 */
-#selected-regions li,
-#selected-genres li {
-  margin: 0.5rem 0;
-  padding: 0.3rem 0.8rem;
-  background-color: #f1f1f1;
-  border-radius: 5px;
-  display: inline-block;
+#selected-regions li, #selected-genres li {
+	margin: 0.5rem 0;
+	padding: 0.3rem 0.8rem;
+	background-color: #f1f1f1;
+	border-radius: 5px;
+	display: inline-block;
 }
 
-#selected-regions button,
-#selected-genres button {
-  background: transparent;
-  border: none;
-  color: red;
-  margin-left: 0.5rem;
-  font-weight: bold;
-  cursor: pointer;
+#selected-regions button, #selected-genres button {
+	background: transparent;
+	border: none;
+	color: red;
+	margin-left: 0.5rem;
+	font-weight: bold;
+	cursor: pointer;
 }
 
 /* 기타 입력창 */
-#position-etc-input,
-#genre-other,
-#region-other {
-  margin-top: 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-    height: 36px;
-  padding: 0 0.6rem;
-  font-size: 0.9rem;
+#position-etc-input, #genre-other, #region-other {
+	margin-top: 0.5rem;
+	border-radius: 6px;
+	border: 1px solid #ccc;
+	height: 36px;
+	padding: 0 0.6rem;
+	font-size: 0.9rem;
 }
 
 /* flatpickr의 altInput input 스타일 재정의 */
 .flatpickr-input.flatpickr-input[readonly] {
-  background-color: #fff !important;
-  border: 1px solid #ccc !important;
-  border-radius: 5px !important;
-  padding: 0.5rem 0.8rem !important;
-  font-size: 0.9rem !important;
-  color: #333 !important;
-  max-width: 520px !important;
-  width: 100% !important;
-  box-sizing: border-box !important;
+	background-color: #fff !important;
+	border: 1px solid #ccc !important;
+	border-radius: 5px !important;
+	padding: 0.5rem 0.8rem !important;
+	font-size: 0.9rem !important;
+	color: #333 !important;
+	max-width: 520px !important;
+	width: 80% !important;
+	box-sizing: border-box !important;
 }
 
 .error-message {
-  color: red;
-  font-size: 0.85rem;
-  margin-top: 0.2rem;
-  display: none;
+	color: red;
+	font-size: 0.85rem;
+	margin-top: 0.2rem;
+	display: none;
 }
 
 /* 자기소개 텍스트창 크기 고정 */
 #note {
   resize: none;
-  height: 140px; 
+  height: 140px;
+  width: calc(100%); 
+  max-width: none;
 }
 
 .hidden {
-  display: none !important;
+	display: none !important;
 }
 
-#region-other,
-#position-etc-input,
-#genre-other {
-  margin-top: 0.5rem;
-  padding: 0.3rem 0.5rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+#region-other, #position-etc-input, #genre-other {
+	margin-top: 0.5rem;
+	padding: 0.3rem 0.5rem;
+	border-radius: 6px;
+	border: 1px solid #ccc;
 }
 
 /* 이메일 오류 메시지 전용 스타일 */
 #emailError {
-  color: red;
-  font-size: 0.85rem;
-  margin-top: 0.2rem;
-  display: none;
+	color: red;
+	font-size: 0.85rem;
+	margin-top: 0.2rem;
+	display: none;
 }
 
 /* 사이드바 (hamburger) */
@@ -655,18 +669,17 @@ textarea#selfIntro {
 }
 
 .remove-btn {
-  position: absolute;
-  top: 0.4rem;
-  right: 0.6rem;
-  background: none;
-  border: none;
-  font-size: 1.2rem;
-  color: #888;
-  cursor: pointer;
-  transition: color 0.2s ease;
+	position: absolute;
+	top: 0.4rem;
+	right: 0.6rem;
+	background: none;
+	border: none;
+	font-size: 1.2rem;
+	color: #888;
+	cursor: pointer;
+	transition: color 0.2s ease;
 }
 
 .remove-btn:hover {
-  color: #dc3545;
+	color: #dc3545;
 }
-
