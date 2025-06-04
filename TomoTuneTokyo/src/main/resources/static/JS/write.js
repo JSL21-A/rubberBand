@@ -1,8 +1,14 @@
 function writePage() {
+    focusEditor();
     // 글 작성 효과적용 스크립트
     $(document).on("click", ".write_text-effect", function () {
         effect = $(this).data("effect-type");
         setStyle(effect);
+        if ($(this).hasClass("toggled")) {
+            $(this).removeClass("toggled");
+        } else {
+            $(this).addClass("toggled");
+        }
     });
 
     $(document).on("change", "#write_font-size", function () {
@@ -60,6 +66,7 @@ function writePage() {
     }
 
     function setStyle(style) {
+        focusEditor();
         document.execCommand(style);
         focusEditor();
     }
