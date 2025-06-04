@@ -146,8 +146,8 @@ button:hover {
 								th:value="${post.post_id}" /></td>
 							<td><a th:href="@{/user/view(post=${post.post_id})}"
 								th:text="${post.post_title} ?: 'タイトルなし'"></a></td>
-							<!--  <td
-								th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd')}"></td>-->
+							<td
+								th:text="${#temporals.format(post.created_at, 'yyyy-MM-dd')}"></td>
 						</tr>
 					</tbody>
 				</table>
