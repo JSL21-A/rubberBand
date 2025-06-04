@@ -51,6 +51,10 @@
     }
 }
 
+.menu-card a {
+    color: #000;
+}
+
 .menu-container {
     top: 0;
     left: 0;

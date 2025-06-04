@@ -113,12 +113,12 @@
             <input id="write_img-selector" type="file" accept="image/*" multiple />
         </div>
         <div class="write_btn-area">
-            <button id="write_to_list">リストへ</button>
+            <button id="write_to_list"
+                th:attr="hx-get=@{'./list'(board=${post?.board_id != null ? post.board_id : (session.prev.length() == 1 ? session.prev : 6)})}"
+                hx-target="#content" hx-select="#content" hx-push-url="true">リストへ</button>
             <button id="write_submit">作成</button>
         </div>
     </div>
 </body>
-<script>
-</script>
 
 </html>
