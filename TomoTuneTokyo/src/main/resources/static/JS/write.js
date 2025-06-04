@@ -68,11 +68,17 @@ function writeJS() {
     function insertYoutubeAtCursor(youtubeUrl) {
         const videoId = extractYoutubeId(youtubeUrl);
         if (!videoId) {
-            alert("유효한 유튜브 URL이 아닙니다.");
+            alert("有効なYoutubeのURLじゃありません");
             return;
         }
 
-        focusEditor(); // 커서 복원 (이 함수 네가 구현했을 거야)
+        focusEditor();
+
+        const wrapper = document.createElement("div");
+        wrapper.contentEditable = "false"; // 사용자가 편집 못하게
+        wrapper.style.display = "block";
+        wrapper.style.margin = "10px 0";
+        wrapper.classList.add("youtube-embed-wrapper");
 
         const iframe = document.createElement("iframe");
         iframe.src = `https://www.youtube.com/embed/${videoId}`;
@@ -84,20 +90,22 @@ function writeJS() {
         iframe.style.margin = "10px 0";
         iframe.allow = "fullscreen"; // 콘솔 경고 줄이기
 
+        wrapper.appendChild(iframe);
+
         const sel = window.getSelection();
         if (!sel.rangeCount) return;
 
         const range = sel.getRangeAt(0);
         range.deleteContents();
-        range.insertNode(iframe);
+        range.insertNode(wrapper);
 
         // 커서 iframe 다음으로 이동
-        range.setStartAfter(iframe);
-        range.setEndAfter(iframe);
+        range.setStartAfter(wrapper);
+        range.setEndAfter(wrapper);
         sel.removeAllRanges();
         sel.addRange(range);
 
-        togglePlaceholder(); // 네가 써둔 placeholder 처리 함수
+        togglePlaceholder();
     }
 
     // 유튜브 주소에서 videoId 추출
@@ -108,7 +116,7 @@ function writeJS() {
     }
 
     $('#write_youtube-btn').on('click', function () {
-        const url = prompt("유튜브 URL 입력:");
+        const url = prompt("YoutubeのURLを貼ってください:");
         if (url) insertYoutubeAtCursor(url);
     });
 

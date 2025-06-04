@@ -195,6 +195,27 @@ body {
     box-shadow: 1px 1px 1px 1px #bbb;
     border-radius: 5px;
     border: none;
+    position: relative;
+    top: 6px;
+}
+
+#write_btn-image img{
+    width: 80%;
+}
+
+#write_youtube-btn img{
+    width: 80%;
+}
+
+#write_youtube-btn{
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    box-shadow: 1px 1px 1px 1px #bbb;
+    border-radius: 5px;
+    border: none;
+    position: relative;
+    top: 6px;
 }
 
 #write_font-size {

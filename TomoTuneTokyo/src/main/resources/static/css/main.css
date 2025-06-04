@@ -119,11 +119,11 @@
     position: absolute;
     /* 카드 크기 */
     width: calc(var(--card-width) * var(--unit-w));
-    height: calc(var(--card-height) * var(--unit-w));
+    height: calc((var(--card-height) + var(--card-height) / 3.5) * var(--unit-w));
     perspective: 1000px;
-    transform-origin: center;
     will-change: transform;
     transform-style: preserve-3d;
+    transform-origin: center center;
 }
 
 .card-inner {
