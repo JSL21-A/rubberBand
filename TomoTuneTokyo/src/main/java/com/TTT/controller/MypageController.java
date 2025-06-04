@@ -266,7 +266,7 @@ public class MypageController {
 
 		// 닉네임 유효성 검사
 		if (!nickname.matches("^[ぁ-んァ-ン一-龥a-zA-Z0-9가-힣]+$")) {
-			redirectAttrs.addFlashAttribute("errorMessage", "ニックネームに空白や記号は使えません。別のニックネームを入力してください。");
+			redirectAttrs.addFlashAttribute("errorMessage", "ニックネームに空白や記号は使えません。");
 			return "redirect:/mypage/profileEdit";
 		}
 		if (nickname.matches("^[0-9]+$")) {
