@@ -49,8 +49,11 @@ public class BandRecruitPostSelectController {
 		BandInsertVo leaderInfo = bandinsertselectservice.selectLeaderInfo(bandId);
 		model.addAttribute("leader", leaderInfo);
 
-		// 밴드 멤버 정보 가져오기
+		// 밴드 멤버 정보 가져오기（리더제외）
 		List<BandInsertVo> members = bandinsertselectservice.getBandMembers(bandId);
+		String leaderUserId = leaderInfo.getUser_id(); // UUID 기준
+		members.removeIf(member -> leaderUserId.equals(member.getUser_id()));
+
 		model.addAttribute("members", members);
 
 		// band_name

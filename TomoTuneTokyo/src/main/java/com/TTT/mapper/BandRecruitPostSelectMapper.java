@@ -61,7 +61,7 @@ public interface BandRecruitPostSelectMapper {
 	int countExistingApplication(Map<String, Object> params);
 
 	// 스크랩 중복 확인 
-	@Select("SELECT COUNT(*) FROM post_scrap WHERE post_id = #{postId} AND user_id = #{userId}")
+	@Select("SELECT COUNT(*) FROM post_scrap WHERE recruit_post_id = #{postId} AND user_id = #{userId}")
 	int countScrapByUserAndPost(Map<String, Object> params);
 
 	// 스크랩 추가 
@@ -69,7 +69,7 @@ public interface BandRecruitPostSelectMapper {
 	void insertScrap(Map<String, Object> params);
 	
 	// 스크랩 해제
-	@Delete("DELETE FROM post_scrap WHERE post_id = #{postId} AND user_id = #{userId}")
+	@Delete("DELETE FROM post_scrap WHERE recruit_post_id = #{postId} AND user_id = #{userId}")
 	void deleteScrap(Map<String, Object> param);
 	
 	// 구인구직 글 삭제 
