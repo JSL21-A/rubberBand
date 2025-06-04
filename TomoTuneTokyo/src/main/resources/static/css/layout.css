@@ -2426,10 +2426,13 @@ body {
 }
 
 .cover-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  position: absolute;
+  top: 50%;                 /* 상단 기준 위치: 중앙 */
+  left: 50%;                /* 좌측 기준 위치: 중앙 */
+  transform: translate(-50%, -30%); /* 중심에서 조금 더 위로 올림 ← 여기 조정이 핵심! */
+  height: auto;
+  width: 100%;              /* 가로 꽉 채우기 */
+  min-height: 100%;
 }
 
 /* 프로필 썸네일 */
