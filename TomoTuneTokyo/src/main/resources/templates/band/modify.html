@@ -163,7 +163,7 @@
 					      <!-- 리더 이미지: 값 있으면 업로드, 없으면 기본 이미지 -->
 					      <img th:src="@{${leader != null and leader.user_img != null and !#strings.isEmpty(leader.user_img) 
 					        ? '/images' + leader.user_img 
-					        : '/images/defaultIcon.png'}}" 
+					        : '/images/member1.png'}}" 
 					        alt="리더" class="member-img"
 					        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
 
