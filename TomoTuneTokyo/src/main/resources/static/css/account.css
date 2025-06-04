@@ -1,7 +1,12 @@
 @import
-	url('https://fonts.googleapis.com/css2?family=Baloo&display=swap');
+	url('https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Baloo&display=swap');
+@font-face {
+	font-family: "kiwi";
+	src: url("https://fonts.google.com/specimen/Kiwi+Maru?lang=ja_Jpan");
+	font-weight: normal;
+	font-style: normal;
+}
 
 body {
 	font-family: 'Noto Sans JP', sans-serif;
@@ -9,6 +14,7 @@ body {
 	margin: 0;
 	padding: 3rem 1rem;
 	color: #111;
+	font-family: "Kiwi Maru", serif;
 }
 
 .container {
@@ -249,12 +255,12 @@ a.btn-outline:hover {
 }
 
 #passwordModal.modal {
-  /* JS에서 display: flex를 줄 테니, opacity/visibility만 덮어쓰기 */
-  opacity: 1 !important;
-  visibility: visible !important;
+	/* JS에서 display: flex를 줄 테니, opacity/visibility만 덮어쓰기 */
+	opacity: 1 !important;
+	visibility: visible !important;
 }
 
 #emailChangeModal.modal {
-  opacity: 1 !important;
-  visibility: visible !important;
+	opacity: 1 !important;
+	visibility: visible !important;
 }
