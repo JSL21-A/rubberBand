@@ -1,12 +1,18 @@
 package com.TTT.controller;
 
+import java.security.Principal;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -122,7 +128,9 @@ public class UserController {
 	@PostMapping("/update-email")
 	public ResponseEntity<Map<String, Object>> updateEmail(
 	        @RequestParam("user_id") String userId,
-	        @RequestParam("new_email") String newEmail) {
+	        @RequestParam("new_email") String newEmail,
+	        Principal principal
+			) {
 
 	    boolean success = userService.updateEmail(userId, newEmail);
 
@@ -130,6 +138,18 @@ public class UserController {
 	    responseBody.put("success", success);
 	    if (!success) {
 	        responseBody.put("message", "メール更新に失敗しました。");
+	    }
+	    
+	    String username = principal.getName();
+	    if (success) {
+	    	UserDto updatedUser = userService.findByUsername(username);
+	    	Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
+	    	Collection<? extends GrantedAuthority> roles = currentAuth.getAuthorities();
+	    	CustomUserDetails newDetails = new CustomUserDetails(updatedUser);
+	    	
+	    	UsernamePasswordAuthenticationToken newAuth = 
+	    			new UsernamePasswordAuthenticationToken(newDetails, currentAuth.getCredentials(), roles);
+	    	SecurityContextHolder.getContext().setAuthentication(newAuth);
 	    }
 
 	    return ResponseEntity
