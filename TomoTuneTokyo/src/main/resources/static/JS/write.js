@@ -65,6 +65,53 @@ function writeJS() {
         reader.readAsDataURL(file);
     }
 
+    function insertYoutubeAtCursor(youtubeUrl) {
+        const videoId = extractYoutubeId(youtubeUrl);
+        if (!videoId) {
+            alert("유효한 유튜브 URL이 아닙니다.");
+            return;
+        }
+
+        focusEditor(); // 커서 복원 (이 함수 네가 구현했을 거야)
+
+        const iframe = document.createElement("iframe");
+        iframe.src = `https://www.youtube.com/embed/${videoId}`;
+        iframe.width = 560;
+        iframe.height = 315;
+        iframe.frameBorder = "0";
+        iframe.allowFullscreen = true;
+        iframe.style.display = "block";
+        iframe.style.margin = "10px 0";
+        iframe.allow = "fullscreen"; // 콘솔 경고 줄이기
+
+        const sel = window.getSelection();
+        if (!sel.rangeCount) return;
+
+        const range = sel.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode(iframe);
+
+        // 커서 iframe 다음으로 이동
+        range.setStartAfter(iframe);
+        range.setEndAfter(iframe);
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        togglePlaceholder(); // 네가 써둔 placeholder 처리 함수
+    }
+
+    // 유튜브 주소에서 videoId 추출
+    function extractYoutubeId(url) {
+        const regExp = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+        const match = url.match(regExp);
+        return match ? match[1] : null;
+    }
+
+    $('#write_youtube-btn').on('click', function () {
+        const url = prompt("유튜브 URL 입력:");
+        if (url) insertYoutubeAtCursor(url);
+    });
+
     function setStyle(style) {
         focusEditor();
         document.execCommand(style);
