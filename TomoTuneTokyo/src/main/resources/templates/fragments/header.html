@@ -56,7 +56,12 @@
 								<!-- 사이드바 미니 프로필 -->
 								<div class="sidebar-profile" th:if="${currentUser != null}">
 									<!-- 프로필 이미지 클릭시 프로필 편집화면으로 이동 -->
-									<img src="/images/defaultprofile0.png" alt="プロフィール画像" class="sidebar-avatar">
+									<img
+									  th:src="${currentUser.user_img} != null 
+									           ? @{${'/images' + currentUser.user_img}} 
+									           : @{/images/defaultIcon.png}"
+									  alt="プロフィール画像"
+									  class="sidebar-avatar" />
 									<div class="sidebar-nickname" th:text="${currentUser.nickname}"></div>
 									<div class="sidebar-id" th:text="'@' + ${currentUser.username}"></div>
 									<div class="sidebar-email" th:text="${currentUser.email}"></div>
@@ -84,8 +89,12 @@
 								<!-- 사이드바 미니 프로필 -->
 								<div class="sidebar-profile" th:if="${currentUser != null}">
 									<!-- 프로필 이미지 클릭시 프로필 편집화면으로 이동 -->
-									<img src="/images/defaultprofile0.png" alt="プロフィール画像"
-										class="sidebar-avatar">
+									<img
+									  th:src="${currentUser.user_img} != null 
+									           ? @{${'/images' + currentUser.user_img}} 
+									           : @{/images/defaultIcon.png}"
+									  alt="プロフィール画像"
+									  class="sidebar-avatar" />
 									<div class="sidebar-nickname" th:text="${currentUser.nickname}"></div>
 									<div class="sidebar-id" th:text="'@' + ${currentUser.username}"></div>
 									<div class="sidebar-email" th:text="${currentUser.email}"></div>
