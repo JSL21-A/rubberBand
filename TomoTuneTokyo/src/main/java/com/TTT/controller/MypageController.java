@@ -3,6 +3,7 @@ package com.TTT.controller;
 import java.nio.file.Path;
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,10 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +27,7 @@ import com.TTT.domain.MypageDto;
 import com.TTT.domain.PostVo;
 import com.TTT.domain.UserDto;
 import com.TTT.domain.UserProfileDto;
+import com.TTT.security.CustomUserDetails;
 import com.TTT.service.MypageService;
 import com.TTT.service.UserService;
 
@@ -321,6 +327,17 @@ public class MypageController {
 		// 서비스 업데이트 호출
 		mypageService.updateUserProfile(userProfileDto);
 		redirectAttrs.addFlashAttribute("successMessage", "プロフィールが更新されました。");
+		
+		String username = principal.getName();
+		UserDto updatedUser = userService.findByUsername(username);
+		CustomUserDetails newDetails = new CustomUserDetails(updatedUser);
+		Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
+		Collection<? extends GrantedAuthority> roles = currentAuth.getAuthorities();
+		
+		UsernamePasswordAuthenticationToken newAuth = 
+				new UsernamePasswordAuthenticationToken(newDetails, currentAuth.getCredentials(), roles);
+		
+		SecurityContextHolder.getContext().setAuthentication(newAuth);
 
 		return "redirect:/mypage/account";
 	}
