@@ -65,7 +65,7 @@ public interface BandRecruitPostSelectMapper {
 	int countScrapByUserAndPost(Map<String, Object> params);
 
 	// 스크랩 추가 
-	@Insert("INSERT INTO post_scrap (user_id, post_id, created_at) VALUES (#{userId}, #{postId}, NOW())")
+	@Insert("INSERT INTO post_scrap (user_id, recruit_post_id, created_at) VALUES (#{userId}, #{postId}, NOW())")
 	void insertScrap(Map<String, Object> params);
 	
 	// 스크랩 해제
