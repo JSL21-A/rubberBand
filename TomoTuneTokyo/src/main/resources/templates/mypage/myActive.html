@@ -34,7 +34,7 @@ body {
 }
 
 table {
-	width: 100%;
+	width: 110%;
 	background: white;
 	border-radius: 6px;
 	overflow: hidden;
@@ -74,7 +74,7 @@ input[type="text"] {
 }
 
 button {
-	padding: 0.5rem 1rem;
+	padding: 0.5rem 2rem;
 	background: #000;
 	color: white;
 	border: none;
@@ -152,14 +152,15 @@ button:hover {
 					</tbody>
 				</table>
 
-				<div class="controls">
+				<div class="controls" style="justify-content: flex-end;">
 					<button type="submit">削除</button>
-					<input type="text" name="keyword" placeholder="タイトルで検索">
-					<button type="submit" formaction="/post/search">検索</button>
+				</div>
+				<div class="controls">
+					<input type="text" name="keyword" placeholder="キーワードで検索">
+					<button type="submit" formaction="/comment/search">検索</button>
 				</div>
 			</form>
 		</div>
-
 
 		<!-- コメント 리스트 + 삭제 + 검색 -->
 		<div th:if="${mode} == 'comments'">
@@ -177,6 +178,10 @@ button:hover {
 						</tr>
 					</thead>
 					<tbody>
+						<tr
+							th:if="${commentContentList == null or #lists.isEmpty(commentContentList)}">
+							<td colspan="3" style="text-align: center;">投稿された記事はありません。</td>
+						</tr>
 						<tr th:each="comment : ${commentContentList}">
 							<td class="checkbox"><input type="checkbox"
 								name="commentIds" th:value="${comment.commentId}"></td>
@@ -187,11 +192,15 @@ button:hover {
 						</tr>
 					</tbody>
 				</table>
-				<div class="controls">
+				<!-- 삭제 / 검색 -->
+				<div class="controls" style="justify-content: flex-end;">
 					<button type="submit">削除</button>
-					<input type="text" name="keyword" placeholder="タイトルで検索">
+				</div>
+				<div class="controls">
+					<input type="text" name="keyword" placeholder="キーワードで検索">
 					<button type="submit" formaction="/comment/search">検索</button>
 				</div>
+
 			</form>
 		</div>
 
