@@ -298,7 +298,7 @@
 		</div>
 
 		<!-- 페이징 -->
-		<div class="board-pagination">
+		<div class="board-pagination" th:if="${totalPages > 0}">
 		    <!-- 이전 페이지 버튼 -->
 		    <a th:if="${currentPage > 1}"
 		       th:href="@{'/bandlist/list'(page=${currentPage - 1})}"
@@ -311,10 +311,9 @@
 		       th:text="${i}">1</a>
 
 		    <!-- 다음 페이지 버튼 -->
-			<a th:if="${currentPage != null and currentPage < totalPages}"
-			   th:href="@{'/bandlist/list'(page='__' + (${currentPage != null ? currentPage + 1 : 2}))}"
-			   class="page-btn">&raquo;</a>
-
+		    <a th:if="${currentPage < totalPages}"
+		       th:href="@{'/bandlist/list'(page=${currentPage + 1})}"
+		       class="page-btn">&raquo;</a>
 		</div>
 
 		<script>
