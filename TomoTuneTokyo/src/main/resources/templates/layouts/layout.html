@@ -48,6 +48,23 @@
 				"width=600,height=800,menubar=no,toolbar=no,location=no,status=no"
 			);
 		});
+
+		function loadPage() {
+			header();
+			if (location.pathname == "/user/write") {
+				writePage();
+			}
+		}
+		$(document).ready(function () {
+			loadPage();
+		});
+		$(document).on("htmx:afterSwap", function (e) {
+			loadPage();
+		});
+
+		$(window).on("popstate", function () {
+			loadPage();
+		});
 	</script>
 </body>
 
