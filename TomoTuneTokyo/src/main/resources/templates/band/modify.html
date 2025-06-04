@@ -233,13 +233,20 @@
 										style="display: none;"></span>
 
 									<!-- 유튜브 영상 -->
-									<div class="video-wrapper" th:if="${photo.activityYoutubeUrl != null}">
-										<iframe
-											th:src="'https://www.youtube.com/embed/' + ${#strings.substringAfter(photo.activityYoutubeUrl, 'v=')}"
-											title="유튜브 영상" frameborder="0"
-											allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-											allowfullscreen>
-										</iframe>
+									<div class="video-wrapper"
+									     th:if="${photo.activityYoutubeUrl != null and #strings.contains(photo.activityYoutubeUrl, 'v=')}">
+										 <iframe
+										   th:if="${photo.activityYoutubeUrl != null}"
+										   th:src="${#strings.contains(photo.activityYoutubeUrl, 'v=') 
+										               ? 'https://www.youtube.com/embed/' + #strings.substringAfter(photo.activityYoutubeUrl, 'v=') 
+										               : (#strings.contains(photo.activityYoutubeUrl, 'youtu.be/') 
+										                   ? 'https://www.youtube.com/embed/' + #strings.substringAfter(photo.activityYoutubeUrl, 'youtu.be/') 
+										                   : 'https://www.youtube.com/embed/' + #strings.substringAfter(photo.activityYoutubeUrl, 'embed/'))}"
+										   width="560" height="315"
+										   frameborder="0"
+										   allowfullscreen>
+										 </iframe>
+									  <p th:text="'src 파싱 확인: https://www.youtube.com/embed/' + ${#strings.substringBefore(#strings.substringAfter(photo.activityYoutubeUrl, 'v='), '&')}"></p>
 									</div>
 								</div>
 							</div>
