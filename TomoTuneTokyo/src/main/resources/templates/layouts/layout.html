@@ -39,6 +39,7 @@
 	<script src="/JS/chat.js"></script>
 	<script src="/JS/write.js"></script>
 	<script src="/JS/notification.js"></script>
+	<script src="/JS/postList.js"></script>
 	<script>
 		document.addEventListener("click", function (event) {
 			const btn = event.target.closest(".open-account-btn");
@@ -54,6 +55,9 @@
 			chatJS();
 			if (location.pathname == "/user/write") {
 				writeJS();
+			}
+			if (location.pathname == "/user/list") {
+				postListJS();
 			}
 		}
 		$(loadJS);
