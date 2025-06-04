@@ -9,13 +9,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>マイアクティビティ</title>
 <style>
+@import
+	url('https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap');
+
+@font-face {
+	font-family: "kiwi";
+	src: url("https://fonts.google.com/specimen/Kiwi+Maru?lang=ja_Jpan");
+	font-weight: normal;
+	font-style: normal;
+}
+
 body {
 	font-family: 'Noto Sans JP', sans-serif;
 	background: #f8f9fa;
 	margin: 0;
 	color: #222;
 	overflow-y: auto; /* 세로 스크롤 허용 */
-	
+	font-family: "Kiwi Maru", serif;
 }
 
 .tabs {
@@ -23,6 +33,7 @@ body {
 	gap: 1.5rem;
 	border-bottom: 2px solid #ddd;
 	margin-bottom: 1rem;
+	width: 110%;
 }
 
 .tab {
@@ -83,8 +94,8 @@ input[type="text"] {
 }
 
 button {
-	width: 80px; 
-	height: 40px; 
+	width: 80px;
+	height: 40px;
 	padding: 0;
 	background: #000;
 	color: white;
@@ -117,6 +128,14 @@ button:hover {
 .active-page {
 	font-weight: bold;
 	text-decoration: underline;
+}
+
+.search-input {
+	width: 200px;
+}
+
+.delete-btn {
+	transform: translateX(70px);
 }
 </style>
 </head>
@@ -170,10 +189,11 @@ button:hover {
 					</table>
 
 					<div class="controls" style="justify-content: flex-end;">
-						<button type="submit">削除</button>
+						<button type="submit" class="delete-btn">削除</button>
 					</div>
 					<div class="controls">
-						<input type="text" name="keyword" placeholder="キーワードで検索">
+						<input type="text" name="keyword" class="search-input"
+							placeholder="キーワードで検索">
 						<button type="submit" formaction="/comment/search">検索</button>
 					</div>
 				</form>
@@ -211,10 +231,11 @@ button:hover {
 					</table>
 					<!-- 삭제 / 검색 -->
 					<div class="controls" style="justify-content: flex-end;">
-						<button type="submit">削除</button>
+						<button type="submit" class="delete-btn">削除</button>
 					</div>
 					<div class="controls">
-						<input type="text" name="keyword" placeholder="キーワードで検索">
+						<input type="text" name="keyword" class="search-input"
+							placeholder="キーワードで検索">
 						<button type="submit" formaction="/comment/search">検索</button>
 					</div>
 
