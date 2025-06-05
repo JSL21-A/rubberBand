@@ -11,7 +11,7 @@
 
 <body>
     <h1 id="banner-font" hx-swap-oob="true">通報管理</h1>
-    <div id="content" layout:fragment="content" th:fragment="content">
+    <div id="content" layout:fragment="content" th:fragment="content" hx-history-elt>
         <style>
             #report {
                 margin: 0;
@@ -115,12 +115,12 @@
                             <div class="noti_date">作成日</div>
                         </li>
                         <li class="noti_post" th:each="post: ${posts}">
-                            <a th:attr="href='/user/view?post='+ ${post.post_id}">
+                            <a th:attr="href='/user/view?post='+ ${post.post_id}" hx-target="#content">
                                 <div class="noti_title" th:text="${post.post_title}"></div>
                             </a>
                             <div th:text="${post.board_name}"></div>
                             <div th:text="${post.nickname}"></div>
-                            <div class="noti_date">2025.04.30</div>
+                            <div class="noti_date" th:text="${#temporals.format(post.created_at, 'yyyy.MM.dd')}"></div>
                         </li>
                     </ul>
                 </div>

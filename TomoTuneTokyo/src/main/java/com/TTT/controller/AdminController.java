@@ -38,32 +38,20 @@ public class AdminController {
 
     @GetMapping("/users")
     public String userList(HttpServletRequest request, @RequestParam(name = "page", required = false) String page) {
-        if ("true".equals(request.getHeader("HX-Request"))) {
-            page = (page == null) ? "1" : page;
-            return "admin/memberList";
-        } else {
-            return "redirect:/admin/main";
-        }
+        page = (page == null) ? "1" : page;
+        return "admin/memberList";
     }
 
     @GetMapping("/notify")
     public String noticeList(HttpServletRequest request, Model model) {
         List<PostVo> list = adminService.getNotiList();
         model.addAttribute("list", list);
-        if ("true".equals(request.getHeader("HX-Request"))) {
-            return "admin/noticeList :: content";
-        } else {
-            return "admin/noticeList";
-        }
+        return "admin/noticeList";
     }
 
     @GetMapping("/QnA")
     public String QnAList(HttpServletRequest request) {
-        if ("true".equals(request.getHeader("HX-Request"))) {
-            return "admin/QnA";
-        } else {
-            return "redirect:/admin/main";
-        }
+        return "admin/QnA";
     }
 
     @GetMapping("/reports")
@@ -72,11 +60,7 @@ public class AdminController {
         List<PostVo> comments = adminService.getRcommentList();
         model.addAttribute("posts", posts);
         model.addAttribute("comment", comments);
-        if ("true".equals(request.getHeader("HX-Request"))) {
-            return "admin/report :: content";
-        } else {
-            return "admin/report";
-        }
+        return "admin/report";
     }
 
 }

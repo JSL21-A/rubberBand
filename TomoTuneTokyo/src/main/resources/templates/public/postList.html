@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div id="content" layout:fragment="content" th:fragment="content">
+    <div id="content" layout:fragment="content" th:fragment="content" hx-history-elt>
         <style>
             body {
                 overflow-y: scroll;
@@ -257,7 +257,7 @@
                     </div>
                 </div>
             </div>
-            <div id="middle">
+            <div id="middle" hx-history-elt>
                 <div class="post_list" th:attr="data-count=${count}">
                     <ul>
                         <li class="post_post">
@@ -271,7 +271,7 @@
                         <li th:each="noti: ${noti}" th:if="${noti != null}" class="post_post">
                             <div class="post_title">
                                 <a th:attr="hx-get='./view?post='+ ${noti.post_id}" th:text="${noti.post_title}"
-                                    hx-target="#content" hx-push-url="true"></a>
+                                    hx-target="#content" hx-select="#content" hx-push-url="true"></a>
                             </div>
                             <div class="post_content">お知らせ</div>
                             <div class="post_content">管理者</div>
@@ -281,7 +281,8 @@
                         <li th:each="post: ${list}" class="post_post">
                             <div class="post_title">
                                 <a th:attr="hx-get='./view?post='+ ${post.post_id}" th:text="${post.post_title}"
-                                    hx-target="#content" hx-push-url="true"></a>
+                                    hx-target="#content" hx-select="#content" hx-push-url="true"
+                                    hx-swap="innerHTML"></a>
                             </div>
                             <div th:switch="${post.board_id}" class="post_content">
                                 <th:block th:case="1">メンバー募集</th:block>
@@ -301,7 +302,7 @@
             <div id="bottom">
                 <div id="doctor_paging">
                 </div>
-                <a id="onPost" hx-get="./write" hx-target="#content" hx-push-url="true">作成</a>
+                <a id="onPost" hx-get="./write" hx-target="#content" hx-select="#content" hx-push-url="true">作成</a>
             </div>
         </div>
     </div>
