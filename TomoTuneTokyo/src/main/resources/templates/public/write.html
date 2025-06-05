@@ -14,7 +14,7 @@
     <style>
 
     </style>
-    <div id="content" layout:fragment="content" th:fragment="content">
+    <div id="content" layout:fragment="content" th:fragment="content" hx-history-elt>
         <div class="write_header">
             <!-- 공지사항 작성인지 판단 -->
             <div class="write_notify" th:if="${session.prev == 'notify'}">
@@ -116,9 +116,14 @@
             <input id="write_img-selector" type="file" accept="image/*" multiple />
         </div>
         <div class="write_btn-area">
-            <button id="write_to_list"
-                th:attr="hx-get=@{'./list'(board=${post?.board_id != null ? post.board_id : (session.prev.length() == 1 ? session.prev : 6)})}"
-                hx-target="#content" hx-select="#content" hx-push-url="true">リストへ</button>
+            <th:block th:with="
+                isNotify=${session.prev == 'notify'},
+                boardId=${post?.board_id != null ? post.board_id : (session.prev.length() == 1 ? session.prev : 6)},
+                getUrl=${isNotify} ? '/admin/notify' : './list'
+            ">
+                <button id="write_to_list" th:attr="hx-get=@{${getUrl}(board=${boardId})}" hx-target="#content"
+                    hx-select="#content" hx-push-url="true">リストへ</button>
+            </th:block>
             <button id="write_submit">作成</button>
         </div>
     </div>

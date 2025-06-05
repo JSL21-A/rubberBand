@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap');
+
+
 @media (max-width: 768px) {
     :root {
         /* 창 크기에 따라 유동적으로 움직이려고 선언 */
@@ -161,8 +164,22 @@
 }
 
 .card-back {
-    background-color: #f4f4f4;
+    background-color: #000;
     transform: rotateY(180deg);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.card-back h1 {
+	text-align: center;
+	font-size: 4rem;
+	margin: auto 0;
+	  font-family: "Dela Gothic One", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 #rotateBtn {

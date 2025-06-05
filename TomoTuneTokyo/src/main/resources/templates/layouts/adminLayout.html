@@ -41,4 +41,22 @@
 <script src="/JS/write.js"></script>
 <script src="/JS/chat.js"></script>
 
+<script>
+  function loadJS() {
+    chatJS();
+    if (location.pathname == "/admin/write") {
+      writeJS();
+    }
+  }
+  $(loadJS);
+
+  $(document).on("htmx:afterSwap", function (e) {
+    loadJS();
+  });
+
+  $(window).on("popstate", function () {
+    loadJS();
+  });
+</script>
+
 </html>

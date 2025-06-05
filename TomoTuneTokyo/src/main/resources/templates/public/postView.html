@@ -11,7 +11,7 @@
 <body>
     <meta name="_csrf" th:content="${_csrf.token}" />
     <meta name="_csrf_header" th:content="${_csrf.headerName}" />
-    <div id="content" layout:fragment="content" th:fragment="content">
+    <div id="content" layout:fragment="content" th:fragment="content" hx-history-elt>
         <style>
             body {
                 overflow: scroll;
@@ -196,7 +196,8 @@
             .bottomUp {
                 display: flex;
                 justify-content: space-between;
-                margin: 0 2% 2% 2%;
+                margin: 0 2%;
+                padding-bottom: 2%;
             }
 
             #comment {
@@ -237,6 +238,52 @@
                 border: none;
                 cursor: pointer;
                 transition: background-color 0.2s ease;
+            }
+
+            .ctrlBtn {
+                position: relative;
+                padding: 0.4rem 0.8rem;
+                font-size: 1rem;
+                border-radius: 5px;
+                background-color: #2D2D2D;
+                color: white;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+                top: 10px;
+            }
+
+            .post_report {
+                background-color: #000;
+                border: 1px solid #000;
+                border-radius: 5px;
+                padding: 3px;
+                width: 40px;
+            }
+
+            .post_report img {
+                width: 100%;
+                filter: invert(100%);
+            }
+
+            .post_scrap {
+                background-color: #000;
+                border: 1px solid #000;
+                border-radius: 5px;
+                padding: 3px;
+                width: 40px;
+            }
+
+            .post_scrap img {
+                width: 100%;
+                filter: invert(100%);
+            }
+
+            .postBtn {
+                margin-top: 50px;
+                display: flex;
+                gap: 10px;
+                justify-content: center;
             }
         </style>
         <div id="view">
@@ -291,18 +338,22 @@
                             <div class="viewHost">管理者</div>
                         </th:block>
                         <div>
-                            <div th:if="${user == post.user_id} or ${#authorization.expression('hasRole(''A'')')}">
-                                <button id="editPost" th:attr="hx-get='./write?edit=' + ${post.post_id}"
-                                    hx-target="#content" hx-push-url="true">修正</button>
-                                <button id="delPost">削除</button>
-                            </div>
+                            <button class="ctrlBtn" id="editPost" th:attr="hx-get='./write?edit=' + ${post.post_id}"
+                                hx-target="#content" hx-select="#content" hx-push-url="true"
+                                th:if="${user == post.user_id}">修正</button>
+                            <button class="ctrlBtn" id="delPost"
+                                th:if="${user == post.user_id} or ${#authorization.expression('hasRole(''A'')')}">削除</button>
                         </div>
                     </div>
                     <div class="view_content">
                         <div class="post_note" th:utext="${post.post_content}"></div>
                         <div class="postBtn" th:if="${user != post.user_id}">
-                            <button class="post_report">通報</button>
-                            <button class="post_scrap">スクラップ</button>
+                            <button class="post_report">
+                                <img src="https://cdn-icons-png.flaticon.com/512/980/980829.png" alt="">
+                            </button>
+                            <button class="post_scrap">
+                                <img src="https://cdn-icons-png.flaticon.com/512/33/33277.png" alt="">
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -372,7 +423,7 @@
                 function cateOn() {
                     isPost = new URLSearchParams(window.location.search).get("post");
                     if (isPost) {
-                        board = [[${ post.board_id }]];
+                        board = '[[${post.board_id}]]';
                     } else {
                         board = new URLSearchParams(window.location.search).get("board");
                     }
@@ -383,7 +434,7 @@
                         target = $(`a[data-board-id="${board}"]`);
                         target.parent().addClass("active");
                         text = $(`a[data-board-id="${board}"]`).text();
-                        $('.cate_title').text(text);
+                        $('.cate_title').text(text == "" ? "お知らせ" : text);
                     } else {
                         target = $(`a[data-board-id=""]`);
                         target.parent().addClass("active");
