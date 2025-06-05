@@ -293,7 +293,7 @@
 									<div th:each="record : ${slide}" class="column-left">
 										<div class="record-card">
 											<div class="record-date">
-												<span th:text="${record.formattedDate}">５月</span><br>
+												<span th:text="${#strings.replace(record.formattedDate, '월', '月')}">5月</span><br>
 												<strong th:text="${record.formattedDay}">21</strong>
 											</div>
 											<div class="record-info">
