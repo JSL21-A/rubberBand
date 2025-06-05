@@ -26,8 +26,8 @@
 								/*]]>*/
 							</script>
 							<button class="close-btn" aria-label="閉じる">&times;</button>
-							<form class="login-form" th:action="@{/user/login}" method="post"
-								sec:authorize="!isAuthenticated()">
+							<form id="loginForm" th:action="@{/user/login}" method="post" class="login-form" sec:authorize="!isAuthenticated()">
+
 								<h2>ログイン</h2>
 								<div class="form-group">
 									<input type="text" name="username" placeholder="ID" required />
@@ -127,8 +127,8 @@
 									戻る</button>
 							</div>
 
-							<form class="register-form" id="registerForm"
-								style="display: none;">
+							<form id="registerForm" class="register-form" th:action="@{/user/register}" method="post" style="display:none">
+
 								<h2>会員登録</h2>
 								<div class="form-group">
 									<input type="text" name="username" id="regUsername"
@@ -162,6 +162,7 @@
 									<div id="codeMsg" class="validation-msg"></div>
 								</div>
 								<button type="button" id="registerBtn" class="btn-login">登録する</button>
+								
 								<div id="registerMsg" class="validation-msg"></div>
 								<div class="login-actions">
 									<a href="#" class="btn-link back-to-login">ログインに戻る</a>
@@ -187,6 +188,22 @@
 			<!-- 네비게이션 (삭제)-->
 
 		</header>
+		
+		<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			  const loginForm = document.getElementById("loginForm");
+
+			  loginForm.addEventListener("submit", function(e) {
+			    // 1) 폼 요소 전체가 유효한지 검사(checkValidity)
+			    if (!loginForm.checkValidity()) {
+			      // 2) 유효하지 않을 때: 제출 막고(validation 메시지 표시)
+			      e.preventDefault();
+			      loginForm.reportValidity(); // 브라우저가 자동으로 invalid 메시지를 띄워줌
+			    }
+			    // 유효하면 별도 처리 없이 폼이 서버로 제출됨
+			  });
+			});
+		</script>
 		
 		<script>
 		//팝업창 크기 조정 -강시-
