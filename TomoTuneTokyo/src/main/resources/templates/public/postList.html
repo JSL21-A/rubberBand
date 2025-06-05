@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate='~{layouts/layout}'>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="content" layout:fragment="content" th:fragment="content" hx-history-elt>
+        <style>
+            body {
+                overflow-y: scroll;
+            }
+
+            #notice {
+                margin: 0;
+                padding: 0;
+            }
+
+            #content {
+                width: 90vw;
+                margin: 0 auto;
+            }
+
+            #top {
+                display: flex;
+                flex-direction: row-reverse;
+                margin-bottom: 30px;
+            }
+
+            #middle {
+                width: 100%;
+                margin: 0 auto;
+                background-color: #fff;
+                border-radius: 30px;
+                box-shadow: 2px 2px 2px 2px #bbb;
+            }
+
+            .post_list ul {
+                list-style: none;
+                padding: 0 3%;
+            }
+
+            .post_list li {
+                border-bottom: 1px dotted black;
+            }
+
+            .post_list li div {
+                width: 25%;
+            }
+
+            .post_content {
+                text-align: center;
+            }
+
+            .post_title {
+                text-align: inherit;
+            }
+
+            .post_date {
+                text-align: end;
+            }
+
+            .post_list {
+                border-radius: 30px;
+                box-shadow: 2px 2px 2px 2px #bbb;
+            }
+
+            .post_post {
+                display: flex;
+                justify-content: space-between;
+                padding: 1%;
+            }
+
+            .post_post a {
+                text-decoration: none;
+                color: #333;
+            }
+
+            .post_title {
+                cursor: pointer
+            }
+
+            .cate_wrapper {
+                border-radius: 30px;
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            .cate_nav {
+                position: relative;
+                overflow: hidden;
+                width: 100%;
+                height: 200px;
+                border-radius: 24px;
+            }
+
+            .cate_sort {
+                position: relative;
+                width: 100%;
+                height: 52px;
+                border-top: 1px solid rgba(0, 0, 0, 0.3);
+                background-color: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(2px);
+                display: flex;
+            }
+
+            .cate_top {
+                position: relative;
+                width: 100%;
+                height: 148px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .cate_top img {
+                width: 100%;
+                position: absolute;
+                filter: grayscale();
+            }
+
+            .cate_title {
+                text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+                font-size: 35px;
+                font-weight: 700;
+                line-height: 130%;
+                color: #000;
+                z-index: 2;
+            }
+
+            .sel_cate_wrapper {
+                position: relative;
+                margin: 0 auto;
+                overflow: hidden;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                gap: 5vw;
+            }
+
+            .sel_cate {
+                display: block;
+                position: relative;
+                z-index: 2;
+                padding: 0 8px;
+                color: #A7AFB3;
+                font-size: 18px;
+                white-space: nowrap;
+            }
+
+            .sel_cate_card.active a {
+                color: #fff;
+                font-weight: bold;
+            }
+
+            .sel_cate_card {
+                position: relative;
+            }
+
+            .sel_cate_card.active::after {
+                position: absolute;
+                display: block;
+                content: "";
+                top: 11px;
+                width: 100%;
+                border-bottom: 17px solid #777;
+                border-radius: 5px;
+                right: 0;
+            }
+
+            .searchTab {
+                width: 30%;
+            }
+
+            #bottom {
+                display: flex;
+                justify-content: space-between;
+                margin: 2%;
+                margin-bottom: calc(2% + 40px);
+                padding: 0 2%;
+            }
+
+            #bottom #doctor_paging {
+                display: flex;
+                gap: 5px;
+            }
+
+            #bottom .pageBtn {
+                width: 30px;
+                height: 30px;
+                background-color: #fff;
+                box-shadow: 1px 1px 1px 1px #bbb;
+                border-radius: 5px;
+                border: none;
+            }
+
+            #bottom .pageBtn.active {
+                background-color: #2D2D2D;
+                color: #fff;
+                box-shadow: none;
+                border: none;
+            }
+
+            #onPost {
+                padding: 0.4rem 0.8rem;
+                font-size: 1rem;
+                border-radius: 5px;
+                background-color: #2D2D2D;
+                color: white;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+            }
+        </style>
+        <div id="notice">
+            <div id="top">
+                <div class="cate_wrapper">
+                    <div class="cate_nav">
+                        <div class="cate_top">
+                            <img src="https://www.ultimate-guitar.com/static/article/news/7/175347_0_wide_ver1738510713.jpg"
+                                alt="">
+                            <h2 class="cate_title"></h2>
+                        </div>
+                        <div class="cate_sort">
+                            <div class="sel_cate_wrapper">
+                                <div class="sel_cate_card">
+                                    <a class="sel_cate" hx-get="./list" data-board-id="" hx-target="#middle"
+                                        hx-select="#middle" hx-push-url="true">すべて</a>
+                                </div>
+                                <div class="sel_cate_card">
+                                    <a class="sel_cate" hx-get="./list?board=6" data-board-id="6" hx-target="#middle"
+                                        hx-select="#middle" hx-push-url="true">コミュニティ
+                                    </a>
+                                </div>
+                                <div class="sel_cate_card">
+                                    <a class="sel_cate" hx-get="./list?board=3" data-board-id="3" hx-target="#middle"
+                                        hx-select="#middle" hx-push-url="true">フリーマーケット
+                                    </a>
+                                </div>
+                                <div class="sel_cate_card">
+                                    <a class="sel_cate" hx-get="./list?board=4" data-board-id="4" hx-target="#middle"
+                                        hx-select="#middle" hx-push-url="true">演奏音源
+                                    </a>
+                                </div>
+                                <div class="sel_cate_card">
+                                    <a class="sel_cate" hx-get="./list?board=5" data-board-id="5" hx-target="#middle"
+                                        hx-select="#middle" hx-push-url="true">ライブ告知
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="middle" hx-history-elt>
+                <div class="post_list" th:attr="data-count=${count}">
+                    <ul>
+                        <li class="post_post">
+                            <div class="post_title">
+                                <a href="#">タイトル</a>
+                            </div>
+                            <div class="post_content">カテゴリー</div>
+                            <div class="post_content">ユーザー名</div>
+                            <div class="post_date">作成日</div>
+                        </li>
+                        <li th:each="noti: ${noti}" th:if="${noti != null}" class="post_post">
+                            <div class="post_title">
+                                <a th:attr="hx-get='./view?post='+ ${noti.post_id}" th:text="${noti.post_title}"
+                                    hx-target="#content" hx-select="#content" hx-push-url="true"></a>
+                            </div>
+                            <div class="post_content">お知らせ</div>
+                            <div class="post_content">管理者</div>
+                            <div class="post_date" th:text="${#temporals.format(noti.created_at, 'yyyy.MM.dd')}">
+                            </div>
+                        </li>
+                        <li th:each="post: ${list}" class="post_post">
+                            <div class="post_title">
+                                <a th:attr="hx-get='./view?post='+ ${post.post_id}" th:text="${post.post_title}"
+                                    hx-target="#content" hx-select="#content" hx-push-url="true"
+                                    hx-swap="innerHTML"></a>
+                            </div>
+                            <div th:switch="${post.board_id}" class="post_content">
+                                <th:block th:case="1">メンバー募集</th:block>
+                                <th:block th:case="2">バンド結成</th:block>
+                                <th:block th:case="3">フリーマーケット</th:block>
+                                <th:block th:case="4">演奏音源</th:block>
+                                <th:block th:case="5">ライブ告知</th:block>
+                                <th:block th:case="6">コミュニティ</th:block>
+                            </div>
+                            <div class="post_content" th:text="${post.board_id != 7 ? post.nickname : '管理者'}"></div>
+                            <div class="post_date" th:text="${#temporals.format(post.created_at, 'yyyy.MM.dd')}">
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="bottom">
+                <div id="doctor_paging">
+                </div>
+                <a id="onPost" hx-get="./write" hx-target="#content" hx-select="#content" hx-push-url="true">作成</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+</html>

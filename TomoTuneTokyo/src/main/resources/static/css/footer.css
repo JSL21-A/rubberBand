@@ -1,0 +1,32 @@
+
+footer{
+    position:fixed;
+    bottom:0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    background-color: #000;
+}
+
+.footer-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  gap: 20px;
+  padding: 0 20px;
+  list-style: none;
+  margin: 0;
+  height: 40px;
+}
+
+.footer-list li a {
+  text-decoration: none;
+  color: #fff; /* 원하는 색상으로 조정 가능 */
+  font-size: 16px;
+}
+
+.footer-list li a:hover {
+  text-decoration: none;
+}
+

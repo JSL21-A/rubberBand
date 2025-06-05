@@ -35,3 +35,12 @@ out/
 
 ### VS Code ###
 .vscode/
+
+###personal###
+.metadata/
+
+###Fucking DS_Store###
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
