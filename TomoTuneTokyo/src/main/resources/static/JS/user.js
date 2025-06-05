@@ -10,6 +10,9 @@ $(function () {
     $.ajaxSetup({ beforeSend: (xhr) => xhr.setRequestHeader(header, token) });
 });
 
+let isEmailVerified = false;
+
+
 // ───────────────────────────────────────────
 // 1) 회원가입: ID 중복 검사
 // ───────────────────────────────────────────
@@ -107,7 +110,10 @@ document.addEventListener("DOMContentLoaded", () => {
 // ───────────────────────────────────────────
 $("#sendEmailCode").on("click", () => {
     const email = $("#email").val().trim();
-    if (!email) return $("#emailMsg").text("メールアドレスを入力してください").css("color", "red");
+    if (!email) {
+        $("#emailMsg").text("メールアドレスを入力してください").css("color", "red");
+        return;
+    }
     $.post("/user/send-email-code", { email })
         .done(() => {
             $("#emailMsg").text("認証メールを送信しました").css("color", "white");
@@ -115,78 +121,131 @@ $("#sendEmailCode").on("click", () => {
             $("#email").prop("readonly", true);
         })
         .fail(() => {
-            $("#emailMsg").text("送信に失敗しました");
+            $("#emailMsg").text("送信に失敗しました").css("color", "red");
         });
 });
 
 $("#verifyEmailCode").on("click", () => {
     const code = $("#emailCode").val().trim();
-    if (!code) return $("#codeMsg").text("認証番号を入力してください");
+    if (!code) {
+        $("#codeMsg").text("認証番号を入力してください").css("color", "red");
+        return;
+    }
     $.post("/user/verify-email-code", { code })
         .done((ok) => {
-            $("#codeMsg")
-                .text(ok ? "認証成功" : "認証番号が正しくありません")
-                .css("color", ok ? "white" : "red");
+            if (ok) {
+                $("#codeMsg").text("認証成功").css("color", "white");
+                isEmailVerified = true;    // ✅ 인증 성공 시 true로 변경
+            } else {
+                $("#codeMsg").text("認証番号が正しくありません").css("color", "red");
+                isEmailVerified = false;   // ❌ 인증 실패 시 false로 유지
+            }
         })
         .fail(() => {
             $("#codeMsg").text("エラーが発生しました").css("color", "red");
+            isEmailVerified = false;
         });
 });
 
-// ───────────────────────────────────────────
+// —————————————
 // 5) 회원가입: 최종 제출
-// ───────────────────────────────────────────
-$("#registerBtn").on("click", async (e) => {
-    e.preventDefault();
-    const form = document.getElementById("registerForm");
-    const data = new URLSearchParams(new FormData(form));
-    const csrf = $('meta[name="_csrf"]').attr("content");
-    const header = $('meta[name="_csrf_header"]').attr("content");
+// —————————————
+document.addEventListener("DOMContentLoaded", () => {
+    const registerBtn = document.getElementById("registerBtn");
+    const registerForm = document.getElementById("registerForm");
 
-    const res = await fetch("/user/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded", [header]: csrf },
-        body: data.toString(),
+    registerBtn.addEventListener("click", async (e) => {
+        e.preventDefault();
+
+        // 1) HTML5 폼 유효성 검사 먼저
+        if (!registerForm.checkValidity()) {
+            registerForm.reportValidity();
+            return;
+        }
+
+        // 2) **이메일 인증 코드 검증 여부 검사**
+        if (!isEmailVerified) {
+            alert("メール認証を完了してください。");
+            // 또는: $("#registerMsg").text("メール認証を完了してください").css("color","red");
+            return;
+        }
+
+        // 3) AJAX 로 회원가입 데이터 전송
+        const data = new URLSearchParams(new FormData(registerForm));
+        const csrf = $('meta[name="_csrf"]').attr("content");
+        const header = $('meta[name="_csrf_header"]').attr("content");
+
+        try {
+            const res = await fetch("/user/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded", [header]: csrf },
+                body: data.toString(),
+            });
+
+            if (res.ok) {
+                $("#registerMsg").text("登録が完了しました！").css("color", "white");
+                setTimeout(() => (window.location.href = "/"), 2000);
+            } else {
+                $("#registerMsg").text("通信エラーが発生しました。").css("color", "red");
+            }
+        } catch (err) {
+            console.error(err);
+            $("#registerMsg").text("通信エラーが発生しました。").css("color", "red");
+        }
     });
-
-    if (res.ok) {
-        $("#registerMsg").text("登録が完了しました！").css("color", "white");
-        setTimeout(() => (window.location.href = "/"), 2000);
-    } else {
-        $("#registerMsg").text("通信エラーが発生しました。").css("color", "red");
-    }
 });
 
-$("#login").on("click", async (e) => {
-    e.preventDefault();
-    const username = $('input[name="username"]').val().trim();
-    const password = $('input[name="password"]').val().trim();
 
-    $.post("/user/login", { username, password })
-        .done(async (data) => {
-            window.currentUser = data.userId;
-            // 기존 UI 갱신
-            $("#slideMenu").removeClass("open");
-            $("#slideMenu .login-form").hide();
-            $("#welcomeName").text(username);
-            $("#slideMenu .welcome").show();
+// ───────────────────────────────────────────
+// 6) 로그인 처리 (수정된 부분 포함)
+// ───────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+    const loginBtn = document.getElementById("login");
+    const loginForm = document.getElementById("loginForm");
+    const loginError = document.getElementById("loginError");
 
-            // **추가**: 로그인 후 슬라이드 메뉴 헤더만 다시 불러와서
-            // 서버 사이드에서 Thymeleaf로 렌더된 상태(인증 정보 반영)를 반영
-            $("#slideMenu").load("/user/header-fragment #mainPane, #notificationPane", function () {
-                // 닫기 버튼 재바인딩
-                $(".close-btn")
-                    .off("click")
-                    .on("click", () => {
-                        $("#slideMenu").removeClass("open");
-                    });
-                updateNotifyBadge();
+    loginBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        // ── HTML5 유효성 검사 적용 ──
+        if (!loginForm.checkValidity()) {
+            loginForm.reportValidity();
+            return;
+        }
+        // ─────────────────────────
+
+        const username = loginForm.querySelector('input[name="username"]').value.trim();
+        const password = loginForm.querySelector('input[name="password"]').value.trim();
+
+        // jQuery AJAX 로직 유지
+        $.post("/user/login", { username, password })
+            .done(async (data) => {
+                window.currentUser = data.userId;
+                // 기존 UI 갱신
+                $("#slideMenu").removeClass("open");
+                $("#slideMenu .login-form").hide();
+                $("#welcomeName").text(username);
+                $("#slideMenu .welcome").show();
+
+                // 로그인 후 슬라이드 메뉴 헤더만 다시 불러와서
+                // 서버 사이드에서 Thymeleaf로 렌더된 상태(인증 정보 반영)를 반영
+                $("#slideMenu").load("/user/header-fragment #mainPane, #notificationPane", function () {
+                    // 닫기 버튼 재바인딩
+                    $(".close-btn")
+                        .off("click")
+                        .on("click", () => {
+                            $("#slideMenu").removeClass("open");
+                        });
+                    updateNotifyBadge();
+                });
+                await initChat(currentUser);
+            })
+            .fail((xhr) => {
+                loginError.textContent = (xhr.status === 401)
+                    ? "IDやパスワードが間違っています"
+                    : "エラー発生";
             });
-            await initChat(currentUser);
-        })
-        .fail((xhr) => {
-            $("#loginError").text(xhr.status === 401 ? "IDやパスワードが間違っています" : "エラー発生");
-        });
+    });
 });
 
 //비밀번호 초기화

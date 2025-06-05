@@ -5,6 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
 	<meta name="_csrf_parameter" th:content="${_csrf.parameterName}" />
 	<title>밴드 상세정보</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -672,6 +673,7 @@
 			          formData.append("profileImage", file);
 
 			          const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+			          const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
 			          const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
 			          if (csrfToken && csrfParam) {
 			            formData.append(csrfParam, csrfToken);
@@ -714,6 +716,7 @@
 
 			  const input = el.querySelector("input");
 			  const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+			  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 			  const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
 
 			  input.addEventListener("blur", (e) => {
@@ -757,6 +760,7 @@
 
 			  const input = el.querySelector("input");
 			  const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+			  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 			  const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
 
 			  input.addEventListener("blur", (e) => {
@@ -2514,12 +2518,15 @@
 		
 		
 		<script th:inline="javascript">
-		/*<![CDATA[*/
-		  const band_id      = [[${band.band_id}]];
-		  const currentUser = [[${currentUserVo?.user_id}]];
-		/*]]>*/
+		  // IDE에서 "const band_id = 0;" 같은 정상적인 JS로 보이게 함
+		  const band_id     = /*[[${band.band_id}]]*/ 0;
+		  const currentUser = /*[[${currentUserVo?.user_id}]]*/ 'anonymous';
 		</script>
+		
 		<script>
+		 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+		 const csrfToken  = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+		
 		const popup = document.getElementById('member-invite-popup');
 		if(popup){
 			

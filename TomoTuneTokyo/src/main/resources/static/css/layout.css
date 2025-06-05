@@ -3959,13 +3959,21 @@ body {
 }
 
 .btn-accept {
-    background-color: #28a745;
+    background-color: #000;
     color: #fff;
 }
 
+.btn-accept:hover {
+    background-color: #333;
+}
+
 .btn-decline {
-    background-color: #dc3545;
+    background-color: #000;
     color: #fff;
+}
+
+.btn-decline:hover {
+    background-color: #333;
 }
 
 /* 초대 팝업 고정 영역 */
