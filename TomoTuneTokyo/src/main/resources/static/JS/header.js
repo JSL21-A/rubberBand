@@ -100,7 +100,7 @@ function headerJS() {
                     ul.innerHTML = "";
 
                     if (list.length === 0) {
-                        ul.innerHTML = '<li class="no-notify">새 알림이 없습니다.</li>';
+                        ul.innerHTML = '<li class="no-notify">新着通知はありません</li>';
                     } else {
                         list.forEach((n) => {
                             const li = document.createElement("li");
