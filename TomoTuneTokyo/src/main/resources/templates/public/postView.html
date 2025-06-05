@@ -252,6 +252,39 @@
                 transition: background-color 0.2s ease;
                 top: 10px;
             }
+
+            .post_report {
+                background-color: #000;
+                border: 1px solid #000;
+                border-radius: 5px;
+                padding: 3px;
+                width: 40px;
+            }
+
+            .post_report img {
+                width: 100%;
+                filter: invert(100%);
+            }
+
+            .post_scrap {
+                background-color: #000;
+                border: 1px solid #000;
+                border-radius: 5px;
+                padding: 3px;
+                width: 40px;
+            }
+
+            .post_scrap img {
+                width: 100%;
+                filter: invert(100%);
+            }
+
+            .postBtn {
+                margin-top: 50px;
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+            }
         </style>
         <div id="view">
             <div id="top">
@@ -315,8 +348,12 @@
                     <div class="view_content">
                         <div class="post_note" th:utext="${post.post_content}"></div>
                         <div class="postBtn" th:if="${user != post.user_id}">
-                            <button class="post_report">通報</button>
-                            <button class="post_scrap">スクラップ</button>
+                            <button class="post_report">
+                                <img src="https://cdn-icons-png.flaticon.com/512/980/980829.png" alt="">
+                            </button>
+                            <button class="post_scrap">
+                                <img src="https://cdn-icons-png.flaticon.com/512/33/33277.png" alt="">
+                            </button>
                         </div>
                     </div>
                 </div>
