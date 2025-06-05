@@ -176,6 +176,7 @@
 
             .sel_cate_card {
                 position: relative;
+                cursor: pointer;
             }
 
             .sel_cate_card.active::after {
@@ -299,26 +300,26 @@
                             <div class="sel_cate_wrapper">
                                 <div class="sel_cate_card">
                                     <a class="sel_cate" hx-get="./list" data-board-id="" hx-target="#content"
-                                        hx-select="#content" hx-push-url="true">すべて</a>
+                                        hx-select="#content" hx-push-url="true" hx-swap="outerHTML">すべて</a>
                                 </div>
                                 <div class="sel_cate_card">
                                     <a class="sel_cate" hx-get="./list?board=6" data-board-id="6" hx-target="#middle"
-                                        hx-select="#middle" hx-push-url="true">コミュニティ
+                                        hx-select="#middle" hx-push-url="true" hx-swap="outerHTML">コミュニティ
                                     </a>
                                 </div>
                                 <div class="sel_cate_card">
                                     <a class="sel_cate" hx-get="./list?board=3" data-board-id="3" hx-target="#middle"
-                                        hx-select="#middle" hx-push-url="true">フリーマーケット
+                                        hx-select="#middle" hx-push-url="true" hx-swap="outerHTML">フリーマーケット
                                     </a>
                                 </div>
                                 <div class="sel_cate_card">
                                     <a class="sel_cate" hx-get="./list?board=4" data-board-id="4" hx-target="#middle"
-                                        hx-select="#middle" hx-push-url="true">演奏音源
+                                        hx-select="#middle" hx-push-url="true" hx-swap="outerHTML">演奏音源
                                     </a>
                                 </div>
                                 <div class="sel_cate_card">
                                     <a class="sel_cate" hx-get="./list?board=5" data-board-id="5" hx-target="#middle"
-                                        hx-select="#middle" hx-push-url="true">ライブ告知
+                                        hx-select="#middle" hx-push-url="true" hx-swap="outerHTML">ライブ告知
                                     </a>
                                 </div>
                             </div>
@@ -340,7 +341,7 @@
                         <div>
                             <button class="ctrlBtn" id="editPost" th:attr="hx-get='./write?edit=' + ${post.post_id}"
                                 hx-target="#content" hx-select="#content" hx-push-url="true"
-                                th:if="${user == post.user_id}">修正</button>
+                                th:if="${user == post.user_id}" hx-swap="outerHTML">修正</button>
                             <button class="ctrlBtn" id="delPost"
                                 th:if="${user == post.user_id} or ${#authorization.expression('hasRole(''A'')')}">削除</button>
                         </div>
@@ -359,10 +360,11 @@
                 </div>
                 <div id="bottom">
                     <div class="bottomUp">
-                        <button id="onPost" hx-get='./list' hx-target="#content" hx-select="#content"
-                            hx-push-url="true">リストへ</button>
+                        <button id="onPost" hx-get='./list' hx-target="#content" hx-select="#content" hx-push-url="true"
+                            hx-swap="outerHTML">リストへ</button>
                         <th:block th:if="${post.board_id != 7}">
-                            <a id="onPost" hx-get="./write" hx-target="#content" hx-push-url="true">作成</a>
+                            <a id="onPost" hx-get="./write" hx-target="#content" hx-push-url="true"
+                                hx-swap="outerHTML">作成</a>
                         </th:block>
                     </div>
                     <div id="comment" th:if="${post.board_id != 7}">
