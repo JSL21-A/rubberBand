@@ -298,7 +298,10 @@
 											<div class="record-info">
 												<span class="record-id" th:text="${record.recordId}" style="display:none;"></span>
 												<div class="record-title" th:text="${record.recordTitle}">公演のタイトル</div>
-												<div class="record-status" th:text="${record.recordStatus}">予定</div>
+												<div class="record-status" 
+												     th:text="${record.recordStatus == '완료' ? '完了' : (record.recordStatus == '예정' ? '予定' : record.recordStatus)}">
+												  状態
+												</div>
 												<div class="record-location" th:text="${record.recordLocation}">場所</div>
 												<div class="record-meta">
 													🕒 <span th:text="${record.recordTime}">時間</span> &nbsp;
