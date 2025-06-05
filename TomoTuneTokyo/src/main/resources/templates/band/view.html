@@ -40,15 +40,11 @@
 		
 
 		<!-- 리더 이미지: 값이 없거나 leaderInfo 자체가 null일 경우 기본 이미지 표시 -->
-		<img
-		  th:src="${leaderInfo == null 
-		            or leaderInfo.user_img == null 
-		            or #strings.isEmpty(leaderInfo.user_img)} 
-		          ? @{/images/defaultIcon.png} 
-		          : @{'/images'+${leaderInfo.user_img}}"
-		  class="leader-image-preview mb-2"
-		  style="width:60px; height:60px; border-radius:50%; object-fit:cover;"
-		  alt="プロフィール画像" />
+		<img th:src="@{${leader != null and leader.user_img != null and !#strings.isEmpty(leader.user_img) 
+						        ? '/images' + leader.user_img 
+						        : '/images/member1.png'}}" 
+						        alt="리더" class="member-img"
+						        style="width:180px; height:180px; border-radius:50%; object-fit:cover;">
 	</div>
 	<div class="leader-name" th:text="'リーダー・' + ${leader.stage_name}">리더・ガム</div>
 	<div id="profile-popup" style="display: none; position: absolute; top: 50px; left: 0; z-index: 9999; overflow: visible;">
