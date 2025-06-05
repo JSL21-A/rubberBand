@@ -122,7 +122,7 @@
                 getUrl=${isNotify} ? '/admin/notify' : './list'
             ">
                 <button id="write_to_list" th:attr="hx-get=@{${getUrl}(board=${boardId})}" hx-target="#content"
-                    hx-select="#content" hx-push-url="true">リストへ</button>
+                    hx-select="#content" hx-push-url="true" hx-swap="outerHTML">リストへ</button>
             </th:block>
             <button id="write_submit">作成</button>
         </div>
