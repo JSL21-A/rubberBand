@@ -31,20 +31,20 @@
 <div class="band-profile-area" style="position: relative;">
 	<!-- 팀 소개: 왼쪽 영역 -->
 	<div class="band-title">
-	    <span class="emoji">☀️</span> <strong th:text="${band_name}"></strong>
+	    <span class="emoji"></span> <strong th:text="${band_name}"></strong>
 	</div>
 
 	<!-- 리더 정보 -->
 <div class="band-leader">
 	<div class="leader-pic">
-		<img th:if="${leaderInfo != null and leaderInfo.user_img != null and !#strings.isEmpty(leaderInfo.user_img)}"
-			th:src="@{'/upload/' + ${leaderInfo.user_img}}" class="member-image-preview mb-2"
-			style="width:60px; height:60px; border-radius:50%; object-fit:cover;" alt="프로필">
+		
 
 		<!-- 리더 이미지: 값이 없거나 leaderInfo 자체가 null일 경우 기본 이미지 표시 -->
-		<img th:if="${leaderInfo == null or leaderInfo.user_img == null or #strings.isEmpty(leaderInfo.user_img)}"
-			th:src="@{/images/member1.png}" class="member-image-preview mb-2"
-			style="width:60px; height:60px; border-radius:50%; object-fit:cover;" alt="기본">
+		<img th:src="@{${leader != null and leader.user_img != null and !#strings.isEmpty(leader.user_img) 
+						        ? '/images' + leader.user_img 
+						        : '/images/member1.png'}}" 
+						        alt="리더" class="member-img"
+						        style="width:180px; height:180px; border-radius:50%; object-fit:cover;">
 	</div>
 	<div class="leader-name" th:text="'リーダー・' + ${leader.stage_name}">리더・ガム</div>
 	<div id="profile-popup" style="display: none; position: absolute; top: 50px; left: 0; z-index: 9999; overflow: visible;">
@@ -89,7 +89,7 @@
 <!-- 멤버들 -->
 <div class="band-members">
 	<div class="member" th:each="member : ${members}">
-		<img th:src="@{${member.user_img != null ? '/upload/' + member.user_img : '/images/default.png'}}"
+		<img th:src="@{${member.user_img != null ? '/images' + member.user_img : '/images/defaultIcon.png'}}"
 			src="/images/default.png" alt="멤버 프로필" class="profile-image" data-index="1">
 		<span th:text="${member.stage_name}"></span>
 	</div>
@@ -143,15 +143,15 @@
     </div>
 
     <div class="detail-content">
-        <h3>🎤 バンドの紹介</h3>
+        <h3> バンドの紹介</h3>
         <p th:text="${post.band_intro}"></p>
-        <h3>🎯 募集ポジション</h3>
+        <h3> 募集ポジション</h3>
         <p th:text="${post.recruitPosition}"></p>
-        <h3>🌍 活動地域</h3>
+        <h3> 活動地域</h3>
         <p th:text="${post.activityArea}"></p>
-        <h3>📯 こんな人を探しています！</h3>
+        <h3> こんな人を探しています！</h3>
         <p><strong th:text="${post.recruitCondition}"></strong></p>
-        <h3>🎵 好きなジャンル</h3>
+        <h3> 好きなジャンル</h3>
         <p th:text="${post.preferredGenres}"></p>
 		    </div>
 		</form>

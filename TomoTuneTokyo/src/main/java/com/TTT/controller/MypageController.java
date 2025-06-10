@@ -3,6 +3,7 @@ package com.TTT.controller;
 import java.nio.file.Path;
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -10,18 +11,22 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.TTT.domain.BandInsertVo;
 import com.TTT.domain.MyActiveDto;
 import com.TTT.domain.MypageDto;
 import com.TTT.domain.PostVo;
 import com.TTT.domain.UserDto;
 import com.TTT.domain.UserProfileDto;
+import com.TTT.security.CustomUserDetails;
 import com.TTT.service.MypageService;
 import com.TTT.service.UserService;
 
@@ -29,6 +34,11 @@ import java.nio.file.Paths;
 import java.nio.file.Files;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import java.security.Principal;
 
 @Controller
 @RequestMapping("/mypage")
@@ -131,11 +141,7 @@ public class MypageController {
 		UserProfileDto userProfile = mypageService.getUserProfileByUserId(userId);
 		model.addAttribute("userProfile", userProfile);
 		model.addAttribute("hasResume", hasResume);
-		//영배 추가(내 밴드 정보)
-		BandInsertVo myBand = mypageService.findMyBand(userId);
-		model.addAttribute("myBand", myBand);
-		model.addAttribute("currentUserId", userId);
-			return "mypage/accountSetting_popup";
+		return "mypage/accountSetting_popup";
 	}
 
 	// 이력서 삭제
@@ -260,7 +266,7 @@ public class MypageController {
 
 		// 닉네임 유효성 검사
 		if (!nickname.matches("^[ぁ-んァ-ン一-龥a-zA-Z0-9가-힣]+$")) {
-			redirectAttrs.addFlashAttribute("errorMessage", "ニックネームに空白や記号は使えません。別のニックネームを入力してください。");
+			redirectAttrs.addFlashAttribute("errorMessage", "ニックネームに空白や記号は使えません。");
 			return "redirect:/mypage/profileEdit";
 		}
 		if (nickname.matches("^[0-9]+$")) {
@@ -321,40 +327,19 @@ public class MypageController {
 		// 서비스 업데이트 호출
 		mypageService.updateUserProfile(userProfileDto);
 		redirectAttrs.addFlashAttribute("successMessage", "プロフィールが更新されました。");
+		
+		String username = principal.getName();
+		UserDto updatedUser = userService.findByUsername(username);
+		CustomUserDetails newDetails = new CustomUserDetails(updatedUser);
+		Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication();
+		Collection<? extends GrantedAuthority> roles = currentAuth.getAuthorities();
+		
+		UsernamePasswordAuthenticationToken newAuth = 
+				new UsernamePasswordAuthenticationToken(newDetails, currentAuth.getCredentials(), roles);
+		
+		SecurityContextHolder.getContext().setAuthentication(newAuth);
 
 		return "redirect:/mypage/account";
-	}
-	// 나의활동 이동
-
-	@GetMapping("/activity")
-	public String showMyActivity(Model model, Principal principal) {
-		if (principal != null) {
-			String username = principal.getName();
-			String userId = userService.findByUsername(username).getUser_id();
-
-			// 댓글 목록 조회
-			List<MyActiveDto> commentList = mypageService.getCommentsByUserId(userId);
-
-			model.addAttribute("commentList", commentList); // 모델에 추가
-		}
-
-		return "mypage/myActive";
-	}
-	
-
-
-	// 댓글 작성한 게시글 이동
-	@GetMapping("/{boardId}/post/{postId}")
-	public String viewPost(@PathVariable Long boardId, @PathVariable Long postId, Model model) {
-
-		PostVo post = mypageService.getPostById(postId);
-
-		if (post == null || !post.getBoard_id().equals(boardId)) {
-			return "error/404"; // 존재하지 않으면 에러 페이지
-		}
-
-		model.addAttribute("post", post);
-		return "board/postView";
 	}
 
 	// 비밀번호 변경 (변경버튼 클릭 > 현재 비밀번호 인증 + 새로운 비밀번호 입력 + 일치여부확인)
@@ -380,6 +365,80 @@ public class MypageController {
 		boolean updated = mypageService.updateUserPassword(userId, newPassword);
 		result.put("success", updated);
 		return result;
+	}
+
+	// 나의활동 이동 (투고, 코멘트, 스크랩, 지원현황)
+
+	// 나의활동 페이지
+	@GetMapping("/activity")
+	public String redirectToDefaultActivity() {
+		return "redirect:/mypage/activity/posts";
+	}
+
+	// 나의활동 네비바
+	@GetMapping("/activity/{mode}")
+	public String viewMyActivity(@PathVariable("mode") String mode, Principal principal, Model model) {
+		String userId = getCurrentUserId(principal);
+
+		if ("posts".equals(mode)) {
+			List<PostVo> postContentList = mypageService.getMyPosts(userId);
+			model.addAttribute("postContentList", postContentList);
+		} else if ("comments".equals(mode)) {
+			List<MyActiveDto> commentContentList = mypageService.getMyComments(userId);
+			model.addAttribute("commentContentList", commentContentList);
+		} else {
+			// 스크랩, 지원현황 추가 예정
+		}
+
+		model.addAttribute("mode", mode);
+		return "mypage/myActive";
+	}
+
+	// 게시글 이동
+	@GetMapping("/user/view")
+	public String viewPostByQuery(@RequestParam("post") Long postId, Model model) {
+		PostVo post = mypageService.getPostById(postId);
+
+		if (post == null) {
+			return "error/404";
+		}
+
+		model.addAttribute("post", post);
+		return "board/postDetail";
+	}
+
+	// 댓글 삭제
+	@PostMapping("/deleteComments")
+	public String deleteComments(@RequestParam("commentIds") List<Long> commentIds, Principal principal,
+			RedirectAttributes redirectAttributes) {
+		String userId = getCurrentUserId(principal);
+
+		// 서비스에서 삭제 처리
+		boolean success = mypageService.deleteCommentsByIds(userId, commentIds);
+
+		if (success) {
+			redirectAttributes.addFlashAttribute("successMessage", "コメントが削除されました。");
+		} else {
+			redirectAttributes.addFlashAttribute("errorMessage", "削除に失敗しました。");
+		}
+
+		return "redirect:/mypage/activity/comments";
+	}
+
+	// 게시글 삭제
+	@PostMapping("/deletePosts")
+	public String deletePosts(@RequestParam("postIds") List<Long> postIds, Principal principal,
+			RedirectAttributes redirectAttributes) {
+		String userId = getCurrentUserId(principal);
+		boolean deleted = mypageService.deletePostsByIds(userId, postIds);
+
+		if (deleted) {
+			redirectAttributes.addFlashAttribute("successMessage", "投稿が削除されました。");
+		} else {
+			redirectAttributes.addFlashAttribute("errorMessage", "削除に失敗しました。");
+		}
+
+		return "redirect:/mypage/activity/posts";
 	}
 
 }

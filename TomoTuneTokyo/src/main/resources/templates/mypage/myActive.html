@@ -1,158 +1,284 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	layout:decorate='~{layouts/layout}'>
+
 <head>
-  <meta charset="UTF-8">
-  <title>マイアクティビティ</title>
-  <style>
-    body {
-      font-family: 'Noto Sans JP', sans-serif;
-      background: #f8f9fa;
-      margin: 0;
-      padding: 2rem;
-      color: #222;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>マイアクティビティ</title>
+<style>
+@import
+	url('https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap');
 
-    .tabs {
-      display: flex;
-      gap: 1.5rem;
-      border-bottom: 2px solid #ddd;
-      margin-bottom: 1rem;
-    }
+@font-face {
+	font-family: "kiwi";
+	src: url("https://fonts.google.com/specimen/Kiwi+Maru?lang=ja_Jpan");
+	font-weight: normal;
+	font-style: normal;
+}
 
-    .tab {
-      font-weight: bold;
-      padding-bottom: 0.5rem;
-      cursor: pointer;
-      color: #333;
-      border-bottom: 3px solid transparent;
-    }
+body {
+	font-family: 'Noto Sans JP', sans-serif;
+	background: #f8f9fa;
+	margin: 0;
+	color: #222;
+	overflow-y: auto; /* 세로 스크롤 허용 */
+	font-family: "Kiwi Maru", serif;
+}
 
-    .tab.active {
-      border-color: #000;
-    }
+.tabs {
+	display: flex;
+	gap: 1.5rem;
+	border-bottom: 2px solid #ddd;
+	margin-bottom: 1rem;
+	width: 110%;
+}
 
-    table {
-      width: 100%;
-      background: white;
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: 0 0 5px rgba(0,0,0,0.05);
-      border-collapse: collapse;
-      margin-bottom: 1rem;
-    }
+.tab {
+	font-weight: bold;
+	padding-bottom: 0.5rem;
+	cursor: pointer;
+	color: #333;
+	border-bottom: 3px solid transparent;
+	text-decoration: none;
+}
 
-    th, td {
-      text-align: left;
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid #eee;
-    }
+.tab.active {
+	border-color: #000;
+	text-decoration: none;
+}
 
-    td a {
-      color: #007bff;
-      text-decoration: none;
-    }
+table {
+	width: 110%;
+	background: white;
+	border-radius: 6px;
+	overflow: hidden;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+	border-collapse: collapse;
+	margin-bottom: 1rem;
+}
 
-    td a:hover {
-      text-decoration: underline;
-    }
+th, td {
+	text-align: left;
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid #eee;
+}
 
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
+td a {
+	color: #007bff;
+	text-decoration: none;
+}
 
-    input[type="text"] {
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      width: 200px;
-    }
+td a:hover {
+	text-decoration: none;
+}
 
-    button {
-      padding: 0.5rem 1rem;
-      background: #000;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+.controls {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-top: 1rem;
+	justify-content: center;
+}
 
-    button:hover {
-      background: #333;
-    }
+input[type="text"] {
+	padding: 0.5rem 0.75rem;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	width: 50px;
+	height: 40px;
+	font-size: 14px;
+	box-sizing: border-box;
+}
 
-    .pagination {
-      text-align: center;
-      margin-top: 1.5rem;
-    }
+button {
+	width: 80px;
+	height: 40px;
+	padding: 0;
+	background: #000;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	font-size: 14px;
+	line-height: 1;
+	cursor: pointer;
+	text-align: center;
+}
 
-    .checkbox {
-      text-align: center;
-    }
+button:hover {
+	background: #333;
+}
 
-    .container {
-      max-width: 720px;
-      margin: 0 auto;
-    }
-  </style>
+.pagination {
+	text-align: center;
+	margin-top: 1.5rem;
+}
+
+.checkbox {
+	text-align: center;
+}
+
+.container {
+	max-width: 720px;
+	margin: 0 auto;
+}
+
+.active-page {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.search-input {
+	width: 200px;
+}
+
+.delete-btn {
+	transform: translateX(70px);
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h2>マイアクティビティ</h2>
+	<meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+	<div id="content" layout:fragment="content" th:fragment="content">
 
-    <div class="tabs">
-      <div class="tab">投稿</div>
-      <div class="tab active">コメント</div>
-      <div class="tab">いいね</div>
-      <div class="tab">スクラップ</div>
-      <div class="tab">バンド応募履歴</div>
-    </div>
+		<div class="container">
 
-    <form method="post" action="/comment/delete">
-      <table>
-        <thead>
-          <tr>
-            <th class="checkbox"><input type="checkbox" id="checkAll" onclick="toggleAll(this)"></th>
-            <th>コメント内容</th>
-            <th>投稿日</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="comment : ${commentList}">
-            <td class="checkbox">
-              <input type="checkbox" name="commentIds" th:value="${comment.commentId}">
-            </td>
-            <td>
- <a th:href="@{/board/{boardId}/post/{postId}(boardId=${comment.boardId}, postId=${comment.postId})}"
-   th:text="${comment.commentContent}">
-</a>
+			<div class="tabs">
+				<a class="tab"
+					th:classappend="${mode} == 'comments' ? ' active' : ''"
+					href="/mypage/activity/comments">コメント</a> <a class="tab"
+					th:classappend="${mode} == 'posts' ? ' active' : ''"
+					href="/mypage/activity/posts">投稿</a>
+				<!--  <a class="tab" th:classappend="${mode} == 'scraps' ? ' active' : ''" href="/mypage/activity">スクラップ</a>
+	<a class="tab" th:classappend="${mode} == 'applies' ? ' active' : ''" href="/mypage/activity">バンド応募履歴</a>-->
+			</div>
 
-</td>
+			<!-- 投稿 리스트 -->
+			<div th:if="${mode} == 'posts'">
+				<form method="post" action="/mypage/deletePosts"
+					th:action="@{/mypage/deletePosts}">
+					<input type="hidden" th:name="${_csrf.parameterName}"
+						th:value="${_csrf.token}" />
 
-            <td th:text="${#temporals.format(comment.commentCreatedAt.toLocalDateTime(), 'yyyy-MM-dd')}">2025-01-01</td>
-          </tr>
-        </tbody>
-      </table>
+					<table>
+						<thead>
+							<tr>
+								<th class="checkbox"><input type="checkbox"
+									id="checkAllPosts" onclick="toggleAllPosts(this)"></th>
+								<th>タイトル</th>
+								<th>投稿日</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								th:if="${postContentList == null or #lists.isEmpty(postContentList)}">
+								<td colspan="3" style="text-align: center;">投稿された記事はありません。</td>
+							</tr>
+							<tr th:each="post : ${postContentList}">
+								<td class="checkbox"><input type="checkbox" name="postIds"
+									th:value="${post.post_id}" /></td>
+								<td><a th:href="@{/user/view(post=${post.post_id})}"
+									th:text="${post.post_title} ?: 'タイトルなし'"></a></td>
+								<td
+									th:text="${#temporals.format(post.created_at, 'yyyy-MM-dd')}"></td>
+							</tr>
+						</tbody>
+					</table>
 
-      <div class="controls">
-        <button type="submit">削除</button>
-        <input type="text" name="keyword" placeholder="タイトルで検索">
-        <button type="submit" formaction="/comment/search">検索</button>
-      </div>
-    </form>
+					<div class="controls" style="justify-content: flex-end;">
+						<button type="submit" class="delete-btn">削除</button>
+					</div>
+					<div class="controls">
+						<input type="text" name="keyword" class="search-input"
+							placeholder="キーワードで検索">
+						<button type="submit" formaction="/comment/search">検索</button>
+					</div>
+				</form>
+			</div>
 
-    <div class="pagination">
-      <span>1</span>
-    </div>
-  </div>
+			<!-- コメント 리스트 + 삭제 + 검색 -->
+			<div th:if="${mode} == 'comments'">
+				<form method="post" action="/mypage/deleteComments"
+					th:action="@{/mypage/deleteComments}">
+					<input type="hidden" th:name="${_csrf.parameterName}"
+						th:value="${_csrf.token}" />
+					<table>
+						<thead>
+							<tr>
+								<th class="checkbox"><input type="checkbox" id="checkAll"
+									onclick="toggleAll(this)"></th>
+								<th>コメント</th>
+								<th>投稿日</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								th:if="${commentContentList == null or #lists.isEmpty(commentContentList)}">
+								<td colspan="3" style="text-align: center;">投稿された記事はありません。</td>
+							</tr>
+							<tr th:each="comment : ${commentContentList}">
+								<td class="checkbox"><input type="checkbox"
+									name="commentIds" th:value="${comment.commentId}"></td>
+								<td><a th:href="@{/user/view(post=${comment.postId})}"
+									th:text="${comment.commentContent}"></a></td>
+								<td
+									th:text="${#dates.format(comment.commentCreatedAt, 'yyyy-MM-dd')}"></td>
+							</tr>
+						</tbody>
+					</table>
+					<!-- 삭제 / 검색 -->
+					<div class="controls" style="justify-content: flex-end;">
+						<button type="submit" class="delete-btn">削除</button>
+					</div>
+					<div class="controls">
+						<input type="text" name="keyword" class="search-input"
+							placeholder="キーワードで検索">
+						<button type="submit" formaction="/comment/search">検索</button>
+					</div>
 
-  <script>
+				</form>
+			</div>
+
+			<!-- コメント 페이지네이션 -->
+			<!-- 이전 페이지 버튼 -->
+			<a th:if="${commentList != null and commentList.hasPrevious()}"
+				th:href="@{/mypage/activity(page=${commentList.number - 1})}">&laquo;
+				前</a>
+
+			<!-- 페이지 번호 
+		<span th:if="${commentList != null}"
+			th:each="pageNum : ${#.sequence(0, commentList.totalPages - 1)}">
+			<a th:href="@{/mypage/activity(page=${pageNum})}"
+			th:text="${pageNum + 1}"
+			th:classappend="${pageNum == commentList.number} ? ' active-page' : ''">
+		</a>
+		</span>
+
+		<!-- 다음 페이지 버튼 -->
+			<!--<a th:if="${commentList != null and commentList.hasNext()}"
+			th:href="@{/mypage/activity(page=${commentList.number + 1})}">次
+			&raquo;</a>-->
+
+		</div>
+
+		<script>
+	//댓글 체크박스
     function toggleAll(source) {
       const checkboxes = document.querySelectorAll('input[name="commentIds"]');
       checkboxes.forEach(cb => cb.checked = source.checked);
     }
   </script>
+
+		<script>
+  // 게시글 체크박스
+  function toggleAllPosts(source) {
+    const checkboxes = document.querySelectorAll('input[name="postIds"]');
+    checkboxes.forEach(cb => cb.checked = source.checked);
+  }
+</script>
 </body>
+</div>
 </html>

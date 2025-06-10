@@ -18,6 +18,10 @@ body {
     padding: 1% 2%;
     min-height: 30vh;
     width: 100%;
+    word-break: break-word;
+    /* 단어 단위로 줄바꿈 허용 */
+    white-space: pre-wrap;
+    /* 줄바꿈도 인식되게 */
 }
 
 .write_note-editable img {
@@ -155,4 +159,71 @@ body {
 
 #write_img-selector {
     display: none;
+}
+
+.write_btn-area button {
+    padding: 0.4rem 0.8rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: #2d2d2d;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.write_text-effect {
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    box-shadow: 1px 1px 1px 1px #bbb;
+    border-radius: 5px;
+    border: none;
+}
+
+.write_text-effect.toggled {
+    background-color: #2d2d2d;
+    color: #fff;
+    box-shadow: none;
+    border: none;
+}
+
+#write_btn-image {
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    box-shadow: 1px 1px 1px 1px #bbb;
+    border-radius: 5px;
+    border: none;
+    position: relative;
+    top: 6px;
+}
+
+#write_btn-image img{
+    width: 80%;
+}
+
+#write_youtube-btn img{
+    width: 80%;
+}
+
+#write_youtube-btn{
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    box-shadow: 1px 1px 1px 1px #bbb;
+    border-radius: 5px;
+    border: none;
+    position: relative;
+    top: 6px;
+}
+
+#write_font-size {
+    width: 55px;
+    height: 30px;
+    background-color: #fff;
+    box-shadow: 1px 1px 1px 1px #bbb;
+    border-radius: 5px;
+    border: none;
+    padding: 0 5px;
 }

@@ -38,7 +38,22 @@ public interface BandInsertSelectMapper {
 	String selectEmailByUserId(@Param("userId") String userId);
 
 	// 리더 insert 정보 불러오기
-	@Select("SELECT band_member_id, user_id, stage_name, member_position, member_mbti, favorite_band, member_motto, photo FROM band_member WHERE band_id = #{bandId} AND member_type = 'LEADER'")
+	@Select("SELECT \r\n"
+			+ "    bm.band_member_id,\r\n"
+			+ "    bm.user_id,\r\n"
+			+ "    bm.stage_name,\r\n"
+			+ "    bm.member_position,\r\n"
+			+ "    bm.member_mbti,\r\n"
+			+ "    bm.favorite_band,\r\n"
+			+ "    bm.member_motto,\r\n"
+			+ "    bm.photo,\r\n"
+			+ "    up.user_img\r\n"
+			+ "FROM band_member bm\r\n"
+			+ "LEFT JOIN user_profile up\r\n"
+			+ "    ON bm.user_id = up.user_id\r\n"
+			+ "WHERE \r\n"
+			+ "    bm.band_id = #{bandId} "
+			+ "    AND bm.member_type = 'LEADER'")
 	BandInsertVo selectLeaderInfo(@Param("bandId") Long bandId);
 
 	// 활동 사진 조회
@@ -146,5 +161,7 @@ public interface BandInsertSelectMapper {
 	// 리더 user_id 불러오기
 	@Select("select user_id from band_member where band_id = #{band_id} and member_type = 'LEADER'")
 	String findLeaderId(@Param("band_id") Long band_id);
+
+	
 	
 }

@@ -240,4 +240,7 @@ public class BandInsertSelectService {
 	public String findLeaderId(Long band_id) {
 		return bandinsertselectMapper.findLeaderId(band_id);
 	}
+	
+	
+
 }
