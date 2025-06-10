@@ -299,5 +299,36 @@
 		</foreach>
 	</delete>
 
+	<!-- 지원현황(리더) -->
+	<select id="findApplyStatusByWriter" resultType="com.TTT.domain.MyActiveDto">
+	SELECT
+		pa.post_apply_id AS postApplyId,
+		pa.post_id AS postId,
+		pa.resume_id AS resumeId,
+		pa.user_id AS userId,
+		u.username AS username, 
+		brp.title AS postTitle,
+		pa.created_at AS commentCreatedAt 
+	FROM
+	post_apply pa
+	JOIN
+	band_recruit_post brp ON pa.post_id = brp.post_id
+	JOIN
+	users u ON pa.user_id = u.user_id
+	WHERE
+	brp.user_id = #{userId}
+	ORDER BY
+	pa.created_at DESC
+</select>
+
+
+
+
+
+
+
+
+
+
 
 </mapper>

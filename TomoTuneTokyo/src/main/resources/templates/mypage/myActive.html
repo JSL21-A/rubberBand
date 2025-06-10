@@ -151,7 +151,10 @@ button:hover {
 					th:classappend="${mode} == 'comments' ? ' active' : ''"
 					href="/mypage/activity/comments">コメント</a> <a class="tab"
 					th:classappend="${mode} == 'posts' ? ' active' : ''"
-					href="/mypage/activity/posts">投稿</a>
+					href="/mypage/activity/posts">投稿</a> <a class="tab"
+					th:classappend="${mode} == 'applies' ? ' active' : ''"
+					href="/mypage/activity/applies">応募状況</a>
+
 				<!--  <a class="tab" th:classappend="${mode} == 'scraps' ? ' active' : ''" href="/mypage/activity">スクラップ</a>
 	<a class="tab" th:classappend="${mode} == 'applies' ? ' active' : ''" href="/mypage/activity">バンド応募履歴</a>-->
 			</div>
@@ -261,6 +264,36 @@ button:hover {
 			<!--<a th:if="${commentList != null and commentList.hasNext()}"
 			th:href="@{/mypage/activity(page=${commentList.number + 1})}">次
 			&raquo;</a>-->
+
+			<!-- 応募状況 리스트 -->
+			<div th:if="${mode} == 'applies'">
+				<table>
+					<thead>
+						<tr>
+							<th>投稿タイトル</th>
+							<th>応募者</th>
+							<th>履歴書</th>
+							<th>応募日</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="apply : ${applyStatusList}">
+							<td th:text="${apply.postTitle}">投稿タイトル</td>
+							<td th:text="${apply.userName}">応募者</td>
+							<td><a
+								th:href="@{'/mypage/resumeView?user=' + ${apply.userId}}">見る</a>
+							</td>
+							<td
+								th:text="${#temporals.format(apply.createdAt, 'yyyy-MM-dd HH:mm')}">2025-06-10</td>
+						</tr>
+						<tr th:if="${#lists.isEmpty(applyStatusList)}">
+							<td colspan="4" style="text-align: center;">応募がまだありません。</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+
 
 		</div>
 

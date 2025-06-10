@@ -440,5 +440,16 @@ public class MypageController {
 
 		return "redirect:/mypage/activity/posts";
 	}
+	
+	//지원현황(리더)
+	@GetMapping("/activity/applies")
+	public String viewApplyStatus(Model model, Principal principal) {
+	    String userId = getCurrentUserId(principal);
+	    List<MyActiveDto> applyStatusList = mypageService.getApplyStatusByWriter(userId);
+	    model.addAttribute("applyStatusList", applyStatusList);
+	    model.addAttribute("mode", "applies");
+	    return "mypage/myActive";
+	}
+
 
 }
