@@ -363,7 +363,7 @@
                         <button id="onPost" hx-get='./list' hx-target="#content" hx-select="#content" hx-push-url="true"
                             hx-swap="outerHTML">リストへ</button>
                         <th:block th:if="${post.board_id != 7}">
-                            <a id="onPost" hx-get="./write" hx-target="#content" hx-push-url="true"
+                            <a id="onPost" hx-get="./write" hx-target="#content" hx-select="#content" hx-push-url="true"
                                 hx-swap="outerHTML">作成</a>
                         </th:block>
                     </div>
