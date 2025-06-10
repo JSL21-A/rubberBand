@@ -2153,6 +2153,7 @@ textarea::placeholder {
     height: 100%;
     object-fit: cover;
     /* ✅ 비율 유지하면서 꽉 차게 */
+	object-position: center center;
     display: block;
 }
 
