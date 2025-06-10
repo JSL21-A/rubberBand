@@ -9,7 +9,7 @@ function chatJS() {
       }
     });
 
-    const APP_ID = '016A2743-AB66-4FFF-9F77-D08966152ABB';  // 본인 SendBird App ID
+    const APP_ID = '0229B38C-FB09-4BFA-A219-8A89D5343E0B';  // 본인 SendBird App ID
     let sb = null, channelsQuery = null, currentChannel = null;
 
     // ─────────────────────────────────────────
