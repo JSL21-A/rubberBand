@@ -104,7 +104,7 @@
 	</select>
 
 	<!-- 이력서 조회 -->
-	<select id="findById" parameterType="long"
+	<select id="findById" parameterType="int"
 		resultType="com.TTT.domain.MypageDto">
 		SELECT
 		resume_id AS resumeId,
@@ -126,7 +126,7 @@
 		detail_time AS detailTime,
 		note
 		FROM resume
-		WHERE resume_id = #{id}
+		WHERE resume_id = #{resume_id}
 	</select>
 
 
@@ -308,7 +308,7 @@
 		pa.user_id AS userId,
 		u.username AS username, 
 		brp.title AS postTitle,
-		pa.created_at AS commentCreatedAt 
+		pa.created_at AS createdAt 
 	FROM
 	post_apply pa
 	JOIN
@@ -321,10 +321,7 @@
 	pa.created_at DESC
 </select>
 
-
-
-
-
+<!-- 이력력서 열람 (resume_id기준으로) -->
 
 
 

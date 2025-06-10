@@ -279,23 +279,36 @@ button:hover {
 					<tbody>
 						<tr th:each="apply : ${applyStatusList}">
 							<td th:text="${apply.postTitle}">投稿タイトル</td>
-							<td th:text="${apply.userName}">応募者</td>
-							<td><a
-								th:href="@{'/mypage/resumeView?user=' + ${apply.userId}}">見る</a>
+							<td th:text="${apply.username}">応募者</td>
+							<td>
+								<button type="button" class="resume-btn"
+									th:attr="data-resume-id=${apply.resumeId}">見る</button>
 							</td>
-							<td
-								th:text="${#temporals.format(apply.createdAt, 'yyyy-MM-dd HH:mm')}">2025-06-10</td>
+								<td
+									th:text="${#dates.format(apply.createdAt, 'yyyy-MM-dd')}"></td>
 						</tr>
+
 						<tr th:if="${#lists.isEmpty(applyStatusList)}">
 							<td colspan="4" style="text-align: center;">応募がまだありません。</td>
 						</tr>
 					</tbody>
+
 				</table>
 			</div>
 
 
 
 		</div>
+
+		<div id="resumeModal"
+			style="display: none; position: fixed; top: 10%; left: 50%; transform: translateX(-50%); background: #fff; border: 1px solid #ccc; padding: 20px; z-index: 1000; width: 80%; max-width: 600px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);">
+			<button onclick="closeModal()"
+				style="float: right; background: none; border: none; font-size: 20px;">&times;</button>
+			<div id="resumeContent">Loading...</div>
+		</div>
+		<div id="modalOverlay"
+			style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;"
+			onclick="closeModal()"></div>
 
 		<script>
 	//댓글 체크박스
@@ -312,6 +325,33 @@ button:hover {
     checkboxes.forEach(cb => cb.checked = source.checked);
   }
 </script>
+
+		<script>
+		document.addEventListener("DOMContentLoaded", function() {
+			  const buttons = document.querySelectorAll(".resume-btn");
+
+			  buttons.forEach(button => {
+			    button.addEventListener("click", function() {
+			      const resumeId = this.getAttribute("data-resume-id");
+			      if (!resumeId || resumeId === "null") {
+			        alert("이력서 정보가 존재하지 않습니다.");
+			        return;
+			      }
+
+			      fetch(`/mypage/resumeView?resumeId=${resumeId}`)
+			        .then(response => response.text())
+			        .then(html => {
+			          document.getElementById("resumeContent").innerHTML = html;
+			          document.getElementById("resumeModal").style.display = "block";
+			          document.getElementById("modalOverlay").style.display = "block";
+			        })
+			        .catch(error => {
+			          document.getElementById("resumeContent").innerText = "エラーが発生しました。";
+			        });
+			    });
+			  });
+			});
+
+</script>
 </body>
-</div>
 </html>
