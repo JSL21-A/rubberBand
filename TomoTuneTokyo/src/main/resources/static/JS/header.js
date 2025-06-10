@@ -70,10 +70,12 @@ function headerJS() {
 
     //헤더 사이드 메뉴 슬라이드
     //.off는 중복바인딩되면 눌리긴하는데 실행해야할게 실행이 안되기때문에 한번 해제 후 다시 바인딩
-    $(document).off('click', '#hamburgerBtn').on("click", '#hamburgerBtn', function (e) {
-        e.stopPropagation(); // 문서 클릭에 의한 즉시 닫힘 방지
-        $("#slideMenu").toggleClass("open");
-    });
+    $(document)
+        .off("click", "#hamburgerBtn")
+        .on("click", "#hamburgerBtn", function (e) {
+            e.stopPropagation(); // 문서 클릭에 의한 즉시 닫힘 방지
+            $("#slideMenu").toggleClass("open");
+        });
 
     $(document).on("click", function (e) {
         if (!$(e.target).closest("#hamburgerBtn, #slideMenu").length) {
@@ -160,7 +162,6 @@ function headerJS() {
             document.getElementById("mainPane").style.display = "block";
         } else {
             // notification 외의 영역 클릭 시 메뉴 닫기 막음
-            console.log("??");
             e.stopPropagation();
         }
     });
@@ -388,7 +389,4 @@ function headerJS() {
     //     document.getElementById("notificationPane").style.display = "none";
     //     document.getElementById("mainPane").style.display = "block";
     // }
-
-    
-
 }

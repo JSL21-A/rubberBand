@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap");
 
 @media (max-width: 768px) {
     :root {
@@ -159,8 +158,8 @@
 }
 
 .card-front img {
-	width: 100%;
-	height: auto;
+    width: 100%;
+    height: auto;
 }
 
 .card-back {
@@ -170,22 +169,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
 }
 
 .card-back h1 {
-	text-align: center;
-	font-size: 4rem;
-	margin: auto 0;
-	  font-family: "Dela Gothic One", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+    text-align: center;
+    font-size: 4rem;
+    margin: auto 0;
+    font-family: "Dela Gothic One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 #rotateBtn {
     font-size: 100px;
     border: 0;
     background-color: transparent;
+    color: #fff;
 }
 
 /* ── 입력창 통일 ── */
