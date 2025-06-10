@@ -722,11 +722,111 @@
 				});
 			});
 		</script>
+			if ($target.length > 0) {
+				$target.find('.selected-member-info').html(`<img src="${image}" class="img-circle" style="width:100px;">`);
+				$target.find('.nickname-display').val(name);
+				$target.find('input[name="user_id_list[]"]').val(userId);
+			} else {
+				console.warn('❌ 해당 index의 멤버 블록을 찾을 수 없습니다.');
+			}
+		}
+
+		$('#memberSearchPopup').modal('hide');
+	});
+
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // ✅ 검색 파라미터 제거
+    const url = new URL(window.location.href);
+    if (url.searchParams.has("keyword")) {
+      url.searchParams.delete("keyword");
+      window.history.replaceState({}, document.title, url.pathname + url.search);
+    }
+  });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const tags = document.querySelectorAll('a.tag');
+
+  tags.forEach(tag => {
+    const param = tag.getAttribute('href').split('=')[0].replace('?', '');
+    const value = tag.getAttribute('href').split('=')[1];
+
+    tag.addEventListener('click', function (e) {
+      e.preventDefault(); // 기본 링크 이동 막기
+
+      const url = new URL(window.location.href);
+      const current = url.searchParams.get(param);
+
+      if (current === value) {
+        url.searchParams.delete(param); // 현재 선택된 값 → 제거 (해제)
+      } else {
+        url.searchParams.set(param, value); // 새로운 값 → 설정
+      }
+
+      window.location.href = url.toString(); // 새 URL로 이동
+    });
+  });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const url = new URL(window.location.href);
+  const params = url.searchParams;
+
+  document.querySelectorAll('.tag').forEach(tag => {
+    const href = tag.getAttribute('href');
+    if (!href) return;
+
+    const match = href.match(/[?&]([^=]+)=([^&]+)/);
+    if (!match) return;
+
+    const key = match[1];
+    const value = match[2];
+
+    // 현재 URL 파라미터와 일치하면 active 클래스 추가
+    if (params.get(key) === value) {
+      tag.classList.add('active');
+    }
+
+    // 클릭 시 리로드 없이 선택/해제
+    tag.addEventListener('click', function (e) {
+      e.preventDefault();
+      const current = params.get(key);
+
+      if (current === value) {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+
+      window.location.href = url.pathname + '?' + params.toString();
+    });
+  });
+});
+</script>
+
+<script>
+  $('#memberSearchPopup').on('show.bs.modal', function () {
+    const $modalDialog = $(this).find('.modal-dialog');
+
+    $modalDialog.css({
+      'margin-top': '15vh',
+      'margin-bottom': 'auto'
+    });
+
+    $(this).find('.modal-body').scrollTop(0);
+  });
+</script>
 
 
 
 
-	</div>
+
+</div>
 </body>
 
 </html>

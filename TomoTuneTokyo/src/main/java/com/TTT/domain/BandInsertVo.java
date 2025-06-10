@@ -56,4 +56,7 @@ public class BandInsertVo {
 	  // users 테이블
 	  private String email;
 	  
+	
+
+	  
 }

@@ -161,5 +161,7 @@ public interface BandInsertSelectMapper {
 	// 리더 user_id 불러오기
 	@Select("select user_id from band_member where band_id = #{band_id} and member_type = 'LEADER'")
 	String findLeaderId(@Param("band_id") Long band_id);
+
+	
 	
 }
