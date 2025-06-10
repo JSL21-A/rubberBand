@@ -309,5 +309,11 @@ public class MypageService {
 			return false;
 		}
 	}
+	
+	//지원현황(리더)
+	public List<MyActiveDto> getApplyStatusByWriter(String userId) {
+	    return mypageMapper.findApplyStatusByWriter(userId);
+	}
+
 
 }

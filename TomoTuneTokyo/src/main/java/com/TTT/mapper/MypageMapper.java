@@ -90,5 +90,8 @@ public interface MypageMapper {
 	//게시글 삭제
 	int deletePostsByIds(@Param("userId") String userId, @Param("postIds") List<Long> postIds);
 
+	// 지원현황(리더)
+	List<MyActiveDto> findApplyStatusByWriter(@Param("userId") String userId);
+
 
 }

@@ -11,8 +11,11 @@ public class MyActiveDto {
     private long postId;
     private long boardId;
     private String userId;
+    private String username;
     private String commentContent;
     private Timestamp commentCreatedAt;
+    private Long postApplyId;      
+    private Long resumeId;         
+    private String postTitle;      
    
-
 }
