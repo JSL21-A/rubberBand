@@ -206,7 +206,7 @@
                 margin: 0 auto;
                 margin-bottom: calc(2% + 40px);
                 background-color: #fff;
-                border-radius: 30px;
+                border-radius: 0px 0px 30px 30px;
                 box-shadow: 2px 2px 2px 2px #bbb;
                 padding: 2%;
             }
@@ -238,7 +238,6 @@
                 color: white;
                 border: none;
                 cursor: pointer;
-                transition: background-color 0.2s ease;
             }
 
             .ctrlBtn {
@@ -285,6 +284,72 @@
                 display: flex;
                 gap: 10px;
                 justify-content: center;
+            }
+
+            #viewComment li {
+                list-style: none;
+                box-shadow: 0px 1px 0px 0px #bbb;
+                margin-top: 10px;
+            }
+
+            .commentUser,
+            .commentWrapper {
+                display: flex;
+            }
+
+            .commentDate {
+                font-size: 12px;
+            }
+
+            .commentId {
+                width: 10%;
+                font-size: 20px;
+            }
+
+            .commentWrapper {
+                justify-content: space-between;
+            }
+
+            #comment_submit,
+            .comment_delete {
+                padding: 0.4rem 0.8rem;
+                font-size: 1rem;
+                border-radius: 5px;
+                background-color: #2D2D2D;
+                color: white;
+                border: none;
+                cursor: pointer;
+            }
+
+            #postComment {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            #comment_submit {
+                float: right;
+            }
+
+            .comment_report {
+                padding: 0.4rem 0.8rem;
+                font-size: 1rem;
+                border-radius: 5px;
+                background-color: #fff;
+                color: #000;
+                border: none;
+                cursor: pointer;
+                box-shadow: 0px 0px 2px 0px #bbb;
+            }
+
+            #commentContent {
+                width: 100%;
+                height: 100px;
+                resize: none;
+            }
+
+            #submitWrapper {
+                width: 100%;
             }
         </style>
         <div id="view">
@@ -373,23 +438,31 @@
                                 <p>コメント &nbsp;&nbsp;&nbsp;&nbsp;<th:block th:text="${comment_cnt}"></th:block>
                                 </p>
                             </div>
-                            <textarea name="comment" id="commentContent"></textarea>
-                            <button id="comment_submit">登録</button>
+                            <div id="postComment">
+                                <textarea name="comment" id="commentContent"></textarea>
+                                <div id="submitWrapper">
+                                    <button id="comment_submit">コメント登録</button>
+                                </div>
+                            </div>
                         </div>
                         <div id="viewComment">
                             <ul id="commentList">
                                 <li th:each="comment: ${comment}" th:if="${comment != null}" class="viewComment">
                                     <div class="commentUser">
-                                        <div th:text="${comment.nickname}"></div>
-                                        <div th:text="${comment.comment_created_at}"></div>
+                                        <div class="commentId" th:text="${comment.nickname}"></div>
+                                        <div class="commentDate"
+                                            th:text="${#temporals.format(comment.comment_created_at, 'yyyy.MM.dd')}">
+                                        </div>
                                     </div>
                                     <div class="commentWrapper">
-                                        <div th:text="${comment.comment_content}"></div>
-                                        <button class="comment_report"
-                                            th:attr="data-comment-id=${comment.comment_id}">通報</button>
-                                        <button class="comment_delete"
-                                            th:if="${user == comment.user_id || #authorization.expression('hasRole(''A'')')}"
-                                            th:attr="data-comment-id=${comment.comment_id}">削除</button>
+                                        <div class="commentClass" th:text="${comment.comment_content}"></div>
+                                        <div class="commentCtrl">
+                                            <button class="comment_report"
+                                                th:attr="data-comment-id=${comment.comment_id}">通報</button>
+                                            <button class="comment_delete"
+                                                th:if="${user == comment.user_id || #authorization.expression('hasRole(''A'')')}"
+                                                th:attr="data-comment-id=${comment.comment_id}">削除</button>
+                                        </div>
                                     </div>
                                 </li>
                             </ul>
