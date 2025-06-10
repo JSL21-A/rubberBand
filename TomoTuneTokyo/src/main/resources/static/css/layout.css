@@ -4451,3 +4451,8 @@ body {
 .slider-card {
     position: relative;
 }
+.modal-dialog {
+  top: 10% !important;
+  transform: translateY(-10%) !important;
+}
+
