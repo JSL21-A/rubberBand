@@ -139,8 +139,8 @@ public class MypageService {
 	}
 
 	// 특정 계정 이력서 조회
-	public MypageDto getResumeById(Long id) {
-		MypageDto resume = mypageMapper.findById(id);
+	public MypageDto getResumeById(int resume_id) {
+		MypageDto resume = mypageMapper.findById(resume_id);
 		if (resume != null) {
 			List<BandHistoryDto> bandList = mypageMapper.selectBandHistoryByResumeId(resume.getResumeId());
 			resume.setBandHistoryList(bandList);
@@ -314,6 +314,17 @@ public class MypageService {
 	public List<MyActiveDto> getApplyStatusByWriter(String userId) {
 	    return mypageMapper.findApplyStatusByWriter(userId);
 	}
+
+	//이력서 열람
+	public MypageDto getResumeByResumeId(int resumeId) {
+	    MypageDto resume = mypageMapper.findById(resumeId);
+	    if (resume != null) {
+	        List<BandHistoryDto> bandList = mypageMapper.selectBandHistoryByResumeId(resume.getResumeId());
+	        resume.setBandHistoryList(bandList);
+	    }
+	    return resume;
+	}
+
 
 
 }

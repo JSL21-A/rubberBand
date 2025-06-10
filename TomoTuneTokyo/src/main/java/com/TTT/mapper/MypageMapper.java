@@ -35,7 +35,7 @@ public interface MypageMapper {
 	void deleteBandHistoryByResumeId(int resumeId);
 
 	// resume_id로 이력서 조회
-	MypageDto findById(Long id);
+	MypageDto findById(int resume_id);
 
 	// 이력서 수정
 	void updateResume(MypageDto mypageDto);
@@ -92,6 +92,8 @@ public interface MypageMapper {
 
 	// 지원현황(리더)
 	List<MyActiveDto> findApplyStatusByWriter(@Param("userId") String userId);
+
+
 
 
 }

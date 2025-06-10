@@ -160,7 +160,7 @@ public class MypageController {
 
 	// 이력서 수정 폼
 	@GetMapping("/resumeEdit/{id}")
-	public String showEditForm(@PathVariable("id") Long id, Model model, Principal principal) {
+	public String showEditForm(@PathVariable("id") int id, Model model, Principal principal) {
 		String userId = getCurrentUserId(principal);
 
 		MypageDto resume = mypageService.getResumeById(id);
@@ -450,6 +450,35 @@ public class MypageController {
 	    model.addAttribute("mode", "applies");
 	    return "mypage/myActive";
 	}
+	//이력서 열람(resume_id 기준으로)
+	@GetMapping("/resumeViewById")
+	public String viewResumeById(@RequestParam("resumeId") int resumeId, Model model, Principal principal) {
+	    MypageDto resume = mypageService.getResumeById(resumeId);  
+	    if (resume == null) {
+	        model.addAttribute("errorMessage", "이력서를 찾을 수 없습니다.");
+	        return "mypage/account";
+	    }
+
+	    String currentUserId = getCurrentUserId(principal);
+	    boolean isOwner = resume.getUserId().equals(currentUserId);
+
+	    model.addAttribute("isOwner", isOwner);
+	    model.addAttribute("resume", resume);
+	    model.addAttribute("areaList", toList(resume.getArea()));
+	    model.addAttribute("instrumentList", toList(resume.getInstrument()));
+	    model.addAttribute("genreList", toList(resume.getGenre()));
+	    model.addAttribute("practiceDayList", toList(resume.getPracticeDate()));
+
+	    return "mypage/resumeView";
+	}
+
+
+
+
+	
+
+	
+
 
 
 }
