@@ -643,6 +643,20 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
+<script>
+  $('#memberSearchPopup').on('show.bs.modal', function () {
+    const $modalDialog = $(this).find('.modal-dialog');
+
+    $modalDialog.css({
+      'margin-top': '15vh',
+      'margin-bottom': 'auto'
+    });
+
+    $(this).find('.modal-body').scrollTop(0);
+  });
+</script>
+
+
 
 
 
