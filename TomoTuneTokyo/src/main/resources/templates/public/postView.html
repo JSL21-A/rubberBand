@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate='~{layouts/layout}'>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TomoTuneTokyo</title>
+</head>
+
+<body>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <div id="content" layout:fragment="content" th:fragment="content" hx-history-elt>
+        <style>
+            body {
+                overflow: scroll;
+            }
+
+            #view {
+                margin: 0;
+                padding: 0;
+            }
+
+            #content {
+                width: 90vw;
+                margin: 0 auto;
+            }
+
+            #top {
+                display: flex;
+                flex-direction: row-reverse;
+                margin-bottom: 30px;
+            }
+
+            #middle {
+                width: 100%;
+                margin: 0 auto;
+                background-color: #fff;
+                border-radius: 30px;
+                box-shadow: 2px 2px 2px 2px #bbb;
+            }
+
+            .post_list ul {
+                list-style: none;
+                padding: 0 3%;
+            }
+
+            .post_list li {
+                border-bottom: 1px dotted black;
+            }
+
+            .post_list li div {
+                width: 25%;
+            }
+
+            .post_content {
+                text-align: center;
+            }
+
+            .view_title {
+                text-align: inherit;
+                width: 100%;
+                margin: 0 auto;
+                background-color: #fff;
+                border-radius: 30px;
+                padding: 2%;
+            }
+
+            .view_content {
+                width: 100%;
+                margin: 0 auto;
+                background-color: #fff;
+                border-radius: 30px;
+                padding: 2%;
+                margin-top: 10px;
+            }
+
+            .viewHost {
+                line-height: 50px;
+            }
+
+            .post_date {
+                text-align: end;
+            }
+
+            .post_list {
+                border-radius: 30px;
+                box-shadow: 2px 2px 2px 2px #bbb;
+            }
+
+            .post_post {
+                display: flex;
+                justify-content: space-between;
+                padding: 1%;
+            }
+
+            .post_post a {
+                text-decoration: none;
+                color: #333;
+            }
+
+            .cate_wrapper {
+                border-radius: 30px;
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+            }
+
+            .cate_nav {
+                position: relative;
+                overflow: hidden;
+                width: 100%;
+                height: 200px;
+                border-radius: 24px;
+            }
+
+            .cate_sort {
+                position: relative;
+                width: 100%;
+                height: 52px;
+                border-top: 1px solid rgba(0, 0, 0, 0.3);
+                background-color: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(2px);
+                display: flex;
+            }
+
+            .cate_top {
+                position: relative;
+                width: 100%;
+                height: 148px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .cate_top img {
+                width: 100%;
+                position: absolute;
+                filter: grayscale();
+            }
+
+            .cate_title {
+                text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+                font-size: 35px;
+                font-weight: 700;
+                line-height: 130%;
+                color: #000;
+                z-index: 2;
+            }
+
+            .sel_cate_wrapper {
+                position: relative;
+                margin: 0 auto;
+                overflow: hidden;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                gap: 5vw;
+            }
+
+            .sel_cate {
+                display: block;
+                position: relative;
+                z-index: 2;
+                padding: 0 8px;
+                color: #A7AFB3;
+                font-size: 18px;
+                white-space: nowrap;
+            }
+
+            .sel_cate_card.active a {
+                color: #fff;
+                font-weight: bold;
+            }
+
+            .sel_cate_card {
+                position: relative;
+                cursor: pointer;
+            }
+
+            .sel_cate_card.active::after {
+                position: absolute;
+                display: block;
+                content: "";
+                top: 11px;
+                width: 100%;
+                border-bottom: 17px solid #777;
+                border-radius: 5px;
+                right: 0;
+            }
+
+            .searchTab {
+                width: 30%;
+            }
+
+            .bottomUp {
+                display: flex;
+                justify-content: space-between;
+                margin: 0 2%;
+                padding-bottom: 2%;
+            }
+
+            #comment {
+                width: 100%;
+                margin: 0 auto;
+                margin-bottom: calc(2% + 40px);
+                background-color: #fff;
+                border-radius: 0px 0px 30px 30px;
+                box-shadow: 2px 2px 2px 2px #bbb;
+                padding: 2%;
+            }
+
+            .viewTitle {
+                text-align: center;
+                font-size: 24px;
+                margin-bottom: 2%;
+                width: 90%;
+            }
+
+            .post_note img {
+                max-width: 100%;
+            }
+
+            .titleBtn {
+                display: flex;
+                justify-content: space-between;
+                background-color: #f4f6f8;
+                border-radius: 30px;
+                padding: 2% 1%;
+            }
+
+            #onPost {
+                padding: 0.4rem 0.8rem;
+                font-size: 1rem;
+                border-radius: 5px;
+                background-color: #2D2D2D;
+                color: white;
+                border: none;
+                cursor: pointer;
+            }
+
+            .ctrlBtn {
+                position: relative;
+                padding: 0.4rem 0.8rem;
+                font-size: 1rem;
+                border-radius: 5px;
+                background-color: #2D2D2D;
+                color: white;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+                top: 10px;
+            }
+
+            .post_report {
+                background-color: #000;
+                border: 1px solid #000;
+                border-radius: 5px;
+                padding: 3px;
+                width: 40px;
+            }
+
+            .post_report img {
+                width: 100%;
+                filter: invert(100%);
+            }
+
+            .post_scrap {
+                background-color: #000;
+                border: 1px solid #000;
+                border-radius: 5px;
+                padding: 3px;
+                width: 40px;
+            }
+
+            .post_scrap img {
+                width: 100%;
+                filter: invert(100%);
+            }
+
+            .postBtn {
+                margin-top: 50px;
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+            }
+
+            #viewComment li {
+                list-style: none;
+                box-shadow: 0px 1px 0px 0px #bbb;
+                margin-top: 10px;
+            }
+
+            .commentUser,
+            .commentWrapper {
+                display: flex;
+            }
+
+            .commentDate {
+                font-size: 12px;
+            }
+
+            .commentId {
+                width: 10%;
+                font-size: 20px;
+            }
+
+            .commentWrapper {
+                justify-content: space-between;
+            }
+
+            #comment_submit,
+            .comment_delete {
+                padding: 0.4rem 0.8rem;
+                font-size: 1rem;
+                border-radius: 5px;
+                background-color: #2D2D2D;
+                color: white;
+                border: none;
+                cursor: pointer;
+            }
+
+            #postComment {
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            #comment_submit {
+                float: right;
+            }
+
+            .comment_report {
+                padding: 0.4rem 0.8rem;
+                font-size: 1rem;
+                border-radius: 5px;
+                background-color: #fff;
+                color: #000;
+                border: none;
+                cursor: pointer;
+                box-shadow: 0px 0px 2px 0px #bbb;
+            }
+
+            #commentContent {
+                width: 100%;
+                height: 100px;
+                resize: none;
+            }
+
+            #submitWrapper {
+                width: 100%;
+            }
+        </style>
+        <div id="view">
+            <div id="top">
+                <div class="cate_wrapper">
+                    <div class="cate_nav">
+                        <div class="cate_top">
+                            <img src="https://www.ultimate-guitar.com/static/article/news/7/175347_0_wide_ver1738510713.jpg"
+                                alt="">
+                            <h2 class="cate_title"></h2>
+                        </div>
+                        <div class="cate_sort">
+                            <div class="sel_cate_wrapper">
+                                <div class="sel_cate_card">
+                                    <a class="sel_cate" hx-get="./list" data-board-id="" hx-target="#content"
+                                        hx-select="#content" hx-push-url="true" hx-swap="outerHTML">すべて</a>
+                                </div>
+                                <div class="sel_cate_card">
+                                    <a class="sel_cate" hx-get="./list?board=6" data-board-id="6" hx-target="#middle"
+                                        hx-select="#middle" hx-push-url="true" hx-swap="outerHTML">コミュニティ
+                                    </a>
+                                </div>
+                                <div class="sel_cate_card">
+                                    <a class="sel_cate" hx-get="./list?board=3" data-board-id="3" hx-target="#middle"
+                                        hx-select="#middle" hx-push-url="true" hx-swap="outerHTML">フリーマーケット
+                                    </a>
+                                </div>
+                                <div class="sel_cate_card">
+                                    <a class="sel_cate" hx-get="./list?board=4" data-board-id="4" hx-target="#middle"
+                                        hx-select="#middle" hx-push-url="true" hx-swap="outerHTML">演奏音源
+                                    </a>
+                                </div>
+                                <div class="sel_cate_card">
+                                    <a class="sel_cate" hx-get="./list?board=5" data-board-id="5" hx-target="#middle"
+                                        hx-select="#middle" hx-push-url="true" hx-swap="outerHTML">ライブ告知
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="middle">
+                <div class="view_title">
+                    <div class="viewTitle" th:text="${post.post_title}"></div>
+                    <div class="titleBtn">
+                        <th:block th:if="${post.board_id != 7}">
+                            <div class="viewHost" th:attr="data-user-id=${post.user_id}" th:text="${post.nickname}">
+                            </div>
+                        </th:block>
+                        <th:block th:unless="${post.board_id != 7}">
+                            <div class="viewHost">管理者</div>
+                        </th:block>
+                        <div>
+                            <button class="ctrlBtn" id="editPost" th:attr="hx-get='./write?edit=' + ${post.post_id}"
+                                hx-target="#content" hx-select="#content" hx-push-url="true"
+                                th:if="${user == post.user_id}" hx-swap="outerHTML">修正</button>
+                            <button class="ctrlBtn" id="delPost"
+                                th:if="${user == post.user_id} or ${#authorization.expression('hasRole(''A'')')}">削除</button>
+                        </div>
+                    </div>
+                    <div class="view_content">
+                        <div class="post_note" th:utext="${post.post_content}"></div>
+                        <div class="postBtn" th:if="${user != post.user_id}">
+                            <button class="post_report">
+                                <img src="https://cdn-icons-png.flaticon.com/512/980/980829.png" alt="">
+                            </button>
+                            <button class="post_scrap">
+                                <img src="https://cdn-icons-png.flaticon.com/512/33/33277.png" alt="">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="bottom">
+                    <div class="bottomUp">
+                        <button id="onPost" hx-get='./list' hx-target="#content" hx-select="#content" hx-push-url="true"
+                            hx-swap="outerHTML">リストへ</button>
+                        <th:block th:if="${post.board_id != 7}">
+                            <a id="onPost" hx-get="./write" hx-target="#content" hx-select="#content" hx-push-url="true"
+                                hx-swap="outerHTML">作成</a>
+                        </th:block>
+                    </div>
+                    <div id="comment" th:if="${post.board_id != 7}">
+                        <div id="writeComment">
+                            <div id="cnt">
+                                <p>コメント &nbsp;&nbsp;&nbsp;&nbsp;<th:block th:text="${comment_cnt}"></th:block>
+                                </p>
+                            </div>
+                            <div id="postComment">
+                                <textarea name="comment" id="commentContent"></textarea>
+                                <div id="submitWrapper">
+                                    <button id="comment_submit">コメント登録</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="viewComment">
+                            <ul id="commentList">
+                                <li th:each="comment: ${comment}" th:if="${comment != null}" class="viewComment">
+                                    <div class="commentUser">
+                                        <div class="commentId" th:text="${comment.nickname}"></div>
+                                        <div class="commentDate"
+                                            th:text="${#temporals.format(comment.comment_created_at, 'yyyy.MM.dd')}">
+                                        </div>
+                                    </div>
+                                    <div class="commentWrapper">
+                                        <div class="commentClass" th:text="${comment.comment_content}"></div>
+                                        <div class="commentCtrl">
+                                            <button class="comment_report"
+                                                th:attr="data-comment-id=${comment.comment_id}">通報</button>
+                                            <button class="comment_delete"
+                                                th:if="${user == comment.user_id || #authorization.expression('hasRole(''A'')')}"
+                                                th:attr="data-comment-id=${comment.comment_id}">削除</button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script data-init>
+                $(".sel_cate").on("click", function () {
+                    if ($(this).data('board-id') == '7') {
+                        $('#onPost').hide();
+                    } else {
+                        $('#onPost').show();
+                    }
+                });
+                $(document).ready(function () {
+                    cateOn();
+                });
+
+                $(document).on('htmx:afterSwap', function (event) {
+                    cateOn();
+                });
+
+                $(window).on("popstate", function () {
+                    cateOn();
+                });
+
+                $(".sel_cate_card").on("click", function () {
+                    $(".sel_cate_card").removeClass("active");
+                    $(this).addClass("active");
+                });
+
+                function cateOn() {
+                    isPost = new URLSearchParams(window.location.search).get("post");
+                    if (isPost) {
+                        board = '[[${post.board_id}]]';
+                    } else {
+                        board = new URLSearchParams(window.location.search).get("board");
+                    }
+
+                    $(".sel_cate_card").removeClass("active");
+
+                    if (board) {
+                        target = $(`a[data-board-id="${board}"]`);
+                        target.parent().addClass("active");
+                        text = $(`a[data-board-id="${board}"]`).text();
+                        $('.cate_title').text(text == "" ? "お知らせ" : text);
+                    } else {
+                        target = $(`a[data-board-id=""]`);
+                        target.parent().addClass("active");
+                        text = $(`a[data-board-id=""]`).text();
+                        $('.cate_title').text(text);
+                    }
+                }
+
+                //신고버튼 누르면
+                //.off가 달린 이유는 동적으로 로드하면서 레이아웃에 아래에 보이는 얘랑 동적으로 불러온 얘랑
+                //겹쳐버려서 3번씩 눌리기때문에 한번 해제해주고 이벤트 발생하는 식으로 해결.
+                $(document).off("click", ".post_report").on("click", ".post_report", function () {
+                    type = "post";
+                    target = '[[${post.post_id}]]';
+                    doReport(target, type);
+                });
+
+                $(document).off("click", ".comment_report").on("click", ".comment_report", function () {
+                    type = "comment";
+                    target = $(this).data("comment-id");
+                    doReport(target, type);
+                });
+
+                $(document).off("click", ".comment_delete").on("click", ".comment_delete", function () {
+                    target = $(this).data("comment-id");
+                    const postId = '[[${post.post_id}]]';
+                    const csrfToken = $("meta[name='_csrf']").attr("content");
+                    const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+                    $.ajax({
+                        url: "./delComment?target=" + target,
+                        method: "GET",
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader(csrfHeader, csrfToken);
+                        },
+                        success: function (res) {
+                            alert("削除しました。");
+                            $("#comment").load("/user/view?post=" + postId + " #comment > *");
+                        },
+                        error: function (err) {
+                            if (err.status == 400) {
+                                window.location.href = "/user/error";
+                            } else {
+                                alert("削除失敗");
+                                console.error(err);
+                            }
+                        },
+                    });
+                });
+
+                //삭제버튼 눌렸을때
+                $(document).off("click", "#delPost").on("click", "#delPost", function () {
+                    const csrfToken = $("meta[name='_csrf']").attr("content");
+                    const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+                    const postId = '[[${post.post_id}]]';
+                    isDel = confirm("本当に削除しますか？");
+                    if (isDel) {
+                        $.ajax({
+                            url: "./delete?target=" + postId,
+                            method: "GET",
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader(csrfHeader, csrfToken);
+                            },
+                            success: function (res) {
+                                alert("削除しました。");
+                                window.location.href = "./list";
+                            },
+                            error: function (err) {
+                                alert(err.status);
+                                if (err.status == 400) {
+                                    window.location.href = "/user/error";
+                                } else {
+                                    alert("削除失敗");
+                                    console.error(err);
+                                }
+                            },
+                        });
+                    }
+                });
+
+                function doReport(target, type) {
+                    const csrfToken = $("meta[name='_csrf']").attr("content");
+                    const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+                    const report = confirm("通報しますか？");
+                    const reportData = new FormData();
+                    reportData.append("type", type);
+                    if (report) {
+                        $.ajax({
+                            url: "./report?target=" + target,
+                            method: "POST",
+                            data: reportData,
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader(csrfHeader, csrfToken);
+                            },
+                            success: function (res) {
+                                alert("通報されました。");
+                                window.location.href = "./list"
+                            },
+                            error: function (err) {
+                                alert("登録失敗");
+                                console.error(err);
+                            },
+                        });
+                    } else {
+                        return;
+                    }
+                }
+
+                // 작성 버튼이 눌렸을때
+                $(document).off("click", "#comment_submit").on("click", "#comment_submit", function () {
+                    $(this).prop("disabled", true);
+                    // 내용이 공백이거나 비어있는지 체크
+                    contentEmpty = $("#commentContent").val().trim();
+
+                    if (contentEmpty.length < 2) {
+                        if (contentEmpty == "") {
+                            alert("内容を入力してください。");
+                        } else {
+                            alert("二文字以上入力してください。");
+                        }
+                        $(this).prop("disabled", false);
+                        $("#commentContent").focus();
+                        return;
+                    }
+
+                    const formData = new FormData();
+
+                    const contentHtml = $("#commentContent").val();
+                    formData.append("comment", contentHtml);
+
+                    const postId = '[[${post.post_id}]]';
+                    const postUserId = '[[${post.user_id}]]';
+
+                    formData.append("post_id", postId);
+                    formData.append("post_user_id", postUserId);
+
+                    const csrfToken = $("meta[name='_csrf']").attr("content");
+                    const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
+                    $.ajax({
+                        url: "./commentWrite",
+                        method: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader(csrfHeader, csrfToken);
+                        },
+                        success: function (res) {
+                            alert("コメントが登録されました。");
+                            $("#comment").load("/user/view?post=" + postId + " #comment > *");
+                        },
+                        error: function (err) {
+                            alert("登録失敗");
+                            console.error(err);
+                        },
+                    });
+                });
+
+                $(document).on('click', '.viewHost', function () {
+                    const $host = $(this);
+                    const targetId = $host.data('user-id');
+                    if (!targetId || targetId === window.currentUser) return;
+
+                    $('.inline-chat-btn').remove();
+
+                    const $btn = $('<button class = "inline-chat-btn">チャットする</button>');
+                    $host.after($btn);
+                });
+
+
+            </script>
+        </div>
+</body>
+
+
+</html>

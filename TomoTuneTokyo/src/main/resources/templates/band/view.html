@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<meta charset="UTF-8">
+	<title>募集内容</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+	<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+
+<body>
+<div layout:fragment="content">
+	
+	<!-- 게시글 상단: 팀 소개 + 상세보기 세트 -->
+	<div class="band-and-detail-container"> <!-- 왼쪽과 오른쪽을 하나의 div로 묶음 -->
+		<!-- 게시글 상단: 팀 소개 + 상세보기 세트 -->
+<input type="hidden" th:value="${postId}" name="postId">
+
+<div class="detail-container">
+<div class="band-info-container">
+	<!-- 왼쪽: 리더 + 멤버 + 코멘트 -->
+	<!-- 마감일 -->
+	<div class="deadline-badge">
+	    <span class="deadline-text" id="dDayText">D-?</span>
+	</div>
+	<input type="hidden" id="deadline" th:value="${post.deadline}" />
+
+<div class="band-profile-area" style="position: relative;">
+	<!-- 팀 소개: 왼쪽 영역 -->
+	<div class="band-title">
+	    <span class="emoji"></span> <strong th:text="${band_name}"></strong>
+	</div>
+
+	<!-- 리더 정보 -->
+<div class="band-leader">
+	<div class="leader-pic">
+		
+
+		<!-- 리더 이미지: 값이 없거나 leaderInfo 자체가 null일 경우 기본 이미지 표시 -->
+		<img th:src="@{${leader != null and leader.user_img != null and !#strings.isEmpty(leader.user_img) 
+						        ? '/images' + leader.user_img 
+						        : '/images/member1.png'}}" 
+						        alt="리더" class="member-img"
+						        style="width:180px; height:180px; border-radius:50%; object-fit:cover;">
+	</div>
+	<div class="leader-name" th:text="'リーダー・' + ${leader.stage_name}">리더・ガム</div>
+	<div id="profile-popup" style="display: none; position: absolute; top: 50px; left: 0; z-index: 9999; overflow: visible;">
+	
+		  <!-- Swiper 슬라이더 -->
+		<!-- 팝업창-->
+    <div class="swiper profile-swiper">
+		<button type="button" id="closeProfilePopup"
+			        style="position: absolute; top: 10px; right: 30px; background: transparent; border: none; font-size: 20px; cursor: pointer; z-index: 20; color: black;">×</button>
+
+        <div class="swiper-wrapper">
+			<!-- 활동 사진 1 -->
+			<div class="swiper-slide"
+			     th:if="${post.image1Url != null and !#strings.isEmpty(post.image1Url)}">
+			    <img th:src="@{'/images/uploads/bands/' + ${post.image1Url}}" alt="활동 사진 1">
+			</div>
+
+			<!-- 활동 사진 2 -->
+			<div class="swiper-slide"
+			     th:if="${post.image2Url != null and !#strings.isEmpty(post.image2Url)}">
+			    <img th:src="@{'/images/uploads/bands/' + ${post.image2Url}}" alt="활동 사진 2">
+			</div>
+
+			<!-- 활동 사진 3 -->
+			<div class="swiper-slide"
+			     th:if="${post.image3Url != null and !#strings.isEmpty(post.image3Url)}">
+			    <img th:src="@{'/images/uploads/bands/' + ${post.image3Url}}" alt="활동 사진 3">
+			</div>
+
+			<!-- 활동 사진 4 -->
+			<div class="swiper-slide"
+			     th:if="${post.image4Url != null and !#strings.isEmpty(post.image4Url)}">
+			    <img th:src="@{'/images/uploads/bands/' + ${post.image4Url}}" alt="활동 사진 4">
+			</div>
+        </div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+</div>
+</div>
+
+<!-- 멤버들 -->
+<div class="band-members">
+	<div class="member" th:each="member : ${members}">
+		<img th:src="@{${member.user_img != null ? '/images' + member.user_img : '/images/defaultIcon.png'}}"
+			src="/images/default.png" alt="멤버 프로필" class="profile-image" data-index="1">
+		<span th:text="${member.stage_name}"></span>
+	</div>
+</div>
+
+<!-- 리더 코멘트 -->
+<div class="band-comment-area">
+	<h3>リーダーのコメント</h3>
+	<p th:text="${post.leaderComment}"></p>
+</div>
+<!-- 해시태그-->
+<div class="tag-black-container">
+    <span class="tag-black" th:each="tag : ${recommendedTags}" th:text="${tag}"></span>
+</div>
+
+</div>
+</div>
+
+<!-- 오른쪽: 구인/구직 글 -->
+<form th:action="@{/bandselect/apply}" method="post" class="post-detail-form">
+	 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+	 <div class="title-and-button">
+	   <h2 class="detail-title" th:text="${post.title}"></h2>
+
+	   <input type="hidden" id="applyPostId" th:value="${post.post_id}" name="postId">
+	   <input type="hidden" id="applyBandId" th:value="${post.band_id}" name="band_id">
+	   <input type="hidden" id="selectedResumeIdInput" name="resume_id">
+
+	   <!-- ✅ 리더 전용: 삭제 버튼 -->
+	   <button type="button" class="btn btn-primary" id="deletePostBtn" th:if="${isLeader}">削除する</button>
+
+	   <!-- ✅ 리더가 아닌 사용자 전용: 응모 버튼 -->
+	   <button type="submit" class="btn btn-primary" th:if="${!isLeader}">応募する</button>
+
+	   <!-- ✅ 공통: 스크랩 버튼 -->
+	   <button id="scrapBtn" title="스크랩" type="button"
+	           th:class="'scrap-button' + (${isScrapped} ? ' active' : '')">
+	     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+	          fill="none" stroke="currentColor" stroke-width="2"
+	          stroke-linecap="round" stroke-linejoin="round">
+	       <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+	     </svg>
+	   </button>
+	 </div>
+	 
+    <div class="detail-meta">
+        <span>作成者: <span th:text="${leader.stage_name}">ガム</span></span> <!-- 리더 이름 -->
+        <span>作成日: <span th:text="${#dates.format(post.createdAt, 'yyyy.MM.dd')}">2024.05.12</span></span> <!-- 생성일 -->
+        <span>ヒット数: <span th:text="${post.bandrecruitpost_count}"></span></span> <!-- 조회수 -->
+    </div>
+
+    <div class="detail-content">
+        <h3> バンドの紹介</h3>
+        <p th:text="${post.band_intro}"></p>
+        <h3> 募集ポジション</h3>
+        <p th:text="${post.recruitPosition}"></p>
+        <h3> 活動地域</h3>
+        <p th:text="${post.activityArea}"></p>
+        <h3> こんな人を探しています！</h3>
+        <p><strong th:text="${post.recruitCondition}"></strong></p>
+        <h3> 好きなジャンル</h3>
+        <p th:text="${post.preferredGenres}"></p>
+		    </div>
+		</form>
+	</div>
+</div>
+<!-- 지원하기 모달 -->
+<div class="modal fade" id="applyModal" tabindex="-1" role="dialog" aria-labelledby="applyModalLabel">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title" id="applyModalLabel">募集内容の作成</h4>
+			</div>
+
+			<div class="modal-body">
+				<form id="applyForm" enctype="multipart/form-data">
+
+					<!-- 밴드팀명 -->
+							<div class="form-group">
+								<label for="bandName">バンドのチーム名</label> <input type="text" class="form-control"
+									id="bandName" placeholder="Tomato Groove">
+							</div>
+
+							<!-- 밴드소개 -->
+							<div class="form-group">
+								<label for="bandIntro">バンド紹介</label>
+								<textarea class="form-control" id="bandIntro" rows="2"
+									placeholder="バンドのご紹介をおお願いいたします。"></textarea>
+							</div>
+
+							<!-- 모집포지션 -->
+							<div class="form-group">
+								<label for="recruitPosition">募集ポジション</label> <input type="text" class="form-control"
+									id="recruitPosition" placeholder="例；女性ボーカル">
+							</div>
+
+							<!-- 활동지역 -->
+							<div class="form-group">
+								<label for="activityArea">活動地域</label> <input type="text" class="form-control"
+									id="activityArea" placeholder="例；ソウル弘大">
+							</div>
+
+							<!-- 모집조건 -->
+							<div class="form-group">
+								<label for="recruitCondition">こんな人を探しています！</label> <input type="text"
+									class="form-control" id="recruitCondition"
+									placeholder="例: 20代、 チームワーク重視、基本的なボーカル経験あり">
+							</div>
+
+							<!-- 선호 장르 -->
+							<div class="form-group">
+								<label for="preferredGenres">好きなジャル</label> <input type="text" class="form-control"
+									id="preferredGenres" placeholder="例: アコースティック、インディーズ、ポップ">
+							</div>
+
+							<!-- 리더의 코멘트 -->
+							<div class="form-group">
+								<label for="leaderComment">リーダーのコメント</label>
+								<textarea class="form-control" id="leaderComment" rows="2"
+									placeholder="リーダーの簡単なメッセージを入力してください　:)"></textarea>
+							</div>
+							<!-- 추천 태그 -->
+							<div class="form-group">
+								<label for="tags">おすすめタグ</label> <input type="text" class="form-control" id="tags"
+									placeholder="#ギター #ボーカル #ジャズ">
+							</div>
+
+							<!-- 이미지 업로드 -->
+							<div class="form-group">
+								<label for="bandImages">チーム構造/活動写真</label> <input type="file" id="bandImages"
+									name="bandImages" class="form-control" accept="image/*" multiple> <small
+									class="text-muted">※
+									最大４枚のイメージが登録可能です。</small>
+							</div>
+							
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="submitApply">応募する</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">閉める</button>
+					</div>
+					<!-- 스크랩 -->
+					<form id="scrapForm" method="post" th:action="@{/bandselect/scrap}" style="display: none;">
+					<input type="hidden" name="postId" th:value="${post.post_id}" />
+					<input type="hidden" name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+					</form>
+
+				</div>
+			</div>
+		</div>
+	<!-- comment-form-container 끝 -->
+	<!-- 외부 스크립트 로드 -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+		    const leaderPic = document.querySelector('.leader-pic');
+		    const profilePopup = document.querySelector('#profile-popup');
+		    const closeBtn = document.getElementById('closeProfilePopup');
+
+		    let isHovered = false;
+		    let isMouseOverPopup = false;
+		    let swiperInstance = null;
+
+		    leaderPic.addEventListener('mouseenter', function () {
+		        if (!isHovered) {
+		            isHovered = true;
+		            profilePopup.style.display = 'block';
+		            profilePopup.style.visibility = 'visible';
+		            profilePopup.style.opacity = 1;
+
+		            if (!swiperInstance) {
+		                swiperInstance = new Swiper('.profile-swiper', {
+		                    navigation: {
+		                        nextEl: '.swiper-button-next',
+		                        prevEl: '.swiper-button-prev',
+		                    },
+		                    loop: true,
+		                });
+		            }
+		        }
+		    });
+
+		    leaderPic.addEventListener('mouseleave', function () {
+		        setTimeout(() => {
+		            if (!leaderPic.matches(':hover') && !isMouseOverPopup) {
+		                isHovered = false;
+		                profilePopup.style.display = 'none';
+		                profilePopup.style.visibility = 'hidden';
+		                profilePopup.style.opacity = 0;
+		            }
+		        }, 200);
+		    });
+
+		    profilePopup.addEventListener('mouseenter', function () {
+		        isMouseOverPopup = true;
+		    });
+
+		    profilePopup.addEventListener('mouseleave', function () {
+		        isMouseOverPopup = false;
+		    });
+
+		    // 닫기 버튼 이벤트도 DOMContentLoaded 안에서 등록
+		    if (closeBtn) {
+		        closeBtn.addEventListener('click', function () {
+		            profilePopup.style.display = 'none';
+		            profilePopup.style.visibility = 'hidden';
+		            profilePopup.style.opacity = 0;
+		            isHovered = false;
+		            isMouseOverPopup = false;
+		        });
+		    }
+		});
+
+
+	</script>
+
+	<script>
+	document.addEventListener('DOMContentLoaded', function () {
+	    const deadlineValue = document.getElementById('deadline').value;
+	    const dDayText = document.getElementById('dDayText');
+
+	    if (deadlineValue) {
+	        const today = new Date();
+	        const deadline = new Date(deadlineValue);
+	        deadline.setHours(0, 0, 0, 0);
+	        today.setHours(0, 0, 0, 0);
+
+	        const diffTime = deadline - today;
+	        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+	        if (diffDays > 0) {
+	            dDayText.textContent = `D-${diffDays}`;
+	        } else if (diffDays === 0) {
+	            dDayText.textContent = 'D-Day';  // 따옴표 추가
+	        } else {
+	            dDayText.textContent = '締切';  // 따옴표 추가 (마감됨)
+	        }
+	    }
+	});
+	</script>
+
+<script>
+		// 지원하기
+	  document.addEventListener('DOMContentLoaded', function() {
+	    const submitBtn = document.getElementById('submitApply');
+	    const form = document.querySelector('.post-detail-form');
+	    const resumeInput = document.getElementById('selectedResumeIdInput');
+
+	    submitBtn.addEventListener('click', function(e) {
+	      if (!resumeInput || !resumeInput.value) {
+	        alert("まずは履歴書を登録してください。");
+	        e.preventDefault(); // form 전송 중단
+	        return;
+	      }
+
+	      form.submit(); // 이력서가 있으면 정상적으로 전송
+	    });
+	  });
+	</script>
+	
+	<script>
+	  document.addEventListener('DOMContentLoaded', function () {
+	    const params = new URLSearchParams(window.location.search);
+	    const message = params.get("message");
+
+	    if (message === "success") {
+	      alert("応募完了になりました。");
+	    } else if (message === "duplicate") {
+	      alert("すでに応募した履歴があります。");
+	    } else if (message === "noresume") {
+	      alert("まずは履歴書を登録してください。");
+	    }
+	  });
+	</script>
+
+	<script>
+	document.addEventListener('DOMContentLoaded', function() {
+	  fetch('/bandselect/resume/list')
+	    .then(response => response.json())
+	    .then(data => {
+	      if (data && data.length > 0) {
+	        // 기본으로 첫 번째 이력서 ID 선택
+	        document.getElementById('selectedResumeIdInput').value = data[0];
+	      }
+	    })
+	    .catch(err => {
+	      console.error('이력서 목록 불러오기 실패:', err);
+	    });
+	});
+	</script>
+	
+	<script>
+		// 지원하기
+		document.addEventListener('DOMContentLoaded', function () {
+		  const params = new URLSearchParams(window.location.search);
+		  const message = params.get("message");
+
+		  if (message === "success") {
+		    alert("応募完了になりました。");
+		  } else if (message === "duplicate") {
+		    alert("すでに応募した履歴があります。");
+		  }
+		});
+		</script>
+	
+		<script>
+		document.addEventListener("DOMContentLoaded", function () {
+		  const urlParams = new URLSearchParams(window.location.search);
+		  const scrapStatus = urlParams.get("scrap");
+		  const scrapBtn = document.getElementById("scrapBtn");
+		  const scrapForm = document.getElementById("scrapForm");
+
+		  // 1. alert 처리
+		  if (scrapStatus === "1") {
+		    alert("スクラップが出来ました。");
+		  } else if (scrapStatus === "0") {
+		    alert("スクラップが解除されました。");
+		  }
+
+		  // 2. 색 유지 (스크랩 상태 유지)
+		  if (scrapStatus === "1") {
+		    scrapBtn?.classList.add("active");
+		  } else if (scrapStatus === "0") {
+		    scrapBtn?.classList.remove("active");
+		  }
+
+		  // 3. click 이벤트로 form submit (반드시 필요함!)
+		  if (scrapBtn && scrapForm) {
+		    scrapBtn.addEventListener('click', function (e) {
+		      e.preventDefault(); // form의 기본 submit 막고
+		      scrapForm.submit(); // 수동으로 submit 실행
+		    });
+		  }
+
+		  // 4. URL 파라미터 제거
+		  if (scrapStatus !== null) {
+		    urlParams.delete("scrap");
+		    const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+		    history.replaceState({}, '', newUrl);
+		  }
+		});
+		</script>
+		
+		<script>
+		document.addEventListener('DOMContentLoaded', function () {
+		  const deleteBtn = document.getElementById('deletePostBtn');
+		  const postId = document.getElementById('applyPostId')?.value;
+		  const deadlineValue = document.getElementById('deadline')?.value;
+
+		  const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+		  const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
+
+		  if (deleteBtn && postId) {
+		    deleteBtn.addEventListener('click', function () {
+		      deleteBtn.blur(); // 포커스 제거
+
+		      if (!confirm('メンバー募集文を削除しますか。')) {
+		        return;
+		      }
+
+		      // 마감일이 남아 있는 경우 한 번 더 confirm
+		      if (deadlineValue) {
+		        const today = new Date();
+		        const deadline = new Date(deadlineValue);
+		        deadline.setHours(0, 0, 0, 0);
+		        today.setHours(0, 0, 0, 0);
+
+		        const diffDays = Math.ceil((deadline - today) / (1000 * 60 * 60 * 24));
+
+		        if (diffDays > 0) {
+		          const confirmMsg = `まだ締切まで (${diffDays}日) 残っていますが、削除してもよろしいですか。`;
+		          if (!confirm(confirmMsg)) {
+		            return;
+		          }
+		        }
+		      }
+
+		      fetch('/bandselect/delete', {
+		        method: 'POST',
+		        headers: {
+		          'Content-Type': 'application/x-www-form-urlencoded',
+		          [csrfHeader]: csrfToken
+		        },
+		        body: new URLSearchParams({ postId })
+		      })
+		      .then(res => {
+		        if (res.ok) {
+		          alert('削除が完了しました。');
+		          window.location.href = '/bandlist/list';
+		        } else {
+		          alert('削除に失敗しました。');
+		        }
+		      })
+		      .catch(err => {
+		        alert('エラーが発生しました。');
+		        console.error(err);
+		      });
+		    });
+		  }
+		});
+		</script>
+
+	</div>
+</body>
+
+</html>

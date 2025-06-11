@@ -1,0 +1,280 @@
+@import url("https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap");
+
+@media (max-width: 768px) {
+    :root {
+        /* 창 크기에 따라 유동적으로 움직이려고 선언 */
+        --diameter: 470;
+        --card-width: 35;
+        --card-height: 35;
+        --unit: 1vw;
+    }
+
+    .menu-inner {
+        /* 돌아가는 판 크기 설정 */
+        width: calc((var(--diameter) + var(--card-width)) * var(--unit));
+        height: calc((var(--diameter) + var(--card-height)) * var(--unit));
+        /* 상단기준 반지름만큼 내려가기 */
+        top: calc(50% - 20px);
+        /* 중앙배치 */
+        left: 35%;
+        transform: translate3d(0%, -50%, 0px);
+        /* 회전 중심을 중앙으로 */
+        transform-origin: center center;
+        will-change: transform;
+    }
+}
+
+@media (min-width: 769px) {
+    :root {
+        /* 창 크기에 따라 유동적으로 움직이려고 선언 */
+        --diameter: 200;
+        --card-width: 20;
+        --card-height: 20;
+        --unit-w: 1vw;
+        --unit-h: 0.5vh;
+    }
+
+    .menu-inner {
+        /* 돌아가는 판 크기 설정 */
+        width: calc((var(--diameter) + var(--card-width)) * var(--unit-w));
+        height: calc((var(--diameter) + var(--card-height)) * var(--unit-w));
+        /* 상단기준 반지름만큼 내려가기 */
+        top: calc(55vh + (var(--diameter) * 0.5 * var(--unit-w)) - (var(--card-height) * 0.5 * var(--unit-h)));
+        /* 중앙배치 */
+        left: 50%;
+        transform: translate3d(-50%, -50%, 0px);
+        /* 회전 중심을 중앙으로 */
+        transform-origin: center center;
+        will-change: transform;
+    }
+
+    .menu-card:hover .card-inner {
+        transform: rotateY(180deg);
+    }
+}
+
+.menu-card a {
+    color: #000;
+}
+
+.menu-container {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+}
+
+.menu-container,
+.menu-inner {
+    position: absolute;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+.menu-arrow {
+    width: 0;
+    height: 0;
+}
+
+.arrow-wrapper {
+    top: 0;
+    width: 10vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 998;
+}
+
+.arrow {
+    width: 100%;
+    height: 100%;
+}
+
+.arrow-wrapper.right {
+    right: 0%;
+}
+
+.arrow.left {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.arrow-wrapper:hover .arrow.left {
+    transform: translateX(0);
+    transition: transform 0.6s;
+}
+
+.arrow.right {
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+    transform: translateX(100%);
+    transition: transform 0.6s;
+}
+
+.arrow-wrapper:hover .arrow.right {
+    transform: translateX(0%);
+    transition: transform 0.6s;
+}
+
+.menu-card {
+    position: absolute;
+    /* 카드 크기 */
+    width: calc(var(--card-width) * var(--unit-w));
+    height: calc((var(--card-height) + var(--card-height) / 3.5) * var(--unit-w));
+    perspective: 1000px;
+    will-change: transform;
+    transform-style: preserve-3d;
+    transform-origin: center center;
+}
+
+.card-inner {
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    will-change: transform;
+    height: calc((var(--card-height) + var(--card-height) / 3.5) * var(--unit-w));
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border: 5px solid #000;
+    border-radius: 30px;
+}
+
+.card-front {
+    background-color: #fff;
+}
+
+.card-front img {
+    width: 100%;
+    height: auto;
+}
+
+.card-back {
+    background-color: #000;
+    transform: rotateY(180deg);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-back h1 {
+    text-align: center;
+    font-size: 4rem;
+    margin: auto 0;
+    font-family: "Dela Gothic One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#rotateBtn {
+    font-size: 100px;
+    border: 0;
+    background-color: transparent;
+    color: #fff;
+}
+
+/* ── 입력창 통일 ── */
+.forgot-form .form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    line-height: 1.2;
+    color: #333;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 0.5rem;
+    transition: border-color 0.2s;
+}
+.forgot-form .form-group input:focus {
+    outline: none;
+    border-color: #fff;
+    background-color: #fff;
+}
+
+/* ── 次へ 버튼 스타일 ── */
+#fpNextBtn {
+    display: inline-block;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    color: #000;
+    background-color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 1rem;
+}
+#fpNextBtn:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+/* ── “ログインに戻る” 링크 스타일 ── */
+.forgot-form .login-actions {
+    text-align: center;
+}
+.forgot-form .login-actions .btn-link {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+.forgot-form .login-actions .btn-link:hover {
+    text-decoration: underline;
+}
+
+.register-form .login-actions .btn-link:hover {
+    text-decoration: underline;
+}
+
+/* ── 에러 메시지 스타일 ── */
+.forgot-form .validation-msg {
+    font-size: 0.85rem;
+    color: #e74c3c;
+    margin-top: -0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+#fpSendCode,
+#fpVerifyCode,
+#fpResetBtn {
+    display: inline-block;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    color: #000;
+    background-color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 1rem;
+}
+
+#fpSendCode:hover,
+#fpVerifyCode:hover,
+#fpResetBtn:hover {
+    background-color: #333;
+    color: #fff;
+}

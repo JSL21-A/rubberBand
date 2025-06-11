@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/layout}">
+
+<head>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link th:href="@{/css/account.css}" rel="stylesheet">
+
+
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+
+</head>
+<body>
+
+
+<div layout:fragment="content">
+
+
+	<div class="container">
+		<h1>設定</h1>
+
+		<!-- 프로필 -->
+		<div class="section">
+			<div class="info-block">
+				<div class="section-title">プロフィール</div>
+				<div class="nickname" th:text="${userProfile.nickname}"></div>
+				<div class="sub-text" th:text="'@' + ${currentUser.username}"></div>
+			</div>
+
+			<img
+				th:src="@{${userProfile.userImg != null ? userProfile.userImg : '/images/tttpanda.png'}}"
+				alt="プロフィール" class="profile-photo" /> <a href="/mypage/profileEdit"
+				class="btn-outline" role="button">プロフィール編集</a>
+		</div>
+
+		<div class="section">
+			<div class="info-block">
+				<div class="section-title">レジュメ管理</div>
+				<div class="email">
+					<!-- 이메일 관련 정보가 있다면 여기에 추가 -->
+				</div>
+			</div>
+			<div class="button-column">
+				<a class="btn-outline"
+					th:href="${hasResume} ? '/mypage/resumeView' : '/mypage/resumeInsert'"
+					th:text="${hasResume} ? 'レジュメを見る' : 'レジュメ作成'"></a>
+			</div>
+
+		</div>
+
+		<!-- 밴드 -->
+		<div class="section">
+			<div class="info-block">
+				<div class="section-title">マイバンド</div>
+				<span th:if="${myBand != null}" th:text="${myBand.band_name}">バンド名</span>
+				<span th:if="${myBand == null}">未所属</span>
+
+				<div class="email">
+					<!-- 이메일 관련 정보가 있다면 여기에 추가 -->
+				</div>
+			</div>
+			<div class="button-column">
+				<button type="button" id="bandPageBtn" class="btn-outline" th:if="${myBand != null}" th:onclick="|window.location.href='@{/bandinsertselect/modify(band_id=${myBand.band_id})}'|">バンドページ</button>
+				<button type="button" th:if="${myBand != null}" id="leaveBandBtn" class="btn-outline" th:attr="data-band-id=${myBand.band_id}">退会する</button>
+			</div>
+		</div>
+
+		<!-- 이메일 변경 -->
+		<div class="section">
+			<div class="info-block">
+				<div class="section-title">メールアドレスの変更</div>
+				<div class="section-desc">パスワード認証後にメールアドレスを変更できます。</div>
+			</div>
+			<button type="button" onclick="openEmailModal()" id="openEmailModalBtn" class="btn-outline">変更</button>
+		</div>
+
+		<!-- 비밀번호 변경 -->
+		<div class="section">
+			<div class="info-block">
+				<div class="section-title">パスワードの変更</div>
+				<div class="section-desc">パスワードを確認し、新しいパスワードを設定してください。</div>
+			</div>
+			<button onclick="openPasswordModal()" class="btn btn-outline">変更</button>
+		</div>
+
+		<!-- 통합 모달 : 비밀번호 인증 + 변경을 한 번에 입력 -->
+		<div id="passwordModal" class="modal">
+			<div class="modal-content">
+				<button class="close" onclick="closePasswordModal()">&times;</button>
+
+				<h2 class="modal-title">パスワードの変更</h2>
+				<p class="modal-desc">現在のパスワードと新しいパスワードを入力してください。</p>
+
+				<div class="input-group">
+					<label for="currentPassword">現在のパスワード</label> <input
+						type="password" id="currentPassword" placeholder="現在のパスワード">
+				</div>
+
+				<div class="input-group">
+					<label for="newPassword">新しいパスワード</label> <input type="password"
+						id="newPassword" placeholder="英数字・記号 10～16文字">
+				</div>
+
+				<div class="input-group">
+					<label for="confirmPassword">新しいパスワード（確認）</label> <input
+						type="password" id="confirmPassword" placeholder="もう一度入力">
+				</div>
+
+				<p id="changeError" class="error-text"></p>
+
+				<div class="button-row">
+					<button onclick="updatePassword()">変更する</button>
+				</div>
+			</div>
+		</div>
+		
+		<!-- 메일변경 -->
+		
+		<div id="emailChangeModal" class="modal" style="display:none; opacity:0; visibility:hidden;">
+        <div class="modal-content">
+          <button class="close" id="closeEmailModalBtn" onclick="closeEmailModal()">&times;</button>
+          <h2 class="modal-title">メールアドレスの変更</h2>
+
+          <!-- 1단계: 현재 비밀번호 입력 -->
+          <div id="email-step-1">
+            <p class="modal-desc">最初に現在のパスワードを入力してください。</p>
+            <div class="input-group">
+              <label for="currentPasswordForEmail">現在のパスワード</label>
+              <input type="password" id="currentPasswordForEmail" placeholder="現在のパスワード">
+            </div>
+            <p id="emailStep1Error" class="error-text"></p>
+            <div class="button-row">
+              <button id="verifyPwForEmailBtn">次へ</button>
+            </div>
+          </div>
+
+          <!-- 2단계: 새 이메일 입력 + 인증코드 전송 -->
+          <div id="email-step-2" style="display:none;">
+            <p class="modal-desc">新しいメールアドレスを入力して認証コードを送信してください。</p>
+            <div class="input-group">
+              <label for="newEmailInput">新しいメールアドレス</label>
+              <input type="email" id="newEmailInput" placeholder="example@domain.com">
+            </div>
+            <p id="emailStep2Error" class="error-text"></p>
+            <div class="button-row">
+              <button id="sendEmailCodeBtn">認証コードを送信</button>
+            </div>
+          </div>
+
+          <!-- 3단계: 인증코드 입력 + 확인 -->
+          <div id="email-step-3" style="display:none;">
+            <p class="modal-desc">メールで届いた認証コードを入力してください。</p>
+            <div class="input-group">
+              <label for="emailAuthCodeInput">認証コード</label>
+              <input type="text" id="emailAuthCodeInput" placeholder="6桁のコード">
+            </div>
+            <p id="emailStep3Error" class="error-text"></p>
+            <div class="button-row">
+              <button id="verifyEmailCodeBtn">認証して更新</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+		<!-- 회원탈퇴 -->
+		<div class="section">
+			<div class="info-block">
+				<div class="section-title">アカウント削除</div>
+			</div>
+			<span class="btn-text-link" onclick="confirmWithdraw()">アカウントを退会する</span>
+		</div>
+	</div>
+
+	<script>
+		function confirmWithdraw() {
+			if (confirm("本当に退会しますか？")) {
+				alert("退会処理が完了しました。");
+			}
+		}
+	</script>
+
+	<script>
+
+	$(function(){
+
+	  $(document).on('click', '#leaveBandBtn', function(e){
+	    e.preventDefault();
+
+	    const bandId = $(this).data('band-id');
+	    if (!bandId) {
+	      alert('バンドIDが取得できませんでした。');
+	      return;
+	    }
+
+	    const userId = window.currentUser;
+	    if (!userId || userId === 'anonymous') {
+	      alert('ユーザー情報がありません。もう一度ログインしてください。');
+	      return;
+	    }
+
+	    if (!confirm('本当にこのバンドを退会しますか？')) {
+	      return;
+	    }
+
+	    $.ajax({
+	      url: '/mypage/leaveBand',
+	      method: 'POST',
+	      data: {
+	        user_id: userId,
+	        band_id: bandId
+	      },
+	      success: function(){
+	        alert('バンドの退会が完了しました。');
+	        location.reload();
+	      },
+	      error: function(xhr, status, error){
+	        console.error('退会失敗:', status, error);
+	        alert('退会に失敗しました。もう一度お試しください。');
+	      }
+	    });
+
+	  });
+
+	});
+	
+	</script>
+
+	<!-- 비밀번호 변경 -->
+	<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // 모달 열기
+    window.openPasswordModal = function () {
+      document.getElementById("passwordModal").style.display = "flex";
+    };
+
+    // 모달 닫기
+    window.closePasswordModal = function () {
+      document.getElementById("passwordModal").style.display = "none";
+      document.getElementById("changeError").textContent = "";
+      document.getElementById("currentPassword").value = "";
+      document.getElementById("newPassword").value = "";
+      document.getElementById("confirmPassword").value = "";
+    };
+
+    // 비밀번호 변경 처리 (영문+숫자 or 숫자+기호를 포함한 10~16자)
+    window.updatePassword = function () {
+      const currentPw = document.getElementById("currentPassword").value.trim();
+      const newPw = document.getElementById("newPassword").value.trim();
+      const confirmPw = document.getElementById("confirmPassword").value.trim();
+      const errorMsg = document.getElementById("changeError");
+
+      errorMsg.textContent = "";
+
+      if (!currentPw || !newPw || !confirmPw) {
+        errorMsg.textContent = "すべての項目を入力してください。";
+        return;
+      }
+
+      if (currentPw === newPw) {
+        errorMsg.textContent = "現在のパスワードと異なるパスワードを入力してください。";
+        return;
+      }
+
+      const pwRegex = /^(?=.*[A-Za-z0-9])[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{10,16}$/;
+      if (!pwRegex.test(newPw)) {
+        errorMsg.textContent = "10〜16文字、英数字または記号を含めてください。";
+        return;
+      }
+
+      if (newPw !== confirmPw) {
+        errorMsg.textContent = "パスワードが一致しません。";
+        return;
+      }
+
+      const token = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+      const headerName = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+      fetch("/mypage/update-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          [headerName]: token
+        },
+        body: JSON.stringify({
+          currentPassword: currentPw,
+          newPassword: newPw
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            alert("パスワードが変更されました。");
+            window.location.href = "/mypage/account";
+          } else {
+            errorMsg.textContent = data.message || "変更に失敗しました。";
+          }
+        })
+        .catch(error => {
+          console.error("エラー:", error);
+          errorMsg.textContent = "サーバーエラーが発生しました。";
+        });
+    };
+  });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 모달 열기 함수
+    window.openEmailModal = function() {
+      // 항상 step1(비밀번호 확인)만 보이도록 초기화
+      document.getElementById("email-step-1").style.display = "block";
+      document.getElementById("email-step-2").style.display = "none";
+      document.getElementById("email-step-3").style.display = "none";
+
+      // 에러 메시지 초기화
+      document.getElementById("emailStep1Error").textContent = "";
+      document.getElementById("emailStep2Error").textContent = "";
+      document.getElementById("emailStep3Error").textContent = "";
+
+      // 입력 필드 초기화 및 활성화
+      document.getElementById("currentPasswordForEmail").value = "";
+      document.getElementById("newEmailInput").value = "";
+      document.getElementById("newEmailInput").disabled = false;
+      document.getElementById("emailAuthCodeInput").value = "";
+
+      // 모달 보이기
+      const emailModal = document.getElementById("emailChangeModal");
+      emailModal.style.display = "flex";
+      emailModal.style.opacity = "1";
+      emailModal.style.visibility = "visible";
+    };
+
+    // 모달 닫기 함수
+    window.closeEmailModal = function() {
+      const emailModal = document.getElementById("emailChangeModal");
+      emailModal.style.display = "none";
+      // (opacity/visibility는 display:none으로 덮어쓰기)
+    };
+
+    // CSRF 토큰 읽기
+    const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+    // 1단계: 현재 비밀번호 검증
+    document.getElementById("verifyPwForEmailBtn").addEventListener("click", async function() {
+      const pw = document.getElementById("currentPasswordForEmail").value.trim();
+      const errEl = document.getElementById("emailStep1Error");
+      errEl.textContent = "";
+
+      if (!pw) {
+        errEl.textContent = "現在のパスワードを入力してください。";
+        return;
+      }
+
+      try {
+        const response = await fetch("/user/verify-current-password", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            [csrfHeader]: csrfToken
+          },
+          body: JSON.stringify({ currentPassword: pw })
+        });
+        const result = await response.json();
+
+        if (result.ok) {
+          // 1단계 통과 → 2단계로
+          document.getElementById("email-step-1").style.display = "none";
+          document.getElementById("email-step-2").style.display = "block";
+        } else {
+          errEl.textContent = "パスワードが正しくありません。";
+        }
+      } catch (err) {
+        console.error(err);
+        errEl.textContent = "サーバーエラーが発生しました。";
+      }
+    });
+
+    // 2단계: 인증 코드 전송
+    document.getElementById("sendEmailCodeBtn").addEventListener("click", async function() {
+      const newEmail = document.getElementById("newEmailInput").value.trim();
+      const errEl = document.getElementById("emailStep2Error");
+      errEl.textContent = "";
+
+      if (!newEmail) {
+        errEl.textContent = "新しいメールアドレスを入力してください。";
+        return;
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(newEmail)) {
+        errEl.textContent = "有効なメールアドレスを入力してください。";
+        return;
+      }
+
+      try {
+        const params = new URLSearchParams();
+        params.append("email", newEmail);
+
+        const response = await fetch("/user/send-email-code", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            [csrfHeader]: csrfToken
+          },
+          body: params.toString()
+        });
+
+        if (response.ok) {
+          // 이메일 입력란 잠금
+          document.getElementById("newEmailInput").disabled = true;
+          // 2단계 → 3단계 화면 전환
+          document.getElementById("email-step-2").style.display = "none";
+          document.getElementById("email-step-3").style.display = "block";
+        } else {
+          errEl.textContent = "認証コードの送信に失敗しました。";
+        }
+      } catch (err) {
+        console.error(err);
+        errEl.textContent = "サーバーエラーが発生しました。";
+      }
+    });
+
+    // 3단계: 인증 코드 확인 후 실제 이메일 업데이트
+    document.getElementById("verifyEmailCodeBtn").addEventListener("click", async function() {
+      const code = document.getElementById("emailAuthCodeInput").value.trim();
+      const newEmail = document.getElementById("newEmailInput").value.trim();
+      const errEl = document.getElementById("emailStep3Error");
+      errEl.textContent = "";
+
+      if (!code) {
+        errEl.textContent = "認証コードを入力してください。";
+        return;
+      }
+
+      try {
+        // 3-1) 인증 코드 확인
+        const params1 = new URLSearchParams();
+        params1.append("code", code);
+
+        const response1 = await fetch("/user/verify-email-code", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            [csrfHeader]: csrfToken
+          },
+          body: params1.toString()
+        });
+        const isValidCode = await response1.json();
+
+        if (!isValidCode) {
+          errEl.textContent = "認証コードが一致しません。";
+          return;
+        }
+
+        // 3-2) 코드가 유효 → 실제 이메일 업데이트
+        const userId = window.currentUser; // 전역 변수로 설정된 user_id
+        const params2 = new URLSearchParams();
+        params2.append("user_id", userId);
+        params2.append("new_email", newEmail);
+
+        const response2 = await fetch("/user/update-email", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            [csrfHeader]: csrfToken
+          },
+          body: params2.toString()
+        });
+        const data2 = await response2.json();
+
+        if (data2.success) {
+          alert("メールアドレスが正常に変更されました。");
+          window.location.reload();
+        } else {
+          errEl.textContent = data2.message || "メール変更に失敗しました。";
+        }
+      } catch (err) {
+        console.error(err);
+        errEl.textContent = "サーバーエラーが発生しました。";
+      }
+    });
+  });
+</script>
+
+	
+</div>
+
+
+
+</body>
+</html>
