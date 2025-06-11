@@ -458,6 +458,7 @@ public class MypageController {
 	        model.addAttribute("errorMessage", "이력서를 찾을 수 없습니다.");
 	        return "mypage/account";
 	    }
+		System.out.println("service resume : " + resumeId);
 
 	    String currentUserId = getCurrentUserId(principal);
 	    boolean isOwner = resume.getUserId().equals(currentUserId);
@@ -471,12 +472,18 @@ public class MypageController {
 
 	    return "mypage/resumeView";
 	}
-
-
-
-
 	
-
+	//스크랩 조회
+	@GetMapping("/activity/scraps")
+	public String showScrapList(Model model, Principal principal) {
+	    System.out.println("현재 로그인한 사용자 ID: " + principal.getName());
+	    String userId = principal.getName();
+	    List<MyActiveDto> scrapList = mypageService.getScrapPostsByUser(userId);
+	    model.addAttribute("mode", "scraps");
+	    model.addAttribute("scrapList", scrapList);
+	    return "mypage/myActive";
+	}
+	
 	
 
 

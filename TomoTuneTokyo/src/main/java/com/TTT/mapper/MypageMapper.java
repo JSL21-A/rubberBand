@@ -86,14 +86,20 @@ public interface MypageMapper {
 
 	// 댓글 소유자 확인용
 	String findCommentOwner(@Param("commentId") Long commentId);
-	
-	//게시글 삭제
+
+	// 게시글 삭제
 	int deletePostsByIds(@Param("userId") String userId, @Param("postIds") List<Long> postIds);
 
 	// 지원현황(리더)
 	List<MyActiveDto> findApplyStatusByWriter(@Param("userId") String userId);
 
-
+	//스크랩 조회
+	List<MyActiveDto> findScrapPostsByUserId(String userName);
+	
+	//user_id user_name으로 전환
+	String findUserIdByUserName(String userName);
+	
+	
 
 
 }

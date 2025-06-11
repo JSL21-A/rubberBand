@@ -16,7 +16,8 @@ public class MyActiveDto {
     private Timestamp createdAt;
     private Long postApplyId;      
     private Long resumeId;         
-    private String postTitle;   
-    
-   
+    private String postTitle;  
+    private Long scrapId;
+    private String title;   
+    private Long recruitPostId;   
 }
