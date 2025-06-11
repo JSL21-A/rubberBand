@@ -37,8 +37,8 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public String userList(HttpServletRequest request, @RequestParam(name = "page", required = false) String page) {
-        page = (page == null) ? "1" : page;
+    public String userList(HttpServletRequest request) {
+        List<UserDto> user = adminService.getAllUser();
         return "admin/memberList";
     }
 

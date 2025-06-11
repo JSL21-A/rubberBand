@@ -23,4 +23,7 @@ public interface AdminMapper {
 
     @Select("SELECT p.post_id, c.comment_content, u.nickname, r.created_at FROM reports r JOIN comments c ON r.comment_id = c.comment_id JOIN posts p ON c.post_id = p.post_id JOIN user_profile u ON r.target_id = u.user_id")
     List<PostVo> getRcommentList();
+
+    @Select("SELECT * FROM user_profile")
+    List<UserDto> getAllUser();
 }

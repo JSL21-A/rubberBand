@@ -31,4 +31,8 @@ public class AdminService {
     public List<PostVo> getRcommentList() {
         return adminMapper.getRcommentList();
     }
+
+    public List<UserDto> getAllUser() {
+        return adminMapper.getAllUser();
+    }
 }
