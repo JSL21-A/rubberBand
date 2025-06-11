@@ -4440,3 +4440,7 @@ body {
 .slider-card {
     position: relative;
 }
+
+.modal-dialog {
+  top: 10% !important;
+}
