@@ -72,13 +72,13 @@ public interface PublicMapper {
                         @Param("target_id") String target_id,
                         @Param("comment_id") Long commnet_id);
 
-        @Select("SELECT COUNT(*) FROM posts WHERE board_id = #{board_id}")
+        @Select("SELECT COUNT(*) FROM posts WHERE board_id = #{board_id} AND post_status IS NULL OR post_status != 'D';")
         int getPostCount(int board_id);
 
-        @Select("SELECT COUNT(*) FROM posts WHERE board_id != 7")
+        @Select("SELECT COUNT(*) FROM posts WHERE board_id != 7 AND post_status IS NULL OR post_status != 'D';")
         int getPostCountAll();
 
-        @Select("SELECT COUNT(*) FROM posts WHERE board_id = 7")
+        @Select("SELECT COUNT(*) FROM posts WHERE board_id = 7 AND post_status IS NULL OR post_status != 'D';")
         int getNotiCount();
 
         @Delete("DELETE FROM comments WHERE comment_id = #{comment_id}")
