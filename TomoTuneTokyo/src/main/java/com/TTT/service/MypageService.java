@@ -139,8 +139,9 @@ public class MypageService {
 	}
 
 	// 특정 계정 이력서 조회
-	public MypageDto getResumeById(Long id) {
-		MypageDto resume = mypageMapper.findById(id);
+	public MypageDto getResumeById(int resume_id) {
+		MypageDto resume = mypageMapper.findById(resume_id);
+		System.out.println("service resume : " + resume_id);
 		if (resume != null) {
 			List<BandHistoryDto> bandList = mypageMapper.selectBandHistoryByResumeId(resume.getResumeId());
 			resume.setBandHistoryList(bandList);
@@ -309,5 +310,38 @@ public class MypageService {
 			return false;
 		}
 	}
+	
+	//지원현황(리더)
+	public List<MyActiveDto> getApplyStatusByWriter(String userId) {
+	    return mypageMapper.findApplyStatusByWriter(userId);
+	}
+
+	//이력서 열람
+	public MypageDto getResumeByResumeId(int resumeId) {
+	    MypageDto resume = mypageMapper.findById(resumeId);
+	    if (resume != null) {
+	        List<BandHistoryDto> bandList = mypageMapper.selectBandHistoryByResumeId(resume.getResumeId());
+	        resume.setBandHistoryList(bandList);
+	    }
+	    return resume;
+	}
+	
+	//스크랩 조회
+	public List<MyActiveDto> getScrapPostsByUser(String userName) {
+	    // user_name을 통해 user_id(UUID)를 먼저 조회
+	    String userId = mypageMapper.findUserIdByUserName(userName);
+
+	    if (userId == null || userId.isEmpty()) {
+	        System.out.println("user_name에 해당하는 user_id(UUID)를 찾을 수 없음: " + userName);
+	        return List.of(); // 빈 리스트 반환
+	    }
+
+	    return mypageMapper.findScrapPostsByUserId(userId);
+	}
+
+
+	
+
+
 
 }

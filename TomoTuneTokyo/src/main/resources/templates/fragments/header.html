@@ -97,9 +97,8 @@
 									<nav>
 										<a href="#" onclick="openProfilePopup(); return false;">プロフィール編集</a>
 
-										<a href="#"
-											onclick="window.open('/mypage/account', 'AccountSettings', 'width=600,height=800,menubar=no,toolbar=no,location=no,status=no'); return false;"
-											class="open-account-btn">アカウント設定</a> <a href="/mypage/activity">アクティビティ</a>
+										<a href="#" onclick="openMyPage()" class="open-account-btn">アカウント設定</a> <a
+											href="/mypage/activity">アクティビティ</a>
 										<a href="/logout">ログアウト</a>
 										<a href="/admin/"
 											th:if="${#authorization.expression('hasRole(''A'')')}">管理者ページ</a>
@@ -192,7 +191,7 @@
 			});
 		</script>
 
-		<script>
+		<!-- <script>
 		  function openProfilePopup() {
 		    const width  = 420;
 		    const height = 580;
@@ -205,5 +204,46 @@
 		  }
 		</script>
 
+			function openMyPage() {
+				console.log("onit");
+				// 팝업 가로/세로 크기
+				const w = 600, h = 800;
+				// 화면 가로 중앙에 띄우기
+				const left = Math.round((screen.width - w) / 2);
+				// 화면 위에서 200px 아래
+				const top = 200;
+				window.open(
+					"/mypage/account",
+					"AccountSettings",
+					"width=" + w +
+					",height=" + h +
+					",left=" + left +
+					",top=" + top +
+					",menubar=no,toolbar=no,location=no,status=no"
+				);
+			}
+
+			document.addEventListener("click", function (event) {
+				const btn = event.target.closest(".open-account-btn");
+				if (!btn) return;
+				event.preventDefault();
+				console.log("onit");
+				// 팝업 가로/세로 크기
+				const w = 600, h = 800;
+				// 화면 가로 중앙에 띄우기
+				const left = Math.round((screen.width - w) / 2);
+				// 화면 위에서 200px 아래
+				const top = 200;
+				window.open(
+					"/mypage/account",
+					"AccountSettings",
+					"width=" + w +
+					",height=" + h +
+					",left=" + left +
+					",top=" + top +
+					",menubar=no,toolbar=no,location=no,status=no"
+				);
+			});
+		</script>
 	</div>
 </div>

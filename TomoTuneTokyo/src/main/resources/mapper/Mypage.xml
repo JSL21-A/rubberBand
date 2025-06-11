@@ -104,7 +104,7 @@
 	</select>
 
 	<!-- 이력서 조회 -->
-	<select id="findById" parameterType="long"
+	<select id="findById" parameterType="int"
 		resultType="com.TTT.domain.MypageDto">
 		SELECT
 		resume_id AS resumeId,
@@ -126,7 +126,8 @@
 		detail_time AS detailTime,
 		note
 		FROM resume
-		WHERE resume_id = #{id}
+		WHERE resume_id =
+		#{value}
 	</select>
 
 
@@ -298,6 +299,78 @@
 			#{id}
 		</foreach>
 	</delete>
+
+	<!-- 지원현황(리더) -->
+	<select id="findApplyStatusByWriter"
+		resultType="com.TTT.domain.MyActiveDto">
+		SELECT
+		pa.post_apply_id AS postApplyId,
+		pa.post_id AS postId,
+		pa.resume_id AS
+		resumeId,
+		pa.user_id AS userId,
+		u.username AS username,
+		brp.title AS postTitle,
+		pa.created_at AS createdAt
+		FROM
+		post_apply pa
+		JOIN
+		band_recruit_post brp ON pa.post_id = brp.post_id
+		JOIN
+		users u ON
+		pa.user_id = u.user_id
+		WHERE
+		brp.user_id = #{userId}
+		ORDER BY
+		pa.created_at DESC
+	</select>
+
+	<select id="findScrapPostsByUserId" resultType="com.TTT.domain.MyActiveDto">
+  (
+    SELECT
+      ps.POST_SCRAP_ID AS scrapId,
+      ps.POST_ID AS postId,
+      NULL AS recruitPostId,
+      p.POST_TITLE AS postTitle,
+      NULL AS title,
+      ps.CREATED_AT AS createdAt
+    FROM post_scrap ps
+    JOIN posts p ON ps.POST_ID = p.POST_ID
+    WHERE ps.USER_ID = #{userId}
+      AND ps.POST_ID IS NOT NULL
+  )
+  UNION
+  (
+    SELECT
+      ps.POST_SCRAP_ID AS scrapId,
+      NULL AS postId,
+      ps.RECRUIT_POST_ID AS recruitPostId,
+      NULL AS postTitle,
+      brp.TITLE AS title,
+      ps.CREATED_AT AS createdAt
+    FROM post_scrap ps
+    JOIN band_recruit_post brp ON ps.RECRUIT_POST_ID = brp.POST_ID
+    WHERE ps.USER_ID = #{userId}
+      AND ps.RECRUIT_POST_ID IS NOT NULL
+  )
+  ORDER BY createdAt DESC
+</select>
+
+<!-- user_name으로 user_id(UUID) 조회 -->
+<select id="findUserIdByUserName" resultType="string" parameterType="string">
+  SELECT user_id
+  FROM users
+  WHERE user_id = #{username}  
+</select>
+
+
+
+
+
+
+
+
+
 
 
 </mapper>

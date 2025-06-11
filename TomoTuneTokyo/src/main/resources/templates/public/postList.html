@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TomoTuneTokyo</title>
 </head>
 
 <body>
@@ -69,11 +69,17 @@
                 box-shadow: 2px 2px 2px 2px #bbb;
             }
 
+            .post_list li:last-child {
+                border-bottom: none;
+            }
+
             .post_post {
                 display: flex;
                 justify-content: space-between;
                 padding: 1%;
             }
+
+
 
             .post_post a {
                 text-decoration: none;
@@ -198,6 +204,7 @@
                 box-shadow: 1px 1px 1px 1px #bbb;
                 border-radius: 5px;
                 border: none;
+                cursor: pointer;
             }
 
             #bottom .pageBtn.active {
@@ -216,6 +223,11 @@
                 border: none;
                 cursor: pointer;
                 transition: background-color 0.2s ease;
+            }
+
+            #post_main {
+                font-weight: bolder;
+                font-size: 18px;
             }
         </style>
         <div id="notice">
@@ -261,9 +273,9 @@
             <div id="middle" hx-history-elt>
                 <div class="post_list" th:attr="data-count=${count}">
                     <ul>
-                        <li class="post_post">
+                        <li id="post_main" class="post_post">
                             <div class="post_title">
-                                <a href="#">タイトル</a>
+                                <div>タイトル</div>
                             </div>
                             <div class="post_content">カテゴリー</div>
                             <div class="post_content">ユーザー名</div>
