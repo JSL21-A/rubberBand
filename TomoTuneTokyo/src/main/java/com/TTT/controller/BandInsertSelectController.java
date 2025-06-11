@@ -140,6 +140,7 @@ public class BandInsertSelectController {
 		BandInsertVo currentUserVo = bandinsertselectservice.SelectBandMemberByUserId(currentUserId, bandId);
 		
 		model.addAttribute("currentUserVo", currentUserVo);
+		
 
 		return "/band/modify";
 	}

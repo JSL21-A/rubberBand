@@ -97,7 +97,6 @@
       <p class="card-meta">
         <span th:text="${band.stage_name}">작성자</span> |
         <span th:text="${#temporals.format(band.created_at, 'yyyy.MM.dd')}">날짜</span> |
-        ヒット数 <span>0</span>
       </p>
     </div>
   </div>
@@ -116,7 +115,6 @@
       <p class="card-meta">
         <span th:text="${band.stage_name}">작성자</span> |
         <span th:text="${#temporals.format(band.created_at, 'yyyy.MM.dd')}">날짜</span> |
-        ヒット数 <span>0</span>
       </p>
     </div>
   </div>
@@ -244,17 +242,14 @@
 	  <div class="member-input-group leader-member">
 	    <label>リーダー</label>
 	
-		<!-- 리더 이미지: 값이 있는 경우에만 업로드된 이미지 표시 -->
-		<img th:if="${leaderInfo != null and leaderInfo.user_img != null and !#strings.isEmpty(leaderInfo.user_img)}"
-		     th:src="@{'/upload/' + ${leaderInfo.user_img}}"
-		     class="member-image-preview mb-2"
-		     style="width:60px; height:60px; border-radius:50%; object-fit:cover;" alt="프로필">
+		
 
 		<!-- 리더 이미지: 값이 없거나 leaderInfo 자체가 null일 경우 기본 이미지 표시 -->
-		<img th:if="${leaderInfo == null or leaderInfo.user_img == null or #strings.isEmpty(leaderInfo.user_img)}"
-		     th:src="@{/images/member1.png}"
-		     class="member-image-preview mb-2"
-		     style="width:60px; height:60px; border-radius:50%; object-fit:cover;" alt="기본">
+		 <img th:src="@{${leaderInfo != null and leaderInfo.user_img != null and !#strings.isEmpty(leaderInfo.user_img) 
+					        ? '/images' + leaderInfo.user_img 
+					        : '/images/defaultIcon.png'}}" 
+					        alt="리더" class="member-img"
+					        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
 
 
 			 <!-- leaderInfo가 존재할 때 -->
@@ -367,7 +362,9 @@
     <div class="modal-content" style="padding: 30px;">
       <div class="modal-header">
         <h4 class="modal-title" id="memberSearchLabel">メンバー検索</h4>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute; top: 10px; right: 16px; font-size: 24px;">&times;</button>
+		<button type="button" class="close" id="closeMemberSearchPopup"
+		        aria-label="Close"
+		        style="position: absolute; top: 10px; right: 16px; font-size: 24px;">&times;</button>
       </div>
       <div class="modal-body">
         <input type="text" id="memberSearchInput" class="form-control mb-3" placeholder="名前で検索">
@@ -531,19 +528,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			members.forEach(user => {
 				const userImg = user.user_img && user.user_img.trim() !== ''
-					? `/upload/${user.user_img}`
-					: '/images/member1.png';
+					? `/images${user.user_img}`
+					: '/images/defaultIcon.png';
 
-					const li = $(`
-					  <li class="list-group-item member-result-item" style="cursor:pointer"
-					      data-nickname="${user.nickname}"
-					      data-user-id="${user.user_id}"
-					      data-stage-name=""
-					      data-image="${userImg}">
-					    <img src="${userImg}" style="width:30px; height:30px; border-radius:50%; margin-right:8px;">
-					    ${user.nickname}
-					  </li>
-					`);
+					// ✅ 이미 선택된 user_id 수집
+					const selectedIds = $('input[name="user_id_list[]"]').map(function () {
+					  return $(this).val();
+					}).get();
+
+					members.forEach(user => {
+					  const userImg = user.user_img && user.user_img.trim() !== ''
+					    ? `/images${user.user_img}`
+					    : '/images/defaultIcon.png';
+
+					  const isSelected = selectedIds.includes(user.user_id); // 중복 확인
+
+					  const li = $(`
+					    <li class="list-group-item member-result-item ${isSelected ? 'disabled' : ''}" 
+					        style="cursor: ${isSelected ? 'not-allowed' : 'pointer'}"
+					        data-nickname="${user.nickname}"
+					        data-user-id="${user.user_id}"
+					        data-stage-name=""
+					        data-image="${userImg}">
+					      <img src="${userImg}" style="width:30px; height:30px; border-radius:50%; margin-right:8px;">
+					      ${user.nickname} ${isSelected ? '<span style="color:red;">(選択済み)</span>' : ''}
+					    </li>
+					  `);
+
+					  resultArea.append(li);
+					});
+
 
 				resultArea.append(li);
 			});
@@ -552,6 +566,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// ✅ 일반 멤버 클릭 시 데이터 반영
 	$(document).on('click', '.member-result-item', function () {
+		if ($(this).hasClass('disabled')) {
+		  alert("このメンバーは既に選択されています。");
+		  return;
+		}
+
 		const name = $(this).data('nickname');
 		const image = $(this).data('image');
 		const userId = $(this).data('user-id');
@@ -649,7 +668,31 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 
+<script>
+	// 닫기 버튼 직접 처리 (data-dismiss 안 씀)
+	document.getElementById("closeMemberSearchPopup").addEventListener("click", function () {
+	  $('#memberSearchPopup').modal('hide');
+	});
 
+</script>
+
+<script>
+	// 모달 열기 전 위치 보정
+	$('#memberSearchPopup').on('show.bs.modal', function () {
+	  // 강제로 body에 modal-open 클래스 추가
+	  $('body').addClass('modal-open');
+
+	  // 모달의 스크롤 위치와 마진 초기화
+	  $(this).css({
+	    'display': 'block',
+	    'padding-right': '0',
+	    'top': '50%', // 수직 중앙 배치
+	    'transform': 'translateY(-50%)',
+	    'position': 'fixed'
+	  });
+	});
+
+</script>
 
 </div>
 </body>

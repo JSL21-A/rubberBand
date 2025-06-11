@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Dela+Gothic+One&display=swap");
+
 @media (max-width: 768px) {
     :root {
         /* 창 크기에 따라 유동적으로 움직이려고 선언 */
@@ -49,6 +51,10 @@
     .menu-card:hover .card-inner {
         transform: rotateY(180deg);
     }
+}
+
+.menu-card a {
+    color: #000;
 }
 
 .menu-container {
@@ -115,11 +121,11 @@
     position: absolute;
     /* 카드 크기 */
     width: calc(var(--card-width) * var(--unit-w));
-    height: calc(var(--card-height) * var(--unit-w));
+    height: calc((var(--card-height) + var(--card-height) / 3.5) * var(--unit-w));
     perspective: 1000px;
-    transform-origin: center;
     will-change: transform;
     transform-style: preserve-3d;
+    transform-origin: center center;
 }
 
 .card-inner {
@@ -152,19 +158,33 @@
 }
 
 .card-front img {
-	width: 100%;
-	height: auto;
+    width: 100%;
+    height: auto;
 }
 
 .card-back {
-    background-color: #f4f4f4;
+    background-color: #000;
     transform: rotateY(180deg);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-back h1 {
+    text-align: center;
+    font-size: 4rem;
+    margin: auto 0;
+    font-family: "Dela Gothic One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 #rotateBtn {
     font-size: 100px;
     border: 0;
     background-color: transparent;
+    color: #fff;
 }
 
 /* ── 입력창 통일 ── */

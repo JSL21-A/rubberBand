@@ -5,7 +5,7 @@
 <head>
     <meta charset=" UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TomoTuneTokyo</title>
 </head>
 
 <body>
@@ -15,8 +15,22 @@
 
     </style>
     <div id="content" layout:fragment="content" th:fragment="content">
+        <style>
+            .ctrlBtn {
+                position: relative;
+                padding: 0.4rem 0.8rem;
+                font-size: 1rem;
+                border-radius: 5px;
+                background-color: #2D2D2D;
+                color: white;
+                border: none;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+                top: 10px;
+            }
+        </style>
         <h1>無いぺージや間違った接近です。</h1>
-        <button hx-get="/" hx-target="body" hx-push-url="true">メインページへ</button>
+        <button class="ctrlBtn" hx-get="/" hx-target="body" hx-push-url="true">メインページへ</button>
     </div>
 </body>
 <script>

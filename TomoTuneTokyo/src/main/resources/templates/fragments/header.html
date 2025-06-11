@@ -1,176 +1,255 @@
 <div th:fragment="header">
-  <div class="top_navigation">
-    <header class="header">
-      <div class="scrolling-banner">
-          <p>✨ パフォーマンスチームメンバー募集中！🎤 ボーカル、ドラマー、ラッパー 大歓迎！🎧 今すぐ応募してみよう！</p>
-      </div>
+	<div class="top_navigation">
+		<header class="header">
+			<div class="scrolling-banner">
+				<p>✨ パフォーマンスチームメンバー募集中！🎤 ボーカル、ドラマー、ラッパー 大歓迎！🎧 今すぐ応募してみよう！</p>
+			</div>
 
-      <div class="header-container">
-        <div class="header-item left">
-          <a href="/">
-            <img src="/images/logo.png" class="header-icon home-icon" alt="Home Icon">
-          </a>
-        </div>
-        <div class="header-item center">
-          <h1>Tomo Tune Tokyo</h1>
-        </div>
-		<div class="header-item right">
-			<div id="hamburgerBtn" class="hamburger-icon">
-				<img th:src="@{/images/memberIcon.png}" 
-					th:data-hover-src="@{/images/memberIcon_hover.png}"
-					class="header-icon hamburger-icon"
-					alt="Hamburger Icon">
-				<div id="slideMenu" th:fragment="slideMenu" class="slide-menu">
-				 <script th:inline="javascript">
-    				/*<![CDATA[*/
-      				window.currentUser = /*[[${currentUserId}]]*/ 'anonymous';
-    				/*]]>*/
-  				 </script>
-					<button class="close-btn" aria-label="閉じる">&times;</button>
-					<form class="login-form" th:action="@{/user/login}" method="post" sec:authorize="!isAuthenticated()">
-						<h2>ログイン</h2>
-						<div class="form-group">
-							<input type="text" name="username" placeholder="ID" required />
-						</div>
-						<div class="form-group">
-							<input type="password" name="password" placeholder="PASSWORD" required />
-						</div>
-						<button id="login" type="button" class="btn-login">ログイン</button>
-						<div class="login-actions">
-							<a href="#" class="btn-link register-link">会員登録</a>
-							<a href="/user/forgot" id="forgotLink" class="btn-link">ID／パスワードをお忘れの方</a>
-						</div>
-					</form>
-					<div id="mainPane" style="display: block;">
-						<div class="welcome" style="display:none">
-								<!-- 알림 아이콘 -->
-								<div class="notification" onclick="goToNotification()" title="알림">
-									<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"
-										viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
-										stroke-linecap="round" stroke-linejoin="round">
-						    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
-						    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-						  </svg>
-										<span class="notification-badge" style="display:none">0</span>
+			<div class="header-container">
+				<div class="header-item left">
+					<a href="/"> <img src="/images/logo.png" class="header-icon home-icon" alt="Home Icon">
+					</a>
+				</div>
+				<div class="header-item center">
+					<h1>Tomo Tune Tokyo</h1>
+				</div>
+				<div class="header-item right">
+					<div id="hamburgerBtn" class="hamburger-icon">
+						<img th:src="@{/images/memberIcon.png}" th:data-hover-src="@{/images/memberIcon_hover.png}"
+							class="header-icon hamburger-icon" alt="Hamburger Icon">
+						<div id="slideMenu" th:fragment="slideMenu" class="slide-menu">
+							<script th:inline="javascript">
+								/*<![CDATA[*/
+								window.currentUser = /*[[${currentUserId}]]*/'anonymous';
+								/*]]>*/
+							</script>
+							<button class="close-btn" aria-label="閉じる">&times;</button>
+							<form id="loginForm" th:action="@{/user/login}" method="post" class="login-form"
+								sec:authorize="!isAuthenticated()">
+
+								<h2>ログイン</h2>
+								<div class="form-group">
+									<input type="text" name="username" placeholder="ID" required />
 								</div>
-								<!-- 사이드바 미니 프로필 -->
-								<div class="sidebar-profile" th:if="${currentUser != null}">
-									<!-- 프로필 이미지 클릭시 프로필 편집화면으로 이동 -->
-									<img src="/images/defaultprofile0.png" alt="プロフィール画像" class="sidebar-avatar">
-									<div class="sidebar-nickname" th:text="${currentUser.nickname}"></div>
-									<div class="sidebar-id" th:text="'@' + ${currentUser.username}"></div>
-									<div class="sidebar-email" th:text="${currentUser.email}"></div>
+								<div class="form-group">
+									<input type="password" name="password" placeholder="PASSWORD" required />
 								</div>
-								<!-- 사이드바 메뉴 -->
-								<nav>
-									<a href="#" onclick="window.open('/mypage/profileEdit', 'AccountSettings', 'width=600,height=800,menubar=no,toolbar=no,location=no,status=no'); return false;">プロフィール編集</a> 
-									<a href="#" onclick="window.open('/mypage/account', 'AccountSettings', 'width=600,height=800,menubar=no,toolbar=no,location=no,status=no'); return false;" class="open-account-btn">アカウント設定</a>
-									<a href="/activity">アクティビティ</a> 
-									<a href="/logout">ログアウト</a>
-								</nav>
-	   						
-	  					</div>
-	  					<div class="welcome" sec:authorize="isAuthenticated()">
-								<!-- 알림 아이콘 -->
-								<div class="notification" onclick="goToNotification()" title="알림">
-									<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"
-										viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
-										stroke-linecap="round" stroke-linejoin="round">
-						    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
-						    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-						  </svg>
-										<span class="notification-badge" style="display:none">0</span>
+								<button id="login" type="button" class="btn-login">ログイン</button>
+								<div class="login-actions">
+									<a href="#" class="btn-link register-link">会員登録</a> <a href="/user/forgot"
+										id="forgotLink" class="btn-link">ID／パスワードをお忘れの方</a>
 								</div>
-								<!-- 사이드바 미니 프로필 -->
-								<div class="sidebar-profile" th:if="${currentUser != null}">
-									<!-- 프로필 이미지 클릭시 프로필 편집화면으로 이동 -->
-									<img src="/images/defaultprofile0.png" alt="プロフィール画像"
-										class="sidebar-avatar">
-									<div class="sidebar-nickname" th:text="${currentUser.nickname}"></div>
-									<div class="sidebar-id" th:text="'@' + ${currentUser.username}"></div>
-									<div class="sidebar-email" th:text="${currentUser.email}"></div>
+							</form>
+							<div id="mainPane" style="display: block;">
+								<div class="welcome" style="display: none">
+									<!-- 알림 아이콘 -->
+									<div class="notification" title="알림">
+										<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"
+											viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
+											stroke-linecap="round" stroke-linejoin="round">
+											<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+											<path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+										</svg>
+										<span class="notification-badge" style="display: none">0</span>
+									</div>
+									<!-- 사이드바 미니 프로필 -->
+									<div class="sidebar-profile" th:if="${currentUser != null}">
+										<!-- 프로필 이미지 클릭시 프로필 편집화면으로 이동 -->
+										<img th:src="${currentUser.user_img} != null 
+									           ? @{${'/images' + currentUser.user_img}} 
+									           : @{/images/defaultIcon.png}" alt="プロフィール画像" class="sidebar-avatar" />
+										<div class="sidebar-nickname" th:text="${currentUser.nickname}"></div>
+										<div class="sidebar-id" th:text="'@' + ${currentUser.username}"></div>
+										<div class="sidebar-email" th:text="${currentUser.email}"></div>
+									</div>
+									<!-- 사이드바 메뉴 -->
+									<nav>
+										<a href="#" onclick="openProfilePopup(); return false;">プロフィール編集</a>
+										<a href="#"
+											onclick="window.open('/mypage/account', 'AccountSettings', 'width=600,height=800,menubar=no,toolbar=no,location=no,status=no'); return false;"
+											class="open-account-btn">アカウント設定</a> <a href="/activity">アクティビティ</a>
+										<a href="/logout">ログアウト</a>
+									</nav>
+
 								</div>
-								<!-- 사이드바 메뉴 -->
-								<nav>
-									<a href="#" onclick="window.open('/mypage/profileEdit', 'AccountSettings', 'width=600,height=800,menubar=no,toolbar=no,location=no,status=no'); return false;">プロフィール編集</a>
-									<a href="#" onclick="window.open('/mypage/account', 'AccountSettings', 'width=600,height=800,menubar=no,toolbar=no,location=no,status=no'); return false;" class="open-account-btn">アカウント設定</a>
-									<a href="/mypage/activity">アクティビティ</a>
-									<a href="/logout">ログアウト</a>
-								</nav>
-												
+								<div class="welcome" sec:authorize="isAuthenticated()">
+									<!-- 알림 아이콘 -->
+									<div class="notification" title="알림">
+										<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26"
+											viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"
+											stroke-linecap="round" stroke-linejoin="round">
+											<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+											<path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+										</svg>
+										<span class="notification-badge" style="display: none">0</span>
+									</div>
+									<!-- 사이드바 미니 프로필 -->
+									<div class="sidebar-profile" th:if="${currentUser != null}">
+										<!-- 프로필 이미지 클릭시 프로필 편집화면으로 이동 -->
+										<img th:src="${currentUser.user_img} != null 
+									           ? @{${'/images' + currentUser.user_img}} 
+									           : @{/images/defaultIcon.png}" alt="プロフィール画像" class="sidebar-avatar" />
+										<div class="sidebar-nickname" th:text="${currentUser.nickname}"></div>
+										<div class="sidebar-id" th:text="'@' + ${currentUser.username}"></div>
+										<div class="sidebar-email" th:text="${currentUser.email}"></div>
+									</div>
+									<!-- 사이드바 메뉴 -->
+									<nav>
+										<a href="#" onclick="openProfilePopup(); return false;">プロフィール編集</a>
+
+										<a href="#" onclick="openMyPage()" class="open-account-btn">アカウント設定</a> <a
+											href="/mypage/activity">アクティビティ</a>
+										<a href="/logout">ログアウト</a>
+										<a href="/admin/"
+											th:if="${#authorization.expression('hasRole(''A'')')}">管理者ページ</a>
+									</nav>
+
+								</div>
+							</div>
+
+							<div id="notificationPane" style="display: none; padding: 1rem;">
+								<h2>通知</h2>
+								<ul id="notificationList" style="list-style: none; padding: 0;">
+									<!-- JS 로 여기에 <li>새 댓글이 달렸습니다.</li> 같은 아이템을 추가 -->
+								</ul>
+								<button class="notify-btn" style="margin-top: 1rem;">←
+									戻る</button>
+							</div>
+
+							<form id="registerForm" class="register-form" th:action="@{/user/register}" method="post"
+								style="display:none">
+								<h2>会員登録</h2>
+								<div class="form-group">
+									<input type="text" name="username" id="regUsername" placeholder="ログインID" required
+										minlength="4" maxlength="20" />
+									<div id="usernameMsg" class="validation-msg"></div>
+								</div>
+								<div class="form-group">
+									<input type="password" id="password" name="password" placeholder="パスワード" required />
+								</div>
+								<div class="form-group">
+									<input type="password" id="passwordConfirm" name="passwordConfirm"
+										placeholder="パスワード確認" required />
+									<div id="pwMatchMsg" class="validation-msg"></div>
+								</div>
+								<div class="form-group nickname-group">
+									<input type="text" id="nickname" name="nickname" placeholder="ニックネーム" required
+										minlength="2" maxlength="8" />
+									<div id="nickMsg" class="validation-msg"></div>
+								</div>
+								<div class="form-group email-group">
+									<input type="email" id="email" name="email" placeholder="メールアドレス" required />
+									<button type="button" id="sendEmailCode">認証メール送信</button>
+									<div id="emailMsg" class="validation-msg"></div>
+								</div>
+								<div class="form-group email-group" id="emailCodeGroup" style="display: none;">
+									<input type="text" id="emailCode" placeholder="認証番号を入力" />
+									<button type="button" id="verifyEmailCode">認証する</button>
+									<div id="codeMsg" class="validation-msg"></div>
+								</div>
+								<button type="button" id="registerBtn" class="btn-login">登録する</button>
+
+								<div id="registerMsg" class="validation-msg"></div>
+								<div class="login-actions">
+									<a href="#" class="btn-link back-to-login">ログインに戻る</a>
+								</div>
+							</form>
+							<form class="forgot-form" style="display: none">
+								<h2>パスワード初期化</h2>
+								<div class="form-group">
+									<input type="text" id="fpUsername" placeholder="ログインID" required />
+									<div id="fpUsernameMsg" class="validation-msg"></div>
+								</div>
+								<button type="button" id="fpNextBtn" class="btn-login">次へ</button>
+								<div class="login-actions">
+									<a href="#" class="btn-link back-to-login">ログインに戻る</a>
+								</div>
+							</form>
 						</div>
 					</div>
-					
-					<div id="notificationPane" style="display:none; padding:1rem;">
-					    <h2>🔔 通知</h2>
-					    <ul id="notificationList" style="list-style:none; padding:0;">
-					      <!-- JS 로 여기에 <li>새 댓글이 달렸습니다.</li> 같은 아이템을 추가 -->
-					    </ul>
-					    <button onclick="showMainMenu()" class = "notify-btn" style="margin-top:1rem;">← 戻る</button>
-					</div>
-					
-					<form class="register-form" id="registerForm" style="display:none;">
-    					<h2>会員登録</h2>
-    					<div class="form-group">
-      						<input 
-      						type="text" 
-      						name="username" 
-      						id="regUsername" 
-      						placeholder="ログインID" 
-      						required 
-      						minlength="4" 
-      						maxlength="20"
-      						/>
-      						<div id="usernameMsg" class="validation-msg"></div>
-    					</div>
-    					<div class="form-group">
-     						<input type="password" id="password" name="password" placeholder="パスワード" required />
-    					</div>
-    					<div class="form-group">
-      						<input type="password" id="passwordConfirm" name="passwordConfirm" placeholder="パスワード確認" required />
-      						<div id="pwMatchMsg" class="validation-msg"></div>
-    					</div>
-    					<div class="form-group nickname-group">
-      						<input type="text" id="nickname" name="nickname" placeholder="ニックネーム" required minlength="2" maxlength="8" />
-      						<div id="nickMsg" class="validation-msg"></div>
-    					</div>
-    					<div class="form-group email-group">
-      						<input type="email" id="email" name="email" placeholder="メールアドレス" required />
-      						<button type="button" id="sendEmailCode">認証メール送信</button>
-      					<div id="emailMsg" class="validation-msg"></div>
-    					</div>
-    					<div class="form-group email-group" id="emailCodeGroup" style="display:none;">
-      						<input type="text" id="emailCode" placeholder="認証番号を入力" />
-      						<button type="button" id="verifyEmailCode">認証する</button>
-      						<div id="codeMsg" class="validation-msg"></div>
-   						</div>
-    					<button type="button" id="registerBtn" class="btn-login">登録する</button>
-    					<div id="registerMsg" class="validation-msg"></div>
-    					<div class="login-actions">	
-      						<a href="#" class="btn-link back-to-login">ログインに戻る</a>
-    					</div>
-  					</form>
-  					<form class="forgot-form" style="display:none">
-  						<h2>パスワード初期化</h2>
-  						<div class="form-group">
-  							<input type="text" id="fpUsername" placeholder="ログインID" required />
-  							<div id="fpUsernameMsg" class="validation-msg"></div>
-  						</div>
-  						<button type="button" id="fpNextBtn" class="btn-login">次へ</button>
-  						<div class="login-actions">
-  							<a href="#" class="btn-link back-to-login">ログインに戻る</a>
-  						</div>
-  					</form>
 				</div>
 			</div>
-		</div>
+
+			<!-- 네비게이션 (삭제)-->
+
+		</header>
+
+		<script>
+			//팝업창 크기 조정 -강시-
+			document.addEventListener("DOMContentLoaded", function () {
+				const loginForm = document.getElementById("loginForm");
+
+				loginForm.addEventListener("submit", function (e) {
+					// 1) 폼 요소 전체가 유효한지 검사(checkValidity)
+					if (!loginForm.checkValidity()) {
+						// 2) 유효하지 않을 때: 제출 막고(validation 메시지 표시)
+						e.preventDefault();
+						loginForm.reportValidity(); // 브라우저가 자동으로 invalid 메시지를 띄워줌
+					}
+					// 유효하면 별도 처리 없이 폼이 서버로 제출됨
+				});
+			});
+		</script>
+
+		<!-- <script>
+			//팝업창 크기 조정 -강시-
+			function openProfilePopup() {
+				window.open('/mypage/profileEdit', 'ProfileEditPopup',
+					'width=420,height=580,resizable=no,scrollbars=no');
+			}
+		</script> -->
+		<script>
+			function openProfilePopup() {
+				const width = 420;
+				const height = 580;
+				// 가로 화면 가운데 정렬
+				const left = Math.round((window.screen.width - width) / 2);
+				// 세로 화면에서 200px 아래에 위치
+				const top = 200;
+				const opts = `width=${width},height=${height},top=${top},left=${left},resizable=no,scrollbars=no`;
+				window.open('/mypage/profileEdit', 'ProfileEditPopup', opts);
+			}
+
+			function openMyPage() {
+				console.log("onit");
+				// 팝업 가로/세로 크기
+				const w = 600, h = 800;
+				// 화면 가로 중앙에 띄우기
+				const left = Math.round((screen.width - w) / 2);
+				// 화면 위에서 200px 아래
+				const top = 200;
+				window.open(
+					"/mypage/account",
+					"AccountSettings",
+					"width=" + w +
+					",height=" + h +
+					",left=" + left +
+					",top=" + top +
+					",menubar=no,toolbar=no,location=no,status=no"
+				);
+			}
+
+			document.addEventListener("click", function (event) {
+				const btn = event.target.closest(".open-account-btn");
+				if (!btn) return;
+				event.preventDefault();
+				console.log("onit");
+				// 팝업 가로/세로 크기
+				const w = 600, h = 800;
+				// 화면 가로 중앙에 띄우기
+				const left = Math.round((screen.width - w) / 2);
+				// 화면 위에서 200px 아래
+				const top = 200;
+				window.open(
+					"/mypage/account",
+					"AccountSettings",
+					"width=" + w +
+					",height=" + h +
+					",left=" + left +
+					",top=" + top +
+					",menubar=no,toolbar=no,location=no,status=no"
+				);
+			});
+		</script>
 	</div>
-
-      <!-- 네비게이션 (삭제)-->
-      
-    </header>
-    
-
-   
-  </div>
 </div>

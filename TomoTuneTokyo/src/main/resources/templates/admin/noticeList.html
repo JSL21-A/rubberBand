@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TomoTuneTokyo</title>
 </head>
 <style>
     body {
@@ -15,7 +15,7 @@
 
 <body>
     <h1 id="banner-font" hx-swap-oob="true" th:fragment="banner_title">お知らせ</h1>
-    <div id="content" layout:fragment="content" th:fragment="content">
+    <div id="content" layout:fragment="content" th:fragment="content" hx-history-elt>
         <div id="notice">
             <div id="top">
 
@@ -30,7 +30,8 @@
                             <div class="noti_date">作成日</div>
                         </li>
                         <li class="noti_post" th:each="post: ${list}">
-                            <a hx-get="/admin/test">
+                            <a th:attr="hx-get='./view?post='+ ${post.post_id}" th:text="${post.post_title}"
+                                hx-target="#middle" hx-select="#middle" hx-push-url="true">
                                 <div class="noti_title" th:text="${post.post_title}"></div>
                             </a>
                             <div class="noti_date" th:text="${#temporals.format(post.created_at, 'yyyy.MM.dd')}"></div>
@@ -39,8 +40,10 @@
                 </div>
             </div>
             <div id="bottom">
-                1 2 3 4 5 6
-                <a hx-get="./write" hx-target="#content" hx-push-url="true">作成</a>
+                <div id="doctor_paging">
+                </div>
+                <a id="onPost" hx-get="./write" hx-target="#content" hx-select="#content" hx-push-url="true"
+                    hx-boost="true">作成</a>
             </div>
         </div>
     </div>

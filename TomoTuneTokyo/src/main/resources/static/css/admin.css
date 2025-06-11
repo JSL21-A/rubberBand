@@ -8,6 +8,10 @@ body {
     color: #333;
 }
 
+.admin.Banner {
+    margin-bottom: 30px;
+}
+
 .banner .banner-img {
     height: 200px;
     width: 100%;
@@ -255,17 +259,12 @@ body {
     margin-top: 60px;
 }
 
-#top {
-    display: flex;
-    flex-direction: row-reverse;
-}
-
-#middle {
+/* #middle {
     width: 100%;
     margin: 0 auto;
     background-color: transparent;
     border-radius: 30px;
-}
+} */
 
 .noti_list ul {
     list-style: none;
@@ -298,4 +297,150 @@ body {
     display: flex;
     justify-content: space-between;
     margin-top: 2%;
+}
+
+/* For notiView */
+
+body {
+    overflow: scroll;
+}
+
+#view {
+    margin: 0;
+    padding: 0;
+}
+
+#content {
+    margin: 0 auto;
+}
+
+#top {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+#middle {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 30px;
+}
+
+.post_list ul {
+    list-style: none;
+    padding: 0 3%;
+}
+
+.post_list li {
+    border-bottom: 1px dotted black;
+}
+
+.post_list li div {
+    width: 25%;
+}
+
+.post_content {
+    text-align: center;
+}
+
+.view_title {
+    text-align: inherit;
+    width: 100%;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 30px;
+    padding: 2%;
+}
+
+.view_content {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 30px;
+    padding: 2%;
+    margin-top: 10px;
+}
+
+.viewHost {
+    line-height: 50px;
+}
+
+.post_date {
+    text-align: end;
+}
+
+.post_list {
+    border-radius: 30px;
+    box-shadow: 2px 2px 2px 2px #bbb;
+}
+
+.post_post {
+    display: flex;
+    justify-content: space-between;
+    padding: 1%;
+}
+
+.post_post a {
+    text-decoration: none;
+    color: #333;
+}
+
+.bottomUp {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 2%;
+    padding-bottom: 2%;
+}
+
+#comment {
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: calc(2% + 40px);
+    background-color: #fff;
+    border-radius: 30px;
+    box-shadow: 2px 2px 2px 2px #bbb;
+    padding: 2%;
+}
+
+.viewTitle {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 2%;
+    width: 90%;
+}
+
+.post_note img {
+    max-width: 100%;
+}
+
+.titleBtn {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f4f6f8;
+    border-radius: 30px;
+    padding: 2% 1%;
+}
+
+#onPost {
+    padding: 0.4rem 0.8rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: #2d2d2d;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.ctrlBtn {
+    position: relative;
+    padding: 0.4rem 0.8rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    background-color: #2d2d2d;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    top: 10px;
 }

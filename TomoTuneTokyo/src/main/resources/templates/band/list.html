@@ -6,104 +6,101 @@
 <head>
 	<title>メンバー募集</title>
 	<link rel="stylesheet" href="/css/board-style.css">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 
 <body>
 	<div layout:fragment="content" class="board-container">
 		<div class="modal-container"> <!-- 하나로 묶는 div -->
-		    <!-- 모달 열기 버튼 -->
-		    <div class="recruit-post-btn-wrap">
-		        <button type="button" class="recruit-post-btn" id="openRecruitModal">メンバー募集登録</button>
-		    </div>
+			<!-- 모달 열기 버튼 -->
+			<div class="recruit-post-btn-wrap">
+				<button type="button" class="recruit-post-btn" id="openRecruitModal">メンバー募集登録</button>
+			</div>
 
-		    <!-- 🔍 밴드 선택 팝업 -->
-		    <div id="selectBandModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="selectBandLabel">
-		        <div class="modal-dialog" role="document">
-		            <div class="modal-content" style="padding: 30px;">
-		                <div class="modal-header">
-		                    <h4 class="modal-title" id="selectBandLabel">バンドを選択してください</h4>
-		                </div>
-		                <div class="modal-body">
-		                    <ul id="myBandList" class="list-group">
-		                        <!-- 여기에 JS로 밴드 목록 삽입 -->
-		                    </ul>
-		                </div>
-		            </div>
-		        </div>
-		    </div>
+			<!-- 🔍 밴드 선택 팝업 -->
+			<div id="selectBandModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="selectBandLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content" style="padding: 30px;">
+						<div class="modal-header">
+							<h4 class="modal-title" id="selectBandLabel">バンドを選択してください</h4>
+						</div>
+						<div class="modal-body">
+							<ul id="myBandList" class="list-group">
+								<!-- 여기에 JS로 밴드 목록 삽입 -->
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<h2 class="board-title">メンバー募集</h2>
 		<!-- 🔍 검색창 -->
 		<div class="search-bar">
 			<form method="get" th:action="@{/bandlist/list}" style="display: contents;">
-			    <input type="text" class="search-input" name="keyword" placeholder="チーム名検索" th:value="${keyword}">
-			    <button type="submit" class="search-btn">検索</button>
-			  </form>
-			</div>
-			
+				<input type="text" class="search-input" name="keyword" placeholder="チーム名検索" th:value="${keyword}">
+				<button type="submit" class="search-btn">検索</button>
+			</form>
+		</div>
+
 		<!-- ⭐ 자동 슬라이더 섹션 시작 -->
 		<div class="autoscroll-wrapper">
-		  <div class="autoscroll-track">
-		    <div class="slider-card" th:each="post : ${sliderPostList}">
-		      <!-- 마감일 뱃지 -->
-		      <div class="deadline-badge list-version" th:if="${post.deadline != null}">
-		        <span class="deadline-text"
-		              th:attr="data-deadline=${#dates.format(post.deadline, 'yyyy-MM-dd')}">D-?</span>
-		      </div>
+			<div class="autoscroll-track">
+				<div class="slider-card" th:each="post : ${sliderPostList}">
+					<!-- 마감일 뱃지 -->
+					<div class="deadline-badge list-version" th:if="${post.deadline != null}">
+						<span class="deadline-text"
+							th:attr="data-deadline=${#dates.format(post.deadline, 'yyyy-MM-dd')}">D-?</span>
+					</div>
 
-		      <!-- 이미지 클릭 시 상세 페이지 이동 -->
-			  <a th:href="@{'/bandselect/view?postId=' + ${post.post_id}}">
-		            <img th:src="@{${post.image1Url != null ? '/images/uploads/bands/' + post.image1Url : '/images/default.png'}}"
-		                 alt="썸네일" class="card-image" /></a>
+					<!-- 이미지 클릭 시 상세 페이지 이동 -->
+					<a th:href="@{'/bandselect/view?postId=' + ${post.post_id}}">
+						<img th:src="@{${post.image1Url != null ? '/images/uploads/bands/' + post.image1Url : '/images/default.png'}}"
+							alt="썸네일" class="card-image" /></a>
 
-		      <!-- 카드 본문 정보 -->
-		      <div class="card-info">
-		        <p><strong>タイトル :</strong> <span th:text="${post.title}">제목</span></p>
-		        <p><strong>バンド紹介 :</strong> <span th:text="${post.band_intro}">소개</span></p>
-		        <p><strong>バンド名 :</strong> <span th:text="${post.band_name}">밴드명</span></p>
-		        <p class="card-meta">
-		          <span th:text="${#dates.format(post.createdAt, 'yyyy.MM.dd')}">작성일</span>
-			        </p>
-			      </div>
-			    </div>
-			  </div>
+					<!-- 카드 본문 정보 -->
+					<div class="card-info">
+						<p><strong>タイトル :</strong> <span th:text="${post.title}">제목</span></p>
+						<p><strong>バンド紹介 :</strong> <span th:text="${post.band_intro}">소개</span></p>
+						<p><strong>バンド名 :</strong> <span th:text="${post.band_name}">밴드명</span></p>
+						<p class="card-meta">
+							<span th:text="${#dates.format(post.createdAt, 'yyyy.MM.dd')}">작성일</span>
+						</p>
+					</div>
+				</div>
 			</div>
-			<!-- ⭐ 자동 슬라이더 섹션 끝 -->
-							
-			<!-- 구분선 + 제목 -->
-			<div class="card-list-section-title">
-			  <h3>📋 登録されたメンバー募集一覧</h3>
-			</div>
+		</div>
+		<!-- ⭐ 자동 슬라이더 섹션 끝 -->
+
+		<!-- 구분선 + 제목 -->
+		<div class="card-list-section-title">
+			<h3>📋 登録されたメンバー募集一覧</h3>
+		</div>
 
 		<!-- 카드 목록 -->
 		<div class="board-card-grid">
-		    <div class="board-card" th:each="post : ${postList}">
-		        <!-- 마감일 뱃지 (D-day 계산용) -->
+			<div class="board-card" th:each="post : ${postList}">
+				<!-- 마감일 뱃지 (D-day 계산용) -->
 				<div class="deadline-badge list-version" th:if="${post.deadline != null}">
-				  <span class="deadline-text"
-				        th:attr="data-deadline=${#dates.format(post.deadline, 'yyyy-MM-dd')}">D-?</span>
+					<span class="deadline-text"
+						th:attr="data-deadline=${#dates.format(post.deadline, 'yyyy-MM-dd')}">D-?</span>
 				</div>
 
-		        <!-- 이미지 클릭 시 상세 페이지 이동 -->
-		        <a th:href="@{'/bandselect/view?postId=' + ${post.post_id}}">
-		            <img th:src="@{${post.image1Url != null ? '/images/uploads/bands/' + post.image1Url : '/images/default.png'}}"
-		                 alt="썸네일" class="card-image" />
-		        </a>
+				<!-- 이미지 클릭 시 상세 페이지 이동 -->
+				<a th:href="@{'/bandselect/view?postId=' + ${post.post_id}}">
+					<img th:src="@{${post.image1Url != null ? '/images/uploads/bands/' + post.image1Url : '/images/default.png'}}"
+						alt="썸네일" class="card-image" />
+				</a>
 
-		        <!-- 카드 본문 정보 -->
-		        <div class="card-info">
-		            <p><strong>タイトル :</strong> <span th:text="${post.title}">제목</span></p>
-		            <p><strong>バンド紹介 :</strong> <span th:text="${post.band_intro}">소개</span></p>
-		            <p><strong>バンド名 :</strong> <span th:text="${post.band_name}">밴드명</span></p>
-		            <p class="card-meta">
-		                <span th:text="${#dates.format(post.createdAt, 'yyyy.MM.dd')}">작성일</span>
-		            </p>
-		        </div>
-		    </div>
+				<!-- 카드 본문 정보 -->
+				<div class="card-info">
+					<p><strong>タイトル :</strong> <span th:text="${post.title}">제목</span></p>
+					<p><strong>バンド紹介 :</strong> <span th:text="${post.band_intro}">소개</span></p>
+					<p><strong>バンド名 :</strong> <span th:text="${post.band_name}">밴드명</span></p>
+					<p class="card-meta">
+						<span th:text="${#dates.format(post.createdAt, 'yyyy.MM.dd')}">작성일</span>
+					</p>
+				</div>
+			</div>
 		</div>
 		<!-- 지원하기 모달 내 폼 페이징 구조 -->
 		<!-- ✅ HTML 구조 -->
@@ -115,7 +112,7 @@
 					<div class="modal-header">
 						<h4 class="modal-title" id="applyModalLabel">募集登録の内容作成</h4>
 						<button type="button" class="close" id="applyModalCloseBtn" aria-label="Close">
-						  <span aria-hidden="true">&times;</span>
+							<span aria-hidden="true">&times;</span>
 						</button>
 					</div>
 
@@ -124,7 +121,7 @@
 						<form id="applyForm" action="/bandlist/insert" method="post" enctype="multipart/form-data">
 
 							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-							
+
 							<input type="hidden" name="selectedGenres" id="selectedGenres">
 							<input type="hidden" name="selectedPositions" id="selectedPositions">
 							<input type="hidden" name="selectedGenders" id="selectedGenders">
@@ -136,10 +133,11 @@
 								<label for="bandName">バンドのチーム名</label> <input type="text"
 									class="form-control" id="bandName" placeholder="Tomato Groove">
 							</div> -->
-							<div class="form-group">
-							    <label for="bandIntro">バンド紹介</label>
-								<textarea class="form-control" id="bandIntro" name="bandIntro" rows="2" placeholder="紹介をお願いします"></textarea>
-							</div>
+								<div class="form-group">
+									<label for="bandIntro">バンド紹介</label>
+									<textarea class="form-control" id="bandIntro" name="bandIntro" rows="2"
+										placeholder="紹介をお願いします"></textarea>
+								</div>
 
 								<!-- 리더 
 							<div class="form-group">
@@ -219,67 +217,68 @@
 									<button id="genre-popup-close" class="popup-close" type="button">×</button>
 									<div class="keyword-box">
 
-									  <!-- ✅ ジャンル -->
-									  <div class="keyword-row">
-									    <div class="keyword-category">ジャンル</div>
-									    <div class="keyword-tags">
-									      <span class="tag" data-category="ジャンル">ロック</span>
-									      <span class="tag" data-category="ジャンル">ポップ</span>
-									      <span class="tag" data-category="ジャンル">ジャズ</span>
-									      <span class="tag" data-category="ジャンル">ヒップホップ</span>
-									      <span class="tag" data-category="ジャンル">クラシック</span>
-									      <span class="tag" data-category="ジャンル">EDM</span>
-									      <span class="tag" data-category="ジャンル">その他</span>
-									    </div>
-									  </div>
+										<!-- ✅ ジャンル -->
+										<div class="keyword-row">
+											<div class="keyword-category">ジャンル</div>
+											<div class="keyword-tags">
+												<span class="tag" data-category="ジャンル">ロック</span>
+												<span class="tag" data-category="ジャンル">ポップ</span>
+												<span class="tag" data-category="ジャンル">ジャズ</span>
+												<span class="tag" data-category="ジャンル">ヒップホップ</span>
+												<span class="tag" data-category="ジャンル">クラシック</span>
+												<span class="tag" data-category="ジャンル">EDM</span>
+												<span class="tag" data-category="ジャンル">その他</span>
+											</div>
+										</div>
 
-									  <!-- ✅ ポジション -->
-									  <div class="keyword-row">
-									    <div class="keyword-category">ポジション</div>
-									    <div class="keyword-tags">
-									      <span class="tag" data-category="ポジション">Vo（ボーカル）</span>
-									      <span class="tag" data-category="ポジション">Gt（ギター）</span>
-									      <span class="tag" data-category="ポジション">Ba（ベース）</span>
-									      <span class="tag" data-category="ポジション">Dr（ドラム）</span>
-									      <span class="tag" data-category="ポジション">Kb（キーボード）</span>
-									      <span class="tag" data-category="ポジション">その他</span>
-									    </div>
-									  </div>
+										<!-- ✅ ポジション -->
+										<div class="keyword-row">
+											<div class="keyword-category">ポジション</div>
+											<div class="keyword-tags">
+												<span class="tag" data-category="ポジション">Vo（ボーカル）</span>
+												<span class="tag" data-category="ポジション">Gt（ギター）</span>
+												<span class="tag" data-category="ポジション">Ba（ベース）</span>
+												<span class="tag" data-category="ポジション">Dr（ドラム）</span>
+												<span class="tag" data-category="ポジション">Kb（キーボード）</span>
+												<span class="tag" data-category="ポジション">その他</span>
+											</div>
+										</div>
 
-									  <!-- ✅ 性別 -->
-									  <div class="keyword-row">
-									    <div class="keyword-category">性別</div>
-									    <div class="keyword-tags">
-									      <span class="tag" data-category="性別">男性バンド</span>
-									      <span class="tag" data-category="性別">女性バンド</span>
-									      <span class="tag" data-category="性別">混成バンド</span>
-									    </div>
-									  </div>
+										<!-- ✅ 性別 -->
+										<div class="keyword-row">
+											<div class="keyword-category">性別</div>
+											<div class="keyword-tags">
+												<span class="tag" data-category="性別">男性バンド</span>
+												<span class="tag" data-category="性別">女性バンド</span>
+												<span class="tag" data-category="性別">混成バンド</span>
+											</div>
+										</div>
 
-									  <!-- ✅ 年齢代 -->
-									  <div class="keyword-row">
-									    <div class="keyword-category">年齢代</div>
-									    <div class="keyword-tags">
-									      <span class="tag" data-category="年齢代">10代</span>
-									      <span class="tag" data-category="年齢代">20代</span>
-									      <span class="tag" data-category="年齢代">30代</span>
-									      <span class="tag" data-category="年齢代">40代</span>
-									      <span class="tag" data-category="年齢代">50代以上</span>
-									    </div>
-									  </div>
+										<!-- ✅ 年齢代 -->
+										<div class="keyword-row">
+											<div class="keyword-category">年齢代</div>
+											<div class="keyword-tags">
+												<span class="tag" data-category="年齢代">10代</span>
+												<span class="tag" data-category="年齢代">20代</span>
+												<span class="tag" data-category="年齢代">30代</span>
+												<span class="tag" data-category="年齢代">40代</span>
+												<span class="tag" data-category="年齢代">50代以上</span>
+											</div>
+										</div>
 
 									</div>
 								</div>
 
-							
+
 								<!-- 활동사진 입력란 -->
 								<div class="form-group">
-								  <label>活動写真</label>
-								  <div id="bandImagesContainer">
-									<input type="file" name="bandImages" class="form-control mb-2">
-								  </div>
-								  <button type="button" id="addBandImageBtn" class="btn btn-secondary mt-2" style = "margin-top: 10px;">＋ 写真追加</button>
-								  <small class="text-muted d-block mt-2">※ 最大４枚のイメージが登録可能です。</small>
+									<label>活動写真</label>
+									<div id="bandImagesContainer">
+										<input type="file" name="bandImages" class="form-control mb-2">
+									</div>
+									<button type="button" id="addBandImageBtn" class="btn btn-secondary mt-2"
+										style="margin-top: 10px;">＋ 写真追加</button>
+									<small class="text-muted d-block mt-2">※ 最大４枚のイメージが登録可能です。</small>
 								</div>
 
 
@@ -299,21 +298,17 @@
 
 		<!-- 페이징 -->
 		<div class="board-pagination" th:if="${totalPages > 0}">
-		    <!-- 이전 페이지 버튼 -->
-		    <a th:if="${currentPage > 1}"
-		       th:href="@{'/bandlist/list'(page=${currentPage - 1})}"
-		       class="page-btn">&laquo;</a>
+			<!-- 이전 페이지 버튼 -->
+			<a th:if="${currentPage > 1}" th:href="@{'/bandlist/list'(page=${currentPage - 1})}"
+				class="page-btn">&laquo;</a>
 
-		    <!-- 페이지 번호들 -->
-		    <a th:each="i : ${#numbers.sequence(1, totalPages)}"
-		       th:href="@{'/bandlist/list'(page=${i})}"
-		       th:class="'page-btn' + (${i} == ${currentPage} ? ' active' : '')"
-		       th:text="${i}">1</a>
+			<!-- 페이지 번호들 -->
+			<a th:each="i : ${#numbers.sequence(1, totalPages)}" th:href="@{'/bandlist/list'(page=${i})}"
+				th:class="'page-btn' + (${i} == ${currentPage} ? ' active' : '')" th:text="${i}">1</a>
 
-		    <!-- 다음 페이지 버튼 -->
-		    <a th:if="${currentPage < totalPages}"
-		       th:href="@{'/bandlist/list'(page=${currentPage + 1})}"
-		       class="page-btn">&raquo;</a>
+			<!-- 다음 페이지 버튼 -->
+			<a th:if="${currentPage < totalPages}" th:href="@{'/bandlist/list'(page=${currentPage + 1})}"
+				class="page-btn">&raquo;</a>
 		</div>
 
 		<script>
@@ -485,209 +480,209 @@
 			}
 
 		</script>
-		
+
 		<script>
-		  let selectedBandId = null; // 선택된 band_id를 저장할 변수
+			let selectedBandId = null; // 선택된 band_id를 저장할 변수
 
-		  // 밴드 선택 팝업 열기
-		  document.getElementById('openRecruitModal').addEventListener('click', function () {
-		    fetch('/bandlist/mybands/all')
-		      .then(response => response.json())
-		      .then(bandList => {
-		        const list = document.getElementById("myBandList");
-		        list.innerHTML = "";
+			// 밴드 선택 팝업 열기
+			document.getElementById('openRecruitModal').addEventListener('click', function () {
+				fetch('/bandlist/mybands/all')
+					.then(response => response.json())
+					.then(bandList => {
+						const list = document.getElementById("myBandList");
+						list.innerHTML = "";
 
-		        if (Array.isArray(bandList) && bandList.length > 0) {
-		          bandList.forEach(band => {
-		            const li = document.createElement("li");
-		            li.className = "list-group-item";
-		            li.style.cursor = "pointer";
-		            li.textContent = band.band_name;
-		            li.dataset.bandId = band.band_id;
+						if (Array.isArray(bandList) && bandList.length > 0) {
+							bandList.forEach(band => {
+								const li = document.createElement("li");
+								li.className = "list-group-item";
+								li.style.cursor = "pointer";
+								li.textContent = band.band_name;
+								li.dataset.bandId = band.band_id;
 
-		            li.addEventListener("click", () => {
-		              selectedBandId = li.dataset.bandId; // 전역 변수에 저장
-		              console.log("선택된 band_id:", selectedBandId);
-		              $('#selectBandModal').modal('hide');
-		              $('#applyModal').modal('show');
-		            });
+								li.addEventListener("click", () => {
+									selectedBandId = li.dataset.bandId; // 전역 변수에 저장
+									console.log("선택된 band_id:", selectedBandId);
+									$('#selectBandModal').modal('hide');
+									$('#applyModal').modal('show');
+								});
 
-		            list.appendChild(li);
-		          });
+								list.appendChild(li);
+							});
 
-		          $('#selectBandModal').modal('show');
-		        } else {
-		          alert("登録されたバンドがありません。まずバンドを登録してください。");
-		        }
-		      })
-		      .catch(err => {
-		        console.error("❌ 밴드 목록 조회 실패:", err);
-		      });
-		  });
-		  
-		  document.addEventListener("DOMContentLoaded", function () {
-		    const form = document.getElementById("applyForm");
+							$('#selectBandModal').modal('show');
+						} else {
+							alert("登録されたバンドがありません。まずバンドを登録してください。");
+						}
+					})
+					.catch(err => {
+						console.error("❌ 밴드 목록 조회 실패:", err);
+					});
+			});
 
-		    if (form) {
-		      form.addEventListener("submit", function (e) {
-		        e.preventDefault(); // 기본 제출 막음
+			document.addEventListener("DOMContentLoaded", function () {
+				const form = document.getElementById("applyForm");
 
-		        const formData = new FormData(form);
+				if (form) {
+					form.addEventListener("submit", function (e) {
+						e.preventDefault(); // 기본 제출 막음
 
-		        // 선택된 band_id 추가
-		        if (selectedBandId) {
-		          formData.append("band_id", selectedBandId);
-		        }
+						const formData = new FormData(form);
 
-		        fetch(form.action, {
-		          method: "POST",
-		          body: formData
-		        })
-		          .then(res => {
-		            if (res.redirected) {
-		              alert("登録が完了しました！");
-		              window.location.href = res.url;
-		            } else {
-		              alert("登録に失敗しました。");
-		            }
-		          })
-		          .catch(err => {
-		            console.error("❌ 등록 오류:", err);
-		            alert("サーバーエラーが発生しました。");
-		          });
-		      });
-		    }
-		  });
+						// 선택된 band_id 추가
+						if (selectedBandId) {
+							formData.append("band_id", selectedBandId);
+						}
+
+						fetch(form.action, {
+							method: "POST",
+							body: formData
+						})
+							.then(res => {
+								if (res.redirected) {
+									alert("登録が完了しました！");
+									window.location.href = res.url;
+								} else {
+									alert("登録に失敗しました。");
+								}
+							})
+							.catch(err => {
+								console.error("❌ 등록 오류:", err);
+								alert("サーバーエラーが発生しました。");
+							});
+					});
+				}
+			});
 
 
 		</script>
-		
+
 		<script>
-		  document.addEventListener("DOMContentLoaded", function () {
-		    const maxImages = 4;
-		    const container = document.getElementById("bandImagesContainer");
-		    const addBtn = document.getElementById("addBandImageBtn");
+			document.addEventListener("DOMContentLoaded", function () {
+				const maxImages = 4;
+				const container = document.getElementById("bandImagesContainer");
+				const addBtn = document.getElementById("addBandImageBtn");
 
-		    addBtn.addEventListener("click", function () {
-		      const currentCount = container.querySelectorAll('input[type="file"]').length;
+				addBtn.addEventListener("click", function () {
+					const currentCount = container.querySelectorAll('input[type="file"]').length;
 
-		      if (currentCount >= maxImages) {
-		        alert("最大4枚までアップロード可能です。");
-		        return;
-		      }
+					if (currentCount >= maxImages) {
+						alert("最大4枚までアップロード可能です。");
+						return;
+					}
 
-		      const newInput = document.createElement("input");
-		      newInput.type = "file";
-		      newInput.name = "bandImages"; 
-		      newInput.accept = "image/*";
-		      newInput.className = "form-control mb-2";
+					const newInput = document.createElement("input");
+					newInput.type = "file";
+					newInput.name = "bandImages";
+					newInput.accept = "image/*";
+					newInput.className = "form-control mb-2";
 
-		      container.appendChild(newInput);
-		    });
-		  });
+					container.appendChild(newInput);
+				});
+			});
 		</script>
-		
+
 		<script>
 			// 페이징
-		document.addEventListener("DOMContentLoaded", function () {
-		  const keyword = new URLSearchParams(window.location.search).get("keyword");
+			document.addEventListener("DOMContentLoaded", function () {
+				const keyword = new URLSearchParams(window.location.search).get("keyword");
 
-		  if (keyword) {
-		      document.querySelectorAll(".board-pagination a").forEach(link => {
-		        const url = new URL(link.href);
-		        url.searchParams.set("keyword", keyword);
-		        link.href = url.toString();
-		      });
-		    }
-		  });
+				if (keyword) {
+					document.querySelectorAll(".board-pagination a").forEach(link => {
+						const url = new URL(link.href);
+						url.searchParams.set("keyword", keyword);
+						link.href = url.toString();
+					});
+				}
+			});
 		</script>
-		
+
 		<script>
 			document.addEventListener("DOMContentLoaded", function () {
-			  // 페이지가 로드될 때 keyword 쿼리 제거
-			  if (window.location.search.includes("keyword=")) {
-			    const url = new URL(window.location.href);
-			    url.searchParams.delete("keyword");
-			    // history.replaceState로 URL만 바꾸고 새로고침 없이 주소 변경
-			    history.replaceState(null, '', url.pathname);
-			  }
+				// 페이지가 로드될 때 keyword 쿼리 제거
+				if (window.location.search.includes("keyword=")) {
+					const url = new URL(window.location.href);
+					url.searchParams.delete("keyword");
+					// history.replaceState로 URL만 바꾸고 새로고침 없이 주소 변경
+					history.replaceState(null, '', url.pathname);
+				}
 			});
 
 		</script>
-		
+
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
-			    const deadlineElements = document.querySelectorAll('.deadline-text');
+				const deadlineElements = document.querySelectorAll('.deadline-text');
 
-			    deadlineElements.forEach(function (el) {
-			        const deadlineStr = el.getAttribute('data-deadline');
-			        if (!deadlineStr) return;
+				deadlineElements.forEach(function (el) {
+					const deadlineStr = el.getAttribute('data-deadline');
+					if (!deadlineStr) return;
 
-			        const today = new Date();
-			        const deadline = new Date(deadlineStr);
-			        deadline.setHours(0, 0, 0, 0);
-			        today.setHours(0, 0, 0, 0);
+					const today = new Date();
+					const deadline = new Date(deadlineStr);
+					deadline.setHours(0, 0, 0, 0);
+					today.setHours(0, 0, 0, 0);
 
-			        const diffTime = deadline - today;
-			        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+					const diffTime = deadline - today;
+					const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-			        if (diffDays > 0) {
-			            el.textContent = `D-${diffDays}`;
-			        } else if (diffDays === 0) {
-			            el.textContent = 'D-Day';
-			        } else {
-			            el.textContent = '締切';
-			        }
-			    });
+					if (diffDays > 0) {
+						el.textContent = `D-${diffDays}`;
+					} else if (diffDays === 0) {
+						el.textContent = 'D-Day';
+					} else {
+						el.textContent = '締切';
+					}
+				});
 			});
 		</script>
 
 		<script>
 			document.addEventListener("DOMContentLoaded", function () {
-			  const closeBtn = document.getElementById("applyModalCloseBtn");
-			  if (closeBtn) {
-			    closeBtn.addEventListener("click", function () {
-			      $('#applyModal').modal('hide'); // Bootstrap 3용 수동 닫기
-			    });
-			  }
+				const closeBtn = document.getElementById("applyModalCloseBtn");
+				if (closeBtn) {
+					closeBtn.addEventListener("click", function () {
+						$('#applyModal').modal('hide'); // Bootstrap 3용 수동 닫기
+					});
+				}
 			});
 
 		</script>
-		
+
 		<script>
 			document.addEventListener("DOMContentLoaded", () => {
-			  const track = document.querySelector(".autoscroll-track");
-			  if (track) {
-			    const cards = track.innerHTML;
-			    track.innerHTML += cards; // 카드 1세트를 반복해서 2배로 만들기
-			  }
+				const track = document.querySelector(".autoscroll-track");
+				if (track) {
+					const cards = track.innerHTML;
+					track.innerHTML += cards; // 카드 1세트를 반복해서 2배로 만들기
+				}
 			});
 
 		</script>
-		
+
 		<script>
-		  document.addEventListener("DOMContentLoaded", () => {
-		    const sortButtons = document.querySelectorAll(".sort-btn");
+			document.addEventListener("DOMContentLoaded", () => {
+				const sortButtons = document.querySelectorAll(".sort-btn");
 
-		    sortButtons.forEach(button => {
-		      button.addEventListener("click", () => {
-		        sortButtons.forEach(btn => btn.classList.remove("active"));
-		        button.classList.add("active");
+				sortButtons.forEach(button => {
+					button.addEventListener("click", () => {
+						sortButtons.forEach(btn => btn.classList.remove("active"));
+						button.classList.add("active");
 
-		        const sortType = button.dataset.sort;
-		        // 예시: location.href = `/bandlist/list?sort=${sortType}`;
-		        console.log("선택된 정렬 기준:", sortType);
-		      });
-		    });
-		  });
+						const sortType = button.dataset.sort;
+						// 예시: location.href = `/bandlist/list?sort=${sortType}`;
+						console.log("선택된 정렬 기준:", sortType);
+					});
+				});
+			});
 		</script>
-		
+
 		<script>
-		  document.getElementById('bandImages').addEventListener('change', function () {
-		    const fileNameSpan = document.querySelector('.custom-file-upload .file-name');
-		    const fileName = this.files.length > 0 ? this.files[0].name : '選択されたファイルがありません';
-		    fileNameSpan.textContent = fileName;
-		  });
+			document.getElementById('bandImages').addEventListener('change', function () {
+				const fileNameSpan = document.querySelector('.custom-file-upload .file-name');
+				const fileName = this.files.length > 0 ? this.files[0].name : '選択されたファイルがありません';
+				fileNameSpan.textContent = fileName;
+			});
 		</script>
 
 

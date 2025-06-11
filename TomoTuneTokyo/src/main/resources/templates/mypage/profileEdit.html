@@ -6,8 +6,20 @@
 <title>プロフィール編集</title>
 <style>
 /* Reset */
+
+@import
+	url('https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap');
+
+@font-face {
+	font-family: "kiwi";
+	src: url("https://fonts.google.com/specimen/Kiwi+Maru?lang=ja_Jpan");
+	font-weight: normal;
+	font-style: normal;
+}
+
 * {
 	box-sizing: border-box;
+	font-family: "Kiwi Maru", serif;
 }
 
 body {
@@ -20,16 +32,24 @@ body {
 }
 
 .container {
-	max-width: 640px;
-	margin: 60px auto 80px;
-	padding: 0 20px;
+	width: 100%;
+	max-width: 380px; /* 팝업에 알맞은 크기 */
+	margin: 40px auto;
+	background: #fff;
+	padding: 32px 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 35px;
 }
 
 h1 {
-	font-weight: 600;
-	font-size: 28px;
-	margin-bottom: 40px;
+	font-size: 26px;
+	font-weight: 700;
 	text-align: center;
+	margin-bottom: 32px;
+	color: #111;
+	border-bottom: 2px solid #333; 
+	padding-bottom: 12px;
 }
 
 /* 프로필 사진 */
@@ -92,12 +112,13 @@ h1 {
 	max-width: 480px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 50px;
 }
 
 label {
 	display: block;
 	font-weight: 600;
-	font-size: 14px;
+	font-size: 15px;
 	color: #444;
 	margin-bottom: 8px;
 }
@@ -144,7 +165,8 @@ button {
 }
 
 button.cancel-btn {
-	color: #fff;
+	color: #000;
+	background: #fff;
 	border: 1.5px solid #222;
 }
 
@@ -167,7 +189,7 @@ button.save-btn {
 
 			<div class="profile-photo-wrapper">
 				<img id="previewImage"
-					th:src="${userProfile.userImg != null} ? @{${userProfile.userImg}} : @{/images/tttpanda.png}"
+					th:src="${userProfile.userImg != null} ? @{${'/images' + currentUser.user_img}} : @{/images/defaultIcon.png}"
 					alt="プロフィール写真" /> <label for="profilePhoto"
 					class="photo-edit-label" tabindex="0" aria-label="プロフィール写真を変更">
 					<input type="file" id="profilePhoto" name="profilePhoto"
@@ -199,7 +221,7 @@ button.save-btn {
 		</form>
 	</div>
 
-	<!-- ✅ 이미지 미리보기 스크립트 -->
+	<!-- 이미지 미리보기 스크립트 -->
 	<script>
 		function previewProfileImage(input) {
 			const preview = document.getElementById("previewImage");
@@ -212,5 +234,7 @@ button.save-btn {
 			}
 		}
 	</script>
+
+
 </body>
 </html>

@@ -95,10 +95,9 @@ public class publicController {
         // 현재 uri 가져오기.
         String uri = request.getRequestURI();
         // htmx로 인한 요청인지 체크
-        boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
         model.addAttribute("banner_title", "public/write :: banner_title");
         // 이전 페이지의 데이터가 있다면.
-        if (request.getHeader("referer") != null) {
+        if ("true".equals(request.getHeader("HX-Request")) && request.getHeader("referer") != null) {
             // 이전 페이지의 경로 저장. (글쓴곳으로 다시 보내기 위함.)
             String prevUri = request.getHeader("referer")
                     .substring(request.getHeader("referer").lastIndexOf("/") + 1);
@@ -110,23 +109,18 @@ public class publicController {
                 // 아니면 그냥 uri 저장.
                 request.getSession().setAttribute("prev", prevUri);
             }
+            System.out.println(prevUri);
         }
-        // htmx 요청이면
-        if (isHtmx) {
-            // 페이지중 일부만 반환
-            return "public/write :: content";
-            // 일반 요청이면
-        } else {
-            if (uri.startsWith("/admin")) {
-                // 어드민페이지에서 요청한거면 어드민 레이아웃
-                model.addAttribute("layout", "layouts/adminLayout");
-                // 전체 페이지 반환
-                return "public/write";
-            }
-            // 어드민 페이지 아니면 메인 레이아웃.
-            model.addAttribute("layout", "layouts/layout");
+        if (uri.startsWith("/admin")) {
+            System.out.println(uri);
+            // 어드민페이지에서 요청한거면 어드민 레이아웃
+            model.addAttribute("layout", "layouts/adminLayout");
+            // 전체 페이지 반환
             return "public/write";
         }
+        // 어드민 페이지 아니면 메인 레이아웃.
+        model.addAttribute("layout", "layouts/layout");
+        return "public/write";
     }
 
     @PostMapping("/doWrite")
@@ -257,21 +251,15 @@ public class publicController {
         model.addAttribute("post", post);
         model.addAttribute("user", publicService.searchUserByUserName(principal.getName()));
 
-        if (isHtmx) {
-            // 페이지중 일부만 반환
-            return "public/postView :: content";
-            // 일반 요청이면
-        } else {
-            if (uri.startsWith("/admin")) {
-                // 어드민페이지에서 요청한거면 어드민 레이아웃
-                model.addAttribute("layout", "layouts/adminLayout");
-                // 전체 페이지 반환
-                return "public/postView";
-            }
-            // 어드민 페이지 아니면 메인 레이아웃.
-            model.addAttribute("layout", "layouts/layout");
+        if (uri.startsWith("/admin")) {
+            // 어드민페이지에서 요청한거면 어드민 레이아웃
+            model.addAttribute("layout", "layouts/adminLayout");
+            // 전체 페이지 반환
             return "public/postView";
         }
+        // 어드민 페이지 아니면 메인 레이아웃.
+        model.addAttribute("layout", "layouts/layout");
+        return "public/postView";
     }
 
     @PostMapping("/commentWrite")

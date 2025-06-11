@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Baloo&display=swap");
 
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Baloo&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru&display=swap');
 
 /* Chrome, Edge, Safari */
 input:-webkit-autofill,
@@ -13,6 +14,12 @@ input:-webkit-autofill:active {
     /* 글자색 유지 */
 }
 
+@font-face{
+	font-family: "kiwi";
+	src: url("https://fonts.google.com/specimen/Kiwi+Maru?lang=ja_Jpan");
+	font-weight: normal;
+	font-style: normal;
+}
 /* Firefox */
 input:-moz-autofill {
     box-shadow: 0 0 0px 1000px #111 inset !important;
@@ -28,6 +35,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+	font-family: "Kiwi Maru", serif;
 }
 
 body {
@@ -2145,6 +2153,7 @@ textarea::placeholder {
     height: 100%;
     object-fit: cover;
     /* ✅ 비율 유지하면서 꽉 차게 */
+	object-position: center center;
     display: block;
 }
 
@@ -2426,10 +2435,13 @@ body {
 }
 
 .cover-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  position: absolute;
+  top: 50%;                 /* 상단 기준 위치: 중앙 */
+  left: 50%;                /* 좌측 기준 위치: 중앙 */
+  transform: translate(-50%, -30%); /* 중심에서 조금 더 위로 올림 ← 여기 조정이 핵심! */
+  height: auto;
+  width: 100%;              /* 가로 꽉 채우기 */
+  min-height: 100%;
 }
 
 /* 프로필 썸네일 */
@@ -2682,7 +2694,7 @@ body {
     padding: 10px 18px;
     font-size: 15px;
     font-weight: bold;
-    background-color: #0077cc;
+    background-color: #000;
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -3473,7 +3485,7 @@ body {
     display: none;
     /* 기본은 숨김 */
     position: fixed;
-    top: 50%;
+    top: 42%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 400px;
@@ -4233,12 +4245,12 @@ body {
 }
 
 .btn-edit {
-    background-color: #f0ad4e;
+    background-color: #000;
     border: none;
     padding: 8px 16px;
     font-weight: bold;
     border-radius: 6px;
-    color: white;
+    color: #fff;
     font-size: 14px;
     cursor: pointer;
 }
@@ -4441,6 +4453,8 @@ body {
     position: relative;
 }
 
+
 .modal-dialog {
   top: 10% !important;
 }
+

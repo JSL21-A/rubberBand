@@ -5,212 +5,371 @@
 
 <mapper namespace="com.TTT.mapper.MypageMapper">
 
-  <!-- 이력서 조회 -->
-  <select id="selectResumeByUserId" resultType="com.TTT.domain.MypageDto" parameterType="String">
-    SELECT 
-      resume_id AS resumeId,
-      user_id AS userId,
-      stage_name AS stageName,
-      gender,
-      birth,
-      sns,
-      phone_number AS phoneNumber,
-      area,
-      instrument,
-      instrument_etc AS instrumentEtc,
-      genre,
-      genre_etc AS genreEtc,
-      practice_date AS practiceDate,
-      practice_time AS practiceTime,
-      detail_time AS detailTime,
-      note
-    FROM resume
-    WHERE user_id = #{userId}
-    LIMIT 1
-  </select>
+	<!-- 이력서 조회 -->
+	<select id="selectResumeByUserId"
+		resultType="com.TTT.domain.MypageDto" parameterType="String">
+		SELECT
+		resume_id AS
+		resumeId,
+		user_id AS userId,
+		stage_name AS stageName,
+		gender,
+		birth,
+		sns,
+		phone_number AS phoneNumber,
+		area,
+		instrument,
+		instrument_etc AS
+		instrumentEtc,
+		genre,
+		genre_etc AS genreEtc,
+		practice_date AS
+		practiceDate,
+		practice_time AS practiceTime,
+		detail_time AS detailTime,
+		note
+		FROM resume
+		WHERE user_id = #{userId}
+		LIMIT 1
+	</select>
 
-  <!-- 이력서 작성 -->
-  <insert id="insertResume"
-          parameterType="com.TTT.domain.MypageDto"
-          useGeneratedKeys="true"
-          keyProperty="resumeId">
-    INSERT INTO resume (
-      user_id,
-      stage_name,
-      gender,
-      birth,
-      sns,
-      phone_number,
-      area,
-      instrument,
-      instrument_etc,
-      genre,
-      genre_etc,
-      practice_date,
-      practice_time,
-      detail_time,
-      note
-    ) VALUES (
-      #{userId},
-      #{stageName},
-      #{gender},
-      #{birth},
-      #{sns},
-      #{phoneNumber},
-      #{area},
-      #{instrument},
-      #{instrumentEtc},
-      #{genre},
-      #{genreEtc},
-      #{practiceDate, jdbcType=VARCHAR},
-      #{practiceTime},
-      #{detailTime},
-      #{note}
-    )
-  </insert>
+	<!-- 이력서 작성 -->
+	<insert id="insertResume"
+		parameterType="com.TTT.domain.MypageDto" useGeneratedKeys="true"
+		keyProperty="resumeId">
+		INSERT INTO resume (
+		user_id,
+		stage_name,
+		gender,
+		birth,
+		sns,
+		phone_number,
+		area,
+		instrument,
+		instrument_etc,
+		genre,
+		genre_etc,
+		practice_date,
+		practice_time,
+		detail_time,
+		note
+		) VALUES (
+		#{userId},
+		#{stageName},
+		#{gender},
+		#{birth},
+		#{sns},
+		#{phoneNumber},
+		#{area},
+		#{instrument},
+		#{instrumentEtc},
+		#{genre},
+		#{genreEtc},
+		#{practiceDate,
+		jdbcType=VARCHAR},
+		#{practiceTime},
+		#{detailTime},
+		#{note}
+		)
+	</insert>
 
-  <!-- 밴드 활동 이력 -->
-  <insert id="insertBandHistory" parameterType="com.TTT.domain.BandHistoryDto">
-    INSERT INTO band_history (
-      resume_id, band_name, band_part, band_start, band_end
-    ) VALUES (
-      #{resumeId}, #{bandName}, #{bandPart}, #{bandStart}, #{bandEnd}
-    )
-  </insert>
+	<!-- 밴드 활동 이력 -->
+	<insert id="insertBandHistory"
+		parameterType="com.TTT.domain.BandHistoryDto">
+		INSERT INTO band_history (
+		resume_id, band_name,
+		band_part, band_start, band_end
+		) VALUES (
+		#{resumeId}, #{bandName},
+		#{bandPart}, #{bandStart}, #{bandEnd}
+		)
+	</insert>
 
-  <select id="selectBandHistoryByResumeId" parameterType="int" resultType="com.TTT.domain.BandHistoryDto">
+	<select id="selectBandHistoryByResumeId" parameterType="int"
+		resultType="com.TTT.domain.BandHistoryDto">
+		SELECT
+		band_name AS bandName,
+		band_part AS bandPart,
+		band_start AS bandStart,
+		band_end AS bandEnd
+		FROM band_history
+		WHERE
+		resume_id = #{resumeId}
+	</select>
+
+	<!-- 이력서 존재 여부 확인 -->
+	<select id="countResumeByUserId" parameterType="String"
+		resultType="int">
+		SELECT COUNT(*) FROM resume WHERE user_id = #{userId}
+	</select>
+
+	<!-- 이력서 조회 -->
+	<select id="findById" parameterType="int"
+		resultType="com.TTT.domain.MypageDto">
+		SELECT
+		resume_id AS resumeId,
+		user_id AS userId,
+		stage_name AS
+		stageName,
+		gender,
+		birth,
+		sns,
+		phone_number AS phoneNumber,
+		area,
+		instrument,
+		instrument_etc AS instrumentEtc,
+		genre,
+		genre_etc AS
+		genreEtc,
+		practice_date AS practiceDate,
+		practice_time AS practiceTime,
+		detail_time AS detailTime,
+		note
+		FROM resume
+		WHERE resume_id =
+		#{value}
+	</select>
+
+
+	<!-- 삭제 -->
+	<delete id="deleteResumeByUserId" parameterType="String">
+		DELETE FROM
+		resume WHERE user_id = #{userId}
+	</delete>
+
+	<delete id="deleteBandHistoryByResumeId" parameterType="int">
+		DELETE
+		FROM band_history WHERE resume_id = #{resumeId}
+	</delete>
+
+	<update id="updateResume"
+		parameterType="com.TTT.domain.MypageDto">
+		UPDATE resume
+		SET
+		stage_name = #{stageName},
+		gender =
+		#{gender},
+		birth = #{birth},
+		sns = #{sns},
+		phone_number = #{phoneNumber},
+		area = #{area},
+		instrument = #{instrument},
+		instrument_etc =
+		#{instrumentEtc},
+		genre = #{genre},
+		genre_etc = #{genreEtc},
+		practice_date = #{practiceDate},
+		practice_time = #{practiceTime},
+		detail_time = #{detailTime},
+		note = #{note}
+		WHERE resume_id =
+		#{resumeId}
+	</update>
+
+	<!-- 프로필편집 -->
+	<select id="selectUserProfileByUserId" parameterType="String"
+		resultType="com.TTT.domain.UserProfileDto">
+		SELECT USER_PROFILE_ID AS userProfileId,
+		USER_ID AS userId,
+		NICKNAME AS nickname,
+		USER_IMG AS userImg
+		FROM user_profile
+		WHERE USER_ID
+		= #{userId}
+	</select>
+
+	<update id="updateUserProfile"
+		parameterType="com.TTT.domain.UserProfileDto">
+		UPDATE user_profile
+		SET nickname = #{nickname},
+		user_img =
+		#{userImg}
+		WHERE user_id = #{userId}
+	</update>
+
+	<!-- 닉네임 중복여부 체크 -->
+	<select id="countByNickname" parameterType="String"
+		resultType="int">
+		SELECT COUNT(*) FROM user_profile WHERE nickname =
+		#{nickname}
+	</select>
+
+	<!-- 댓글조회 -->
+
+	<select id="findCommentsByUserId"
+		resultType="com.TTT.domain.MyActiveDto">
+		SELECT
+		COMMENT_ID AS commentId,
+		POST_ID AS postId,
+		USER_ID AS
+		userId,
+		COMMENT_CONTENT AS commentContent,
+		comment_created_at AS
+		commentCreatedAt
+		FROM comments
+		WHERE USER_ID = #{userId}
+		ORDER BY
+		comment_created_at DESC
+	</select>
+
+	<!-- 댓글 작성한 게시글 조회 -->
+	<select id="findPostById" parameterType="long"
+		resultType="com.TTT.domain.PostVo">
+		SELECT
+		post_id,
+		board_id,
+		user_id,
+		nickname,
+		post_title,
+		post_content,
+		post_img,
+		post_pinned,
+		post_status
+		FROM post
+		WHERE post_id =
+		#{postId}
+	</select>
+
+	<!-- 사용자 비밀번호 조회 -->
+	<select id="getPasswordByUserId" resultType="String">
+		SELECT password
+		FROM
+		users
+		WHERE user_id = #{userId}
+	</select>
+
+	<!-- 새로운 비밀번호 업데이트 -->
+	<update id="updatePassword">
+		UPDATE users
+		SET password = #{password}
+		WHERE user_id =
+		#{userId}
+	</update>
+
+	<!-- 내가 쓴 게시글 목록 -->
+	<select id="getMyPosts" resultType="com.TTT.domain.PostVo">
+		SELECT POST_ID, POST_TITLE,
+		created_at
+		FROM posts
+		WHERE USER_ID = #{userId}
+		ORDER BY created_at DESC
+	</select>
+
+	<!-- 내가 쓴 댓글 목록 -->
+	<select id="getMyComments"
+		resultType="com.TTT.domain.MyActiveDto">
+		SELECT comment_id AS commentId,
+		comment_content AS
+		commentContent,
+		comment_created_at AS commentCreatedAt,
+		post_id AS
+		postId
+		FROM comments
+		WHERE user_id = #{userId}
+		ORDER BY
+		comment_created_at DESC
+	</select>
+
+	<!-- 댓글 삭제 (본인 것만) -->
+	<delete id="deleteCommentsByIds">
+		DELETE FROM comments
+		WHERE user_id = #{userId}
+		AND comment_id IN
+		<foreach item="id" collection="commentIds" open="("
+			separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<!-- 댓글의 소유자 확인 -->
+	<select id="findCommentOwner" resultType="String">
+		SELECT user_id
+		FROM
+		comments
+		WHERE comment_id = #{commentId}
+	</select>
+
+	<!-- 게시글 삭제 -->
+	<delete id="deletePostsByIds">
+		DELETE FROM posts
+		WHERE user_id = #{userId}
+		AND post_id IN
+		<foreach item="id" collection="postIds" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<!-- 지원현황(리더) -->
+	<select id="findApplyStatusByWriter"
+		resultType="com.TTT.domain.MyActiveDto">
+		SELECT
+		pa.post_apply_id AS postApplyId,
+		pa.post_id AS postId,
+		pa.resume_id AS
+		resumeId,
+		pa.user_id AS userId,
+		u.username AS username,
+		brp.title AS postTitle,
+		pa.created_at AS createdAt
+		FROM
+		post_apply pa
+		JOIN
+		band_recruit_post brp ON pa.post_id = brp.post_id
+		JOIN
+		users u ON
+		pa.user_id = u.user_id
+		WHERE
+		brp.user_id = #{userId}
+		ORDER BY
+		pa.created_at DESC
+	</select>
+
+	<select id="findScrapPostsByUserId" resultType="com.TTT.domain.MyActiveDto">
+  (
     SELECT
-      band_name AS bandName,
-      band_part AS bandPart,
-      band_start AS bandStart,
-      band_end AS bandEnd
-    FROM band_history
-    WHERE resume_id = #{resumeId}
-  </select>
-
-  <!-- 이력서 존재 여부 확인 -->
-  <select id="countResumeByUserId" parameterType="String" resultType="int">
-    SELECT COUNT(*) FROM resume WHERE user_id = #{userId}
-  </select>
-  
-  <!-- 이력서 조회 -->
-  <select id="findById" parameterType="long" resultType="com.TTT.domain.MypageDto">
-  SELECT 
-    resume_id AS resumeId,
-    user_id AS userId,
-    stage_name AS stageName,
-    gender,
-    birth,
-    sns,
-    phone_number AS phoneNumber,
-    area,
-    instrument,
-    instrument_etc AS instrumentEtc,
-    genre,
-    genre_etc AS genreEtc,
-    practice_date AS practiceDate,
-    practice_time AS practiceTime,
-    detail_time AS detailTime,
-    note
-  FROM resume
-  WHERE resume_id = #{id}
-</select>
-  
-
-  <!-- 삭제 -->
-  <delete id="deleteResumeByUserId" parameterType="String">
-    DELETE FROM resume WHERE user_id = #{userId}
-  </delete>
-
-  <delete id="deleteBandHistoryByResumeId" parameterType="int">
-    DELETE FROM band_history WHERE resume_id = #{resumeId}
-  </delete>
-  
-  <update id="updateResume" parameterType="com.TTT.domain.MypageDto">
-    UPDATE resume
-    SET
-        stage_name = #{stageName},
-        gender = #{gender},
-        birth = #{birth},
-        sns = #{sns},
-        phone_number = #{phoneNumber},
-        area = #{area},
-        instrument = #{instrument},
-        instrument_etc = #{instrumentEtc},
-        genre = #{genre},
-        genre_etc = #{genreEtc},
-        practice_date = #{practiceDate},
-        practice_time = #{practiceTime},
-        detail_time = #{detailTime},
-        note = #{note}
-    WHERE resume_id = #{resumeId}
-</update>
-
-<!-- 프로필편집 -->
-<select id="selectUserProfileByUserId" parameterType="String" resultType="com.TTT.domain.UserProfileDto">
-    SELECT USER_PROFILE_ID AS userProfileId,
-           USER_ID AS userId,
-           NICKNAME AS nickname,
-           USER_IMG AS userImg
-    FROM user_profile
-    WHERE USER_ID = #{userId}
+      ps.POST_SCRAP_ID AS scrapId,
+      ps.POST_ID AS postId,
+      NULL AS recruitPostId,
+      p.POST_TITLE AS postTitle,
+      NULL AS title,
+      ps.CREATED_AT AS createdAt
+    FROM post_scrap ps
+    JOIN posts p ON ps.POST_ID = p.POST_ID
+    WHERE ps.USER_ID = #{userId}
+      AND ps.POST_ID IS NOT NULL
+  )
+  UNION
+  (
+    SELECT
+      ps.POST_SCRAP_ID AS scrapId,
+      NULL AS postId,
+      ps.RECRUIT_POST_ID AS recruitPostId,
+      NULL AS postTitle,
+      brp.TITLE AS title,
+      ps.CREATED_AT AS createdAt
+    FROM post_scrap ps
+    JOIN band_recruit_post brp ON ps.RECRUIT_POST_ID = brp.POST_ID
+    WHERE ps.USER_ID = #{userId}
+      AND ps.RECRUIT_POST_ID IS NOT NULL
+  )
+  ORDER BY createdAt DESC
 </select>
 
-<update id="updateUserProfile" parameterType="com.TTT.domain.UserProfileDto">
-    UPDATE user_profile
-    SET nickname = #{nickname},
-    user_img = #{userImg}
-    WHERE user_id = #{userId}
-</update>
-
-<!-- 닉네임 중복여부 체크 -->
-<select id="countByNickname" parameterType="String" resultType="int">
-  SELECT COUNT(*) FROM user_profile WHERE nickname = #{nickname}
-</select>
-
-<!-- 댓글조회 -->
-
-  <select id="findCommentsByUserId" resultType="com.TTT.domain.MyActiveDto">
-    SELECT 
-      COMMENT_ID AS commentId,
-      POST_ID AS postId,
-      USER_ID AS userId,
-      COMMENT_CONTENT AS commentContent,
-      comment_created_at AS commentCreatedAt
-    FROM comments
-    WHERE USER_ID = #{userId}
-    ORDER BY comment_created_at DESC
-  </select>
-
-<!-- 댓글 작성한 게시글 조회 -->
-<select id="findPostById" parameterType="long" resultType="com.TTT.domain.PostVo">
-  SELECT
-    post_id,
-    board_id,
-    user_id,
-    nickname,
-    post_title,
-    post_content,
-    post_img,
-    post_pinned,
-    post_status
-  FROM post
-  WHERE post_id = #{postId}
-</select>
-
-<!-- 사용자 비밀번호 조회 -->
-<select id="getPasswordByUserId" resultType="String">
-  SELECT password
+<!-- user_name으로 user_id(UUID) 조회 -->
+<select id="findUserIdByUserName" resultType="string" parameterType="string">
+  SELECT user_id
   FROM users
-  WHERE user_id = #{userId}
+  WHERE user_id = #{username}  
 </select>
 
-<!-- 새로운 비밀번호 업데이트 -->
-<update id="updatePassword">
-  UPDATE users
-  SET password = #{password}
-  WHERE user_id = #{userId}
-</update>
+
+
+
+
+
+
+
 
 
 

@@ -5,6 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
 	<meta name="_csrf_parameter" th:content="${_csrf.parameterName}" />
 	<title>밴드 상세정보</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -79,7 +80,7 @@
 						<ul class="intro-list">
 							<li>
 							  <strong>結成日 : </strong>
-							  <div class="formation-date" th:text="${#temporals.format(band.formation_date, 'yyyy-MM-dd')}">2022-05-01</div>
+							  <span class="formation-date" th:text="${#temporals.format(band.formation_date, 'yyyy-MM-dd')}">2022-05-01</span>
 							</li>
 							<li>
 							  <strong>ジャンル : </strong>
@@ -138,11 +139,11 @@
 							</div>
 							<li>
 							  <strong>活動地域 : </strong>
-							  <div class="band-region" th:text="${band.region}"></div>
+							  <span class="band-region" th:text="${band.region}">東京</span>
 							</li>
 							<li>
 							  <strong>バンド紹介 : </strong>
-							  <div class="band-one-liner" th:text="${band.band_intro}"></div>
+							  <span class="band-one-liner" th:text="${band.band_intro}"></span>
 							</li>
 						</ul>
 					</section>
@@ -162,13 +163,13 @@
 									  data-member-type='leader'">
 					      <!-- 리더 이미지: 값 있으면 업로드, 없으면 기본 이미지 -->
 					      <img th:src="@{${leader != null and leader.user_img != null and !#strings.isEmpty(leader.user_img) 
-					        ? '/upload/' + leader.user_img 
+					        ? '/images' + leader.user_img 
 					        : '/images/member1.png'}}" 
 					        alt="리더" class="member-img"
 					        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
 
 					      <!-- 이름 -->
-					      <div class="member-name" th:text="'리더 · ' + ${leader.stage_name}"></div>
+					      <div class="member-name" th:text="'リーダー · ' + ${leader.stage_name}"></div>
 
 					      <!-- JS에서 내용 삽입할 빈 팝업 -->
 					      <div class="member-popup"></div>
@@ -188,13 +189,13 @@
 					                  data-member-motto=${member.member_motto}">
 					      <!-- 프로필 이미지: user_img 없으면 기본 이미지 -->
 					      <img th:src="@{${member.user_img != null and !#strings.isEmpty(member.user_img) 
-					        ? '/upload/' + member.user_img 
+					        ? '/images' + member.user_img 
 					        : '/images/member1.png'}}" 
 					        class="member-img" alt="멤버 이미지"
 					        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
 
 					      <!-- 이름 = 포지션 -->
-					      <div class="member-name" th:text="'멤버 · ' + ${member.stage_name}"></div>
+					      <div class="member-name" th:text="'メンバー · ' + ${member.stage_name}"></div>
 
 					      <!-- JS에서 내용 삽입할 빈 팝업 -->
 					      <div class="member-popup"></div>
@@ -212,7 +213,7 @@
 							</div>
 
 							<!-- ◀ 왼쪽 화살표 -->
-							<button class="gallery-arrow gallery-prev">◀</button>
+							<button class="gallery-arrow gallery-prev" th:if="${not #lists.isEmpty(galleryList)}">◀</button>
 
 							<!-- 활동사진 슬라이드 반복 -->
 							<div th:each="photo, stat : ${galleryList}" th:if="${photo != null}" class="media-slide"
@@ -233,19 +234,26 @@
 										style="display: none;"></span>
 
 									<!-- 유튜브 영상 -->
-									<div class="video-wrapper" th:if="${photo.activityYoutubeUrl != null}">
-										<iframe
-											th:src="'https://www.youtube.com/embed/' + ${#strings.substringAfter(photo.activityYoutubeUrl, 'v=')}"
-											title="유튜브 영상" frameborder="0"
-											allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-											allowfullscreen>
-										</iframe>
+									<div class="video-wrapper"
+									     th:if="${photo.activityYoutubeUrl != null and #strings.contains(photo.activityYoutubeUrl, 'v=')}">
+										 <iframe
+										   th:if="${photo.activityYoutubeUrl != null}"
+										   th:src="${#strings.contains(photo.activityYoutubeUrl, 'v=') 
+										               ? 'https://www.youtube.com/embed/' + #strings.substringAfter(photo.activityYoutubeUrl, 'v=') 
+										               : (#strings.contains(photo.activityYoutubeUrl, 'youtu.be/') 
+										                   ? 'https://www.youtube.com/embed/' + #strings.substringAfter(photo.activityYoutubeUrl, 'youtu.be/') 
+										                   : 'https://www.youtube.com/embed/' + #strings.substringAfter(photo.activityYoutubeUrl, 'embed/'))}"
+										   width="560" height="315"
+										   frameborder="0"
+										   allowfullscreen>
+										 </iframe>
+									  <p th:text="'src 파싱 확인: https://www.youtube.com/embed/' + ${#strings.substringBefore(#strings.substringAfter(photo.activityYoutubeUrl, 'v='), '&')}"></p>
 									</div>
 								</div>
 							</div>
 
 							<!-- ▶ 오른쪽 화살표 -->
-							<button class="gallery-arrow gallery-next">▶</button>
+							<button class="gallery-arrow gallery-next" th:if="${not #lists.isEmpty(galleryList)}">▶</button>
 						</div>
 
 						<!-- 하단 도트 -->
@@ -285,13 +293,16 @@
 									<div th:each="record : ${slide}" class="column-left">
 										<div class="record-card">
 											<div class="record-date">
-												<span th:text="${record.formattedDate}">５月</span><br>
+												<span th:text="${#strings.replace(record.formattedDate, '월', '月')}">5月</span><br>
 												<strong th:text="${record.formattedDay}">21</strong>
 											</div>
 											<div class="record-info">
 												<span class="record-id" th:text="${record.recordId}" style="display:none;"></span>
 												<div class="record-title" th:text="${record.recordTitle}">公演のタイトル</div>
-												<div class="record-status" th:text="${record.recordStatus}">予定</div>
+												<div class="record-status" 
+												     th:text="${record.recordStatus == '완료' ? '完了' : (record.recordStatus == '예정' ? '予定' : record.recordStatus)}">
+												  状態
+												</div>
 												<div class="record-location" th:text="${record.recordLocation}">場所</div>
 												<div class="record-meta">
 													🕒 <span th:text="${record.recordTime}">時間</span> &nbsp;
@@ -515,7 +526,7 @@
 			  const coverBtn = document.createElement("button");
 			  coverBtn.id = "cover-file-btn";
 			  coverBtn.type = "button";
-			  coverBtn.textContent = "커버 변경";
+			  coverBtn.textContent = "カバーイメージ変更";
 			  coverBtn.className = "btn-primary";
 
 			  Object.assign(coverBtn.style, {
@@ -665,6 +676,7 @@
 			          formData.append("profileImage", file);
 
 			          const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+			          const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
 			          const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
 			          if (csrfToken && csrfParam) {
 			            formData.append(csrfParam, csrfToken);
@@ -707,6 +719,7 @@
 
 			  const input = el.querySelector("input");
 			  const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+			  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 			  const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
 
 			  input.addEventListener("blur", (e) => {
@@ -750,6 +763,7 @@
 
 			  const input = el.querySelector("input");
 			  const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+			  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 			  const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
 
 			  input.addEventListener("blur", (e) => {
@@ -2289,7 +2303,7 @@
 				}
 
 				if (storedMode) {
-					editButton.textContent = "수정완료";
+					editButton.textContent = "編集完了";
 					initCoverImageEdit();
 					initProfileEdit();
 					initBandIntro();
@@ -2417,7 +2431,7 @@
 				// 슬라이드가 하나라도 있으면 숨기지 않음
 				if (
 					galleryEmptyMessage &&
-					galleryEmptyMessage.textContent.includes("등록된 활동 사진이 없습니다") &&
+					galleryEmptyMessage.textContent.includes("登録された活動写真がありません。") &&
 					realSlides.length === 0
 				) {
 					arrows.forEach(arrow => arrow.style.display = "none");
@@ -2507,12 +2521,15 @@
 		
 		
 		<script th:inline="javascript">
-		/*<![CDATA[*/
-		  const band_id      = [[${band.band_id}]];
-		  const currentUser = [[${currentUserVo?.user_id}]];
-		/*]]>*/
+		  // IDE에서 "const band_id = 0;" 같은 정상적인 JS로 보이게 함
+		  const band_id     = /*[[${band.band_id}]]*/ 0;
+		  const currentUser = /*[[${currentUserVo?.user_id}]]*/ 'anonymous';
 		</script>
+		
 		<script>
+		 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+		 const csrfToken  = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+		
 		const popup = document.getElementById('member-invite-popup');
 		if(popup){
 			
