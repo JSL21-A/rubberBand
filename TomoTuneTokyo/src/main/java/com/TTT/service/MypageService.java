@@ -309,5 +309,16 @@ public class MypageService {
 			return false;
 		}
 	}
+	
+	//회원탈퇴
+	public boolean deactivateMember(String user_id) {
+		try {
+			int deactivated = mypageMapper.deactivateMember(user_id);
+			return deactivated > 0;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 }

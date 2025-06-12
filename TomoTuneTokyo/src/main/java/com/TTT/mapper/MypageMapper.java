@@ -89,6 +89,10 @@ public interface MypageMapper {
 	
 	//게시글 삭제
 	int deletePostsByIds(@Param("userId") String userId, @Param("postIds") List<Long> postIds);
+	
+	//회원탈퇴
+	@Update("update users set status = 'D' where user_id = #{user_id}")
+	int deactivateMember(@Param("user_id") String user_id);
 
 
 }

@@ -440,5 +440,7 @@ public class MypageController {
 
 		return "redirect:/mypage/activity/posts";
 	}
+	
+	
 
 }
