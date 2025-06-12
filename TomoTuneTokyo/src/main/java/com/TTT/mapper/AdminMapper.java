@@ -18,9 +18,9 @@ public interface AdminMapper {
     @Select("SELECT * FROM posts WHERE board_id = '7' ORDER BY created_at DESC")
     List<PostVo> getNotiList();
 
-    @Select("SELECT p.post_id, u.nickname, p.post_title, b.board_name, p.created_at FROM reports r JOIN posts p ON r.post_id = p.post_id JOIN user_profile u ON r.target_id = u.user_id JOIN boards b ON p.board_id = b.board_id")
+    @Select("SELECT p.post_id, u.nickname, p.post_title, b.board_name, p.created_at FROM reports r JOIN posts p ON r.post_id = p.post_id JOIN user_profile u ON r.target_id = u.user_id JOIN boards b ON p.board_id = b.board_id WHERE p.post_status IS NULL OR p.post_status != 'D'")
     List<PostVo> getRpostsList();
 
-    @Select("SELECT p.post_id, c.comment_content, u.nickname, r.created_at FROM reports r JOIN comments c ON r.comment_id = c.comment_id JOIN posts p ON c.post_id = p.post_id JOIN user_profile u ON r.target_id = u.user_id")
+    @Select("SELECT p.post_id, c.comment_content, u.nickname, r.created_at FROM reports r JOIN comments c ON r.comment_id = c.comment_id JOIN posts p ON c.post_id = p.post_id JOIN user_profile u ON r.target_id = u.user_id WHERE p.post_status IS NULL OR p.post_status != 'D'")
     List<PostVo> getRcommentList();
 }
