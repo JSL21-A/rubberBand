@@ -187,12 +187,37 @@
 	</div>
 
 	<script>
-		function confirmWithdraw() {
-			if (confirm("本当に退会しますか？")) {
-				alert("退会処理が完了しました。");
-			}
-		}
+	  const csrfToken  = document.querySelector('meta[name="_csrf"]').content;
+	  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+	
+	  function confirmWithdraw() {
+	    if (!confirm("本当に退会しますか？")) return;
+	
+	    $.ajax({
+	      url: '/mypage/deactivate',
+	      type: 'POST',
+	      headers: { [csrfHeader]: csrfToken },
+	      dataType: 'json'
+	    })
+	    .done(function(res) {
+	      if (!res.success) {
+	        return alert(res.message || '退会に失敗しました。');
+	      }
+	      //탈퇴 성공 알림
+	      alert('アカウントの退会が正常に完了しました。');
+	      //부모 창 로그아웃
+	      if (window.opener && !window.opener.closed) {
+	        window.opener.location.href = '/logout'; 
+	      }
+	      // 팝업 닫기
+	      window.close();
+	    })
+	    .fail(function() {
+	      alert('通信エラーが発生しました。もう一度お試しください。');
+	    });
+	  }
 	</script>
+
 
 	<script>
 
