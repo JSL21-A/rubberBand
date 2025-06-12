@@ -132,7 +132,7 @@
                             <div class="noti_date">作成日</div>
                         </li>
                         <li class="noti_post" th:each="comment: ${comment}">
-                            <a hx-get="/admin/test">
+                            <a th:attr="href='/user/view?post='+ ${comment.post_id}" hx-target="#content">
                                 <div class="noti_title" th:text="${comment.comment_content}"></div>
                             </a>
                             <div th:text="${comment.nickname}"></div>

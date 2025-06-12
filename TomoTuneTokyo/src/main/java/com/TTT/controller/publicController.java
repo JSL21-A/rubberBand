@@ -276,6 +276,7 @@ public class publicController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/report")
     public ResponseEntity<Object> reportPost(@RequestParam("target") Long target, @RequestParam("type") String type,
             Principal principal) {
 
