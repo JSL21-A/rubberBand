@@ -458,7 +458,6 @@ public class MypageController {
 	        model.addAttribute("errorMessage", "이력서를 찾을 수 없습니다.");
 	        return "mypage/account";
 	    }
-		System.out.println("service resume : " + resumeId);
 
 	    String currentUserId = getCurrentUserId(principal);
 	    boolean isOwner = resume.getUserId().equals(currentUserId);
