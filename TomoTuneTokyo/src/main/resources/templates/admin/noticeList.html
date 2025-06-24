@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" data-layout-decorate=~{layouts/adminLayout}>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body {
+        overflow: scroll;
+    }
+</style>
+
+<body>
+    <h1 id="banner-font" hx-swap-oob="true" th:fragment="banner_title">お知らせ</h1>
+    <div id="content" layout:fragment="content" th:fragment="content" hx-history-elt>
+        <div id="notice">
+            <div id="top">
+
+            </div>
+            <div id="middle">
+                <div class="noti_list">
+                    <ul>
+                        <li class="noti_post">
+                            <a href="#">
+                                <div class="noti_title">タイトル</div>
+                            </a>
+                            <div class="noti_date">作成日</div>
+                        </li>
+                        <li class="noti_post" th:each="post: ${list}">
+                            <a th:attr="hx-get='./view?post='+ ${post.post_id}" th:text="${post.post_title}"
+                                hx-target="#middle" hx-select="#middle" hx-push-url="true">
+                                <div class="noti_title" th:text="${post.post_title}"></div>
+                            </a>
+                            <div class="noti_date" th:text="${#temporals.format(post.created_at, 'yyyy.MM.dd')}"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="bottom">
+                <div id="doctor_paging">
+                </div>
+                <a id="onPost" hx-get="./write" hx-target="#content" hx-select="#content" hx-push-url="true"
+                    hx-boost="true">作成</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

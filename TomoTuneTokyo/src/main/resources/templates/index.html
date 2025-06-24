@@ -1,493 +1,322 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{layouts/layout}">
 
 <head>
-	<meta charset="UTF-8">
-	<title>Insert title here</title>
 </head>
-<style>
-	:root {
-		/* 창 크기에 따라 유동적으로 움직이려고 선언 */
-		--diameter: 200;
-		--card-width: 20;
-		--card-height: 20;
-		--unit: 1vw;
-	}
-
-	body {
-		padding: 0;
-		margin: 0;
-	}
-
-	.menu-container {
-		top: 0;
-		left: 0;
-		bottom: 0;
-		right: 0;
-		overflow: hidden;
-	}
-
-	.menu-container,
-	.menu-inner {
-		position: absolute;
-		-webkit-backface-visibility: hidden;
-		backface-visibility: hidden;
-		will-change: transform;
-	}
-
-	.menu-inner {
-		/* 돌아가는 판 크기 설정 */
-		width: calc((var(--diameter) + var(--card-width))*var(--unit));
-		height: calc((var(--diameter) + var(--card-height))*var(--unit));
-		/* 상단기준 반지름만큼 내려가기 */
-		top: calc(55vh + (var(--diameter) * 0.5 * var(--unit)) - (var(--card-height) * 0.5 * var(--unit)));
-		/* 중앙배치 */
-		left: 50%;
-		transform: translate(-50%, -50%);
-		/* 회전 중심을 중앙으로 */
-		transform-origin: center center;
-		will-change: transform;
-	}
-
-	.menu-arrow {
-		width: 240px;
-		position: fixed;
-		bottom: 12vh;
-		left: 50%;
-		transform: translate(-50%);
-	}
-
-	.card {
-		position: absolute;
-		/* 카드 크기 */
-		width: calc(var(--card-width)*var(--unit));
-		height: calc(var(--card-height) * var(--unit));
-		perspective: 1000px;
-		transform-origin: center;
-		will-change: transform;
-		transform-style: preserve-3d;
-	}
-
-	.card-inner {
-		transition: transform .6s;
-		transform-style: preserve-3d;
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		will-change: transform;
-		height: calc((var(--card-height) + var(--card-height)/3.5)*var(--unit));
-	}
-
-	.card:hover .card-inner {
-		transform: rotateY(180deg);
-	}
-
-	.card-front,
-	.card-back {
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		-webkit-backface-visibility: hidden;
-		backface-visibility: hidden;
-		border: 5px solid #000;
-		border-radius: 30px;
-	}
-
-	.card-front {
-		background-color: #fff;
-	}
-
-	.card-back {
-		background-color: #f4f4f4;
-		transform: rotateY(180deg);
-	}
-
-	#rotateBtn {
-		font-size: 100px;
-		border: 0;
-		background-color: transparent;
-	}
-</style>
 
 <body>
-	<div class="main-menu">
-		<div class="menu-container">
-			<div class="menu-inner">
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 1</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
+	<div id="contents" layout:fragment="content" hx-history-elt>
+		<div class="main-menu">
+			<div class="menu-container">
+				<div class="menu-inner">
+					<div class="menu-card">
+						<a href="/bandinsert/modifylist">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/bands.png">
+								</div>
+								<div class="card-back">
+									<h1>バンド<br>リスト</h1>
+								</div>
+							</div>
+						</a>
 					</div>
+					<div class="menu-card">
+						<a href="/bandlist/list">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/recruit.png">
+								</div>
+								<div class="card-back">
+									<h1>メンバ<br>募集</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=5">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/concerts.png">
+								</div>
+								<div class="card-back">
+									<h1>ライブ<br>告知</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=3">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/market.png">
+								</div>
+								<div class="card-back">
+									<h1 style="font-size: 3rem;">フリー<br>マーケット</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=6">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/records.png">
+								</div>
+								<div class="card-back">
+									<h1>演奏<br>音源</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=6">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/community.png">
+								</div>
+								<div class="card-back">
+									<h1 style="font-size: 3rem;">コミュニティ</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/bandinsert/modifylist">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/bands.png">
+								</div>
+								<div class="card-back">
+									<h1>バンド<br>リスト</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/bandlist/list">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/recruit.png">
+								</div>
+								<div class="card-back">
+									<h1>メンバ<br>募集</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=5">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/concerts.png">
+								</div>
+								<div class="card-back">
+									<h1>ライブ<br>告知</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=3">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/market.png">
+								</div>
+								<div class="card-back">
+									<h1 style="font-size: 3rem;">フリー<br>マーケット</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=6">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/records.png">
+								</div>
+								<div class="card-back">
+									<h1>演奏<br>音源</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=6">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/community.png">
+								</div>
+								<div class="card-back">
+									<h1 style="font-size: 3rem;">コミュニティ</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/bandinsert/modifylist">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/bands.png">
+								</div>
+								<div class="card-back">
+									<h1>バンド<br>リスト</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/bandlist/list">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/recruit.png">
+								</div>
+								<div class="card-back">
+									<h1>メンバ<br>募集</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=5">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/concerts.png">
+								</div>
+								<div class="card-back">
+									<h1>ライブ<br>告知</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=3">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/market.png">
+								</div>
+								<div class="card-back">
+									<h1 style="font-size: 3rem;">フリー<br>マーケット</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=6">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/records.png">
+								</div>
+								<div class="card-back">
+									<h1>演奏<br>音源</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=6">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/community.png">
+								</div>
+								<div class="card-back">
+									<h1 style="font-size: 3rem;">コミュニティ</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/bandinsert/modifylist">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/bands.png">
+								</div>
+								<div class="card-back">
+									<h1>バンド<br>リスト</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/bandlist/list">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/recruit.png">
+								</div>
+								<div class="card-back">
+									<h1>メンバ<br>募集</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=5">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/concerts.png">
+								</div>
+								<div class="card-back">
+									<h1>ライブ<br>告知</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=3">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/market.png">
+								</div>
+								<div class="card-back">
+									<h1 style="font-size: 3rem;">フリー<br>マーケット</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=6">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/records.png">
+								</div>
+								<div class="card-back">
+									<h1>演奏<br>音源</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="menu-card">
+						<a href="/user/list?board=6">
+							<div class="card-inner">
+								<div class="card-front">
+									<img alt="" src="/images/menuPanels/community.png">
+								</div>
+								<div class="card-back">
+									<h1 style="font-size: 3rem;">コミュニティ</h1>
+								</div>
+							</div>
+						</a>
+					</div>
+					
 				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 2</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
+			</div>
+			<div class="menu-arrow">
+				<!-- 회전 트리거 버튼 -->
+				<div class="arrow-wrapper left">
+					<button class="arrow left" id="rotateBtn"></button>
 				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 3</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 4</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 5</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 6</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 1</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 2</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 3</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 4</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 5</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 6</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 1</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 2</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 3</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 4</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 5</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 6</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 1</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 2</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 3</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 4</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 5</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
-				</div>
-				<div class="card">
-					<div class="card-inner">
-						<div class="card-front">
-							<h2>카드 6</h2>
-						</div>
-						<div class="card-back">
-							<p>추가 정보 표시</p>
-						</div>
-					</div>
+				<div class="arrow-wrapper right">
+					<button class="arrow right" id="rotateBtn"></button>
 				</div>
 			</div>
 		</div>
-		<div class="menu-arrow">
-			<!-- 회전 트리거 버튼 -->
-			<button class="arrow left" id="rotateBtn">❮</button>
-			<button class="arrow right" id="rotateBtn">❯</button>
-		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/Draggable.min.js"></script>
+		<script src="/JS/index.js"></script>
+
 	</div>
 </body>
-<script src="/src/main/resources/static/JS/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/Draggable.min.js"></script>
-<script>
-	// 돌아돌아 돌림판
-	gsap.registerPlugin(Draggable);
-
-	var menu = $('.menu-inner');
-	let rotation = 0;
-	let velocity = 0;
-	let isDragging = false;
-	let lastRotation = 0;
-	let raf;
-
-	// 돌아가게 div태그에 draggable 설정
-	const draggable = Draggable.create(menu.get(0), {
-		type: "rotation",
-		onDragStart: function () {
-			isDragging = true;
-			cancelAnimationFrame(raf);
-			velocity = 0;
-		},
-		onDrag: function () {
-			rotation = gsap.getProperty(menu.get(0), "rotation");
-			velocity = rotation - lastRotation;
-			lastRotation = rotation;
-		},
-		onDragEnd: function () {
-			isDragging = false;
-			animateInertia();
-		}
-	});
-
-	//관성 설정
-	function animateInertia() {
-		if (!isDragging) {
-			// 점점 속도 줄게 (velocity = 감속 계수)
-			velocity *= 0.95;
-			rotation += velocity;
-
-			gsap.set(menu.get(0), { rotation });
-
-			// 속도가 거의 0이면 스냅 처리
-			if (Math.abs(velocity) > 0.5) {
-				raf = requestAnimationFrame(animateInertia);
-			} else {
-				snapToClosestAngle(); // 가장 가까운 각도로 스냅
-			}
-		}
-	}
-
-	function snapToClosestAngle() {
-		let nextMultiple;
-
-		const isClockwise = rotation > lastRotation; // 시계방향 회전 여부 확인
-
-		// 시계방향 (양수로 증가) 일 때
-		if (isClockwise) {
-			nextMultiple = Math.ceil(rotation / 15) * 15;  // 다음 15도 배수
-		}
-		// 반시계방향 (음수로 감소) 일 때
-		else {
-			nextMultiple = Math.floor(rotation / 15) * 15;  // 이전 15도 배수
-		}
-
-		gsap.to(menu.get(0), {
-			rotation: nextMultiple,
-			duration: 0.7,
-			ease: "power1.out"
-		});
-
-		$("#rotation").click(function () {
-			console.log(gsap.getProperty(menu.get(0), "rotation"), "from element");
-			console.log(Draggable.get(menu.get(0)).rotation, "from the Draggable");
-		});
-	}
-	$(document).ready(function () {
-		function cardLayout() {
-			var $container = $('.menu-inner');
-			var $cards = $container.find('.card');
-			var totalCards = $cards.length; // 카드 개수에 따라 동적 계산
-
-			// 반지름 및 위치 계산
-			const radius = parseFloat(getComputedStyle(document.documentElement)
-				.getPropertyValue('--diameter')) * window.innerWidth / 100 / 2; // 1vw = window.innerWidth / 100
-
-			var centerX = $container.width() / 2; //가로 중앙
-			var centerY = $container.height() / 2; //세로 중앙
-
-			const cardWidth = radius * 0.2;  // 카드 너비는 반지름의 10%로 계산
-			const cardHeight = cardWidth * 1.4; // 비율 유지 (예: 2:3 → 1.4배 높이)
-
-			// 첫 번째 카드는 컨테이너 12시 방향에 오게 각도 -90도
-			$cards.each(function (index) {
-				var angle = (2 * Math.PI / totalCards) * index - Math.PI / 2;
-				var $card = $(this);
-				// 카드 중심이 계산된 좌표에 오도록 카드 크기의 절반씩 빼줌
-				var x = centerX + radius * Math.cos(angle) - $card.width() / 2;
-				var y = centerY + radius * Math.sin(angle) - $card.height() / 2;
-				$card.css({
-					// 카드 배치 위치 조절 
-					left: x + 'px',
-					top: y + 'px',
-					transform: 'rotate(' + ((angle * 180 / Math.PI) + 90) + 'deg)'
-				});
-			});
-		}
-
-		// 창 크기가 변하면 다시 계산
-		cardLayout();
-		$(window).on('resize', cardLayout);
-	});
-
-	$('.arrow').on('click', function () {
-		rotation = gsap.getProperty(menu.get(0), "rotation");
-		if ($(this).hasClass('right')) {
-			RightRotation = rotation - 15;
-		} else {
-			RightRotation = rotation + 15;
-		}
-		gsap.to(menu.get(0), { "rotation": RightRotation });
-	});
-</script>
 
 </html>

@@ -1,0 +1,613 @@
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+
+<title>MYPAGE Resume Insert Form</title>
+
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link th:href="@{/css/resume.css}" rel="stylesheet">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/plugins/monthSelect/style.css">
+
+</head>
+
+<body>
+	<!-- 로고 클릭시 메인 화면으로 이동 -->
+	<div class="overlay" id="overlay" onclick="toggleSidebar(false)"></div>
+	<!-- 이력서 폼 박스 -->
+	<div class="page">
+		<div class="box content-box">
+			<div class="resume-form">
+				<form id="resumeForm" th:action="@{/mypage/insert}" method="post">
+					<input type="hidden" th:name="${_csrf.parameterName}"
+						th:value="${_csrf.token}" />
+					<!-- 활동명(필수) -->
+					<h4>
+						<label class="field-label">アーティスト名<span
+							class="required-label">必須</span></label>
+					</h4>
+					<input type="text" name="stageName" id="stageName"
+						placeholder="例: NANA" />
+					<div class="error-message" id="error-stageName"></div>
+					<!-- 성별(필수) 체크박스 -->
+					<h4>
+						<label class="field-label">性別<span class="required-label">必須</span></label>
+					</h4>
+					<div class="gender-group">
+						<label><input type="radio" name="gender" value="F">
+							女性</label> <label><input type="radio" name="gender" value="M">
+							男性</label>
+					</div>
+					<div class="error-message" id="error-gender"></div>
+
+					<!-- 생년월일 캘린더(선택) -->
+					<h4>
+						<label class="field-label">生年月日</label>
+					</h4>
+					<input type="text" id="birth" name="birth"
+						placeholder="例: 2001-01-01" />
+					<!-- 이메일(선택) -->
+					<h4>
+						<label class="field-label">Eメール</label>
+					</h4>
+					<input type="text" id="emailInput" name="sns"
+						placeholder="例: example@mail.com" />
+					<div id="emailError" class="error-message">
+						正しいメールアドレス形式で入力してください。</div>
+					<!-- 연락처(선택) -->
+					<h4>
+						<label class="field-label">連絡先</label>
+					</h4>
+					<input type="text" name="phoneNumber"
+						placeholder="例: 080-1234-5678" />
+					<!-- 활동가능지역 체크박스(복수선택가능) (필수)-->
+					<h4>
+						<label class="field-label">活動可能地域（最大5個まで）<span
+							class="required-label">必須</span></label>
+					</h4>
+					<select id="region-select">
+						<option value="">選択してください</option>
+						<option value="千代田区">千代田区</option>
+						<option value="中央区">中央区</option>
+						<option value="港区">港区</option>
+						<option value="新宿区">新宿区</option>
+						<option value="文京区">文京区</option>
+						<option value="台東区">台東区</option>
+						<option value="墨田区">墨田区</option>
+						<option value="江東区">江東区</option>
+						<option value="品川区">品川区</option>
+						<option value="目黒区">目黒区</option>
+						<option value="大田区">大田区</option>
+						<option value="世田谷区">世田谷区</option>
+						<option value="渋谷区">渋谷区</option>
+						<option value="中野区">中野区</option>
+						<option value="杉並区">杉並区</option>
+						<option value="豊島区">豊島区</option>
+						<option value="北区">北区</option>
+						<option value="荒川区">荒川区</option>
+						<option value="板橋区">板橋区</option>
+						<option value="練馬区">練馬区</option>
+						<option value="足立区">足立区</option>
+						<option value="葛飾区">葛飾区</option>
+						<option value="江戸川区">江戸川区</option>
+						<option value="その他">その他（入力）</option>
+					</select>
+					<!-- その他 -->
+					<div class="error-message" id="error-region"></div>
+					<input type="text" id="region-other" class="hidden"
+						placeholder="例: 神奈川県" />
+					<!-- 지역 추가하기 버튼 -->
+					<div class="form-block">
+						<button type="button" onclick="addRegion()">+ 地域追加</button>
+					</div>
+					<!-- 선택된 지역 목록 -->
+					<ul id="selected-regions"></ul>
+					<!-- 포지션 체크박스 복수선택가능 (필수)-->
+					<h4>
+						<label class="field-label">ポジション（複数追加可能）<span
+							class="required-label">必須</span></label>
+					</h4>
+					<div class="form-block checkbox-group">
+						<label><input type="checkbox" name="instrument" value="Vo">
+							Vo（ボーカル）</label><br /> <label><input type="checkbox"
+							name="instrument" value="Gt"> Gt（ギター）</label><br /> <label><input
+							type="checkbox" name="instrument" value="Ba"> Ba（ベース）</label><br />
+						<label><input type="checkbox" name="instrument" value="Dr">
+							Dr（ドラム）</label><br /> <label><input type="checkbox"
+							name="instrument" value="Kb"> Kb（キーボード）</label><br /> <label><input
+							type="checkbox" name="instrument" value="etc" id="position-etc">
+							その他</label><br /> <input type="text" id="position-etc-input"
+							name="instrumentEtc" class="hidden" placeholder="例: DJ" />
+
+					</div>
+					<div class="error-message" id="error-position"></div>
+					<!-- 선호하는 음악장르, 드롭다운 복수선택가능 -->
+					<h4>
+						<label class="field-label">好きなジャンル（最大5個まで）</label>
+					</h4>
+					<select id="genre-select">
+						<option value="">選択してください</option>
+						<option value="ロック">ロック</option>
+						<option value="ポップ">ポップ</option>
+						<option value="ジャズ">ジャズ</option>
+						<option value="ヒップホップ">ヒップホップ</option>
+						<option value="クラシック">クラシック</option>
+						<option value="EDM">EDM</option>
+						<option value="その他">その他</option>
+					</select>
+					<div class="error-message" id="error-position"></div>
+					<input type="text" id="genre-other" name="genreEtc" class="hidden"
+						placeholder="例: 演歌" />
+
+					<!-- 추가하기 버튼 -->
+					<div class="form-block">
+						<button type="button" onclick="addGenre()">+ ジャンル追加</button>
+					</div>
+					<ul id="selected-genres"></ul>
+					<!-- 엽습가능요일, 체크박스 복수선택 가능 (선택) -->
+					<h4>
+						<label class="field-label">練習時間（複数追加可能）</label>
+					</h4>
+					<div class="form-block checkbox-group">
+						<label><input type="checkbox" name="practiceDateList"
+							value="月"> 月</label><br /> <label><input type="checkbox"
+							name="practiceDateList" value="火"> 火</label><br /> <label><input
+							type="checkbox" name="practiceDateList" value="水"> 水</label><br />
+						<label><input type="checkbox" name="practiceDateList"
+							value="木"> 木</label><br /> <label><input type="checkbox"
+							name="practiceDateList" value="金"> 金</label><br /> <label><input
+							type="checkbox" name="practiceDateList" value="土"> 土</label><br />
+						<label><input type="checkbox" name="practiceDateList"
+							value="日"> 日</label><br />
+					</div>
+					<!-- 연습가능시간대, 드롭다운 복수선택가능 (선택) -->
+					<label>時間代 </label> <select id="timeSlot" name="practiceTime">
+						<option value="">-- 選択してください --</option>
+						<option value="morning">午前（06時〜12時）</option>
+						<option value="afternoon">午後（12時〜18時）</option>
+						<option value="evening">夜（18時〜22時）</option>
+					</select>
+					<!-- その他 -->
+					<label>具体的な時間</label> <input type="text" id="customTime"
+						name="detailTime" placeholder="例）18時〜22時">
+					<!-- 밴드활동이력추가, 버튼 클릭시 입력폼이 나오게(선택) -->
+					<h4>
+						<label class="field-label">バンド活動履歴（複数追加可能）</label>
+					</h4>
+					<div id="band-history"></div>
+					<div class="form-block">
+						<button type="button" onclick="addBandHistory()">+ 活動履歴追加</button>
+					</div>
+					<!-- 자기소개, 텍스트창 (선택) -->
+					<h4>
+						<label class="field-label">自己紹介</label>
+					</h4>
+					<textarea id="note" name="note" rows="5" cols="50"
+						placeholder="例：ギター歴3年、ロックバンド経験あり。よろしくお願いします！"></textarea>
+					<!-- 작성취소 / 리셋 / 저장 버튼  -->
+					<div class="button-group">
+						<button type="button" onclick="cancelForm()">作成取消</button>
+						<button type="button" onclick="openResetModal()">リセット</button>
+						<button type="submit">保存する</button>
+					</div>
+					<!-- 작성취소 버튼 경고창-->
+					<div id="cancelModal" class="modal-overlay">
+						<div class="modal-content">
+							<p>作成をキャンセルしますか？</p>
+							<div class="modal-buttons">
+								<button onclick="confirmCancel()">はい</button>
+								<button onclick="closeModal()">いいえ</button>
+							</div>
+						</div>
+					</div>
+					<!-- 리셋버튼 경고창 -->
+					<div id="resetModal" class="modal-overlay">
+						<div class="modal-content">
+							<p>入力された内容をすべて初期化しますか？</p>
+							<div class="modal-buttons">
+								<button onclick="confirmReset()">はい</button>
+								<button onclick="closeResetModal()">いいえ</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<!-- JS -->
+			<script
+				src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
+			<!-- 일본어 locale -->
+			<script
+				src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/ja.js"></script>
+			<!-- monthSelect plugin (밴드활동기간 캘린더) -->
+			<script
+				src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/plugins/monthSelect/index.js"></script>
+			<!-- 작성취소버튼 -->
+			<script>
+		function cancelForm() {
+			  document.getElementById('cancelModal').classList.add('active');
+			}
+
+			function closeModal() {
+			  document.getElementById('cancelModal').classList.remove('active');
+			}
+
+  function confirmCancel() {
+    window.location.href = '/mypage/account';
+  }
+</script>
+			<!-- 리셋버튼 -->
+
+			<script>
+function openResetModal() {
+  document.getElementById('resetModal').classList.add('active');
+}
+
+function closeResetModal() {
+  document.getElementById('resetModal').classList.remove('active');
+}
+
+function confirmReset() {
+  document.getElementById("resumeForm").reset();
+
+  document.getElementById("selected-regions").innerHTML = '';
+  document.getElementById("region-other").style.display = 'none';
+
+  document.getElementById("selected-genres").innerHTML = '';
+  document.getElementById("genre-other").style.display = 'none';
+
+  document.getElementById("position-etc-input").style.display = 'none';
+
+  document.getElementById("customTime").value = '';
+  document.getElementById("band-history").innerHTML = '';
+  bandCount = 0;
+
+  closeResetModal(); 
+}
+</script>
+			<!-- 이메일형식 유효성검사 -->
+			<script>
+document.getElementById("resumeForm").addEventListener("submit", function (e) {
+  const emailInput = document.getElementById("emailInput");
+  const emailError = document.getElementById("emailError");
+
+  const email = emailInput.value.trim();
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (email && !emailPattern.test(email)) {
+    e.preventDefault(); // 제출 중단
+    emailError.style.display = "block";
+    emailInput.focus();
+    return;
+  }
+
+  // 정상일 경우 에러 숨기기
+  emailError.style.display = "none";
+});
+</script>
+
+			<!-- 유저가 수정중일때 문구 자동숨김 -->
+			<script>
+document.getElementById("emailInput").addEventListener("input", function () {
+  const emailError = document.getElementById("emailError");
+  emailError.style.display = "none";
+});
+</script>
+			<!-- 필수항목 유효성검사 -->
+			<script>
+document.getElementById("resumeForm").addEventListener("submit", function (e) {
+  let hasError = false;
+
+  // 아티스트명
+  const stageName = document.getElementById("stageName");
+  const errorStage = document.getElementById("error-stageName");
+  if (!stageName.value.trim()) {
+    errorStage.textContent = "アーティスト名を入力してください。";
+    errorStage.style.display = "block";
+    if (!hasError) {
+      stageName.scrollIntoView({ behavior: "smooth", block: "center" });
+      stageName.focus();
+      hasError = true;
+    }
+  } else {
+    errorStage.style.display = "none";
+  }
+
+  // 성별
+  const genderChecked = document.querySelector('input[name="gender"]:checked');
+  const errorGender = document.getElementById("error-gender");
+  if (!genderChecked) {
+    errorGender.textContent = "性別を選択してください。";
+    errorGender.style.display = "block";
+    if (!hasError) {
+      errorGender.scrollIntoView({ behavior: "smooth", block: "center" });
+      hasError = true;
+    }
+  } else {
+    errorGender.style.display = "none";
+  }
+
+  // 활동 가능 지역
+  const selectedRegions = document.getElementById("selected-regions").children.length;
+  const errorRegion = document.getElementById("error-region");
+  if (selectedRegions === 0) {
+    errorRegion.textContent = "活動可能地域を1つ以上選択してください。";
+    errorRegion.style.display = "block";
+    if (!hasError) {
+      errorRegion.scrollIntoView({ behavior: "smooth", block: "center" });
+      hasError = true;
+    }
+  } else {
+    errorRegion.style.display = "none";
+  }
+
+  // 포지션
+  const instruments = document.querySelectorAll('input[name="instrument"]:checked');
+  const errorPosition = document.getElementById("error-position");
+  if (instruments.length === 0) {
+    errorPosition.textContent = "ポジションを1つ以上選択してください。";
+    errorPosition.style.display = "block";
+    if (!hasError) {
+      errorPosition.scrollIntoView({ behavior: "smooth", block: "center" });
+      hasError = true;
+    }
+  } else {
+    errorPosition.style.display = "none";
+  }
+
+  if (hasError) e.preventDefault();
+});
+</script>
+
+			<script>
+// 유저가 입력하는 동안 에러 메시지 숨기기
+document.getElementById("stageName").addEventListener("input", function () {
+  document.getElementById("error-stageName").style.display = "none";
+});
+
+document.querySelectorAll('input[name="gender"]').forEach((radio) => {
+  radio.addEventListener("change", function () {
+    document.getElementById("error-gender").style.display = "none";
+  });
+});
+
+document.getElementById("region-select").addEventListener("change", function () {
+  document.getElementById("error-region").style.display = "none";
+});
+
+document.querySelectorAll('input[name="instrument"]').forEach((checkbox) => {
+  checkbox.addEventListener("change", function () {
+    document.getElementById("error-position").style.display = "none";
+  });
+});
+</script>
+
+			<!-- 생년월일 캘린더 일본어 -->
+			<script>
+  flatpickr("#birth", {
+    locale: "ja",
+    dateFormat: "Y-m-d"
+  });
+</script>
+			<!-- 활동가능지역  -->
+			<script>
+  const regionSelect = document.getElementById('region-select');
+  const regionOther = document.getElementById('region-other');
+  const selectedList = document.getElementById('selected-regions');
+	// その他 선택 시 입력창 표시
+  regionSelect.addEventListener('change', () => {
+    regionOther.style.display = regionSelect.value === 'その他' ? 'inline-block' : 'none';
+  });
+
+  function addRegion() {
+	  let value = regionSelect.value;
+	  if (!value) return;
+
+	  if (value === 'その他') {
+	    value = regionOther.value.trim();
+	    if (!value) {
+	      alert("地域名を入力してください");
+	      return;
+	    }
+	  }
+
+	  // 최대 5개까지만 추가 허용
+	  if (selectedList.children.length >= 5) {
+	    alert("地域は最大5件まで選択できます。");
+	    return;
+	  }
+
+	  // 이미 추가된 지역인지 확인
+	  const existing = [...selectedList.children].some(li => li.dataset.value === value);
+	  if (existing) {
+	    alert("既に追加されています");
+	    return;
+	  }
+
+	  const li = document.createElement('li');
+	  li.textContent = value + ' ';
+	  li.dataset.value = value;
+
+	  const hiddenInput = document.createElement('input');
+	  hiddenInput.type = 'hidden';
+	  hiddenInput.name = 'region[]';
+	  hiddenInput.value = value;
+	  li.appendChild(hiddenInput);
+
+	  const removeBtn = document.createElement('button');
+	  removeBtn.type = 'button';
+	  removeBtn.textContent = '✕';
+	  removeBtn.style.marginLeft = '0.5rem';
+	  removeBtn.onclick = () => li.remove();
+	  li.appendChild(removeBtn);
+
+	  selectedList.appendChild(li);
+	  regionSelect.value = '';
+	  regionOther.value = '';
+	  regionOther.style.display = 'none';
+	}
+
+</script>
+			<!-- 포지션 その他, 선택시 텍스트창 나타나게 -->
+			<script>
+  document.getElementById('position-etc').addEventListener('change', function () {
+    const input = document.getElementById('position-etc-input');
+    input.style.display = this.checked ? 'block' : 'none';
+  });
+</script>
+			<!-- 밴드활동이력  -->
+			<script>
+  let bandCount = 0;
+
+  function addBandHistory() {
+    if (bandCount >= 3) {
+      alert("最大3件まで追加できます。");
+      return;
+    }
+
+    const index = bandCount++;
+    const container = document.createElement('div');
+    container.className = 'band-card';
+    container.style.position = 'relative';
+
+    container.innerHTML = `
+      <button class="remove-btn" type="button" title="削除">✕</button>
+      <label>バンド名</label>
+      <input type="text" name="bandHistoryList[${index}].bandName" placeholder="例: Oasis" />
+
+      <label>ポジション</label>
+      <input type="text" name="bandHistoryList[${index}].bandPart" placeholder="例: ボーカル" />
+
+      <label>活動期間</label>
+      <div class="band-period">
+        <input type="text" id="band-start-${index}" name="bandHistoryList[${index}].bandStart" placeholder="開始年月を選択" />
+        <span>から</span>
+        <input type="text" id="band-end-${index}" name="bandHistoryList[${index}].bandEnd" placeholder="終了年月を選択" />
+        <span>まで</span>
+      </div>
+    `;
+
+    container.querySelector('.remove-btn').onclick = () => {
+      container.remove();
+      bandCount--;
+    };
+
+    document.getElementById('band-history').appendChild(container);
+
+    // flatpickr 적용
+    if (window.monthSelectPlugin) {
+        flatpickr(`#band-start-${index}`, {
+          locale: "ja",
+          dateFormat: "Y-m",
+          altInput: true,
+          altFormat: "Y年m月",
+          altInputClass: "custom-flatpickr",
+          plugins: [new window.monthSelectPlugin({
+            shorthand: true,
+            dateFormat: "Y-m",
+            altFormat: "Y年m月"
+          })]
+        });
+
+        flatpickr(`#band-end-${index}`, {
+          locale: "ja",
+          dateFormat: "Y-m",
+          altInput: true,
+          altFormat: "Y年m月",
+          altInputClass: "custom-flatpickr",
+          plugins: [new window.monthSelectPlugin({
+            shorthand: true,
+            dateFormat: "Y-m",
+            altFormat: "Y年m月"
+          })]
+        });
+      } else {
+        console.error("monthSelectPlugin이 초기화되지 않았습니다.");
+      }
+  }
+</script>
+			<script>
+  // "その他" 선택 시 input 표시
+  document.getElementById("genre-select").addEventListener("change", function () {
+    const other = document.getElementById("genre-other");
+    other.style.display = this.value === "その他" ? "inline-block" : "none";
+  });
+
+  // 장르 추가 함수
+  function addGenre() {
+    const select = document.getElementById("genre-select");
+    const otherInput = document.getElementById("genre-other");
+    const list = document.getElementById("selected-genres");
+
+    let value = select.value;
+    if (!value) return;
+
+    if (value === "その他") {
+      value = otherInput.value.trim();
+      if (!value) {
+        alert("ジャンル名を入力してください");
+        return;
+      }
+    }
+
+    // 최대 5개 제한
+    if (list.children.length >= 5) {
+      alert("ジャンルは最大5件まで選択できます。");
+      return;
+    }
+
+    // 중복 확인
+    const exists = [...list.children].some(li => li.dataset.value === value);
+    if (exists) {
+      alert("既に追加されています");
+      return;
+    }
+
+    const li = document.createElement("li");
+    li.textContent = value + " ";
+    li.dataset.value = value;
+
+    const hiddenInput = document.createElement("input");
+    hiddenInput.type = "hidden";
+    hiddenInput.name = "genreList";
+    hiddenInput.value = value;
+    li.appendChild(hiddenInput);
+
+    const removeBtn = document.createElement("button");
+    removeBtn.type = "button";
+    removeBtn.textContent = "✕";
+    removeBtn.style.marginLeft = "0.5rem";
+    removeBtn.onclick = () => li.remove();
+    li.appendChild(removeBtn);
+
+    list.appendChild(li);
+    select.value = "";
+    otherInput.value = "";
+    otherInput.style.display = "none";
+  }
+</script>
+
+			<!--その他 hidden 기능 -->
+			<script>
+document.getElementById('position-etc').addEventListener('change', function () {
+	  document.getElementById('position-etc-input').classList.toggle('hidden', !this.checked);
+	});
+
+	document.getElementById("genre-select").addEventListener("change", function () {
+	  const other = document.getElementById("genre-other");
+	  other.classList.toggle("hidden", this.value !== "その他");
+	});
+
+	regionSelect.addEventListener('change', () => {
+	  regionOther.classList.toggle('hidden', regionSelect.value !== 'その他');
+	});
+</script>
+		</div>
+	</div>
+
+</body>
+</html>

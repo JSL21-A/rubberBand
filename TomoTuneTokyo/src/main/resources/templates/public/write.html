@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" data-layout-decorate=${layout}>
+
+<head>
+    <meta charset=" UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <style>
+
+    </style>
+    <div id="content" layout:fragment="content" th:fragment="content" hx-history-elt>
+        <div class="write_header">
+            <!-- 공지사항 작성인지 판단 -->
+            <div class="write_notify" th:if="${session.prev == 'notify'}">
+                <input type="hidden" name="board_id" value="7" id="write_board_id">
+                <h1>お知らせ</h1>
+            </div>
+            <!-- 공지사항이 아니면 카테고리 표시 -->
+            <div class="write_category_list" th:unless="${session.prev == 'notify'}">
+                <div class="write_select_box">
+                    <!-- 글 카테고리 -->
+                    <input type="hidden" name="board_id"
+                        th:value="${post?.board_id != null ? post.board_id : session.prev.length() == 1 ? session.prev : 6}"
+                        id="write_board_id">
+                    <div class="write_selected">
+                        <span>コミュニティ</span>
+                    </div>
+                    <!-- 카테고리 옵션 -->
+                    <div class="write_select_option">
+                        <ul>
+                            <li class="" data-board_id="1">メンバー募集</li>
+                            <li class="" data-board_id="2">バンド結成</li>
+                            <li class="" data-board_id="3">フリーマーケット</li>
+                            <li class="" data-board_id="4">演奏音源</li>
+                            <li class="" data-board_id="5">ライブ告知</li>
+                            <li class="" data-board_id="6">コミュニティ</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- 제목 -->
+            <div class="write_post_title">
+                <!-- 공지사항 작성이 아니면 악기 카테고리 표시 -->
+                <div class="write_select_box play" tabindex="0" th:unless="${session.prev == 'notify'}">
+                    <input type="hidden" name="play_id" value="" id="write_play_id">
+                    <div class="write_selected">
+                        <span>ー楽器ー</span>
+                    </div>
+                    <!-- 악기 옵션 -->
+                    <div class="write_select_option">
+                        <ul>
+                            <li class="" data-play_id="1">ギター</li>
+                            <li class="" data-play_id="2">ベース</li>
+                            <li class="" data-play_id="3">ドラム</li>
+                            <li class="" data-play_id="4">キーボード</li>
+                            <li class="" data-play_id="5">その外</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- 제목 작성 input -->
+                <input type="text" name="post_title" id="write_post_title" placeholder="タイトルを入力してください"
+                    th:value="${post?.post_title != null ? post.post_title : ''}">
+            </div>
+        </div>
+        <!-- 글 효과 툴바 -->
+        <div class="write_toolbar">
+            <button class="write_text-effect" data-effect-type="bold">
+                <b>B</b>
+            </button>
+            <button class="write_text-effect" data-effect-type="italic">
+                <i>I</i>
+            </button>
+            <button class="write_text-effect" data-effect-type="underline">
+                <u>U</u>
+            </button>
+            <button class="write_text-effect" data-effect-type="strikeThrough">
+                <s>S</s>
+            </button>
+            <button class="write_text-effect" data-effect-type="insertOrderedList">
+                OL
+            </button>
+            <button class="write_text-effect" data-effect-type="insertUnorderedList">
+                UL
+            </button>
+            <!-- 폰트 사이즈 -->
+            <select name="font-size" id="write_font-size">
+                <option value="1">10px</option>
+                <option value="2">13px</option>
+                <option value="3" selected>16px</option>
+                <option value="4">18px</option>
+                <option value="5">24px</option>
+                <option value="6">32px</option>
+                <option value="7">48px</option>
+            </select>
+            <button id="write_btn-image">
+                <img src="https://cdn-icons-png.flaticon.com/512/4503/4503645.png" alt="">
+            </button>
+            <button id="write_youtube-btn">
+                <img src="https://cdn-icons-png.flaticon.com/512/152/152810.png" alt="">
+            </button>
+        </div>
+        <div class="write_edit-area">
+            <!-- 글 작성 AREA -->
+            <div class="write_note-editable" contenteditable="true"
+                th:utext="${post?.post_content} != null ? ${post.post_content} : ''"></div>
+            <div class="write_note-placeholder">
+                <div>名誉毀損、虚偽情報、非正常プレイ流布など法律、約款、運営政策に違反する掲示文登録時に利用が制限されることがあります。<br>掲示文の作成時に大切な個人情報を含めないようにご注意お願いします
+                </div>
+            </div>
+            <input id="write_img-selector" type="file" accept="image/*" multiple />
+        </div>
+        <div class="write_btn-area">
+            <th:block th:with="
+                isNotify=${session.prev == 'notify'},
+                boardId=${post?.board_id != null ? post.board_id : (session.prev.length() == 1 ? session.prev : 6)},
+                getUrl=${isNotify} ? '/admin/notify' : './list'
+            ">
+                <button id="write_to_list" th:attr="hx-get=@{${getUrl}(board=${boardId})}" hx-target="#content"
+                    hx-select="#content" hx-push-url="true" hx-swap="outerHTML">リストへ</button>
+            </th:block>
+            <button id="write_submit">作成</button>
+        </div>
+    </div>
+</body>
+
+</html>

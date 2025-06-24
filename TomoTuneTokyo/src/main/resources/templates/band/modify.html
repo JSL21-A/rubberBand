@@ -1,0 +1,2577 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultrag.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/layout}">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="_csrf" th:content="${_csrf.token}" />
+	<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+	<meta name="_csrf_parameter" th:content="${_csrf.parameterName}" />
+	<title>밴드 상세정보</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" href="/css/band-profile-style.css">
+</head>
+
+<body th:attr="data-is-leader=${isLeader}">
+	<div layout:fragment="content">
+		<!-- 전체 폼 -->
+		<div class="band-profile-outer-form">
+			<span id="band-id" th:text="${band.band_id}" style="display:none;"></span>
+
+			<!-- 커버 이미지 -->
+			<div class="cover-image">
+				<img th:src="@{'/images/uploads/bands/' + ${band.band_cover_img}}" alt="커버 이미지">
+				
+				<!-- 초대 알림 고정 팝업 (오른쪽 상단) -->
+				
+				<div id="member-invite-popup" class="member-invite-fixed" th:if="${currentUserVo != null  && currentUserVo.status == 'I'}" style="display: none;">
+				  <button class="invite-close-btn">×</button>
+				  <h4 class="popup-title">バンド招待のお知らせ</h4>
+				  <p class="popup-message">
+				    <strong>バンド名</strong>から バンドからメンバー招待を受けました。<span class="register-question">登録しますか？</span>
+				  </p>
+				  <div class="popup-buttons">
+				    <button id = "btn-accept" class="btn-accept">受諾</button>
+				    <button id = "btn-decline" class="btn-decline">拒絶</button>
+				  </div>
+				</div>
+
+			</div>
+
+			<div class="profile-header">
+				<!-- 프로필 썸네일 -->
+				<div class="profile-thumbnail">
+					<img th:src="@{'/images/uploads/bands/' + ${band.band_profile_img}}" alt="프로필 이미지">
+				</div>
+
+				<!-- 프로필 정보 -->
+				<div class="profile-info">
+					<h2 class="band-name" th:text="${band.band_name}">Tomo Groove</h2>
+					<p class="band-leader-comment" th:text="${band.leader_comment}">리더 코멘트</p>
+				<p id="leader-email" class="band-email" th:text="${leaderEmail}">리더 이메일</p>
+					<a id="youtube-link" th:href="${band.youtube_link}" class="external-link" target="_blank">ユーチューブチャンネル</a>
+					<a id="instagram-link" th:href="${band.instagram_link}" class="external-link" target="_blank"
+						style="padding-left: 10px;">インスタ</a>
+				</div>
+
+				<!-- 수정/채팅 버튼 -->
+				<div class="band-actions">
+					<button class="btn-edit" id="edit-toggle-btn" type="button" th:if="${isLeader}">編集する</button>
+					<button id="btn-chat" class="btn-chat" th:if="${currentUserId != leader.user_id}" th:attr="data-user-id=${leader.user_id}">チャットする</button> 
+				</div>
+			</div>
+
+
+			<!-- 메인 콘텐츠: 사이드바와 콘텐츠를 같은 wrapper 내부에 넣음 -->
+			<div class="band-content-wrapper">
+				<!-- 프로필 아래 세로 메뉴 -->
+				<nav class="band-sidebar band-sidebar-floating">
+					<button class="band-tab-btn active" data-target="section-intro">バンド紹介</button>
+					<button class="band-tab-btn" data-target="section-members">バンドメンバー</button>
+					<button class="band-tab-btn" data-target="section-gallery">活動写真</button>
+					<button class="band-tab-btn" data-target="section-records">活動記録</button>
+				</nav>
+
+				<div class="band-content">
+					<!-- 소개 -->
+					<section class="band-section active" id="section-intro">
+						<h3>バンド紹介</h3>
+						<ul class="intro-list">
+							<li>
+							  <strong>結成日 : </strong>
+							  <span class="formation-date" th:text="${#temporals.format(band.formation_date, 'yyyy-MM-dd')}">2022-05-01</span>
+							</li>
+							<li>
+							  <strong>ジャンル : </strong>
+							  <span th:each="tag, stat : ${tags}"
+							        th:if="${tag.tag_type == 'genre' or tag.tag_type == 'position' or tag.tag_type == 'gender' or tag.tag_type == 'age'}"
+							        th:text="${tag.tag_value + (stat.last ? '' : ', ')}"
+							        class="tag-item">
+							  </span>
+							</li>
+							<!-- 장르 태그 선택 팝업 구조 -->
+							<div id="genre-popup" class="keyword-popup" style="display: none;">
+								<button id="genre-popup-close" class="popup-close">×</button>
+								<div class="keyword-box">
+									<div class="keyword-row">
+										<div class="keyword-category">ジャンル</div>
+										<div class="keyword-tags">
+											<span class="tag">ロック</span>
+											<span class="tag">ポップ</span>
+											<span class="tag">ジャズ</span>
+											<span class="tag">ヒップホップ</span>
+											<span class="tag">クラシック</span>
+											<span class="tag">EDM</span>
+											<span class="tag">その他</span>
+										</div>
+									</div>
+									<div class="keyword-row">
+										<div class="keyword-category">ポジション</div>
+										<div class="keyword-tags">
+											<span class="tag">Vo（ボーカル)</span>
+											<span class="tag">Gt（ギター）</span>
+											<span class="tag">Ba（ベース)</span>
+											<span class="tag">Dr（ドラム</span>
+											<span class="tag">Kb（キーボード)</span>
+											<span class="tag">その他</span>
+										</div>
+									</div>
+									<div class="keyword-row">
+										<div class="keyword-category">性別</div>
+										<div class="keyword-tags">
+											<span class="tag">男性バンド</span>
+											<span class="tag">女性バンド</span>
+											<span class="tag">混成バンド</span>
+										</div>
+									</div>
+									<div class="keyword-row">
+										<div class="keyword-category">年齢代</div>
+										<div class="keyword-tags">
+											<span class="tag">10代</span>
+											<span class="tag">20代</span>
+											<span class="tag">30代</span>
+											<span class="tag">40代</span>
+											<span class="tag">50代以上</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<li>
+							  <strong>活動地域 : </strong>
+							  <span class="band-region" th:text="${band.region}">東京</span>
+							</li>
+							<li>
+							  <strong>バンド紹介 : </strong>
+							  <span class="band-one-liner" th:text="${band.band_intro}"></span>
+							</li>
+						</ul>
+					</section>
+
+					<!-- 멤버 -->
+					<section class="band-section" id="section-members">
+					  <h3>バンドメンバー</h3>
+					  <!-- 리더 멤버 카드 전체 -->
+					  <div class="member-container leader-only">
+					    <div class="member-card"
+					         th:attr="data-member-id=${leader.band_member_id},
+					                  data-stage-name=${leader.stage_name},
+					                  data-member-position=${leader.member_position},
+					                  data-member-mbti=${leader.member_mbti},
+					                  data-favorite-band=${leader.favorite_band},
+					                  data-member-motto=${leader.member_motto},
+									  data-member-type='leader'">
+					      <!-- 리더 이미지: 값 있으면 업로드, 없으면 기본 이미지 -->
+					      <img th:src="@{${leader != null and leader.user_img != null and !#strings.isEmpty(leader.user_img) 
+					        ? '/images' + leader.user_img 
+					        : '/images/member1.png'}}" 
+					        alt="리더" class="member-img"
+					        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
+
+					      <!-- 이름 -->
+					      <div class="member-name" th:text="'リーダー · ' + ${leader.stage_name}"></div>
+
+					      <!-- JS에서 내용 삽입할 빈 팝업 -->
+					      <div class="member-popup"></div>
+					    </div>
+					  </div>
+
+					  <!-- 일반 멤버 목록 -->
+					  <div class="member-container">
+					    <div class="member-card"
+					         th:each="member : ${members}"
+					         th:if="${member.member_type.name() == 'member'}"
+					         th:attr="data-member-id=${member.band_member_id},
+					                  data-stage-name=${member.stage_name},
+					                  data-member-position=${member.member_position},
+					                  data-member-mbti=${member.member_mbti},
+					                  data-favorite-band=${member.favorite_band},
+					                  data-member-motto=${member.member_motto}">
+					      <!-- 프로필 이미지: user_img 없으면 기본 이미지 -->
+					      <img th:src="@{${member.user_img != null and !#strings.isEmpty(member.user_img) 
+					        ? '/images' + member.user_img 
+					        : '/images/member1.png'}}" 
+					        class="member-img" alt="멤버 이미지"
+					        style="width:60px; height:60px; border-radius:50%; object-fit:cover;">
+
+					      <!-- 이름 = 포지션 -->
+					      <div class="member-name" th:text="'メンバー · ' + ${member.stage_name}"></div>
+
+					      <!-- JS에서 내용 삽입할 빈 팝업 -->
+					      <div class="member-popup"></div>
+					    </div>
+					  </div>
+					</section>
+
+					<!-- 활동 사진 섹션 -->
+					<section class="band-section" id="section-gallery">
+						<h3>活動写真</h3>
+						<div class="gallery-wrapper">
+							<!-- 📌 활동 사진 없을 때 메시지 -->
+							<div th:if="${#lists.isEmpty(galleryList)}">
+								<p style="padding: 40px; text-align: center; color: #888;">登録された活動写真はありません。</p>
+							</div>
+
+							<!-- ◀ 왼쪽 화살표 -->
+							<button class="gallery-arrow gallery-prev" th:if="${not #lists.isEmpty(galleryList)}">◀</button>
+
+							<!-- 활동사진 슬라이드 반복 -->
+							<div th:each="photo, stat : ${galleryList}" th:if="${photo != null}" class="media-slide"
+								th:classappend="${stat.index == 0} ? ' active'" th:attr="
+	        data-title=${#strings.defaultString(photo.activityTitle, '')},
+	        data-desc=${#strings.defaultString(photo.activityContent, '')},
+	        data-photo-id=${photo.activityPhotoId},
+	        data-youtube=${#strings.defaultString(photo.activityYoutubeUrl, '')}">
+
+								<div class="media-row">
+
+									<!-- 썸네일 -->
+									<div class="gallery-grid activity-thumb"
+										th:attr="data-title=${photo.activityTitle}, data-desc=${photo.activityContent}">
+										<img th:src="@{'/images/uploads/bands/' + ${photo.imageUrl}}">
+									</div>
+									<span class="photo-id" th:text="${photo.activityPhotoId}"
+										style="display: none;"></span>
+
+									<!-- 유튜브 영상 -->
+									<div class="video-wrapper"
+									     th:if="${photo.activityYoutubeUrl != null and #strings.contains(photo.activityYoutubeUrl, 'v=')}">
+										 <iframe
+										   th:if="${photo.activityYoutubeUrl != null}"
+										   th:src="${#strings.contains(photo.activityYoutubeUrl, 'v=') 
+										               ? 'https://www.youtube.com/embed/' + #strings.substringAfter(photo.activityYoutubeUrl, 'v=') 
+										               : (#strings.contains(photo.activityYoutubeUrl, 'youtu.be/') 
+										                   ? 'https://www.youtube.com/embed/' + #strings.substringAfter(photo.activityYoutubeUrl, 'youtu.be/') 
+										                   : 'https://www.youtube.com/embed/' + #strings.substringAfter(photo.activityYoutubeUrl, 'embed/'))}"
+										   width="560" height="315"
+										   frameborder="0"
+										   allowfullscreen>
+										 </iframe>
+									  <p th:text="'src 파싱 확인: https://www.youtube.com/embed/' + ${#strings.substringBefore(#strings.substringAfter(photo.activityYoutubeUrl, 'v='), '&')}"></p>
+									</div>
+								</div>
+							</div>
+
+							<!-- ▶ 오른쪽 화살표 -->
+							<button class="gallery-arrow gallery-next" th:if="${not #lists.isEmpty(galleryList)}">▶</button>
+						</div>
+
+						<!-- 하단 도트 -->
+						<div class="gallery-dots" th:if="${not #lists.isEmpty(galleryList)}">
+							<div th:each="photo, stat : ${galleryList}" class="gallery-dot"
+								th:classappend="${stat.index == 0} ? ' active'">
+							</div>
+						</div>
+
+						<!-- 활동사진 설명 팝업 -->
+						<div id="activity-popup" class="review-popup" style="display: none;">
+							<button class="popup-close">×</button>
+							<div class="review-popup-content">
+								<h4 class="activity-popup-title">活動名</h4>
+								<p class="activity-popup-desc">説明</p>
+							</div>
+						</div>
+					</section>
+
+					<!-- 활동 기록 -->
+					<section class="band-section" id="section-records">
+						<h3>活動記録</h3>
+						<div class="gallery-wrapper">
+							<!-- ◀ 왼쪽 화살표 -->
+							<button class="gallery-arrow gallery-prev">◀</button>
+
+							<!-- 📌 활동 기록 없을 때 메시지 -->
+							<div th:if="${#lists.isEmpty(recordList)}">
+								<p style="padding: 40px; text-align: center; color: #888;">登録された活動記録はありません。</p>
+							</div>
+
+							<!-- 활동기록 슬라이드 묶음: 4개씩 -->
+							<div th:each="slide, stat : ${recordSlides}" class="media-slide"
+								th:classappend="${stat.index == 0} ? ' active'">
+								<div class="media-row two-columns">
+									<!-- 슬라이드 내 최대 4개 반복 -->
+									<div th:each="record : ${slide}" class="column-left">
+										<div class="record-card">
+											<div class="record-date">
+												<span th:text="${#strings.replace(record.formattedDate, '월', '月')}">5月</span><br>
+												<strong th:text="${record.formattedDay}">21</strong>
+											</div>
+											<div class="record-info">
+												<span class="record-id" th:text="${record.recordId}" style="display:none;"></span>
+												<div class="record-title" th:text="${record.recordTitle}">公演のタイトル</div>
+												<div class="record-status" 
+												     th:text="${record.recordStatus == '완료' ? '完了' : (record.recordStatus == '예정' ? '予定' : record.recordStatus)}">
+												  状態
+												</div>
+												<div class="record-location" th:text="${record.recordLocation}">場所</div>
+												<div class="record-meta">
+													🕒 <span th:text="${record.recordTime}">時間</span> &nbsp;
+													👥 <span th:text="${record.participantCount} + '名'">0名</span>
+												</div>
+											</div>
+											<div class="record-image">
+												<img th:src="@{'/images/uploads/bands/' + ${record.recordImageUrl}}"
+													alt="썸네일">
+											</div>
+											<!-- 후기 팝업 -->
+											<div class="review-popup">
+												<button class="popup-close">×</button>
+												<div class="review-item">
+													<p th:text="${record.recordDescription}">活動説明</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- ▶ 오른쪽 화살표 -->
+							<button class="gallery-arrow gallery-next">▶</button>
+						</div>
+
+						<!-- 페이징 도트 (4개 단위로) -->
+						<div class="gallery-dots" th:if="${#lists.size(recordSlides) > 1}">
+							<div th:each="slide, stat : ${recordSlides}" class="gallery-dot"
+								th:classappend="${stat.index == 0} ? ' active'">
+							</div>
+						</div>
+					</section>
+					<!-- 다시 열기 버튼 -->
+					<button id="invite-toggle-btn" class="invite-reopen-btn" style="display: none;">📩</button>
+
+				</div>
+			</div>
+		</div>
+
+		<script>
+			// 탭 전환 기능
+			document.addEventListener("DOMContentLoaded", () => {
+				document.querySelectorAll('.band-tab-btn').forEach(button => {
+					button.addEventListener('click', () => {
+						document.querySelectorAll('.band-tab-btn').forEach(btn => btn.classList.remove('active'));
+						document.querySelectorAll('.band-section').forEach(section => section.classList.remove('active'));
+						button.classList.add('active');
+						document.getElementById(button.getAttribute('data-target')).classList.add('active');
+					});
+				});
+			});
+		</script>
+
+		<script>
+			// 활동사진 슬라이드(페이징) 기능
+			document.addEventListener("DOMContentLoaded", () => {
+				const gallerySlides = document.querySelectorAll("#section-gallery .media-slide");
+				const galleryDots = document.querySelectorAll("#section-gallery .gallery-dot");
+				let galleryIndex = 0;
+
+				if (gallerySlides.length === 0) return;
+
+				function updateGallerySlide(newIndex) {
+					gallerySlides[galleryIndex].classList.remove("active");
+					galleryDots[galleryIndex]?.classList.remove("active");
+					galleryIndex = newIndex;
+					gallerySlides[galleryIndex].classList.add("active");
+					galleryDots[galleryIndex]?.classList.add("active");
+				}
+
+				document.querySelector("#section-gallery .gallery-prev")?.addEventListener("click", () => {
+					updateGallerySlide((galleryIndex - 1 + gallerySlides.length) % gallerySlides.length);
+				});
+				document.querySelector("#section-gallery .gallery-next")?.addEventListener("click", () => {
+					updateGallerySlide((galleryIndex + 1) % gallerySlides.length);
+				});
+				galleryDots.forEach((dot, index) => {
+					dot.addEventListener("click", () => updateGallerySlide(index));
+				});
+			});
+		</script>
+
+		<script>
+			// 활동기록 슬라이드(페이징) 기능
+			document.addEventListener("DOMContentLoaded", () => {
+				const allSlides = Array.from(document.querySelectorAll("#section-records .media-slide"));
+				const dots = document.querySelectorAll("#section-records .gallery-dot");
+				const prevBtn = document.querySelector("#section-records .gallery-prev");
+				const nextBtn = document.querySelector("#section-records .gallery-next");
+				const galleryDotsContainer = document.querySelector("#section-records .gallery-dots");
+
+				if (allSlides.length <= 1) {
+					// 슬라이드가 1개 이하이면 모두 보이고 버튼 제거
+					allSlides.forEach(slide => slide.classList.add("active"));
+					prevBtn?.style.setProperty("display", "none");
+					nextBtn?.style.setProperty("display", "none");
+					if (galleryDotsContainer) galleryDotsContainer.style.display = "none";
+					return;
+				}
+
+				let currentIndex = 0;
+
+				function updateRecordSlide(newIndex) {
+					// 슬라이드 전환 처리
+					allSlides.forEach(slide => slide.classList.remove("active"));
+					allSlides[newIndex].classList.add("active");
+
+					// 도트 처리
+					dots.forEach(dot => dot.classList.remove("active"));
+					dots[newIndex]?.classList.add("active");
+
+					currentIndex = newIndex;
+				}
+
+				// 초기 첫 번째 슬라이드 활성화
+				updateRecordSlide(0);
+
+				// ◀ 버튼
+				prevBtn?.addEventListener("click", () => {
+					const newIndex = (currentIndex - 1 + allSlides.length) % allSlides.length;
+					updateRecordSlide(newIndex);
+				});
+
+				// ▶ 버튼
+				nextBtn?.addEventListener("click", () => {
+					const newIndex = (currentIndex + 1) % allSlides.length;
+					updateRecordSlide(newIndex);
+				});
+
+				// 도트 클릭
+				dots.forEach((dot, index) => {
+					dot.addEventListener("click", () => updateRecordSlide(index));
+				});
+			});
+		</script>
+
+		<script>
+		  // 활동기록 카드 클릭 → 후기 팝업 하나만 열리도록 처리
+		  document.addEventListener("DOMContentLoaded", () => {
+		    document.querySelectorAll('.record-card').forEach(card => {
+		      card.addEventListener('click', () => {
+		        // 모든 popup을 먼저 닫는다
+		        document.querySelectorAll('.review-popup').forEach(popup => {
+		          popup.style.display = 'none';
+		        });
+
+		        // 선택된 카드의 popup만 보이도록
+		        const popup = card.querySelector('.review-popup');
+		        if (popup) {
+		          popup.style.display = 'block';
+		        }
+		      });
+		    });
+
+		    // 닫기 버튼 눌렀을 때 숨김 처리
+		    document.querySelectorAll('.popup-close').forEach(btn => {
+		      btn.addEventListener('click', (e) => {
+		        e.stopPropagation();
+		        const popup = btn.closest('.review-popup') || btn.closest('.keyword-popup');
+		        if (popup) popup.style.display = 'none';
+		      });
+		    });
+		  });
+		</script>
+
+
+		<script>
+			// 활동사진 클릭 → 후기 팝업 열기 + '활동 사진' 탭 활성화 기능 + activity_photo_id 로깅
+			document.addEventListener("DOMContentLoaded", () => {
+				document.querySelectorAll('.activity-thumb').forEach(el => {
+					el.addEventListener('click', () => {
+
+						// 1) 모든 탭 버튼에서 active 제거
+						document.querySelectorAll('.band-tab-btn').forEach(btn => btn.classList.remove('active'));
+
+						// 2) '활동 사진' 탭 버튼에 active 추가
+						const galleryBtn = document.querySelector('.band-tab-btn[data-target="section-gallery"]');
+						if (galleryBtn) galleryBtn.classList.add('active');
+
+						// 3) 모든 탭 섹션에서 active 제거
+						document.querySelectorAll('.band-section').forEach(sec => sec.classList.remove('active'));
+
+						// 4) '활동 사진' 섹션에 active 추가
+						const gallerySection = document.getElementById('section-gallery');
+						if (gallerySection) gallerySection.classList.add('active');
+
+						const slide = el.closest('.media-slide');
+						if (!slide) return;
+
+						const title = slide.dataset.title || '';
+						const desc = slide.dataset.desc || '';
+						const photoId = slide.dataset.photoId || '';
+						const youtube = slide.dataset.youtube || '';
+
+						// 후기 팝업 내용 갱신
+						const popup = document.getElementById('activity-popup');
+						popup.querySelector('.activity-popup-title').textContent = title;
+						popup.querySelector('.activity-popup-desc').textContent = desc;
+
+						// photoId 콘솔 확인
+						console.log("선택된 activity_photo_id:", photoId);
+
+						popup.style.display = 'block';
+					});
+				});
+			});
+		</script>
+
+		<script>
+			// 커버 이미지 수정
+			function initCoverImageEdit() {
+			  const isLeader = document.body.dataset.isLeader === "true";
+			  if (!isLeader) return;
+
+			  const coverImageDiv = document.querySelector(".cover-image");
+			  const coverImg = coverImageDiv?.querySelector("img");
+
+			  if (!coverImageDiv || document.getElementById("cover-file-btn")) return;
+
+			  const coverBtn = document.createElement("button");
+			  coverBtn.id = "cover-file-btn";
+			  coverBtn.type = "button";
+			  coverBtn.textContent = "カバーイメージ変更";
+			  coverBtn.className = "btn-primary";
+
+			  Object.assign(coverBtn.style, {
+			    position: "absolute",
+			    top: "10px",
+			    right: "10px",
+			    width: "120px",
+			    height: "36px",
+			    fontSize: "14px",
+			    backgroundColor: "rgba(0,0,0,0.7)",
+			    color: "#fff",
+			    border: "none",
+			    borderRadius: "6px",
+			    padding: "2px 4px",
+			    cursor: "pointer",
+			    zIndex: "10"
+			  });
+
+			  coverImageDiv.style.position = "relative";
+			  coverImageDiv.appendChild(coverBtn);
+
+			  // input이 없으면 생성
+			  let input = document.querySelector("input[type='file'][name='coverFile']");
+			  if (!input) {
+			    input = document.createElement("input");
+			    input.type = "file";
+			    input.name = "coverFile";
+			    input.accept = "image/*";
+			    input.style.display = "none";
+			    document.body.appendChild(input);
+
+			    input.addEventListener("change", (e) => {
+			      const file = e.target.files[0];
+			      if (file) {
+			        const reader = new FileReader();
+			        reader.onload = (event) => {
+			          if (coverImg) {
+			            coverImg.src = event.target.result;
+			          }
+			        };
+			        reader.readAsDataURL(file);
+
+			        const bandId = document.getElementById("band-id")?.textContent.trim();
+			        const formData = new FormData();
+			        formData.append("bandId", bandId);
+			        formData.append("coverFile", file);
+
+			        const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+			        const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+			        if (csrfToken && csrfParam) {
+			          formData.append(csrfParam, csrfToken);
+			        }
+
+			        fetch("/bandinsertselect/updateCoverImage", {
+			          method: "POST",
+			          body: formData
+			        })
+			          .then(res => {
+			            if (res.ok) {
+			              alert("カバーイメージが変更になりました。");
+			              document.getElementById("edit-toggle-btn")?.click(); // 수정모드 종료
+			            } else {
+			              alert("アップロード失敗");
+			            }
+			          })
+			          .catch(err => {
+			            console.error("転送エラー:", err);
+			            alert("転送失敗");
+			          });
+			      }
+			    });
+			  }
+
+			  coverBtn.addEventListener("click", () => input.click());
+			}
+
+		</script>
+
+		<script>
+			// 프로필(이름/핸들/한줄소개) 영역 수정모드
+			function initProfileEdit() {
+			    const isLeader = document.body.dataset.isLeader === "true";
+			    if (!isLeader) return;
+
+			    if (window.profileEditBtnCreated) return;
+			    window.profileEditBtnCreated = true;
+
+			    const profileContainer = document.querySelector(".profile-thumbnail");
+			    const profileImage = profileContainer?.querySelector("img");
+
+			    const profileBtn = document.createElement("button");
+			    profileBtn.id = "profile-file-btn";
+			    profileBtn.type = "button";
+			    profileBtn.textContent = "プロフィール変更";
+			    profileBtn.className = "btn-primary";
+
+			    Object.assign(profileBtn.style, {
+			      position: "absolute",
+			      bottom: "8px",
+			      left: "50%",
+			      transform: "translateX(-50%)",
+			      width: "90px",
+			      height: "26px",
+			      fontSize: "12px",
+			      backgroundColor: "rgba(0,0,0,0.7)",
+			      color: "#fff",
+			      border: "none",
+			      borderRadius: "6px",
+			      padding: "2px 4px",
+			      cursor: "pointer",
+			      zIndex: "10"
+			    });
+
+			    const wrapper = document.createElement("div");
+			    wrapper.id = "profile-btn-wrapper";
+			    wrapper.style.position = "relative";
+			    wrapper.appendChild(profileBtn);
+
+			    if (profileContainer) {
+			      profileContainer.appendChild(wrapper);
+			    }
+
+			    // input이 없으면 생성
+			    let input = document.querySelector("input[type='file'][name='profileImage']");
+			    if (!input) {
+			      input = document.createElement("input");
+			      input.type = "file";
+			      input.name = "profileImage";
+			      input.accept = "image/*";
+			      input.style.display = "none";
+			      document.body.appendChild(input);
+
+			      input.addEventListener("change", (e) => {
+			        const file = e.target.files[0];
+			        if (file) {
+			          const reader = new FileReader();
+			          reader.onload = (event) => {
+			            if (profileImage) {
+			              profileImage.src = event.target.result;
+			            }
+			          };
+			          reader.readAsDataURL(file);
+
+			          const bandId = document.getElementById("band-id")?.textContent.trim();
+			          const formData = new FormData();
+			          formData.append("bandId", bandId);
+			          formData.append("profileImage", file);
+
+			          const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+			          const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.content;
+			          const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+			          if (csrfToken && csrfParam) {
+			            formData.append(csrfParam, csrfToken);
+			          }
+
+			          fetch("/bandinsertselect/updateProfileImage", {
+			            method: "POST",
+			            body: formData
+			          })
+			            .then(res => {
+			              if (res.ok) {
+			                alert("プロフィールイメージが変更になりました。");
+			                document.getElementById("edit-toggle-btn")?.click();
+			              } else {
+			                alert("アップロード失敗");
+			              }
+			            })
+			            .catch(err => {
+			              console.error("転送エラー:", err);
+			              alert("転送失敗");
+			            });
+			        }
+			      });
+			    }
+
+			    profileBtn.addEventListener("click", () => input.click());
+			  }
+
+		</script>
+
+		<script>
+			// 밴드 이륾 수정
+			function initBandNameEdit() {
+			  const el = document.querySelector(".band-name");
+			  if (!el || el.querySelector("input")) return;
+
+			  const bandId = document.getElementById("band-id")?.textContent.trim();
+			  const val = el.textContent.trim();
+			  el.innerHTML = `<input type="text" name="bandName" value="${val}" style="width: 100%; padding: 10px;">`;
+
+			  const input = el.querySelector("input");
+			  const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+			  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+			  const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+
+			  input.addEventListener("blur", (e) => {
+			    const value = e.target.value.trim();
+			    const formData = new FormData();
+			    formData.append("bandId", bandId);
+			    formData.append("bandName", value);
+			    if (csrfToken && csrfParam) formData.append(csrfParam, csrfToken);
+
+			    fetch("/bandinsertselect/updateBandName", {
+			      method: "POST",
+			      body: formData
+			    })
+			    .then(res => {
+			      if (!res.ok) {
+			        alert("バンド名保存失敗");
+			      } else {
+			        alert("バンド名が変更になりました。");
+			        sessionStorage.setItem("editMode", "false"); 
+					sessionStorage.setItem("justExitedEditMode", "true");
+			        location.reload();                           
+			      }
+			    })
+			    .catch(err => {
+			      console.error("保存エラー:", err);
+			      alert("保存失敗");
+			    });
+			  });
+			}
+		</script>
+		
+		<script>
+			// 리더 코멘트 수정
+			function initLeaderCommentEdit() {
+			  const el = document.querySelector(".band-leader-comment");
+			  if (!el || el.querySelector("input")) return;
+
+			  const bandId = document.getElementById("band-id")?.textContent.trim();
+			  const val = el.textContent.trim();
+			  el.innerHTML = `<input type="text" name="leaderComment" value="${val}" style="width: 100%; padding: 10px;">`;
+
+			  const input = el.querySelector("input");
+			  const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+			  const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+			  const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+
+			  input.addEventListener("blur", (e) => {
+			    const value = e.target.value.trim();
+			    const formData = new FormData();
+			    formData.append("bandId", bandId);
+			    formData.append("leaderComment", value);
+			    if (csrfToken && csrfParam) formData.append(csrfParam, csrfToken);
+
+			    fetch("/bandinsertselect/updateLeaderComment", {
+			      method: "POST",
+			      body: formData
+			    })
+			    .then(res => {
+			      if (!res.ok) {
+			        alert("リーダーコメント保存失敗");
+			      } else {
+			        alert("リーダーコメントが変更になりました。");
+			        sessionStorage.setItem("editMode", "false"); 
+					sessionStorage.setItem("justExitedEditMode", "true");
+			        location.reload();                      
+			      }
+			    })
+			    .catch(err => {
+			      console.error("保存エラー:", err);
+			      alert("転送失敗");
+			    });
+			  });
+			}
+		</script>
+
+		<script>
+		  // 밴드 소개 수정
+		  function initOneLinerEdit() {
+		    const el = document.querySelector(".band-one-liner");
+		    if (!el || el.querySelector("textarea")) return;
+
+		    const bandId = document.getElementById("band-id")?.textContent.trim();
+		    const val = el.textContent.trim();
+
+		    el.innerHTML = `<textarea name="bandOneLiner" style="width: 100%; padding: 10px; height: 120px;">${val}</textarea>`;
+
+		    const textarea = el.querySelector("textarea");
+		    const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+		    const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+
+		    textarea.addEventListener("blur", () => {
+		      const value = textarea.value.trim();
+		      const formData = new FormData();
+		      formData.append("bandId", bandId);
+		      formData.append("bandOneLiner", value);
+		      if (csrfToken && csrfParam) formData.append(csrfParam, csrfToken);
+
+		      fetch("/bandinsertselect/updateBandOneLiner", {
+		        method: "POST",
+		        body: formData
+		      })
+		        .then(res => {
+		          if (!res.ok) {
+		            alert("バンド紹介保存失敗");
+		          } else {
+		            alert("バンド紹介が変更になりました。"); 
+		            sessionStorage.setItem("editMode", "false");
+					sessionStorage.setItem("justExitedEditMode", "true");
+		            location.reload(); 
+		          }
+		        })
+		        .catch(err => {
+		          console.error("保存エラー:", err);
+		          alert("転送失敗");
+		        });
+		    });
+		  }
+		</script>
+		
+		<script>
+		  // 유튜브 채널 주소 수정
+		  function initYoutubeLinkEdit() {
+		    const el = document.getElementById("youtube-link");
+		    if (!el || el.querySelector("input")) return;
+
+		    const bandId = document.getElementById("band-id")?.textContent.trim();
+		    const val = el.getAttribute("href") || "";
+		    el.outerHTML = `
+		      <input type="text" id="youtube-link" name="youtubeLink" value="${val}" style="width: 100%; padding: 10px;">
+		    `;
+
+		    const input = document.getElementById("youtube-link");
+		    const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+		    const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+
+		    input.addEventListener("blur", () => {
+		      const value = input.value.trim();
+		      const formData = new FormData();
+		      formData.append("bandId", bandId);
+		      formData.append("youtubeLink", value);
+		      if (csrfToken && csrfParam) formData.append(csrfParam, csrfToken);
+
+		      fetch("/bandinsertselect/updateYoutubeLink", {
+		        method: "POST",
+		        body: formData
+		      })
+		        .then(res => {
+		          if (!res.ok) {
+		            alert("ユーチューブアドレス保存失敗");
+		          } else {
+		            alert("ユーチューブアドレスが変更になりました。");
+		            sessionStorage.setItem("editMode", "false");
+					sessionStorage.setItem("justExitedEditMode", "true");
+		            location.reload();
+		          }
+		        })
+		        .catch(err => {
+		          console.error("保存エラー:", err);
+		          alert("転送失敗");
+		        });
+		    });
+		  }
+		</script>
+
+		<script>
+			// 인스타 주소 수정
+			function initInstagramEdit() {
+			  const el = document.getElementById("instagram-link");
+			  if (!el || el.querySelector("input")) return;
+
+			  const bandId = document.getElementById("band-id")?.textContent.trim();
+			  const val = el.getAttribute("href") || "";
+
+			  el.outerHTML = `
+			    <input type="text" id="instagram-link" name="instagramLink" value="${val}" style="width: 100%; padding: 10px;">
+			  `;
+
+			  const input = document.getElementById("instagram-link");
+			  const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+			  const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+
+			  input.addEventListener("blur", () => {
+			    const value = input.value.trim();
+			    const formData = new FormData();
+			    formData.append("bandId", bandId);
+			    formData.append("instagramLink", value);
+			    if (csrfToken && csrfParam) formData.append(csrfParam, csrfToken);
+
+			    fetch("/bandinsertselect/updateInstagramLink", {
+			      method: "POST",
+			      body: formData
+			    })
+			      .then(res => {
+			        if (!res.ok) {
+			          alert("インスタアドレス保存失敗");
+			        } else {
+			          alert("インスタアドレスが変更になりました。");
+			          sessionStorage.setItem("editMode", "false");
+					  sessionStorage.setItem("justExitedEditMode", "true");
+			          location.reload();
+			        }
+			      })
+			      .catch(err => {
+			        console.error("保存エラー:", err);
+			        alert("転送失敗");
+			      });
+			  });
+			}
+		</script>
+		<script>
+		  // 결성일 수정
+		  function initFormationDateEdit() {
+		    const li = Array.from(document.querySelectorAll("#section-intro .intro-list li"))
+		      .find(el => el.textContent.includes("결성일"));
+		    if (!li || li.querySelector("input")) return;
+
+		    const label = li.querySelector("strong")?.textContent.trim();
+		    const val = li.querySelector(".formation-date")?.textContent.trim();
+		    const bandId = document.getElementById("band-id")?.textContent.trim();
+
+		    // 이미 yyyy-MM-dd 형식으로 되어 있으므로 별도의 파싱 없이 바로 사용
+		    const defaultDate = val || "";
+
+		    li.innerHTML = `
+		      <strong>${label}</strong>
+		      <input type="date" name="formationDate" value="${defaultDate}" style="padding: 10px;">
+		    `;
+
+		    const input = li.querySelector("input");
+		    const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+		    const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+
+		    input.addEventListener("blur", (e) => {
+		      const value = e.target.value;
+		      const formData = new FormData();
+		      formData.append("bandId", bandId);
+		      formData.append("formationDate", value);
+		      if (csrfToken && csrfParam) formData.append(csrfParam, csrfToken);
+
+		      fetch("/bandinsertselect/updateFormationDate", {
+		        method: "POST",
+		        body: formData
+		      })
+		      .then(res => {
+		        if (!res.ok) {
+		          alert("結成日保存失敗");
+		        } else {
+		          alert("結成日が変更になりました。");
+		          document.getElementById("edit-toggle-btn")?.click();
+		        }
+		      })
+		      .catch(err => {
+		        console.error("保存エラー:", err);
+		        alert("転送失敗");
+		      });
+		    });
+		  }
+
+		</script>
+
+		<script>
+		  // 장르 토글 수정
+		  function initGenreTagEdit() {
+		    const genreLi = Array.from(document.querySelectorAll("#section-intro .intro-list li"))
+		      .find(li => li.textContent.includes("장르"));
+		    if (!genreLi) return;
+
+		    // 쉼표로 분해해서 정확히 태그별 배열로 변환
+		    const initialTags = Array.from(genreLi.querySelectorAll(".tag-item"))
+		      .flatMap(el => el.textContent.split(','))
+		      .map(tag => tag.trim())
+		      .filter(Boolean);
+
+		    genreLi.innerHTML = `
+		      <strong>장르 : </strong>
+		      <input type="text" id="genre-input" name="genre" value="${initialTags.join(', ')}" readonly style="cursor: pointer;">
+		    `;
+
+		    const genreInput = document.getElementById("genre-input");
+		    const genrePopup = document.getElementById("genre-popup");
+		    const popupTags = genrePopup.querySelectorAll(".tag");
+		    const closeBtn = document.getElementById("genre-popup-close");
+
+		    // 초기 선택된 태그 강조 (.active 적용)
+		    popupTags.forEach(tag => {
+		      const tagText = tag.textContent.trim();
+		      tag.classList.toggle("active", initialTags.includes(tagText));
+		    });
+
+		    genreInput.addEventListener("click", (e) => {
+		      e.stopPropagation();
+		      genrePopup.style.display = "block";
+		    });
+
+		    popupTags.forEach(tag => {
+		      tag.addEventListener("click", (e) => {
+		        e.stopPropagation();
+		        tag.classList.toggle("active");
+
+		        const selected = Array.from(genrePopup.querySelectorAll(".tag.active"))
+		          .map(t => t.textContent.trim())
+		          .filter(Boolean);
+
+		        genreInput.value = selected.join(', ');
+		      });
+		    });
+
+		    closeBtn.addEventListener("click", () => {
+		      genrePopup.style.display = "none";
+
+		      const bandId = document.getElementById("band-id")?.textContent.trim();
+		      const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+		      const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+
+		      const formData = new FormData();
+		      formData.append("bandId", bandId);
+		      formData.append("genre", genreInput.value.trim().replace(/,\s*,+/g, ', '));
+		      formData.append("position", "");
+		      formData.append("gender", "");
+		      formData.append("age", "");
+		      if (csrfToken && csrfParam) formData.append(csrfParam, csrfToken);
+
+		      fetch("/bandinsertselect/updateBandIntro", {
+		        method: "POST",
+		        body: formData
+		      }).then(res => {
+		        if (res.ok) {
+		          alert("ジャンルが変更になりました。");
+		          sessionStorage.setItem("editMode", "false");
+				  sessionStorage.setItem("justExitedEditMode", "true");
+		          location.reload();
+		        } else {
+		          alert("ジャンル保存失敗");
+		        }
+		      }).catch(err => {
+		        console.error("ジャンル保存エラー:", err);
+		        alert("ジャンル保存失敗");
+		      });
+		    });
+
+		    document.addEventListener("click", (e) => {
+		      if (!e.target.closest("#genre-popup") && e.target.id !== "genre-input") {
+		        genrePopup.style.display = "none";
+		      }
+		    });
+		  }
+		</script>
+
+		<script>
+		  // 활동지역 수정
+		  function initRegionEdit() {
+		    const el = document.querySelector(".band-region");
+		    if (!el || el.querySelector("input")) return;
+
+		    const bandId = document.getElementById("band-id")?.textContent.trim();
+		    const val = el.textContent.trim();
+
+		    el.innerHTML = `
+		      <input type="text" name="region" value="${val}" style="width: 100%; padding: 10px;">
+		    `;
+
+		    const input = el.querySelector("input");
+		    const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+		    const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+
+		    input.addEventListener("blur", () => {
+		      const value = input.value.trim();
+		      const formData = new FormData();
+		      formData.append("bandId", bandId);
+		      formData.append("region", value);
+		      if (csrfToken && csrfParam) formData.append(csrfParam, csrfToken);
+
+		      fetch("/bandinsertselect/updateRegion", {
+		        method: "POST",
+		        body: formData
+		      })
+		        .then(res => {
+		          if (!res.ok) {
+		            alert("活動地域保存失敗");
+		          } else {
+		            alert("活動地域が変更になりました。");
+		            sessionStorage.setItem("editMode", "false");
+					sessionStorage.setItem("justExitedEditMode", "true");
+		            location.reload(); 
+		          }
+		        })
+		        .catch(err => {
+		          console.error("保存エラー:", err);
+		          alert("転送失敗");
+		        });
+		    });
+		  }
+		</script>
+		
+		<script>
+		  // 밴드 소개(이름, 한 줄 소개, 장르) 수정 기능 초기화
+		  function initBandIntro() {
+		    initBandNameEdit();      // 밴드 이름 input으로 변경
+		    initOneLinerEdit();      // 한 줄 소개 input으로 변경
+		    initGenreTagEdit();      // 장르 선택 팝업 띄움
+			initLeaderCommentEdit(); // 리더 코멘트
+			initFormationDateEdit(); // 결성일
+			initRegionEdit(); // 활동 지역
+			initLeaderPopupEdit();  
+			initMemberPopupEdit(); 
+			initYoutubeLinkEdit(); // 유튜브 채널
+			initInstagramEdit(); // 인스타 주소
+		  }
+		</script>
+		
+		<script>
+			// 프로필 사진 수정
+			function initProfileImage() {
+			  const isLeader = document.body.dataset.isLeader === "true";
+			  if (!isLeader) return;
+
+			  const profileContainer = document.querySelector(".profile-thumbnail");
+			  const profileImage = document.querySelector(".profile-thumbnail > img");
+
+			  if (!document.getElementById("profile-file-btn")) {
+			    const profileBtn = document.createElement("button");
+			    profileBtn.id = "profile-file-btn";
+			    profileBtn.type = "button";
+			    profileBtn.textContent = "프로필 변경";
+			    profileBtn.className = "btn-primary";
+
+			    profileContainer.style.position = "relative";
+			    Object.assign(profileBtn.style, {
+			      position: "absolute",
+			      bottom: "8px",
+			      left: "50%",
+			      transform: "translateX(-50%)",
+			      width: "90px",
+			      height: "26px",
+			      fontSize: "12px",
+			      backgroundColor: "rgba(0,0,0,0.7)",
+			      color: "#fff",
+			      border: "none",
+			      borderRadius: "6px",
+			      padding: "2px 4px",
+			      cursor: "pointer",
+			      zIndex: "10"
+			    });
+
+			    profileContainer.appendChild(profileBtn);
+
+			    profileBtn.addEventListener("click", () => {
+			      let input = document.querySelector("input[type='file'][name='profileImage']");
+
+			      if (!input) {
+			        input = document.createElement("input");
+			        input.type = "file";
+			        input.name = "profileImage";
+			        input.accept = "image/*";
+			        input.style.display = "none";
+			        document.body.appendChild(input);
+
+			        input.addEventListener("change", (e) => {
+			          const file = e.target.files[0];
+			          if (file) {
+			            const reader = new FileReader();
+			            reader.onload = (event) => {
+			              if (profileImage) {
+			                profileImage.src = event.target.result; 
+			              }
+			            };
+			            reader.readAsDataURL(file);
+
+			            const bandId = document.getElementById("band-id")?.textContent.trim();
+			            const formData = new FormData();
+			            formData.append("bandId", bandId);
+			            formData.append("profileImage", file);
+
+			            const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+			            const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+			            if (csrfToken && csrfParam) {
+			              formData.append(csrfParam, csrfToken);
+			            }
+
+			            fetch("/bandinsertselect/updateProfileImage", {
+			              method: "POST",
+			              body: formData
+			            })
+			              .then(res => {
+			                if (res.ok) {
+			                  alert("プロフィールイメージが変更になりました。");
+			                  document.getElementById("edit-toggle-btn")?.click();
+			                } else {
+			                  alert("アップロード失敗");
+			                }
+			              })
+			              .catch(err => {
+			                console.error("転送エラー:", err);
+			                alert("転送失敗");
+			              });
+			          }
+			        });
+			      }
+
+			      input.click();
+			    });
+			  }
+			}
+		</script>
+		
+		<script>
+		  // 멤버 소개 수정 (리더)
+		  function initLeaderPopupEdit() {
+		    const card = document.querySelector(".leader-only .member-card");
+		    const popup = card?.querySelector(".member-popup");
+
+		    card?.addEventListener("click", (e) => {
+		      e.stopPropagation();
+		      if (!popup) return;
+
+		      // 이미 편집 가능한 상태면 팝업만 열기
+		      if (popup.dataset.editable === "true") {
+		        popup.style.display = "block";
+		        return;
+		      }
+
+		      popup.dataset.editable = "true";
+		      popup.style.display = "block";
+		      popup.style.pointerEvents = "auto";
+		      popup.style.background = "#fff";
+		      popup.style.padding = "10px";
+
+		      const name = card.dataset.stageName || "";
+		      const position = card.dataset.memberPosition || "";
+		      const mbti = card.dataset.memberMbti || "";
+		      const band = card.dataset.favoriteBand || "";
+		      const motto = card.dataset.memberMotto || "";
+
+		      popup.innerHTML = `
+		        <label>活動名　: <input type="text" name="stage_name" value="${name}"></label><br>
+		        <label>ポジション　: <input type="text" name="member_position" value="${position}"></label><br>
+		        <label>MBTI　: <input type="text" name="member_mbti" value="${mbti}"></label><br>
+		        <label>好みのバンド　: <input type="text" name="favorite_band" value="${band}"></label><br>
+		        <label>一言　: <textarea name="member_motto">${motto}</textarea></label><br>
+		        <div style="text-align: center; margin-top: 10px;">
+		          <button class="save-member-btn" style="padding:8px 16px; border:none; border-radius:6px; background:#000; color:#fff; cursor:pointer;">저장</button>
+		        </div>
+		      `;
+
+		      // 저장 버튼 클릭 이벤트
+		      popup.querySelector(".save-member-btn").addEventListener("click", () => {
+		        const stage_name = popup.querySelector("input[name='stage_name']").value.trim();
+		        const member_position = popup.querySelector("input[name='member_position']").value.trim();
+		        const member_mbti = popup.querySelector("input[name='member_mbti']").value.trim();
+		        const favorite_band = popup.querySelector("input[name='favorite_band']").value.trim();
+		        const member_motto = popup.querySelector("textarea[name='member_motto']").value.trim();
+
+		        const memberId = card.getAttribute("data-member-id");
+		        const bandId = document.getElementById("band-id")?.textContent.trim();
+
+		        const formData = new FormData();
+		        formData.append("bandId", bandId);
+		        formData.append("bandMemberId", memberId);
+		        formData.append("stage_name", stage_name);
+		        formData.append("member_position", member_position);
+		        formData.append("member_mbti", member_mbti);
+		        formData.append("favorite_band", favorite_band);
+		        formData.append("member_motto", member_motto);
+		        formData.append("member_type", "leader"); 
+
+		        // CSRF 토큰
+		        const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+		        const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+		        if (csrfToken && csrfParam) {
+		          formData.append(csrfParam, csrfToken);
+		        }
+
+		        // 전송
+		        fetch("/bandinsertselect/updateMemberInfo", {
+		          method: "POST",
+		          body: formData
+		        })
+		        .then(res => {
+		          if (res.ok) {
+		            alert("メンバー紹介が変更になりました。");
+		            sessionStorage.setItem("editMode", "false");
+					sessionStorage.setItem("justExitedEditMode", "true");
+		            location.reload();
+		          } else {
+		            alert("保存失敗");
+		          }
+		        })
+		        .catch(err => {
+		          console.error("転送エラー:", err);
+		          alert("転送失敗");
+		        });
+		      });
+		    });
+
+		    // 팝업 외부 클릭 시 닫기
+		    document.addEventListener("click", (e) => {
+		      if (!e.target.closest(".member-card")) {
+		        if (popup?.style) popup.style.display = "none";
+		      }
+		    });
+		  }
+		</script>
+		
+		<script>
+		  // 리더 소개 마우스 오버 팝업
+		  function initLeaderPopupHover() {
+		    const card = document.querySelector("#section-members .leader-only .member-card");
+		    const popup = card?.querySelector(".member-popup");
+		    if (!card || !popup) return;
+
+		    // 데이터 속성 추출
+		    const name = card.dataset.stageName || "";
+		    const position = card.dataset.memberPosition || "";
+		    const mbti = card.dataset.memberMbti || "";
+		    const band = card.dataset.favoriteBand || "";
+		    const motto = card.dataset.memberMotto || "";
+
+		    // popup 내용 구성
+		    popup.innerHTML = `
+		      <div style="line-height: 1.6; display: flex; flex-direction: column; gap: 4px;">
+		        <div><strong>活動名　:</strong> <span>${name}</span></div>
+		        <div><strong>ポジション　:</strong> <span>${position}</span></div>
+		        <div><strong>MBTI　:</strong> <span>${mbti}</span></div>
+		        <div><strong>好みのバンド　:</strong> <span>${band}</span></div>
+		        <div><strong>一言　:</strong> <span>${motto}</span></div>
+		      </div>
+		    `;
+
+		    Object.assign(popup.style, {
+		      position: "absolute",
+		      top: "70px",
+		      left: "50%",
+		      transform: "translateX(-50%)",
+		      display: "none",
+		      background: "#fff",
+		      border: "1px solid #ccc",
+		      padding: "12px 16px",
+		      borderRadius: "8px",
+		      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
+		      zIndex: "999",
+		      whiteSpace: "normal",
+		      minWidth: "200px",
+		      maxWidth: "260px",
+		      fontSize: "14px"
+		    });
+
+		    card.style.position = "relative";
+
+		    card.addEventListener("mouseenter", () => {
+		      popup.style.display = "block";
+		    });
+
+		    card.addEventListener("mouseleave", () => {
+		      popup.style.display = "none";
+		    });
+		  }
+
+		  // 문서 로딩 후 실행
+		  document.addEventListener("DOMContentLoaded", () => {
+		    initLeaderPopupHover();
+		  });
+		</script>
+
+
+
+		<script>
+		  // 멤버 소개 수정 (일반 멤버)
+		  function initMemberPopupEdit() {
+		    document.querySelectorAll("#section-members .member-container:not(.leader-only) .member-card").forEach(card => {
+		      const popup = card.querySelector(".member-popup");
+
+		      card.addEventListener("click", (e) => {
+		        e.stopPropagation();
+		        if (!popup || !window.editMode) return;
+
+		        if (popup.dataset.editable === "true") {
+		          popup.style.display = "block";
+		          return;
+		        }
+
+		        popup.dataset.editable = "true";
+		        popup.style.display = "block";
+
+		        const name = card.dataset.stageName || "";
+		        const position = card.dataset.memberPosition || "";
+		        const mbti = card.dataset.memberMbti || "";
+		        const band = card.dataset.favoriteBand || "";
+		        const motto = card.dataset.memberMotto || "";
+
+		        popup.innerHTML = `
+		          <div style="display: flex; flex-direction: column; gap: 12px; padding: 16px;">
+		            <label style="font-weight: bold;">活動名　:
+		              <input type="text" name="stage_name" value="${name}" style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
+		            </label>
+		            <label style="font-weight: bold;">ポジション　:
+		              <input type="text" name="member_position" value="${position}" style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
+		            </label>
+		            <label style="font-weight: bold;">MBTI　:
+		              <input type="text" name="member_mbti" value="${mbti}" style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
+		            </label>
+		            <label style="font-weight: bold;">好みのバンド　:
+		              <input type="text" name="favorite_band" value="${band}" style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
+		            </label>
+		            <label style="font-weight: bold;">一言　:
+		              <textarea name="member_motto" style="width:100%; height:80px; padding:10px; border-radius:6px; border:1px solid #ccc; resize: vertical;">${motto}</textarea>
+		            </label>
+		            <button class="save-member-btn" style="padding:10px; border:none; border-radius:6px; background:#000; color:#fff; cursor:pointer;">저장</button>
+		          </div>
+		        `;
+
+		        Object.assign(popup.style, {
+		          position: "absolute",
+		          top: "70px",
+		          left: "50%",
+		          transform: "translateX(-50%)",
+		          background: "#fff",
+		          border: "1px solid #ccc",
+		          borderRadius: "10px",
+		          boxShadow: "0 2px 12px rgba(0,0,0,0.2)",
+		          minWidth: "260px",
+		          zIndex: "1000",
+		          fontSize: "14px"
+		        });
+
+		        // 저장 처리
+		        popup.querySelector(".save-member-btn").addEventListener("click", () => {
+		          const stage_name = popup.querySelector("input[name='stage_name']").value.trim();
+		          const member_position = popup.querySelector("input[name='member_position']").value.trim();
+		          const member_mbti = popup.querySelector("input[name='member_mbti']").value.trim();
+		          const favorite_band = popup.querySelector("input[name='favorite_band']").value.trim();
+		          const member_motto = popup.querySelector("textarea[name='member_motto']").value.trim();
+		          const memberId = card.getAttribute("data-member-id");
+		          const bandId = document.getElementById("band-id")?.textContent.trim();
+
+		          const formData = new FormData();
+		          formData.append("bandId", bandId);
+		          formData.append("bandMemberId", memberId);
+		          formData.append("stage_name", stage_name);
+		          formData.append("member_position", member_position);
+		          formData.append("member_mbti", member_mbti);
+		          formData.append("favorite_band", favorite_band);
+		          formData.append("member_motto", member_motto);
+		          formData.append("member_type", "member");
+
+		          const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+		          const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+		          if (csrfToken && csrfParam) {
+		            formData.append(csrfParam, csrfToken);
+		          }
+
+		          fetch("/bandinsertselect/updateMemberInfo", {
+		            method: "POST",
+		            body: formData
+		          })
+		          .then(res => {
+		            if (res.ok) {
+		              alert("メンバー紹介が変更になりました。");
+		              sessionStorage.setItem("editMode", "false");
+					  sessionStorage.setItem("justExitedEditMode", "true");
+		              location.reload();
+		            } else {
+		              alert("保存失敗");
+		            }
+		          })
+		          .catch(err => {
+		            console.error("転送エラー:", err);
+		            alert("転送失敗");
+		          });
+		        });
+		      });
+		    });
+
+		    // 외부 클릭 시 팝업 닫기
+		    document.addEventListener("click", (e) => {
+		      if (!e.target.closest(".member-card")) {
+		        document.querySelectorAll("#section-members .member-popup").forEach(p => {
+		          p.style.display = "none";
+		        });
+		      }
+		    });
+		  }
+		</script>
+
+		<script>
+			// 멤버 소개 (일반 멤버 팝업창)
+			function initMemberPopupHover() {
+			  document.querySelectorAll("#section-members .member-container:not(.leader-only) .member-card").forEach(card => {
+			    const popup = card.querySelector(".member-popup");
+			    if (!popup) return;
+
+			    // 데이터 속성 추출
+			    const name = card.dataset.stageName || "";
+			    const position = card.dataset.memberPosition || "";
+			    const mbti = card.dataset.memberMbti || "";
+			    const band = card.dataset.favoriteBand || "";
+			    const motto = card.dataset.memberMotto || "";
+
+			    // popup 내용 구성 (한눈에 보기 쉽게 정렬)
+			    popup.innerHTML = `
+			      <div style="line-height: 1.6; display: flex; flex-direction: column; gap: 4px;">
+			        <div><strong>活動名:</strong> <span>${name}</span></div>
+			        <div><strong>ポジション:</strong> <span>${position}</span></div>
+			        <div><strong>MBTI:</strong> <span>${mbti}</span></div>
+			        <div><strong>好むのバンド:</strong> <span>${band}</span></div>
+			        <div><strong>一言:</strong> <span>${motto}</span></div>
+			      </div>
+			    `;
+
+			    // popup 기본 스타일 지정
+			    Object.assign(popup.style, {
+			      position: "absolute",
+			      top: "70px",
+			      left: "50%",
+			      transform: "translateX(-50%)",
+			      display: "none",
+			      background: "#fff",
+			      border: "1px solid #ccc",
+			      padding: "12px 16px",
+			      borderRadius: "8px",
+			      boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
+			      zIndex: "999",
+			      whiteSpace: "normal",
+			      minWidth: "200px",
+			      maxWidth: "260px",
+			      fontSize: "14px"
+			    });
+
+			    // 카드 위치 설정
+			    card.style.position = "relative";
+
+			    // hover 이벤트
+			    card.addEventListener("mouseenter", () => {
+			      popup.style.display = "block";
+			    });
+
+			    card.addEventListener("mouseleave", () => {
+			      popup.style.display = "none";
+			    });
+			  });
+			}
+
+			// 문서 로딩 후 초기화
+			document.addEventListener("DOMContentLoaded", () => {
+			  initMemberPopupHover();
+			});
+		</script>
+
+		<script>
+			// 탭 전환 기능
+			document.addEventListener("DOMContentLoaded", () => {
+				document.querySelectorAll('.band-tab-btn').forEach(button => {
+					button.addEventListener('click', () => {
+						document.querySelectorAll('.band-tab-btn').forEach(btn => btn.classList.remove('active'));
+						document.querySelectorAll('.band-section').forEach(section => section.classList.remove('active'));
+						button.classList.add('active');
+						document.getElementById(button.getAttribute('data-target')).classList.add('active');
+
+						const targetId = button.getAttribute("data-target");
+						if (editMode) {
+							if (targetId === "section-intro") {
+								// 밴드소개 탭이면 입력폼 유지
+							} else {
+								// 다른 탭이면 원래 텍스트 복구
+								restoreProfileInfo();
+							}
+						}
+					});
+				});
+			});
+		</script>
+
+		<script>
+			// 탭 전환 시 밴드소개 입력폼 유지/복구
+			document.addEventListener("DOMContentLoaded", () => {
+				document.querySelectorAll(".band-tab-btn").forEach(btn => {
+					btn.addEventListener("click", () => {
+						const targetId = btn.getAttribute("data-target");
+
+						if (window.editMode) {
+							if (targetId === "section-intro") {
+								// "밴드 소개" 탭이면 기존 init 함수 호출로 유지
+								initBandIntro();
+							} else {
+								// 그 외 탭이면 원상복구
+								restoreProfileInfo();
+							}
+						}
+					});
+				});
+			});
+		</script>
+
+		<script>
+			// 활동사진 수정 버튼 (수정모드 진입 시 생성)
+			function initGalleryEditButton() {
+				const sectionGallery = document.getElementById("section-gallery");
+
+				if (!sectionGallery) return;
+				if (window.editGalleryBtnCreated) return; // 이미 생성했으면 또 만들지 않음
+
+				// 1. 활동사진 수정 버튼 생성
+				const editGalleryBtn = document.createElement("button");
+				editGalleryBtn.id = "edit-gallery-btn";
+				editGalleryBtn.type = "button";
+				editGalleryBtn.textContent = "活動写真編集";
+				editGalleryBtn.className = "btn-primary edit-only";
+				
+				editGalleryBtn.style.position = "absolute";
+				editGalleryBtn.style.top = "-40px";
+				editGalleryBtn.style.right = "20px";
+				editGalleryBtn.style.zIndex = "10";
+				editGalleryBtn.style.padding = "10px 20px";
+				editGalleryBtn.style.background = "#000";
+				editGalleryBtn.style.color = "#fff";
+				editGalleryBtn.style.borderRadius = "8px";
+				editGalleryBtn.style.fontSize = "16px";
+				editGalleryBtn.style.border = "none";
+				editGalleryBtn.style.cursor = "pointer";
+
+				sectionGallery.style.position = "relative";
+				sectionGallery.appendChild(editGalleryBtn);
+
+				window.editGalleryBtnCreated = true;
+
+				// 2. 팝업 생성
+				const galleryPopup = document.createElement("div");
+				galleryPopup.id = "gallery-edit-popup";
+				galleryPopup.style.cssText = `
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border-radius: 12px;
+    z-index: 1000;
+    width: 400px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #000;
+    box-sizing: border-box;
+  `;
+
+				galleryPopup.innerHTML = `
+    <h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">活動写真編集</h3>
+    <input type="file" id="gallery-thumb-upload" accept="image/*" style="width:100%; margin-bottom:20px;">
+    <input type="text" id="all-photo-youtube" name="youtubeUrl" placeholder="ユーチューブアドレス (例: https://www.youtube.com/watch?v=XXXXXX)"
+      style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px;">
+    <input type="text" id="gallery-title-input" placeholder="活動タイトル" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px;">
+    <textarea id="gallery-desc-input" placeholder="活動説明" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px; resize:vertical;"></textarea>
+    <input type="hidden" id="edit-photo-id" name="activityPhotoId" value="">
+    <div id="gallery-button-wrapper" style="display:flex; justify-content:center; align-items:center; gap:10px; margin-top:5px;">
+      <button id="save-gallery-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">保存する</button>
+      <button id="close-gallery-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">閉める</button>
+    </div>
+  `;
+
+				document.body.appendChild(galleryPopup);
+
+				// 3. 수정 버튼 클릭 시 현재 슬라이드 내용 반영 + 팝업 열기
+				editGalleryBtn.addEventListener("click", () => {
+					const activeSlide = document.querySelector("#section-gallery .media-slide.active");
+					if (!activeSlide) return;
+
+					const thumbWrapper = activeSlide.querySelector(".gallery-grid");
+					const imgEl = thumbWrapper?.querySelector("img");
+					const title = thumbWrapper?.dataset.title || "";
+					const desc = thumbWrapper?.dataset.desc || "";
+
+					const iframe = activeSlide.querySelector("iframe");
+					const youtubeEmbed = iframe?.getAttribute("src") || "";
+					const youtubeId = youtubeEmbed.includes("embed/") ? youtubeEmbed.split("embed/")[1] : "";
+					const youtubeFull = youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : "";
+
+					const photoId = activeSlide.querySelector(".photo-id")?.textContent.trim() || "";
+
+					// input에 값 세팅
+					document.getElementById("gallery-title-input").value = title;
+					document.getElementById("gallery-desc-input").value = desc;
+					document.getElementById("all-photo-youtube").value = youtubeFull;
+					document.getElementById("edit-photo-id").value = photoId;
+
+					galleryPopup.style.display = "block";
+				});
+
+				// 닫기 버튼
+				document.getElementById("close-gallery-popup").addEventListener("click", () => {
+					galleryPopup.style.display = "none";
+				});
+
+				// 저장 버튼
+				document.getElementById("save-gallery-btn").addEventListener("click", () => {
+					const title = document.getElementById("gallery-title-input").value.trim();
+					const desc = document.getElementById("gallery-desc-input").value.trim();
+					const youtubeUrl = document.getElementById("all-photo-youtube").value.trim();
+					const activityPhotoId = document.getElementById("edit-photo-id").value;
+					const bandId = document.getElementById("band-id").textContent.trim();
+					const photoFile = document.getElementById("gallery-thumb-upload").files[0];
+
+					if (!title || !desc) {
+						alert("活動タイトルと説明を入力してください。");
+						return;
+					}
+
+					const formData = new FormData();
+					formData.append("activityPhotoId", activityPhotoId);
+					formData.append("bandId", bandId);
+					formData.append("title", title);
+					formData.append("description", desc);
+					formData.append("youtubeUrl", youtubeUrl);
+					if (photoFile) {
+						formData.append("photo", photoFile);
+					}
+
+					// CSRF 토큰 처리
+					const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+					const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+					if (csrfToken && csrfParam) {
+						formData.append(csrfParam, csrfToken);
+					}
+
+					fetch("/bandinsertselect/activeupdate", {
+						method: "POST",
+						body: formData
+					})
+						.then(response => {
+							if (response.ok) {
+								alert("活動写真が変更になりました。");
+
+								// 수정완료 버튼 자동 클릭 → 수정모드 종료
+								document.getElementById("edit-toggle-btn")?.click();
+
+							} else {
+								alert("編集失敗");
+							}
+						})
+						.catch(error => {
+							console.error("編集失敗　:", error);
+							alert("編集中にエラーが発生しました。");
+						});
+				});
+			}
+		</script>
+
+		<script>
+			// 활동 사진 추가 (수정모드 진입 시 생성)
+			function initGalleryAddButton() {
+				const sectionGallery = document.getElementById("section-gallery");
+				if (!sectionGallery || !window.editMode || window.addAllBtnCreated) return;
+
+				const addAllBtn = document.createElement("button");
+				addAllBtn.id = "add-all-btn";
+				addAllBtn.type = "button";
+				addAllBtn.textContent = "活動写真追加";
+				addAllBtn.className = "btn-primary edit-only";
+				Object.assign(addAllBtn.style, {
+					position: "absolute",
+					top: "-40px",
+					right: "140px",
+					zIndex: "10",
+					padding: "10px 20px",
+					background: "#000",
+					color: "#fff",
+					borderRadius: "8px",
+					fontSize: "16px",
+					border: "none",
+					cursor: "pointer",
+					marginRight: "20px"
+				});
+
+				sectionGallery.style.position = "relative";
+				sectionGallery.appendChild(addAllBtn);
+				window.addAllBtnCreated = true;
+
+				const allPopup = document.createElement("div");
+				allPopup.id = "all-popup";
+				allPopup.style.cssText = `
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    border-radius: 12px;
+    z-index: 1000;
+    width: 400px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #000;
+    box-sizing: border-box;
+  `;
+
+				allPopup.innerHTML = `
+    <h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">活動写真追加</h3>
+    <form id="all-photo-form" method="post" enctype="multipart/form-data">
+      <input type="file" id="new-all-photo" name="photo" accept="image/*" style="width:100%; margin-bottom:20px;">
+      <input type="text" id="all-photo-youtube" name="youtubeUrl" placeholder="ユーチューブアドレス (例: https://www.youtube.com/watch?v=XXXXXX)" 
+        style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px;">
+      <input type="text" id="all-photo-title" name="title" placeholder="活動タイトル" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px;">
+      <textarea id="all-photo-desc" name="description" placeholder="活動説明" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; background:#fff; color:#000; margin-bottom:10px; resize:vertical;"></textarea>
+      <div id="button-wrapper" style="display:flex; justify-content:center; align-items:center; gap:10px; margin-top:5px;">
+        <button type="button" id="save-all-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">保存する</button>
+        <button type="button" id="close-all-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">閉める</button>
+      </div>
+    </form>
+  `;
+
+				document.body.appendChild(allPopup);
+
+				const form = allPopup.querySelector("#all-photo-form");
+
+				// CSRF 토큰 추가
+				const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+				const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.getAttribute('content');
+				if (csrfToken && csrfParam) {
+					const csrfInput = document.createElement("input");
+					csrfInput.type = "hidden";
+					csrfInput.name = csrfParam;
+					csrfInput.value = csrfToken;
+					form.appendChild(csrfInput);
+				}
+
+				// bandId hidden field 추가
+				const hiddenBandIdInput = document.createElement("input");
+				hiddenBandIdInput.type = "hidden";
+				hiddenBandIdInput.name = "bandId";
+
+				let bandId = new URLSearchParams(window.location.search).get("band_id");
+				if (!bandId) {
+					const bandIdEl = document.getElementById("band-id");
+					if (bandIdEl) bandId = bandIdEl.textContent.trim();
+				}
+
+				hiddenBandIdInput.value = bandId || "";
+				form.appendChild(hiddenBandIdInput);
+
+				// 팝업 열기
+				addAllBtn.addEventListener("click", () => {
+					allPopup.style.display = "block";
+				});
+
+				// 팝업 닫기
+				document.getElementById("close-all-popup").addEventListener("click", () => {
+					allPopup.style.display = "none";
+				});
+
+				// 저장 버튼
+				document.getElementById("save-all-btn").addEventListener("click", () => {
+					const title = document.getElementById("all-photo-title").value.trim();
+					const desc = document.getElementById("all-photo-desc").value.trim();
+					const youtubeUrl = document.getElementById("all-photo-youtube").value.trim();
+					const photoFile = document.getElementById("new-all-photo").files[0];
+
+					if (!title || !desc || !photoFile) {
+						alert("全ての項目を入力してください。");
+						return;
+					}
+
+					const formData = new FormData();
+					formData.append("title", title);
+					formData.append("description", desc);
+					formData.append("youtubeUrl", youtubeUrl);
+					formData.append("photo", photoFile);
+					formData.append("bandId", bandId || "");
+
+					if (csrfToken && csrfParam) {
+						formData.append(csrfParam, csrfToken);
+					}
+
+					fetch("/bandinsertselect/activeinsert", {
+						method: "POST",
+						body: formData
+					})
+						.then(response => {
+							if (response.ok) {
+								alert("活動写真が追加されました。");
+
+								// 수정모드 종료를 위해 '수정완료' 버튼 클릭
+								document.getElementById("edit-toggle-btn")?.click();
+
+							} else {
+								alert("追加失敗");
+							}
+						})
+						.catch(error => {
+							console.error("追加失敗:", error);
+							alert("活動写真追加ちっうエラーが発生しました。");
+						});
+				});
+			}
+		</script>
+
+		<script>
+			// 활동 기록 추가 (수정모드 진입 시 생성)
+			function initRecordAddButton() {
+				const sectionRecords = document.getElementById("section-records");
+				if (!sectionRecords || !window.editMode || window.addRecordBtnCreated) return;
+
+				// 버튼 생성
+				const addRecordBtn = document.createElement("button");
+				addRecordBtn.id = "add-record-btn";
+				addRecordBtn.type = "button";
+				addRecordBtn.textContent = "活動記録追加";
+				addRecordBtn.className = "btn-primary edit-only";
+
+				Object.assign(addRecordBtn.style, {
+					position: "absolute",
+					top: "-40px",
+					right: "140px",
+					zIndex: "10",
+					padding: "10px 20px",
+					background: "#000",
+					color: "#fff",
+					borderRadius: "8px",
+					fontSize: "16px",
+					border: "none",
+					cursor: "pointer",
+					marginRight: "20px"
+				});
+
+				sectionRecords.style.position = "relative";
+				sectionRecords.appendChild(addRecordBtn);
+				window.addRecordBtnCreated = true;
+
+				// 팝업 생성
+				const popup = document.createElement("div");
+				popup.id = "add-record-popup";
+				popup.style.cssText = `
+					display: none;
+					position: fixed;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					background: #fff;
+					padding: 30px;
+					box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+					border-radius: 12px;
+					z-index: 1000;
+					width: 400px;
+					font-family: 'Noto Sans KR', sans-serif;
+					color: #000;
+					box-sizing: border-box;
+				`;
+
+				popup.innerHTML = `
+					<h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">活動記録追加</h3>
+					<input type="text" id="new-title" placeholder="公演タイトル" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+					<input type="date" id="new-date" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+					<input type="time" id="new-time" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+					<input type="text" id="new-location" placeholder="場所" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+					<input type="text" id="new-capacity" placeholder="人数" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+					<input type="file" id="new-thumb-upload" style="width:100%; padding:12px; font-size:16px; border:1px solid #ccc; border-radius:8px; margin-bottom:20px;">
+					<textarea id="new-desc" placeholder="簡単な説明" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; resize:vertical; margin-bottom:10px;"></textarea>
+					<div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+						<button id="save-new-record-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">保存する</button>
+						<button id="close-new-record-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">閉める</button>
+					</div>
+				`;
+
+				document.body.appendChild(popup);
+
+				// 열기
+				addRecordBtn.addEventListener("click", () => {
+					popup.style.display = "block";
+				});
+
+				// 닫기
+				document.getElementById("close-new-record-popup").addEventListener("click", () => {
+					popup.style.display = "none";
+				});
+
+				// 저장 처리
+				document.getElementById("save-new-record-btn").addEventListener("click", () => {
+					const title = document.getElementById("new-title").value.trim();
+					const date = document.getElementById("new-date").value.trim();
+					const time = document.getElementById("new-time").value.trim();
+					const location = document.getElementById("new-location").value.trim();
+					const capacity = document.getElementById("new-capacity").value.trim();
+					const desc = document.getElementById("new-desc").value.trim();
+					const imageFile = document.getElementById("new-thumb-upload").files[0];
+
+					if (!title || !date || !time || !location || !capacity || !desc || !imageFile) {
+						alert("全ての項目を入力してください。");
+						return;
+					}
+
+					const formData = new FormData();
+					formData.append("recordTitle", title);
+					formData.append("recordDate", date);
+					formData.append("recordTime", time);
+					formData.append("recordLocation", location);
+					formData.append("participantCount", capacity);
+					formData.append("recordDescription", desc);
+					formData.append("recordImage", imageFile);
+
+					// bandId 추가
+					const bandId = document.getElementById("band-id")?.textContent.trim();
+					formData.append("bandId", bandId || "");
+
+					// CSRF 처리
+					const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+					const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+					if (csrfToken && csrfParam) {
+						formData.append(csrfParam, csrfToken);
+					}
+
+					fetch("/bandinsertselect/recordinsert", {
+						method: "POST",
+						body: formData
+					})
+					.then(async response => {
+						if (response.ok) {
+							alert("活動記録が追加されました。");
+							document.getElementById("edit-toggle-btn")?.click(); // 자동 수정완료
+						} else {
+							const text = await response.text();
+							console.error("❌ 상태 코드:", response.status);
+							console.error("❌ 응답 내용:", text);
+							alert("추가 실패: " + response.status);
+						}
+					})
+					.catch(error => {
+						console.error("❌ 추가 실패:", error);
+						alert("追加中エラーが発生しました。");
+					});
+				});
+			}
+		</script>
+
+		<script>
+		  // 활동 기록 수정 (수정모드 진입 시 생성)
+		  function initRecordEditButton() {
+		    const sectionRecords = document.getElementById("section-records");
+		    if (!sectionRecords || window.editRecordBtnCreated) return;
+		    window.editRecordBtnCreated = true;
+		    sectionRecords.style.position = "relative";
+
+		    const editRecordBtn = document.createElement("button");
+		    editRecordBtn.id = "edit-record-btn";
+		    editRecordBtn.type = "button";
+		    editRecordBtn.textContent = "活動記録編集";
+		    editRecordBtn.className = "btn-primary edit-only";
+		    Object.assign(editRecordBtn.style, {
+		      position: "absolute",
+		      top: "-40px",
+		      right: "20px",
+		      zIndex: "10",
+		      padding: "10px 20px",
+		      background: "#000",
+		      color: "#fff",
+		      borderRadius: "8px",
+		      fontSize: "16px",
+		      border: "none",
+		      cursor: "pointer"
+		    });
+		    sectionRecords.appendChild(editRecordBtn);
+
+		    document.querySelectorAll("#section-records .record-card").forEach(card => {
+		      const checkbox = document.createElement("input");
+		      checkbox.type = "checkbox";
+		      checkbox.className = "record-select-checkbox";
+		      Object.assign(checkbox.style, {
+		        position: "absolute",
+		        top: "10px",
+		        left: "10px",
+		        width: "20px",
+		        height: "20px",
+		        zIndex: "20"
+		      });
+		      checkbox.addEventListener("change", () => {
+		        if (checkbox.checked) {
+		          document.querySelectorAll(".record-select-checkbox").forEach(cb => {
+		            if (cb !== checkbox) cb.checked = false;
+		          });
+		        }
+		      });
+		      card.style.position = "relative";
+		      card.appendChild(checkbox);
+		    });
+
+		    const editRecordPopup = document.createElement("div");
+		    editRecordPopup.id = "edit-record-popup";
+		    editRecordPopup.style.cssText = `
+		      display: none;
+		      position: fixed;
+		      top: 50%;
+		      left: 50%;
+		      transform: translate(-50%, -50%);
+		      background: #fff;
+		      padding: 30px;
+		      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+		      border-radius: 12px;
+		      z-index: 1000;
+		      width: 400px;
+		      font-family: 'Noto Sans KR', sans-serif;
+		      color: #000;
+		      box-sizing: border-box;
+		    `;
+		    editRecordPopup.innerHTML = `
+		      <h3 style="font-size:22px; font-weight:bold; text-align:center; margin-bottom:25px;">活動記録編集</h3>
+			  <img id="edit-thumb-preview" src="" style="width:100%; border-radius:8px; margin-bottom:10px; display:none;" alt="サムネイルプレビュー">
+		      <input type="text" id="edit-title" placeholder="公演タイトル" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+		      <input type="date" id="edit-date" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+		      <input type="time" id="edit-time" placeholder="時間" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+		      <input type="text" id="edit-location" placeholder="場所" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+		      <input type="text" id="edit-capacity" placeholder="人数" style="width:100%; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px;">
+		      <input type="file" id="edit-thumb-upload" style="width:100%; padding:12px; font-size:16px; border:1px solid #ccc; border-radius:8px; margin-bottom:20px;">
+		      <textarea id="edit-desc" placeholder="簡単な説明" style="width:100%; height:100px; padding:20px; font-size:20px; border:1px solid #ccc; border-radius:8px; resize:vertical; margin-bottom:10px;"></textarea>
+		      <div style="display:flex; justify-content:center; align-items:center; gap:10px;">
+		        <button id="save-edit-btn" class="btn-primary" style="background:#000; color:#fff; padding:12px 24px; font-size:15px; border:none; border-radius:8px; cursor:pointer;">保存する</button>
+		        <button id="close-edit-popup" class="btn-primary" style="background:#fff; color:#000; border:1px solid #000; padding:12px 24px; font-size:15px; border-radius:8px; cursor:pointer;">閉める</button>
+		      </div>
+		    `;
+		    document.body.appendChild(editRecordPopup);
+
+		    editRecordBtn.addEventListener("click", () => {
+		      const selected = document.querySelector(".record-select-checkbox:checked");
+		      if (!selected) return alert("編集する活動記録を選んでください。");
+
+		      const card = selected.closest(".record-card");
+			  
+		      const title = card.querySelector(".record-title")?.textContent.trim() || "";
+		      const year = new Date().getFullYear();
+		      const monthStr = card.querySelector(".record-date span")?.textContent.trim().replace("월", "") || "1";
+		      const dayStr = card.querySelector(".record-date strong")?.textContent.trim() || "1";
+		      const isoDate = `${year}-${monthStr.padStart(2, '0')}-${dayStr.padStart(2, '0')}`;
+		      const time = card.querySelector(".record-meta span:nth-of-type(1)")?.textContent.trim() || "";
+		      const capacity = card.querySelector(".record-meta span:nth-of-type(2)")?.textContent.replace("명", "").trim() || "";
+		      const desc = card.querySelector(".review-item p")?.textContent.trim() || "";
+		      const location = card.querySelector(".record-location")?.textContent.trim() || "";
+
+		      document.getElementById("edit-title").value = title;
+		      document.getElementById("edit-date").value = isoDate;
+		      document.getElementById("edit-time").value = time;
+		      document.getElementById("edit-location").value = location;
+		      document.getElementById("edit-capacity").value = capacity;
+		      document.getElementById("edit-desc").value = desc;
+
+		      editRecordPopup.style.display = "block";
+		    });
+
+		    document.getElementById("close-edit-popup").addEventListener("click", () => {
+		      editRecordPopup.style.display = "none";
+		    });
+
+		    document.getElementById("save-edit-btn").addEventListener("click", () => {
+				const selected = document.querySelector(".record-select-checkbox:checked");
+				 const card = selected?.closest(".record-card");
+				 const recordId = card?.querySelector(".record-id")?.textContent.trim();
+				 if (!recordId) {
+				   alert("recordId가 없습니다. 수정할 수 없습니다.");
+				   return;
+				 }
+		      const title = document.getElementById("edit-title").value.trim();
+		      const date = document.getElementById("edit-date").value.trim();
+		      const time = document.getElementById("edit-time").value.trim();
+		      const location = document.getElementById("edit-location").value.trim();
+		      const capacity = document.getElementById("edit-capacity").value.trim();
+		      const desc = document.getElementById("edit-desc").value.trim();
+		      const imageFile = document.getElementById("edit-thumb-upload").files[0];
+
+		      if (!title || !date || !time || !location || !capacity || !desc) {
+		        alert("全ての項目を入力してください。");
+		        return;
+		      }
+
+		      const formData = new FormData();
+			  formData.append("recordId", recordId);
+		      formData.append("recordTitle", title);
+		      formData.append("recordDate", date);
+		      formData.append("recordTime", time);
+		      formData.append("recordLocation", location);
+		      formData.append("participantCount", capacity);
+		      formData.append("recordDescription", desc);
+		      if (imageFile) formData.append("recordImage", imageFile);
+
+		      const bandId = document.getElementById("band-id")?.textContent.trim();
+		      if (bandId) formData.append("bandId", bandId);
+
+		      const csrfToken = document.querySelector('meta[name="_csrf"]')?.content;
+		      const csrfParam = document.querySelector('meta[name="_csrf_parameter"]')?.content;
+		      if (csrfToken && csrfParam) {
+		        formData.append(csrfParam, csrfToken);
+		      }
+
+		      fetch("/bandinsertselect/recordupdate", {
+		        method: "POST",
+		        body: formData
+		      })
+		        .then(response => {
+		          if (response.ok) {
+		            alert("活動記録の編集を完了しました。");
+		            document.getElementById("edit-toggle-btn")?.click();
+		          } else {
+		            alert("수정 실패");
+		          }
+		        })
+		        .catch(error => {
+		          console.error("수정 실패:", error);
+		          alert("編集中エラーが発生しました。");
+		        });
+		    });
+		  }
+
+		</script>
+
+
+		<!-- 세 번째: 수정모드 페이징 기능 (밴드소개 페이징) -->
+		<script>
+			// 밴드소개 페이징 기능 (수정모드 진입 시 실행)
+			function initBandIntroPaging() {
+
+				const introItems = document.querySelectorAll("#section-intro .intro-list li");
+				if (introItems.length < 4) return; // li가 최소 4개 있어야 정상
+
+				const introPages = [
+					[introItems[0], introItems[1]], // 1페이지: 결성일 + 장르
+					[introItems[2], introItems[3]]  // 2페이지: 활동지역 + 밴드소개
+				];
+				let introIndex = 0;
+
+				function updateIntroPage(newIndex) {
+					introPages[introIndex].forEach(el => el.style.display = "none");
+					introIndex = newIndex;
+					introPages[introIndex].forEach(el => el.style.display = "block");
+				}
+
+				// 처음에 전부 숨기고 1페이지만 보여줌
+				introItems.forEach(el => el.style.display = "none");
+				updateIntroPage(0);
+
+				// 페이징 버튼이 없으면 생성
+				if (!document.getElementById("intro-paging-controls")) {
+					const pagingWrap = document.createElement("div");
+					pagingWrap.id = "intro-paging-controls";
+					pagingWrap.style.display = "flex";
+					pagingWrap.style.justifyContent = "center";
+					pagingWrap.style.gap = "20px";
+					pagingWrap.style.marginTop = "20px";
+
+					pagingWrap.innerHTML = `
+      <button id="intro-prev-btn" class="btn-primary">◀</button>
+      <button id="intro-next-btn" class="btn-primary">▶</button>
+    `;
+
+					const target = document.querySelector("#section-intro .intro-list");
+					if (target?.parentNode) {
+						target.parentNode.insertBefore(pagingWrap, target.nextSibling);
+					}
+
+					document.getElementById("intro-prev-btn").addEventListener("click", () => {
+						if (introIndex > 0) {
+							updateIntroPage(introIndex - 1);
+						}
+					});
+
+					document.getElementById("intro-next-btn").addEventListener("click", () => {
+						if (introIndex < introPages.length - 1) {
+							updateIntroPage(introIndex + 1);
+						}
+					});
+				}
+			}
+		</script>
+
+		<script>
+			// 수정모드 토글 버튼 기능 초기화
+			function initEditToggle() {
+				const editButton = document.getElementById("edit-toggle-btn");
+				if (!editButton) return;
+
+				const storedMode = sessionStorage.getItem("editMode") === "true";
+				window.editMode = storedMode;
+
+				// 이메일 표시 여부 처리
+				const emailEl = document.getElementById("leader-email");
+				if (emailEl) {
+					emailEl.style.display = storedMode ? "none" : "block";
+				}
+
+				if (storedMode) {
+					editButton.textContent = "編集完了";
+					initCoverImageEdit();
+					initProfileEdit();
+					initBandIntro();
+					initBandIntroPaging();
+					initGalleryEditButton();
+					initGalleryAddButton();
+					initRecordEditButton();
+					initRecordAddButton();
+					initMemberPopupEdit();
+				} else {
+					removeEditButtons();
+				}
+
+				editButton.addEventListener("click", () => {
+					window.editMode = !window.editMode;
+					sessionStorage.setItem("editMode", window.editMode ? "true" : "false");
+					editButton.textContent = window.editMode ? "編集完了" : "編集する";
+
+					// 이메일 표시 여부 다시 처리
+					if (emailEl) {
+						emailEl.style.display = window.editMode ? "none" : "block";
+					}
+
+					if (window.editMode) {
+						initCoverImageEdit();
+						initProfileEdit();
+						initBandIntro();
+						initBandIntroPaging();
+						initGalleryEditButton();
+						initGalleryAddButton();
+						initRecordEditButton();
+						initRecordAddButton();
+						initMemberPopupEdit();
+					} else {
+						sessionStorage.setItem("forceReload", "true");
+						location.reload();
+					}
+				});
+			}
+		</script>
+
+		<script>
+			// 프로필 영역 원상복구 (이름/핸들/한줄소개)
+			function restoreProfileInfo() {
+				const fields = [
+					{selector: ".band-name", defaultText: "Tomo Groove"},
+					{selector: ".band-handle", defaultText: "@tomogroove"},
+					{selector: ".band-one-liner", defaultText: "도쿄와 홍대를 오가는 감성 시티팝 밴드입니다 🎷"}
+				];
+
+				fields.forEach(({selector, defaultText}) => {
+					const container = document.querySelector(selector);
+					if (!container) return;
+
+					const input = container.querySelector("input");
+					if (input) {
+						const value = input.value.trim();
+						container.textContent = value || defaultText;
+					}
+				});
+			}
+		</script>
+
+		<script>
+			// 밴드 소개 영역 원상복구 (+ 페이징 제거 포함)
+			function restoreBandIntro() {
+				const introList = document.querySelectorAll("#section-intro .intro-list li");
+
+				introList.forEach(li => {
+					const label = li.querySelector("strong")?.textContent.trim();
+					if (!label) return;
+
+					const input = li.querySelector("input");
+					const value = input ? input.value.trim() : "";
+
+					if (label.includes("결성일")) {
+						li.innerHTML = `<strong>${label}</strong> ${value || "2022년 5월"}`;
+					} else if (label.includes("장르")) {
+						li.innerHTML = `<strong>${label}</strong> ${value || "시티팝, 재즈, 인디"}`;
+					} else if (label.includes("활동지역")) {
+						li.innerHTML = `<strong>${label}</strong> ${value || "서울 홍대, 도쿄 시부야"}`;
+					} else if (label.includes("밴드 소개")) {
+						const textarea = li.querySelector("textarea");
+						const text = textarea ? textarea.value.trim() : "";
+						li.innerHTML = `<strong>${label}</strong><p class="band-description">${text || "Tomo Groove는 도쿄와 홍대 중심으로 활동하는 밴드입니다."}</p>`;
+					}
+
+					// 각 항목 display:block 으로 모두 표시
+					li.style.display = "list-item";
+				});
+
+				// 페이징 컨트롤 제거
+				const paging = document.getElementById("intro-paging-controls");
+				if (paging) paging.remove();
+			}
+		</script>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", () => {
+				if (window.editMode) {
+					initProfileEdit();
+					initBandIntro();
+					initBandIntroPaging();
+					initGalleryEditButton();
+					initGalleryAddButton();
+					initRecordEditButton();
+					initRecordAddButton();
+					initMemberPopupEdit();
+				} else {
+					removeEditButtons(); // 비리더일 경우 안전하게 초기화
+				}
+			});
+		</script>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", () => {
+				const gallerySection = document.getElementById("section-gallery");
+				const galleryWrapper = gallerySection.querySelector(".gallery-wrapper");
+				const galleryEmptyMessage = galleryWrapper.querySelector("p");
+
+				const realSlides = galleryWrapper.querySelectorAll(".media-slide");
+				const arrows = galleryWrapper.querySelectorAll(".gallery-arrow");
+				const dots = galleryWrapper.querySelector(".gallery-dots");
+
+				// 슬라이드가 하나라도 있으면 숨기지 않음
+				if (
+					galleryEmptyMessage &&
+					galleryEmptyMessage.textContent.includes("登録された活動写真がありません。") &&
+					realSlides.length === 0
+				) {
+					arrows.forEach(arrow => arrow.style.display = "none");
+					if (dots) dots.style.display = "none";
+				}
+			});
+
+		</script>
+
+
+		<script>
+			// 수정모드 해제 시 생성된 수정 버튼들 제거
+			function removeEditButtons() {
+				const elementIds = [
+					"edit-gallery-btn",
+					"add-all-btn",
+					"edit-record-btn",
+					"add-record-btn",
+					"profile-file-btn",
+					"intro-paging-controls"
+				];
+
+				elementIds.forEach(id => {
+					const el = document.getElementById(id);
+					if (el && el.parentNode) {
+						el.parentNode.removeChild(el);
+					}
+				});
+
+				// 상태 변수 초기화
+				window.editGalleryBtnCreated = false;
+				window.addAllBtnCreated = false;
+				window.editRecordBtnCreated = false;
+				window.addRecordBtnCreated = false;
+				window.profileEditBtnCreated = false;
+			}
+
+		</script>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", () => {
+			  const emailEl = document.getElementById("leader-email");
+			  if (!emailEl) return;
+
+			  const justExited = sessionStorage.getItem("justExitedEditMode") === "true";
+			  const editMode = sessionStorage.getItem("editMode") === "true";
+
+			  if (editMode) {
+			    // 수정모드 중이면 무조건 숨김
+			    emailEl.style.display = "none";
+			  } else if (justExited) {
+			    // 저장 후 새로고침된 경우 → 딜레이 후 표시
+			    emailEl.style.display = "none";
+			    setTimeout(() => {
+			      emailEl.style.display = "block";
+			      sessionStorage.removeItem("justExitedEditMode");
+			    }, 300); // 300ms 정도 딜레이
+			  } else {
+			    // 평상시에는 바로 보이도록
+			    emailEl.style.display = "block";
+			  }
+			});
+
+		</script>
+			
+		<script>
+		  window.addEventListener("load", () => {
+		    const emailEl = document.getElementById("leader-email");
+		    if (!emailEl) return;
+
+		    const justExited = sessionStorage.getItem("justExitedEditMode") === "true";
+		    const editMode = sessionStorage.getItem("editMode") === "true";
+
+		    if (!editMode && justExited) {
+		      emailEl.classList.add("visible"); // 모든 리소스 로드 후 표시
+		      sessionStorage.removeItem("justExitedEditMode");
+		    }
+		  });
+		</script>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", () => {
+				initEditToggle(); // 수정하기 버튼 기능 연결
+			});
+		</script>
+		
+		
+		
+		<script th:inline="javascript">
+		  // IDE에서 "const band_id = 0;" 같은 정상적인 JS로 보이게 함
+		  const band_id     = /*[[${band.band_id}]]*/ 0;
+		  const currentUser = /*[[${currentUserVo?.user_id}]]*/ 'anonymous';
+		</script>
+		
+		<script>
+		 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+		 const csrfToken  = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+		
+		const popup = document.getElementById('member-invite-popup');
+		if(popup){
+			
+		    popup.style.display = "block";
+
+			
+			document.getElementById('btn-accept').addEventListener('click', () => {
+				fetch(`/bandinvite/${band_id}/invite/${currentUser}/accept`, {
+					method: 'POST',
+					headers: { [csrfHeader]: csrfToken }
+				})
+				.then(res => {
+					if (!res.ok) throw new Error('수락 실패');
+					popup.style.display = 'none';
+					alert('招待を受け入れました')
+				})
+				.catch(err => {
+					console.error(err);
+					alert('수락 중 오류 발생')
+				})
+			})
+			document.getElementById('btn-decline').addEventListener('click', () => {
+				fetch(`/bandinvite/${band_id}/invite/${currentUser}/decline`, {
+					method: 'POST',
+					headers: { [csrfHeader]: csrfToken }
+				})
+				.then(res => {
+					if (!res.ok) throw new Error('거절 실패');
+					popup.style.display = 'none';
+					alert('招待を拒否しました')
+				})
+				.catch(err => {
+					console.error(err);
+					alert('거절 중 오류 발생')
+				})
+			})
+		}
+		</script>
+
+
+		
+	</div>
+</body>
+
+</html>
